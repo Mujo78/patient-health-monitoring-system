@@ -1,18 +1,27 @@
 const mongoose = require("mongoose");
 const validator = require("validator")
 
-const departmentSchema = mongoose.Schema({
+const pharmacySchema = mongoose.Schema({
+    user_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     name:{
         type: String,
         required: [true, "Name is required!"],
         unique: [true, 'Name must be unique!'],
     },
+    address: {
+        type: String,
+        required: [true, "Address is required!"]
+    },
     description:{
         type: String,
         required: [true, "Description is required!"]
     },
-    doctors:[
-        {type: mongoose.Schema.Types.ObjectId, ref: 'Doctor'}
+    medicine:[
+        {type: mongoose.Schema.Types.ObjectId, ref: 'Medicine'}
     ],
     phone_number: {
         type: String,
@@ -25,10 +34,14 @@ const departmentSchema = mongoose.Schema({
             },
             message: "Phone number must be valid!"
         }
+    },
+    working_hours: {
+        type: String,
+        required: [true, "Working hours are required!"]
     }
 }, {
     timestamps: true
 })
 
 
-module.exports = mongoose.model('Department', departmentSchema);
+module.exports = mongoose.model('Pharmacy', pharmacySchema);

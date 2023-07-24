@@ -15,6 +15,10 @@ const userSchema = mongoose.Schema({
         enum: ["doctor", "hospital", "patient", "pharmachy"],
         required: [true, "Role is required!"]
     },
+    photo:{
+        type: String,
+        required: false
+    },
     password: {
         type: String,
         required: [true, "Password is required!"],
@@ -31,6 +35,11 @@ const userSchema = mongoose.Schema({
             message: "Paswords are not the same!"
         }
     },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    }
 })
 
 
