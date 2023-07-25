@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema({
     },
     role:{
         type: String,
-        enum: ["doctor", "hospital", "patient", "pharmachy"],
+        enum: ["DOCTOR", "HOSPITAL", "PATIENT", "PHARMACY"],
         required: [true, "Role is required!"]
     },
     photo:{

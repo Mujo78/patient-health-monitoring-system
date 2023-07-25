@@ -9,10 +9,10 @@ const {
 const router = express.Router()
 
 
-router.use(protect, restrictTo("hospital"))
+router.use(protect, restrictTo("HOSPITAL"))
 
-router.route("/department").get(getAll).post(createDepartment)
-router.route("/department/:id").get(getDepartment).patch(updateDepartment).delete(deleteDepartment)
+router.route("/").get(getAll).post(createDepartment)
+router.route("/:id").get(getDepartment).patch(updateDepartment).delete(deleteDepartment)
 
 
 

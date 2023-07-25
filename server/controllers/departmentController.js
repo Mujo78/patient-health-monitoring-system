@@ -1,4 +1,3 @@
-const asyncHandler = require("express-async-handler")
 
 const { getAllData, createNewDoc, deleteDoc, updateDoc, getDoc } = require("./handleController")
 const Department = require("../models/department")

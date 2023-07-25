@@ -21,13 +21,7 @@ const medicineSchema = mongoose.Schema({
     },
     price: {
         type: Number,
-        required: [true, "Price is required!"],
-        validate: {
-            validator: async function(){
-                return validator.isNumber(this.price)
-            },
-            message: "Price must be a number type!"
-        }
+        required: [true, "Price is required!"]
     },
     manufacturer: {
         type: String,
