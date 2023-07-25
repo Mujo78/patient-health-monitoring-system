@@ -11,21 +11,25 @@ const departmentSchema = mongoose.Schema({
         type: String,
         required: [true, "Description is required!"]
     },
-    doctors:[
-        {type: mongoose.Schema.Types.ObjectId, ref: 'Doctor'}
-    ],
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
         unique: [true, "Phone number must be unique"],
         maxlength: 12,
         validate: {
-            validator: async function(){
-                return validator.isMobilePhone(this.phone_number)
+            validator: async function(value){
+                return validator.isMobilePhone(`${value}`)
             },
-            message: "Phone number must be valid!"
+            message: "Phone number ({VALUE}) must be valid!"
         }
-    }
+    },
+    doctors:[
+        {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Doctor', 
+            required: false
+        }
+    ]
 }, {
     timestamps: true
 })

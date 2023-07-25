@@ -22,10 +22,10 @@ const doctorSchema = mongoose.Schema({
         unique: [true, "Phone number must be unique"],
         maxlength: 12,
         validate: {
-            validator: async function(){
-                return validator.isMobilePhone(this.phone_number)
+            validator: async function(value){
+                return validator.isMobilePhone(`${value}`)
             },
-            message: "Phone number must be valid!"
+            message: "Phone number ({VALUE}) must be valid!"
         }
     },
     address: {
