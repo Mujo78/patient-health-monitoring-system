@@ -7,6 +7,11 @@ const doctorSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
+    department_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     first_name:{
         type: String,
         required: [true, "First name is required!"],

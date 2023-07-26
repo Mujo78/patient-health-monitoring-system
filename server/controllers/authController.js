@@ -22,17 +22,15 @@ const signup = asyncHandler( async (req, res) =>{
     
     const {
         email, role, photo, password, passwordConfirm, 
-    } = req.body
+    } = req.userData
     
     const newUser = await User.create({
-        email: email,
-        role: role,
+        email, role,
         photo: photo ? photo : "",
-        password: password,
-        passwordConfirm: passwordConfirm
+        password, passwordConfirm
     })
 
-    return newUser
+    return res.status(200).json(newUser)
 })
 
 

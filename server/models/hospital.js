@@ -18,11 +18,9 @@ const hospitalSchema = mongoose.Schema({
     },
     description:{
         type: String,
-        required: [true, "Description is required!"]
+        required: [true, "Description is required!"],
+        minlength: [10, "Description is too short!"]
     },
-    departments:[
-        {type: mongoose.Schema.Types.ObjectId, ref: 'Department'}
-    ],
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
@@ -38,6 +36,5 @@ const hospitalSchema = mongoose.Schema({
 }, {
     timestamps: true
 })
-
 
 module.exports = mongoose.model('Hospital', hospitalSchema);

@@ -5,7 +5,9 @@ const app = express();
 
 const userRoutes = require("./routes/userRoutes")
 const medicineRoutes = require("./routes/medicineRoutes")
+const pharmacyRoutes = require("./routes/pharmacyRoutes")
 const departmentRoutes = require("./routes/departmentRoutes");
+const hospitalRoutes = require("./routes/hospitalRoutes")
 const { errorHandler } = require("./middlewares/errorMiddleware");
 
 // File for the routes
@@ -19,6 +21,8 @@ app.use(express.json())
 app.use("/", userRoutes)
 app.use("/department", departmentRoutes)
 app.use("/medicine", medicineRoutes)
+app.use("/pharmacy", pharmacyRoutes)
+app.use("/hospital", hospitalRoutes)
 
 app.all('*', (req, res, next) =>{
 

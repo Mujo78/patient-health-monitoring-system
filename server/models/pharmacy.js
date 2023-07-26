@@ -20,9 +20,6 @@ const pharmacySchema = mongoose.Schema({
         type: String,
         required: [true, "Description is required!"]
     },
-    medicine:[
-        {type: mongoose.Schema.Types.ObjectId, ref: 'Medicine'}
-    ],
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
@@ -43,5 +40,13 @@ const pharmacySchema = mongoose.Schema({
     timestamps: true
 })
 
+
+pharmacySchema.pre('save', async function (next) {
+    const count = await this.constructor.countDocuments();
+    if(count === 1) {
+        throw new Error('You can add only one pharmacy!')
+    }
+    next()
+})
 
 module.exports = mongoose.model('Pharmacy', pharmacySchema);

@@ -5,7 +5,12 @@ const medicineSchema = mongoose.Schema({
     name:{
         type: String,
         required: [true, "Name is required!"],
-        minlength: [2, "Name is too short!"]
+        minlength: [2, "Name is too short!"],
+        unique: [true, "Name must be unique!"]
+    },
+    pharmacy_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Pharamcy'
     },
     description: {
         type: String,
@@ -17,6 +22,7 @@ const medicineSchema = mongoose.Schema({
     },
     category: {
         type: String,
+        enum: ["Pain Relief", "Antibiotics", "Antipyretics", "Antacids", "Antihistamines", "Antidepressants", "Anticoagulants", "Antidiabetics", "Antipsychotics", "Vaccines", "Other"],
         required: [true, "Category is required!"]
     },
     price: {

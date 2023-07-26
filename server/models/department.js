@@ -7,9 +7,15 @@ const departmentSchema = mongoose.Schema({
         required: [true, "Name is required!"],
         unique: [true, 'Name must be unique!'],
     },
+    hospital_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        select: false
+    },
     description:{
         type: String,
-        required: [true, "Description is required!"]
+        required: [true, "Description is required!"],
+        minlength: [10, "Description is too short!"]
     },
     phone_number: {
         type: String,
@@ -22,14 +28,7 @@ const departmentSchema = mongoose.Schema({
             },
             message: "Phone number ({VALUE}) must be valid!"
         }
-    },
-    doctors:[
-        {
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'Doctor', 
-            required: false
-        }
-    ]
+    }
 }, {
     timestamps: true
 })

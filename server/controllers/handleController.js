@@ -14,9 +14,7 @@ const createNewDoc = Model => asyncHandler (async (req, res) =>{
 
     const newOne = await Model.create(req.body)
 
-    return res.status(200).json({
-        data: newOne
-    })
+    return res.status(200).json(newOne)
 })
 
 const deleteDoc = Model => asyncHandler( async (req, res) => {
@@ -25,9 +23,7 @@ const deleteDoc = Model => asyncHandler( async (req, res) => {
 
     if(!deleted) return res.status(404).json("There is no document with that ID!", 404)
 
-    return res.status(200).json({
-        data: deleted
-    })
+    return res.status(200).json(deleted)
 })
 
 const updateDoc = Model => asyncHandler(async (req, res ,next) =>{
@@ -39,9 +35,7 @@ const updateDoc = Model => asyncHandler(async (req, res ,next) =>{
     
     if(!updatedDoc) return res.status(404).json('No doc found with that ID!')
     
-    return res.status(200).json({
-        data: updatedDoc
-    })
+    return res.status(200).json(updatedDoc)
 })
 
 const getDoc = Model => asyncHandler (async (req, res) =>{
