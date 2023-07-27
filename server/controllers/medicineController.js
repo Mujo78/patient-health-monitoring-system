@@ -1,4 +1,4 @@
-const { getAllData, getDoc, createNewDoc, updateDoc, deleteDoc } = require("./handleController")
+const { getAllData, getDoc, updateDoc, deleteDoc } = require("./handleController")
 const Medicine = require("../models/medicine")
 const asyncHandler = require("express-async-handler")
 const Pharmacy = require("../models/pharmacy")
@@ -13,10 +13,10 @@ const createMedicine = asyncHandler( async (req, res) => {
     } = req.body;
 
     const oldOne = await Medicine.findOne({name, category})
-    if(oldOne) return res.status(404).json("Medicine already in database!")
+    if(oldOne) return res.status(400).json("Medicine already in database!")
 
     const ph = await Pharmacy.findOne()
-    if(!ph) return res.status(404).json("There is no pharmacy for medicine!")
+    if(!ph) return res.status(400).json("There is no pharmacy for medicine!")
 
     const newMedicine = await Medicine.create({
         name,

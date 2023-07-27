@@ -19,7 +19,7 @@ const createDepartment = asyncHandler( async (req, res) =>{
 
     if(!hospital) return res.status(404).json("There was some error!")
 
-    const department = await Department.crete({
+    const department = await Department.create({
         name,
         hospital_id: hospital._id,
         description,
@@ -32,7 +32,7 @@ const createDepartment = asyncHandler( async (req, res) =>{
 
 const deleteDepartment = deleteDoc(Department)
 const updateDepartment = updateDoc(Department)
-const getDepartment = getDoc(Department)
+const getDepartment = getDoc(Department) 
 
 module.exports = {
     getAll,

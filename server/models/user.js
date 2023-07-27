@@ -34,7 +34,8 @@ const userSchema = mongoose.Schema({
                 return el === this.password
             },
             message: "Paswords are not the same!"
-        }
+        },
+        select: false
     },
     passwordChangedAt: {
         type: Date

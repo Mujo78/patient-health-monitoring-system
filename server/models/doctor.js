@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
+const user = require("./user");
 
 const doctorSchema = mongoose.Schema({
     user_id:{
@@ -20,6 +21,8 @@ const doctorSchema = mongoose.Schema({
     last_name:{
         type: String,
         required: [true, "Last name is required!"],
+        required: [true, "First name is required!"],
+        minlength: [2, "First name is too short!"]
     },
     phone_number: {
         type: String,
@@ -51,5 +54,6 @@ const doctorSchema = mongoose.Schema({
     }
     
 })
+
 
 module.exports = mongoose.model('Doctor', doctorSchema);

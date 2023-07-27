@@ -26,8 +26,6 @@ const protect = asyncHandler (async (req, res, next) => {
 
 const restrictTo = (...roles) => {
     return (req, res, next) => {
-        console.log(req.user)
-        console.log(roles)
         if(!roles.includes(req.user.role)){
             return res.status(403).json("You are not authorized for this action!")
         }

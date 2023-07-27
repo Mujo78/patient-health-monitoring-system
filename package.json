@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "seed": "node server/seed.js",
     "start": "nodemon server/server.js"
   },
   "repository": {
