@@ -20,12 +20,14 @@ const createToken = (user, statusCode, res) =>{
     }
 const signup = asyncHandler( async (req, res) =>{
     
+    if(req.file) req.body.photo = req.file.filename
+
     const {
         email, role, photo, password, passwordConfirm, 
     } = req.body
     
     const newUser = await User.create({
-        email, role,
+        email, role, photo,
         password, passwordConfirm
     })
 

@@ -20,7 +20,7 @@ if(process.env.NODE_ENV === 'development'){
 
 app.use(express.json())
 
-app.use("/", userRoutes)
+app.use("/user", userRoutes)
 app.use("/department", departmentRoutes)
 app.use("/medicine", medicineRoutes)
 app.use("/pharmacy", pharmacyRoutes)

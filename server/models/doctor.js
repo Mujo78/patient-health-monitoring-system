@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const user = require("./user");
 
 const doctorSchema = mongoose.Schema({
     user_id:{

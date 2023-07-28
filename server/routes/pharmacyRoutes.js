@@ -5,15 +5,19 @@ const {
     addPharmacy,
     deletePharmacy,
     updatePharmacy
-} = require("../controllers/pharmacyController")
+} = require("../controllers/pharmacyController");
+const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userController");
 
 const router = express.Router()
 
 router.use(protect)
 
-router.patch("/:id", restrictTo('PHARMACY'), updatePharmacy)
-router.route("/").post(restrictTo('HOSPITAL'), addPharmacy).get(getPharmacy)
-router.route("/:id").delete(restrictTo('HOSPITAL'), deletePharmacy)
+router.get("/", getPharmacy)
+
+router.patch("/:id",restrictTo('PHARMACY'), updatePharmacy)
+
+router.post("/", restrictTo('HOSPITAL'), uploadUserPhoto, resizeUserPhoto,  addPharmacy)
+router.delete("/:id",restrictTo('HOSPITAL', 'PHARMACY'),  deletePharmacy)
 
 module.exports = router;
 

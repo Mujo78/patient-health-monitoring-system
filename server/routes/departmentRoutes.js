@@ -6,21 +6,22 @@ const {
     getDepartment, updateDepartment, deleteDepartment
 } = require("../controllers/departmentController")
 
-const doctorRoutes = require("../routes/doctorRoutes");
 const { addDoctor, getAllDoctors } = require("../controllers/doctorController");
+const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userController");
 
 const router = express.Router()
 
-
 router.use(protect)
 
-router.use("/:departmentId/doctors", getAllDoctors)
+router.get("/:departmentId/doctors", getAllDoctors)
+router.get("/", getAll)
+router.get("/:id", getDepartment)
 
 router.use(restrictTo("HOSPITAL"))
 
-router.post("/:departmentId/add-doctor", addDoctor)
-router.route("/").get(getAll).post(createDepartment)
-router.route("/:id").get(getDepartment).patch(updateDepartment).delete(deleteDepartment)
+router.post("/:departmentId/add-doctor", uploadUserPhoto, resizeUserPhoto, addDoctor)
+router.route("/").post(createDepartment)
+router.route("/:id").patch(updateDepartment).delete(deleteDepartment)
 
 
 

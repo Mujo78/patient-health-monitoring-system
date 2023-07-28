@@ -1,11 +1,12 @@
-const { getAllData, updateDoc, getDoc } = require("./handleController")
+const { updateDoc, getDoc } = require("./handleController")
 const Doctor = require("../models/doctor")
 const asyncHandler = require("express-async-handler")
-const Hospital = require("../models/hospital")
 const User = require("../models/user")
 const { default: mongoose } = require("mongoose")
 
 const addDoctor = asyncHandler( async (req, res) =>{
+
+    if(req.file) req.body.photo = req.file.filename
 
     const {
         first_name, last_name, photo, phone_number, address, speciality, qualification, bio
@@ -16,16 +17,17 @@ const addDoctor = asyncHandler( async (req, res) =>{
     session.startTransaction()
     const email = req.user.email;
     const docEmail = email.slice(email.indexOf('@'))
-    
     const emailID = phone_number.substr(phone_number.length - 3, phone_number.length)
-    
+    const doctorEmail = `${first_name.toLowerCase()}.${last_name.toLowerCase() + emailID + docEmail}` 
+
+
     try{
         const newUserDoctor = await User.create([{
-            email: `${first_name}.${last_name + emailID + docEmail}`,
+            email: doctorEmail,
             role: 'DOCTOR',
             photo: photo ? photo : "",
-            password: first_name + "." + last_name,
-            passwordConfirm: first_name + "." + last_name
+            password: first_name.toLowerCase() + "." + last_name.toLowerCase(),
+            passwordConfirm: first_name.toLowerCase() + "." + last_name.toLowerCase()
         }], {session})
         
         const newDoctor = await Doctor.create([{

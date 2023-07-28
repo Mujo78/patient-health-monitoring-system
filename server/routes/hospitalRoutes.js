@@ -10,7 +10,8 @@ const router = express.Router()
 
 router.use(protect)
 
-router.get("/", getHospitalInfo)
+router.route("/").get(getHospitalInfo)
+
 router.patch("/:id", restrictTo('HOSPITAL'), updateHospitalInfo)
 
 

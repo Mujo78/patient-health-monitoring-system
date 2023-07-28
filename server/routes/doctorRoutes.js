@@ -2,7 +2,6 @@ const express = require("express");
 const { protect, restrictTo } = require("../middlewares/authMiddlewares");
 
 const {
-    getAllDoctors,
     getDoctor,
     updateDoctor,
     deleteDoctor

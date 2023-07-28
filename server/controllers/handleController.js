@@ -27,7 +27,7 @@ const deleteDoc = Model => asyncHandler( async (req, res) => {
 })
 
 const updateDoc = Model => asyncHandler(async (req, res ,next) =>{
-    
+
     const updatedDoc = await Model.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true

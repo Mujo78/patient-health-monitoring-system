@@ -1,5 +1,5 @@
 
-const { getAllData, createNewDoc, deleteDoc, updateDoc, getDoc } = require("./handleController")
+const { getAllData, deleteDoc, updateDoc, getDoc } = require("./handleController")
 const Department = require("../models/department")
 const asyncHandler = require("express-async-handler")
 const Hospital = require("../models/hospital")

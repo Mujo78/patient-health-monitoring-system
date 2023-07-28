@@ -1,10 +1,8 @@
 const multer = require('multer')
 const sharp = require('sharp')
-const path = require('path');
 const { v4 : uuidv4 } = require ('uuid');
-const User = require("../models/user")
-
-// Not finished!
+const User = require("../models/user");
+const asyncHandler = require('express-async-handler');
 
 const multerStorage = multer.memoryStorage();
 
@@ -26,17 +24,59 @@ const uploadUserPhoto = upload.single('photo')
 const resizeUserPhoto = (req, res, next) =>{
     if(!req.file) return next();
     
-    req.file.filename = `user-${uuidv4()}.jpg`
+    req.file.filename = `user-${uuidv4()}.jpeg`
 
     sharp(req.file.buffer)
         .resize(500, 500)
-        .toFormat('jpg')
-        .toFile(`data/img/${req.file.filename}`)
+        .toFormat('jpeg')
+        .jpeg({quality: 90})
+        .toFile(`uploads/${req.file.filename}`)
     
     next()
 }
 
+
+const fillterObj = (obj, ...allowedFields) => {
+    const newObj = {}
+    Object.keys(obj).forEach(el => {
+        if(allowedFields.includes(el)) newObj[el] = obj[el]
+    })
+
+    return newObj;
+}
+
+const updateUserProfile = asyncHandler ( async(req, res) =>{
+    
+    if(req.body.password ||req.body.passwordConfirm) {
+        return res.status(400).json("This route is not for updating password!")
+    }
+
+    const fillterBody = fillterObj(req.body, 'email', 'phone_number')
+    if(req.file) fillterBody.photo = req.file.filename
+
+    const user = await User.findByIdAndUpdate(req.params.id, fillterBody, {new: true, runValidators: true})
+
+    return res.status(200).json(user)
+})
+
+const updateMe = asyncHandler(async (req, res) =>{
+    
+    if(req.body.password ||req.body.passwordConfirm) {
+        return res.status(400).json("This route is not for updating password!")
+    }
+
+    const fillterBody = fillterObj(req.body, 'email', 'phone_number')
+    if(req.file) fillterBody.photo = req.file.filename
+
+    const user = await User.findByIdAndUpdate(req.user._id, fillterBody, {new: true, runValidators: true})
+
+    return res.status(200).json(user)
+})
+
+
 module.exports = {
     uploadUserPhoto,
-    resizeUserPhoto
+    resizeUserPhoto,
+    updateUserProfile,
+    updateMe
 }

@@ -1,4 +1,3 @@
-const fs = require("fs").promises
 const mongoose = require('mongoose')
 const Hospital = require("./models/hospital")
 const User = require("./models/user")

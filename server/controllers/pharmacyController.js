@@ -1,23 +1,48 @@
 
-const { getAllData, createNewDoc, deleteDoc, updateDoc, getDoc } = require("./handleController")
+const { getAllData, deleteDoc, updateDoc } = require("./handleController")
 const Pharmacy = require("../models/pharmacy")
 const asyncHandler = require("express-async-handler")
-const { signup } = require("./authController")
+const { default: mongoose } = require("mongoose")
+const User = require("../models/user")
 
 const getPharmacy = getAllData(Pharmacy)
+
 const addPharmacy = asyncHandler( async (req, res) =>{
     
+    if(req.file) req.body.photo = req.file.filename
+
     const {
-        name, user_id, address, description, phone_number, working_hours
+        name,email, photo, password, passwordConfirm, address, description, phone_number, working_hours
     } = req.body
 
-    const newPharmacyData = await Pharmacy.create({
-        name, address, user_id : user_id, description, phone_number, working_hours
-    })
+    const session = await mongoose.startSession()
+    session.startTransaction()
 
-    if(newPharmacyData) return res.status(200).json(newPharmacyData)
+    try{
 
-    return res.status(400).json("There was an error!")
+        const user = await User.create({
+            email,
+            photo: photo ? photo : 'default.jpg',
+            role: 'PHARMACY',
+            password,
+            passwordConfirm
+        })
+
+        const newPharmacyData = await Pharmacy.create({
+            name, address, user_id : user._id, description, phone_number, working_hours
+        })
+
+        if(newPharmacyData) return res.status(200).json(newPharmacyData)
+
+        await session.commitTransaction()
+        session.endSession()
+    
+    }catch(err) {
+        await session.abortTransaction()
+        session.endSession()
+
+        return res.status(400).json(err.message)
+    }
 })
 
 
