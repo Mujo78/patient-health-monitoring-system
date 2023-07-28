@@ -22,11 +22,10 @@ const signup = asyncHandler( async (req, res) =>{
     
     const {
         email, role, photo, password, passwordConfirm, 
-    } = req.userData
+    } = req.body
     
     const newUser = await User.create({
         email, role,
-        photo: photo ? photo : "",
         password, passwordConfirm
     })
 
@@ -54,7 +53,29 @@ const login = asyncHandler( async (req, res) => {
 
 })
 
+
+const changeMyPassword = asyncHandler ( async (req, res) =>{
+
+    const {
+        currentPassword,
+        newPassword,
+        confirmNewPassword
+    } = req.body;
+
+    const user = await User.findById(req.user._id).select("+password")
+
+    if(!(await user.correctPassword(currentPassword, user.password))){
+        return res.status(400).json("Wrong password!")
+    }
+
+    user.password = newPassword
+    user.passwordConfirm = confirmNewPassword
+    await user.save()
+
+    createToken(user, 200, res)
+})
 module.exports = {
     signup,
-    login
+    login,
+    changeMyPassword
 }

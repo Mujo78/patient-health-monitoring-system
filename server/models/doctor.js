@@ -56,4 +56,13 @@ const doctorSchema = mongoose.Schema({
 })
 
 
+doctorSchema.pre(/^find/, function(next) {
+    this.populate({
+      path: "user_id",
+      select: "email"
+    });
+  
+    next();
+  });
+
 module.exports = mongoose.model('Doctor', doctorSchema);

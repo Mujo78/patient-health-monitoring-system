@@ -1,3 +1,4 @@
+const fs = require("fs").promises
 const mongoose = require('mongoose')
 const Hospital = require("./models/hospital")
 const User = require("./models/user")
@@ -18,29 +19,45 @@ const hospitalData = {
 
 
 const seedDb = asyncHandler( async () =>{
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const existingOne = await Hospital.find();
-
-    if(existingOne.length === 0){
+    try{
+        const image = 'default.jpg'
+        const existingOne = await Hospital.find();
         
-        const newUserHospital = await User.create({
-            email: hospitalData.email,
-            role: 'HOSPITAL',
-            photo: "",
-            password: hospitalData.password,
-            passwordConfirm: hospitalData.password
-        })
+        if(existingOne.length === 0){
+            
+            const newUserHospital = await User.create([{
+                email: hospitalData.email,
+                role: 'HOSPITAL',
+                photo: image,
+                password: hospitalData.password,
+                passwordConfirm: hospitalData.password
+            }], {session})
+    
+            const newHospital = await Hospital.create([{
+                user_id: newUserHospital[0]._id,
+                name: hospitalData.name,
+                address: hospitalData.address,
+                description: hospitalData.description,
+                phone_number: hospitalData.phone_number
+            }], {session})
+    
+            console.log(`Hospital: ${newHospital[0].name} successfully created!`)
+            
+            await session.commitTransaction()
+            session.endSession()
 
-        const newHospital = await Hospital.create({
-            user_id: newUserHospital._id,
-            name: hospitalData.name,
-            address: hospitalData.address,
-            description: hospitalData.description,
-            phone_number: hospitalData.phone_number
-        })
+        }
+    }catch(err){
+        await session.abortTransaction()
+        session.endSession()
 
-        console.log("Hospital created!")
+        console.log(err.message)
     }
+
+
 })
 
 seedDb().then(() => {

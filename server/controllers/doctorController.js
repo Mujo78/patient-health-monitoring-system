@@ -54,6 +54,7 @@ const getAllDoctors = asyncHandler( async (req, res) => {
             department_id: req.params.departmentId
         }
     }
+    
     const doctors = await Doctor.find(filter)
 
     if(!doctors) return res.status(404).json("There was an error!")
