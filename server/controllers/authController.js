@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler")
-const User = require("../models/user");
+const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const Patient = require("../models/patient");
 
 const signToken = (id) =>{
     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -23,15 +25,38 @@ const signup = asyncHandler( async (req, res) =>{
     if(req.file) req.body.photo = req.file.filename
 
     const {
-        email, role, photo, password, passwordConfirm, 
+        email, photo, password, passwordConfirm,
+        first_name,
+        last_name, phone_number,
+        address, gender, blood_type, date_of_birth
     } = req.body
-    
-    const newUser = await User.create({
-        email, role, photo,
-        password, passwordConfirm
-    })
 
-    return res.status(200).json(newUser)
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try{
+        const newUser = await User.create([{
+            email, role: 'PATIENT', photo : photo ? photo : "",
+            password, passwordConfirm
+        }], {session})
+
+        const newPatient = await Patient.create([{
+            user_id: newUser[0]._id,
+            first_name, last_name, phone_number,
+            address, gender, blood_type, date_of_birth
+        }], {session})
+
+        await session.commitTransaction()
+        session.endSession()
+    
+        return res.status(200).json(newPatient)
+    }catch(err) {
+        await session.abortTransaction()
+        session.endSession()
+
+        return res.status(400).json(err.message)
+    }
+
 })
 
 
@@ -47,7 +72,7 @@ const login = asyncHandler( async (req, res) => {
 
     const user = await User.findOne({email}).select('+password')
 
-    if(!user || !(await user.correctPassword(password, user.password))){
+    if(!user || !(await user.correctPassword(password, user.password)) || user.active === false){
         return res.status(404).json("Incorrect password or email!")
     }
 

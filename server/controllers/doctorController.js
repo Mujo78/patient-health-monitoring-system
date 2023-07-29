@@ -2,7 +2,7 @@ const { updateDoc, getDoc } = require("./handleController")
 const Doctor = require("../models/doctor")
 const asyncHandler = require("express-async-handler")
 const User = require("../models/user")
-const { default: mongoose } = require("mongoose")
+const mongoose = require("mongoose")
 
 const addDoctor = asyncHandler( async (req, res) =>{
 

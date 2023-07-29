@@ -14,11 +14,13 @@ const appointmentSchema = mongoose.Schema({
     },
     diagnose:{
         type: String, 
-        required: [true, "Diagnose is required!"]
+        required: [true, "Diagnose is required!"],
+        default: ""
     },
     therapy: {
         type: String, 
-        required: [true, "Therapy is required!"]
+        required: [true, "Therapy is required!"],
+        default: ""
     },
     medicine_id:{
         type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +29,8 @@ const appointmentSchema = mongoose.Schema({
     },
     description: {
         type: String, 
-        required: false
+        required: false,
+        default: ""
     },
     reason: {
         type: String, 

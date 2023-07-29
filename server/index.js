@@ -9,6 +9,7 @@ const pharmacyRoutes = require("./routes/pharmacyRoutes")
 const departmentRoutes = require("./routes/departmentRoutes");
 const hospitalRoutes = require("./routes/hospitalRoutes")
 const doctorRoutes = require("./routes/doctorRoutes")
+const patientRoutes = require("./routes/patientRoutes")
 
 const { errorHandler } = require("./middlewares/errorMiddleware");
 
@@ -26,6 +27,7 @@ app.use("/medicine", medicineRoutes)
 app.use("/pharmacy", pharmacyRoutes)
 app.use("/hospital", hospitalRoutes)
 app.use("/doctor", doctorRoutes)
+app.use("/patient", patientRoutes)
 
 app.all('*', (req, res, next) =>{
 

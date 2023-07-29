@@ -45,7 +45,12 @@ const patientSchema = mongoose.Schema({
         type: Date,
         required: [true, "Date of birth is required!"]
     },
-    healt_card: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' }]
+    healt_card: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Appointment' 
+        }
+    ]
 }, {
     timestamps: true
 })
