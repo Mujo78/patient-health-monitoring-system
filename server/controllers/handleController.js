@@ -3,9 +3,8 @@ const {Model} = require("mongoose")
 const asyncHandler = require("express-async-handler")
 
 const getAllData = Model => asyncHandler (async (req, res) =>{
-
+    console.log(req.user._id)
     const data = await Model.find();
-
     if(data) return res.status(200).json(data)
     return res.status(404).json("There was an error")
 })

@@ -14,12 +14,12 @@ const appointmentSchema = mongoose.Schema({
     },
     diagnose:{
         type: String, 
-        required: [true, "Diagnose is required!"],
+        required: false,
         default: ""
     },
     therapy: {
-        type: String, 
-        required: [true, "Therapy is required!"],
+        type: String,
+        required: false,
         default: ""
     },
     medicine_id:{
@@ -42,7 +42,12 @@ const appointmentSchema = mongoose.Schema({
     },
     appointment_time: {
         type: String,
-        required: [true, "Time of an appointment is required!"]
+        required: [true, "Time of an appointment is required!"],
+        match: [/^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/, "Invalid time format (HH:mm or HH:mm:ss)"]
+    },
+    finished: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
