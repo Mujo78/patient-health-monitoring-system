@@ -29,42 +29,55 @@ const makeAppointment = asyncHandler( async (req, res) =>{
 
 const makeAppointmentFinished = asyncHandler( async (req, res) => {
 
-    if(req.body.doctor_id || req.body.reason || req.body.appointment_date || req.body.appointment_time){
+    if(req.body.doctor_id || req.body.patient_id || req.body.reason || req.body.appointment_date || req.body.appointment_time){
         return res.status(404).json("You can't edit fields: reason, date or time of appointment!")
     }
 
-    const app = await Appointment.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+    const app = await Appointment.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
 
     if(!app) return res.status(404).json("There was an error, please try again later!")
-
+    
     return res.status(200).json(app)
 })
 
 /*
+const editAppointmentInfo = asyncHandler ( async (req, res) => {
+
+    if(req.body.doctor_id || req.body.diagnose || req.body.therapy || req.bodydescription || req.body.finished){
+        return res.status(404).json("You can't edit fields: diagnose, therapy, description!")
+    }
+
+    const appToEdit = await Appointment.findById(req.params.id)
+
+    const date = new Date()
+    const d = date.toISOString().toString().slice(0, 10)
+    const time = date.toLocaleTimeString().toString()
+    console.log("object")
+})
+*/
+
+
 const getAppointmentForPatient = asyncHandler ( async (req, res) => {
-    console.log(req.user)
-    const patient = await Patient.findOne({user_id: req.user._id})
-    const allApp = await Appointment.findOne({patient_id : patient._id})
+
+    const patient = await Patient.findOne({user_id: req.params.id })
+    const allApp = await Appointment.find({patient_id: patient._id})
     
     if(!allApp) return res.status(404).json("There was an error, please try again later!")
     
     return res.status(200).json(allApp)
-    
 })
 
 const getAppointmentForDoctor = asyncHandler ( async (req, res) => {
     
-    console.log("")
-    console.log(req.user._id)
-
-    const doc = await Doctor.findOne({user_id: req.user._id})
+    const doc = await Doctor.findOne({user_id: req.params.id})
     const allApp = await Appointment.find({doctor_id : doc._id})
     
     if(!allApp) return res.status(404).json("There was an error, please try again later!")
     
     return res.status(200).json(allApp)
 })
-*/
+
+
 
 const getOneAppointment = getDoc(Appointment)
 const getAllAppointments = getAllData(Appointment)
@@ -73,9 +86,10 @@ const cancelAppointment = deleteDoc(Appointment)
 module.exports = {
     getOneAppointment,
     getAllAppointments,
-   // getAppointmentForPatient,
-    //getAppointmentForDoctor,
+    getAppointmentForPatient,
+    getAppointmentForDoctor,
     cancelAppointment,
     makeAppointment,
-    makeAppointmentFinished
+    makeAppointmentFinished,
+    //editAppointmentInfo
 }
