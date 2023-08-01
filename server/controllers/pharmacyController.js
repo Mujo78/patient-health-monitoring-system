@@ -12,7 +12,7 @@ const addPharmacy = asyncHandler( async (req, res) =>{
     if(req.file) req.body.photo = req.file.filename
 
     const {
-        name,email, photo, password, passwordConfirm, address, description, phone_number, working_hours
+        name,email, photo, password, passwordConfirm,passwordChangedAt, address, description, phone_number, working_hours
     } = req.body
 
     const session = await mongoose.startSession()
@@ -25,7 +25,8 @@ const addPharmacy = asyncHandler( async (req, res) =>{
             photo: photo ? photo : 'default.jpg',
             role: 'PHARMACY',
             password,
-            passwordConfirm
+            passwordConfirm,
+            passwordChangedAt
         })
 
         const newPharmacyData = await Pharmacy.create({

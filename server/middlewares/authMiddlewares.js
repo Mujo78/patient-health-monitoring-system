@@ -17,6 +17,9 @@ const protect = asyncHandler (async (req, res, next) => {
     const user = await User.findById(decoded.id)
 
     if(!user) return res.status(401).json("There was a problem with token!")
+    if(user.changedPasswordAfter(decoded.iat)){
+        return res.status(400).json('User recently changed password!')
+    }
 
     req.user = user;
 

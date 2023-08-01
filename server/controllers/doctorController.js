@@ -9,7 +9,7 @@ const addDoctor = asyncHandler( async (req, res) =>{
     if(req.file) req.body.photo = req.file.filename
 
     const {
-        first_name, last_name, photo, phone_number, address, speciality, qualification, bio
+        first_name, last_name, photo, phone_number, address, speciality, passwordChangedAt, qualification, bio
     } = req.body;
 
     
@@ -27,7 +27,8 @@ const addDoctor = asyncHandler( async (req, res) =>{
             role: 'DOCTOR',
             photo: photo ? photo : "",
             password: first_name.toLowerCase() + "." + last_name.toLowerCase(),
-            passwordConfirm: first_name.toLowerCase() + "." + last_name.toLowerCase()
+            passwordConfirm: first_name.toLowerCase() + "." + last_name.toLowerCase(),
+            passwordChangedAt
         }], {session})
         
         const newDoctor = await Doctor.create([{
@@ -50,7 +51,7 @@ const addDoctor = asyncHandler( async (req, res) =>{
 const getAllDoctors = asyncHandler( async (req, res) => {
 
     let filter = {}
-    console.log(req.params)
+
     if(req.params.departmentId){
         filter = {
             department_id: req.params.departmentId
