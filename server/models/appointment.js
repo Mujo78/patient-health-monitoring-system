@@ -27,6 +27,11 @@ const appointmentSchema = mongoose.Schema({
         ref: 'Medicine',
         required: false
     },
+    other_medicine: {
+        type: String,
+        required: false,
+        default: ""
+    },
     description: {
         type: String, 
         required: false,
@@ -40,12 +45,11 @@ const appointmentSchema = mongoose.Schema({
         type: Date,
         required: [true, "Date of an appointment is required!"]
     },
-    appointment_time: {
-        type: String,
-        required: [true, "Time of an appointment is required!"],
-        match: [/^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/, "Invalid time format (HH:mm or HH:mm:ss)"]
-    },
     finished: {
+        type: Boolean,
+        default: false
+    },
+    notification: {
         type: Boolean,
         default: false
     }

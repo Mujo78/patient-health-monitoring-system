@@ -1,9 +1,11 @@
 const asyncHandler = require("express-async-handler")
-const { getAllData, deleteDoc, updateDoc, getDoc } = require("./handleController")
-
+const { getAllData, deleteDoc, getDoc } = require("./handleController")
+const cron = require("node-cron")
 const Appointment = require("../models/appointment")
 const Patient = require("../models/patient")
 const Doctor = require("../models/doctor")
+const User = require("../models/user")
+const sendEmail = require("../utils/email")
 
 
 const makeAppointment = asyncHandler( async (req, res) =>{
@@ -23,6 +25,9 @@ const makeAppointment = asyncHandler( async (req, res) =>{
         appointment_date,
         appointment_time
     })
+
+    patient.health_card.push(newAppointment._id)
+    patient.save()
 
     return res.status(200).json(newAppointment)
 })
@@ -61,11 +66,51 @@ const getAppointmentForPatient = asyncHandler ( async (req, res) => {
 
     const patient = await Patient.findOne({user_id: req.params.id })
     const allApp = await Appointment.find({patient_id: patient._id})
-    
+
     if(!allApp) return res.status(404).json("There was an error, please try again later!")
-    
+     
     return res.status(200).json(allApp)
 })
+
+cron.schedule('* * * * *', async () => {
+    const allApp = await Appointment.find()
+
+    //console.log(new Date())
+    const currentTime = new Date().getTime()
+    const twentyMinutesFromNow = currentTime + 20 * 60 * 1000;
+
+    const upcomingAppointments = allApp.filter((appointment) => {
+        const appT = new Date(appointment.appointment_date).getTime()
+        return appT >= currentTime && appT <= twentyMinutesFromNow && !appointment.notification;
+    });
+
+    upcomingAppointments.forEach(async (el) => {
+        try{
+
+            const patient = await Patient.findById(el.patient_id)
+
+            if(!patient) return res.status(200).json("There was an error, please try again later!")
+
+            
+            const user = await User.findById(patient.user_id)
+
+            const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${el.appointment_date}`;
+
+            await sendEmail({
+                email: user.email,
+                subject: "Appointment reminder!",
+                message
+            })
+
+            el.notification = true
+            await el.save()
+
+        }catch(err) {
+            console.log(err.message)
+        }
+    })
+})
+
 
 const getAppointmentForDoctor = asyncHandler ( async (req, res) => {
     

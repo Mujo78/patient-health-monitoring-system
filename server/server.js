@@ -12,6 +12,8 @@ if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'))
 }
 
+console.log(process.env.NODE_ENV)
+
 
 app.listen(port, () => {console.log(`Server working on port: ${port}`)})
 

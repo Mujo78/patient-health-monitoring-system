@@ -59,14 +59,23 @@ const signup = asyncHandler( async (req, res) =>{
             email,
             subject: 'Email verification (valid for 2 hours)',
             message
+        }).catch(async (err) =>{
+
+            newUser[0].verificationToken = undefined
+            newUser[0].verificationTokenExpires = undefined
+            await newUser[0].save({validateBeforeSave: false});
+            
+            return res.status(400).json(err.message)
         })
 
         await session.commitTransaction()
         session.endSession()
-        return res.status(200).json(newUser)
+
+        return res.status(200).json(newUser[0])
 
     
     }catch(err) {
+
         await session.abortTransaction()
         session.endSession()
 
@@ -92,6 +101,17 @@ const verifyEmail = asyncHandler( async (req, res) => {
     user.verificationToken = undefined;
     user.verificationTokenExpires = undefined;
     await user.save()
+
+    try{
+        const message = `Dear, Welcome to the Patient Health System!`
+        await sendEmail({
+            email: user.email,
+            subject: 'Welcome to PHMS!',
+            message
+        })
+    }catch(err){
+        return res.status(404).json(err.message)
+    }
 
     return res.status(200).json("Email successfully verified!")
 })
@@ -179,7 +199,7 @@ const resetPassword = asyncHandler(async (req, res) =>{
     const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
     const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}})
 
-    if(!user) return res.status(400).json("Token is invalid or has expired!", 400)
+    if(!user) return res.status(400).json("Token is invalid or has expired!")
 
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
@@ -188,7 +208,6 @@ const resetPassword = asyncHandler(async (req, res) =>{
 
     await user.save();
     return res.status(200).json("Password reset: Success!")
-    // Optional: email
 })
 
 module.exports = {
