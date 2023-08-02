@@ -48,6 +48,19 @@ const signup = asyncHandler( async (req, res) =>{
             address, gender, blood_type, date_of_birth
         }], {session})
 
+        const verificationToken = newUser[0].createVerificationToken()
+        
+        await newUser[0].save({validateBeforeSave: false});
+
+        const verifyURL = `${req.protocol}://${req.get('host')}/api/v1/user/verify/${verificationToken}`
+        const message = `Dear ${newPatient[0].first_name}, To verify your account please click on the link: ${verifyURL} (if this doesnt work, please copy/paste it in your browser)`
+    
+        await sendEmail({
+            email,
+            subject: 'Email verification (valid for 2 hours)',
+            message
+        })
+
         await session.commitTransaction()
         session.endSession()
         return res.status(200).json(newUser)
@@ -60,6 +73,27 @@ const signup = asyncHandler( async (req, res) =>{
         return res.status(400).json(err.message)
     }
 
+})
+
+const verifyEmail = asyncHandler( async (req, res) => {
+
+    const tokenVerification = crypto.createHash('sha256').update(req.params.verificationToken).digest('hex')
+
+    const user = await User.findOne({
+        verificationToken: tokenVerification,
+        verificationTokenExpires: {$gt: Date.now()}
+    })
+
+    if(!user) return res.status(400).json("Invalid or expired verification token!")
+
+
+    user.isVerified = true;
+    user.active = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save()
+
+    return res.status(200).json("Email successfully verified!")
 })
 
 
@@ -156,10 +190,12 @@ const resetPassword = asyncHandler(async (req, res) =>{
     return res.status(200).json("Password reset: Success!")
     // Optional: email
 })
+
 module.exports = {
     signup,
     login,
     changeMyPassword,
     resetPassword,
-    forgotPassword
+    forgotPassword,
+    verifyEmail
 }

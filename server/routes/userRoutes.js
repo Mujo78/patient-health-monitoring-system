@@ -1,6 +1,6 @@
 
 const express = require("express");
-const { signup, login, changeMyPassword, resetPassword, forgotPassword } = require("../controllers/authController");
+const { signup, login, changeMyPassword, resetPassword, forgotPassword, verifyEmail } = require("../controllers/authController");
 const { protect, restrictTo } = require("../middlewares/authMiddlewares");
 const { uploadUserPhoto, resizeUserPhoto, updateUserProfile, updateMe } = require("../controllers/userController");
 
@@ -12,6 +12,7 @@ router.post("/login", login)
 
 router.patch("/forgotPassword", forgotPassword)
 router.patch("/resetPassword/:token", resetPassword)
+router.get("/verify/:verificationToken", verifyEmail)
 
 router.use(protect)
 
