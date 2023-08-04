@@ -5,7 +5,7 @@ const Appointment = require("../models/appointment")
 const Patient = require("../models/patient")
 const Doctor = require("../models/doctor")
 const User = require("../models/user")
-const sendEmail = require("../utils/email")
+const Email = require("../utils/email")
 
 
 const makeAppointment = asyncHandler( async (req, res) =>{
@@ -91,16 +91,12 @@ cron.schedule('* * * * *', async () => {
 
             if(!patient) return res.status(200).json("There was an error, please try again later!")
 
-            
             const user = await User.findById(patient.user_id)
 
             const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${el.appointment_date}`;
+            const subject = "Appointment reminder!"
 
-            await sendEmail({
-                email: user.email,
-                subject: "Appointment reminder!",
-                message
-            })
+            await new Email(user).send(subject, message)
 
             el.notification = true
             await el.save()

@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Patient = require("../models/patient");
-const sendEmail = require("../utils/email");
+const Email = require("../utils/email");
 
 const signToken = (id) =>{
     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -24,6 +24,9 @@ const createToken = (user, statusCode, res) =>{
     }
 const signup = asyncHandler( async (req, res) =>{
     
+    let newUser;
+    let newPatient;
+
     if(req.file) req.body.photo = req.file.filename
 
     const {
@@ -37,12 +40,12 @@ const signup = asyncHandler( async (req, res) =>{
     session.startTransaction()
 
     try{
-        const newUser = await User.create([{
+        newUser = await User.create([{
             email, role: 'PATIENT', photo : photo ? photo : "",
             password, passwordConfirm, passwordChangedAt
         }], {session})
 
-        const newPatient = await Patient.create([{
+        newPatient = await Patient.create([{
             user_id: newUser[0]._id,
             first_name, last_name, phone_number,
             address, gender, blood_type, date_of_birth
@@ -54,27 +57,19 @@ const signup = asyncHandler( async (req, res) =>{
 
         const verifyURL = `${req.protocol}://${req.get('host')}/api/v1/user/verify/${verificationToken}`
         const message = `Dear ${newPatient[0].first_name}, To verify your account please click on the link: ${verifyURL} (if this doesnt work, please copy/paste it in your browser)`
-    
-        await sendEmail({
-            email,
-            subject: 'Email verification (valid for 2 hours)',
-            message
-        }).catch(async (err) =>{
+        const subject = 'Email verification (valid for 2 hours)'
 
-            newUser[0].verificationToken = undefined
-            newUser[0].verificationTokenExpires = undefined
-            await newUser[0].save({validateBeforeSave: false});
-            
-            return res.status(400).json(err.message)
-        })
+        if(verificationToken) await new Email(newUser[0], newPatient[0].first_name).send(subject, message)
 
         await session.commitTransaction()
         session.endSession()
 
         return res.status(200).json(newUser[0])
 
-    
     }catch(err) {
+
+        if(newPatient) await Patient.findByIdAndDelete(newPatient[0]._id)
+        if(newUser) await User.findByIdAndDelete(newUser[0]._id)
 
         await session.abortTransaction()
         session.endSession()
@@ -95,7 +90,6 @@ const verifyEmail = asyncHandler( async (req, res) => {
 
     if(!user) return res.status(400).json("Invalid or expired verification token!")
 
-
     user.isVerified = true;
     user.active = true;
     user.verificationToken = undefined;
@@ -103,12 +97,9 @@ const verifyEmail = asyncHandler( async (req, res) => {
     await user.save()
 
     try{
-        const message = `Dear, Welcome to the Patient Health System!`
-        await sendEmail({
-            email: user.email,
-            subject: 'Welcome to PHMS!',
-            message
-        })
+        const patient = await Patient.findOne({user_id: user._id})
+        if(user.isVerified) await new Email(user, patient.first_name).sendWelcomeMessage()
+        
     }catch(err){
         return res.status(404).json(err.message)
     }
@@ -174,12 +165,9 @@ const forgotPassword = asyncHandler ( async (req, res) => {
 
         const resetURL = `${req.protocol}://${req.get('host')}/api/v1/user/resetPassword/${resetToken}`
         const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\n If this is not you, please ignore this email!`
-    
-        await sendEmail({
-            email: user.email,
-            subject: 'Your password reset token (valid for 10 minutes)',
-            message
-        })
+        const subject = 'Your password reset token (valid for 10 minutes)';
+
+        if(resetToken) await new Email(user).send(subject, message)
 
         return res.status(200).json("Token successfully sent!")
     }catch(err){
