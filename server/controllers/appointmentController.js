@@ -68,7 +68,6 @@ const getAppointmentForPatient = asyncHandler ( async (req, res) => {
     const allApp = await Appointment.find({patient_id: patient._id})
 
     if(!allApp) return res.status(404).json("There was an error, please try again later!")
-     
     return res.status(200).json(allApp)
 })
 

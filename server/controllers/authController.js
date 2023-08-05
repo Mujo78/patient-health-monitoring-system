@@ -21,7 +21,7 @@ const createToken = (user, statusCode, res) =>{
             token: token,
             data: user
         })
-    }
+}
 const signup = asyncHandler( async (req, res) =>{
     
     let newUser;
@@ -64,7 +64,7 @@ const signup = asyncHandler( async (req, res) =>{
         await session.commitTransaction()
         session.endSession()
 
-        return res.status(200).json(newUser[0])
+        return res.status(200).json(newUser[0]);
 
     }catch(err) {
 
