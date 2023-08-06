@@ -10,8 +10,8 @@ const router = express.Router()
 router.post("/signup", uploadUserPhoto, resizeUserPhoto, signup)
 router.post("/login", login)
 
-router.patch("/forgotPassword", forgotPassword)
-router.patch("/resetPassword/:token", resetPassword)
+router.patch("/forgot-password", forgotPassword)
+router.patch("/reset-password/:token", resetPassword)
 router.get("/verify/:verificationToken", verifyEmail)
 
 router.use(protect)

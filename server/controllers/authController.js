@@ -153,6 +153,7 @@ const changeMyPassword = asyncHandler ( async (req, res) =>{
 
 
 const forgotPassword = asyncHandler ( async (req, res) => {
+
     const user = await User.findOne({email: req.body.email})
 
     if(!user) return res.status(400).json("There is no user with that email address!")
@@ -163,7 +164,7 @@ const forgotPassword = asyncHandler ( async (req, res) => {
     
     try{
 
-        const resetURL = `${req.protocol}://${req.get('host')}/api/v1/user/resetPassword/${resetToken}`
+        const resetURL = `${process.env.URL_LINK}api/v1/user/reset-password/${resetToken}`
         const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\n If this is not you, please ignore this email!`
         const subject = 'Your password reset token (valid for 10 minutes)';
 

@@ -14,6 +14,10 @@ if(process.env.NODE_ENV === 'development'){
 
 console.log(process.env.NODE_ENV)
 
+if(process.env.NODE_ENV.match('production')){
+    process.env.URL_LINK = "url"
+}
+
 
 app.listen(port, () => {console.log(`Server working on port: ${port}`)})
 

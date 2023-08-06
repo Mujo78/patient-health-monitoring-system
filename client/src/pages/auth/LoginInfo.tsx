@@ -8,9 +8,9 @@ const LoginInfo: React.FC<Props> = ({ setSignUp}) => {
     }
   return (
             <>
-                <h1 className=' font-Rubik font-Poppins text-gray-300 text-4xl font-bold pb-7 text-center '>Login to be part of PHMS Family</h1>
-                <p className='text-gray-300 font-Poppins mb-10'>It to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <Button color="light" onClick={goSignUp}>Sign up</Button>
+                <h1 className=' font-Rubik font-Poppins text-white text-4xl font-bold pb-7 text-center '>New here?</h1>
+                <p className='text-white text-center font-Poppins mb-10'>Your health, your priority - sign up today!</p>
+                <Button color="gray" className='font-Poppins hover:!text-black' onClick={goSignUp}>Sign up</Button>
              </>
   )
 }

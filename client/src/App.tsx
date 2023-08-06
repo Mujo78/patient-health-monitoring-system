@@ -5,6 +5,7 @@ import AppLayout from './pages/AppLayout'
 import LandingPage from './pages/LandingPage'
 import HomeLayout from './pages/HomeLayout'
 import Dashboard from './pages/Dashboard'
+import ForgotPassword from './pages/auth/ForgotPassword'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -12,6 +13,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<HomeLayout />}>
       <Route path='/dashboard' element={<Dashboard />} />
     </Route>
+    <Route path='api/v1/user/reset-password/:token' element={<ForgotPassword />} />
   </Route>
 ))
 

@@ -1,6 +1,6 @@
 
 import axios from "axios"
-import { LoginUser } from "./authSlice"
+import { LoginUser, ResetPassword } from "./authSlice"
 
 const BASE_URL = "http://localhost:3001/api/v1/user"
 
@@ -18,9 +18,23 @@ const logout = () => {
     localStorage.removeItem("user")
 }
 
+const forgotPassword = async(email: string) => {
+    const response = await axios.patch(`${BASE_URL}/forgot-password`, {email})
+
+    return response.data;
+}
+
+const resetPassword = async (ResetPasswordData: ResetPassword) =>{
+    const response = await axios.patch(`${BASE_URL}/reset-password/${ResetPasswordData.token}`, ResetPasswordData)
+
+    return response.data;
+}
+
 const authServices = {
     login,
-    logout
+    logout,
+    forgotPassword,
+    resetPassword
 }
 
 export default authServices

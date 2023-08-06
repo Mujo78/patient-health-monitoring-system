@@ -16,14 +16,14 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className='text-start w-full h-screen flex items-center'>
-        <div className={`w-3/4 flex justify-center flex-col ${signup ? 'animate-slide-right' : 'animate-slide-back-right'}`}> 
+        <div className={`w-3/4 h-screen flex flex-col ${signup ? 'animate-slide-right' : 'animate-slide-back-right'}`}> 
         {signup ?
-           <div className={`w-2/4 mx-auto `}>
-               <SignUpForm />
+              <div className={`w-2/4 mx-auto `}>
+                <SignUpForm />
                </div> : 
-              <div className={`w-2/4 mx-auto`}>
+              <div className="h-screen">
                <LoginForm />
-           </div>
+              </div>
         }
   </div>
   <div className={`bg-blue-700 w-1/4 h-screen flex-col flex items-center justify-center ${signup ? 'animate-slide-left' : ' animate-slide-back-left'}`}>

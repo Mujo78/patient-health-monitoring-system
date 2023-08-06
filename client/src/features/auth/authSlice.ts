@@ -8,6 +8,12 @@ export interface LoginUser {
     password: string
 }
 
+export interface ResetPassword {
+    token: string,
+    password: string, 
+    passwordConfirm: string
+}
+
 interface AuthState {
     accessUser: any,
     status: 'idle' | 'loading' | 'failed',
@@ -35,10 +41,33 @@ export const login = createAsyncThunk("/auth/login", async(loginData: LoginUser,
     }
 })
 
+export const forgotPassword = createAsyncThunk("/auth/forgotPassword",  async(email: string, thunkAPI) => {
+    try {
+        return await authServices.forgotPassword(email)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const resetPassword = createAsyncThunk("/auth/resetPassword",  async(ResetPasswordData: ResetPassword, thunkAPI) => {
+    try {
+        return await authServices.resetPassword(ResetPasswordData)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const logout = createAsyncThunk("/auth/logout", async(_, thunkAPI) => {
     try{
-        return await authServices.logout()
+        return authServices.logout()
     }catch(error: any){
+        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
@@ -50,7 +79,8 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) => {
-            state.status = 'idle'
+            state.status = 'idle',
+            state.message = ''
         }
     },
     extraReducers(builder) {
@@ -66,6 +96,26 @@ export const authSlice = createSlice({
                 state.status = 'failed'
                 state.accessUser = null;
                 state.message = action.payload as string
+            })
+            .addCase(forgotPassword.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(forgotPassword.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(forgotPassword.fulfilled, (state, action) => {
+                state.status = 'idle'
+                state.message = action.payload as string
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(resetPassword.fulfilled, (state) => {
+                state.status = 'idle'
+            })
+            .addCase(resetPassword.rejected, (state) => {
+                state.status = 'failed'
             })
             .addCase(logout.fulfilled, (state) => {
                 state.accessUser = null
