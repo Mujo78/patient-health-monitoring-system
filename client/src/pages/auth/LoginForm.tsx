@@ -80,6 +80,7 @@ const LoginForm: React.FC = () => {
                         <TextInput
                             {...register("email")}
                             id="email"
+                            disabled={status === 'loading'}
                             icon={HiEnvelope}
                             color={errors.email && "failure"}
                             placeholder="name@example.com"
@@ -100,6 +101,7 @@ const LoginForm: React.FC = () => {
                             {...register("password")}
                             color={errors.password && "failure"}
                             id="password"
+                            disabled={status === 'loading'}
                             icon={HiLockClosed}
                             type="password"
                             />
@@ -112,7 +114,7 @@ const LoginForm: React.FC = () => {
                             </p>
                         </div>
                     </div>
-                    <CustomButton className='bg-blue-700 hover:!bg-blue-600 transition-colors duration-300' type="submit">
+                    <CustomButton disabled={status === 'loading'} className='bg-blue-700 hover:!bg-blue-600 transition-colors duration-300' type="submit">
                         Log in
                     </CustomButton>
                     </form>

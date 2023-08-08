@@ -7,6 +7,7 @@ import HomeLayout from './pages/HomeLayout'
 import Dashboard from './pages/Dashboard'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import VerificationPage from './pages/auth/VerificationPage'
+import ForgotPasswordRes from './pages/auth/ForgotPasswordRes'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -15,6 +16,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path='/dashboard' element={<Dashboard />} />
     </Route>
     <Route path='api/v1/user/reset-password/:token' element={<ForgotPassword />} />
+    <Route path='api/v1/user/reset-password-result' element={<ForgotPasswordRes />} />
     <Route path='api/v1/user/verify/:verificationToken' element={<VerificationPage />} />
   </Route>
 ))

@@ -1,8 +1,8 @@
 import { Label, Tabs, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { authUser, resetPassword } from '../../features/auth/authSlice'
+import { authUser, resetPassword, reset } from '../../features/auth/authSlice'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { resetPasswordValidationSchema } from '../../validations/auth/resetPasswordValidation'
 import { HiLockClosed } from 'react-icons/hi2'
@@ -10,7 +10,6 @@ import CustomButton from '../../components/CustomButton'
 import Logo from '../../components/Logo'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
-import img from "../../assets/check.png"
 
 type PasswordReset = {
   password: string,
@@ -19,7 +18,6 @@ type PasswordReset = {
 
 const ForgotPassword: React.FC = () => {
 
-  const [isSet, setIsSet] = useState<boolean>(false)
   const {token} = useParams()
   console.log(token)
   const navigate = useNavigate()
@@ -29,18 +27,18 @@ const ForgotPassword: React.FC = () => {
   const {status} = useSelector(authUser)
 
   const goToLoginPage = () => {
-    navigate("/")
-  }
+        navigate("/")
+    }
 
   const onSubmit = () => {
-
     const passwordsObject = {
       token: token ? token : "",
       password: getValues().password,
       passwordConfirm: getValues().passwordConfirm
     }
-    setIsSet(true)
+    reset()
     dispatch(resetPassword(passwordsObject))
+    navigate("/api/v1/user/reset-password-result", {replace: true})
   }
 
 
@@ -56,8 +54,7 @@ const ForgotPassword: React.FC = () => {
       </h1>
       <Tabs.Group className='mt-4'>
         <Tabs.Item
-          active={!isSet}
-          disabled={isSet}
+          active
           title='Password reset'
         >
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3 px-20'>
@@ -69,7 +66,7 @@ const ForgotPassword: React.FC = () => {
               <TextInput
               {...register("password")}
               id='password'
-              disabled={isSet}
+              disabled={status === 'loading'}
               color={errors.password && "failure"}
               icon={HiLockClosed}
                 type='password'
@@ -83,7 +80,7 @@ const ForgotPassword: React.FC = () => {
               <TextInput
               {...register("passwordConfirm")}
                 id='passwordConfirm'
-                disabled={isSet}
+                disabled={status === 'loading'}
                 color={errors.passwordConfirm && "failure"}
                 icon={HiLockClosed}
                 type='password'
@@ -92,36 +89,10 @@ const ForgotPassword: React.FC = () => {
                 <p className='text-red-600 text-xs'>{errors.passwordConfirm?.message}</p>
               </div>
             </div>
-            <CustomButton disabled={isSet} type='submit'>
+            <CustomButton disabled={status === 'loading'} type='submit'>
                 Reset Password
             </CustomButton>
           </form>
-        </Tabs.Item>
-        <Tabs.Item
-          disabled={!isSet}
-          active={isSet}
-          title='Result'
-        >
-          <div className='px-20 flex justify-center flex-col gap-4 items-center'>
-            {status === 'idle' ? 
-              <div className='flex justify-center items-center flex-col'>
-                <p className='text-sm'>
-                  You have successfully restarted your pasword!
-                </p>
-                <img src={img} className='h-[150px] w-[150px]' />
-              </div>
-              :
-              <div>
-                <p className='text-red-600 text-md font-semibold'>
-                  There was an error, please try again later!
-                </p>
-              </div>
-            }
-          <CustomButton onClick={goToLoginPage}>
-            Go to Login Page
-          </CustomButton>
-          </div>
-
         </Tabs.Item>
       </Tabs.Group>
     </div>

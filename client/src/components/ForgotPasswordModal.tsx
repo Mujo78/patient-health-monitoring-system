@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {Button, Label, Modal, Tabs, TextInput } from 'flowbite-react';
 import CustomButton from './CustomButton';
 import { HiEnvelope } from 'react-icons/hi2';
@@ -24,10 +24,19 @@ const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) =>
     }
 
     const handleClick = (event: React.FormEvent) => {
+        reset()
         event.preventDefault()
-        dispatch(fPassword(email))
-        setEmail("")
+        if(email !== ''){
+          dispatch(fPassword(email))
+        }
+        if(status === 'idle') setEmail("")
     }
+
+    useEffect(() =>{
+      if(status === 'idle'){
+        setEmail("")
+      }
+    }, [dispatch, status])
 
     const onChange = (event : React.FormEvent<HTMLInputElement>) =>{
         const {value} = event.currentTarget;
@@ -55,18 +64,21 @@ const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) =>
             />
             <TextInput
                 id='email'
+                disabled={status === 'loading'}
+                name='email'
+                value={email}
                 onChange={onChange}
                 icon={HiEnvelope}
                 placeholder='name@example.com'
                 type='email'
             />
-            <div className='h-3'>
+            {status !== 'loading' && <div className='h-3'>
                 {
                     message !== "" && <p className={`${status === 'idle' ? 'text-green-600' : 'text-red-600'} text-xs mt-1`}>{message}</p>
                 }
-            </div>
+            </div>}
           </div>
-          <CustomButton type='submit'>
+          <CustomButton  disabled={status === 'loading'} type='submit'>
             Continue
           </CustomButton>
         </form>

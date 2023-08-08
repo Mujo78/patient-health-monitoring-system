@@ -7,9 +7,9 @@ const SignUpInfo: React.FC<Props> = ({setSignUp}) => {
         setSignUp(n => !n)
     }
   return (
-            <div className='font-Poppins'>
-                <h1 className=' text-white text-3xl font-bold pb-7 text-center '>Already have an account?</h1>
-                <p className='text-white mb-10'>Step into a world of healing and care</p>
+            <div className='font-Poppins  flex flex-col gap-10'>
+                <h1 className=' text-white text-3xl font-bold text-center '>Already have an account?</h1>
+                <p className='text-white'>Step into a world of healing and care.</p>
                 <Button color="gray" className="w-full hover:!text-black" onClick={goLogin}>Log in</Button>
              </div>
   )
