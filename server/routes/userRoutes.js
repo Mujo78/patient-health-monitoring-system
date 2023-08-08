@@ -14,9 +14,8 @@ router.patch("/forgot-password", forgotPassword)
 router.patch("/reset-password/:token", resetPassword)
 router.get("/verify/:verificationToken", verifyEmail)
 
-router.use(protect)
 
-router.patch("/change-password", changeMyPassword)
+router.patch("/change-password",protect, changeMyPassword)
 router.patch("/update-me", uploadUserPhoto, resizeUserPhoto, updateMe)
 
 router.use(restrictTo('HOSPITAL'))

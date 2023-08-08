@@ -36,12 +36,13 @@ const signup = asyncHandler( async (req, res) =>{
         address, gender, blood_type, date_of_birth
     } = req.body
 
+    console.log(req.body)
     const session = await mongoose.startSession()
     session.startTransaction()
 
     try{
         newUser = await User.create([{
-            email, role: 'PATIENT', photo : photo ? photo : "",
+            email, role: 'PATIENT', photo : photo !== 'undefined' ? photo : "",
             password, passwordConfirm, passwordChangedAt
         }], {session})
 
@@ -55,7 +56,7 @@ const signup = asyncHandler( async (req, res) =>{
         
         await newUser[0].save({validateBeforeSave: false});
 
-        const verifyURL = `${req.protocol}://${req.get('host')}/api/v1/user/verify/${verificationToken}`
+        const verifyURL = `${process.env.URL_LINK}api/v1/user/verify/${verificationToken}`
         const message = `Dear ${newPatient[0].first_name}, To verify your account please click on the link: ${verifyURL} (if this doesnt work, please copy/paste it in your browser)`
         const subject = 'Email verification (valid for 2 hours)'
 
@@ -64,7 +65,7 @@ const signup = asyncHandler( async (req, res) =>{
         await session.commitTransaction()
         session.endSession()
 
-        return res.status(200).json(newUser[0]);
+        return res.status(200).json('Verification email has been sent!');
 
     }catch(err) {
 
@@ -81,7 +82,7 @@ const signup = asyncHandler( async (req, res) =>{
 
 const verifyEmail = asyncHandler( async (req, res) => {
 
-    const tokenVerification = crypto.createHash('sha256').update(req.params.verificationToken).digest('hex')
+    const tokenVerification = crypto.createHash('sha256').update(req.body.verificationToken).digest('hex')
 
     const user = await User.findOne({
         verificationToken: tokenVerification,

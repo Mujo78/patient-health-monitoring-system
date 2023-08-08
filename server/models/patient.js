@@ -19,7 +19,7 @@ const patientSchema = mongoose.Schema({
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
-        unique: [true, "Phone number must be unique"],
+        unique: [true, "Phone number already used!"],
         maxlength: 12,
         validate: {
             validator: async function(value){

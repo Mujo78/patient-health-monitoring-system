@@ -8,6 +8,20 @@ export interface LoginUser {
     password: string
 }
 
+export interface PatientUser {
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    address: string,
+    gender: string,
+    photo: File,
+    blood_type: string,
+    date_of_birth: Date,
+    email: string,
+    password: string,
+    passwordConfirm: string
+}
+
 export interface ResetPassword {
     token: string,
     password: string, 
@@ -16,7 +30,7 @@ export interface ResetPassword {
 
 interface AuthState {
     accessUser: any,
-    status: 'idle' | 'loading' | 'failed',
+    status: 'idle' | 'loading' | 'failed' | '',
     message: string
 }
 
@@ -25,7 +39,7 @@ const storedObj = user !== null ? JSON.parse(user) : null
 
 const initialState: AuthState = {
     accessUser: storedObj,
-    status: 'idle',
+    status: '',
     message: ''
 }
 
@@ -39,6 +53,28 @@ export const login = createAsyncThunk("/auth/login", async(loginData: LoginUser,
 
         return thunkAPI.rejectWithValue(message)
     }
+})
+
+export const signup = createAsyncThunk("/auth/signup", async(signupData : PatientUser, thunkAPI) => {
+    try {
+        return await authServices.signup(signupData)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+        
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const verifyEmailAddress = createAsyncThunk("/auth/verify",async (verificationToken:string, thunkAPI) => {
+    try {
+        return await authServices.verifyEmail(verificationToken)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+        
+        return thunkAPI.rejectWithValue(message)
+    }    
 })
 
 export const forgotPassword = createAsyncThunk("/auth/forgotPassword",  async(email: string, thunkAPI) => {
@@ -79,7 +115,7 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) => {
-            state.status = 'idle',
+            state.status = '',
             state.message = ''
         }
     },
@@ -96,6 +132,17 @@ export const authSlice = createSlice({
                 state.status = 'failed'
                 state.accessUser = null;
                 state.message = action.payload as string
+            })
+            .addCase(signup.pending, (state) =>{
+                state.status = 'loading'
+            })
+            .addCase(signup.rejected, (state, action) => {
+                state.status = 'failed'
+                state.message = action.payload as string
+            })
+            .addCase(signup.fulfilled, (state, action) => {
+                state.message = action.payload as string
+                state.status = 'idle'
             })
             .addCase(forgotPassword.pending, (state) => {
                 state.status = 'loading'
@@ -119,6 +166,17 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.accessUser = null
+            })
+            .addCase(verifyEmailAddress.pending, (state) =>{
+                state.status = 'loading'
+            })
+            .addCase(verifyEmailAddress.rejected, (state, action) =>{
+                state.status = 'failed'
+                state.message = action.payload as string
+            })
+            .addCase(verifyEmailAddress.fulfilled, (state, action) =>{
+                state.status = 'idle'
+                state.message = action.payload as string
             })
     }
 })

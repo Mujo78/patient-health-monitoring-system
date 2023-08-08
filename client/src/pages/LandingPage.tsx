@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
     <div className='text-start w-full h-screen flex items-center'>
         <div className={`w-3/4 h-screen flex flex-col ${signup ? 'animate-slide-right' : 'animate-slide-back-right'}`}> 
         {signup ?
-              <div className={`w-2/4 mx-auto `}>
+              <div className='h-screen'>
                 <SignUpForm />
                </div> : 
               <div className="h-screen">

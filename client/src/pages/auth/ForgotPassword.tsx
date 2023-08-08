@@ -19,7 +19,7 @@ type PasswordReset = {
 
 const ForgotPassword: React.FC = () => {
 
-  const [step, setStep] = useState<number>(1)
+  const [isSet, setIsSet] = useState<boolean>(false)
   const {token} = useParams()
   console.log(token)
   const navigate = useNavigate()
@@ -39,9 +39,8 @@ const ForgotPassword: React.FC = () => {
       password: getValues().password,
       passwordConfirm: getValues().passwordConfirm
     }
-
+    setIsSet(true)
     dispatch(resetPassword(passwordsObject))
-    setStep(2)
   }
 
 
@@ -57,8 +56,8 @@ const ForgotPassword: React.FC = () => {
       </h1>
       <Tabs.Group className='mt-4'>
         <Tabs.Item
-          active={step===1}
-          disabled={step ===2}
+          active={!isSet}
+          disabled={isSet}
           title='Password reset'
         >
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3 px-20'>
@@ -70,6 +69,7 @@ const ForgotPassword: React.FC = () => {
               <TextInput
               {...register("password")}
               id='password'
+              disabled={isSet}
               color={errors.password && "failure"}
               icon={HiLockClosed}
                 type='password'
@@ -83,6 +83,7 @@ const ForgotPassword: React.FC = () => {
               <TextInput
               {...register("passwordConfirm")}
                 id='passwordConfirm'
+                disabled={isSet}
                 color={errors.passwordConfirm && "failure"}
                 icon={HiLockClosed}
                 type='password'
@@ -91,14 +92,14 @@ const ForgotPassword: React.FC = () => {
                 <p className='text-red-600 text-xs'>{errors.passwordConfirm?.message}</p>
               </div>
             </div>
-            <CustomButton type='submit'>
+            <CustomButton disabled={isSet} type='submit'>
                 Reset Password
             </CustomButton>
           </form>
         </Tabs.Item>
         <Tabs.Item
-          disabled={step === 1}
-          active={step === 2}
+          disabled={!isSet}
+          active={isSet}
           title='Result'
         >
           <div className='px-20 flex justify-center flex-col gap-4 items-center'>

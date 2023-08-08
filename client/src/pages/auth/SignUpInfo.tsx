@@ -7,11 +7,11 @@ const SignUpInfo: React.FC<Props> = ({setSignUp}) => {
         setSignUp(n => !n)
     }
   return (
-            <>
-                <h1 className=' font-Rubik text-gray-300 text-4xl font-bold pb-7 text-center '>Sign up</h1>
-                <p className='text-gray-300 mb-10'>It maining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <Button color="light" onClick={goLogin}>Log in</Button>
-             </>
+            <div className='font-Poppins'>
+                <h1 className=' text-white text-3xl font-bold pb-7 text-center '>Already have an account?</h1>
+                <p className='text-white mb-10'>Step into a world of healing and care</p>
+                <Button color="gray" className="w-full hover:!text-black" onClick={goLogin}>Log in</Button>
+             </div>
   )
 }
 

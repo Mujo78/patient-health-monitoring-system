@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         'Poppins': ['Poppins', 'sans-serif'],
-        'Sono': ['Sono', 'sans-serif']
+        'Roboto': ['Roboto', 'sans-serif']
       },
       animation: {
         'slide-left': 'slide-left 2s  ease-out forwards',
