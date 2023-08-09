@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import SignUpForm from "./auth/SignUpForm"
 import LoginForm from "./auth/LoginForm"
 import SignUpInfo from "./auth/SignUpInfo"
 import LoginInfo from "./auth/LoginInfo"
+import { useNavigate } from "react-router-dom"
 
 
 export type Props = {
@@ -13,6 +14,16 @@ export type Props = {
 const LandingPage: React.FC = () => {
 
     const [signup, setSignUp] = useState<boolean>(false)
+    const user = localStorage.getItem("user")
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(user){
+      navigate("/dashboard")
+    }else{
+      navigate("/")
+    }
+  }, [user, navigate])
 
   return (
     <div className='text-start w-full h-screen flex items-center'>

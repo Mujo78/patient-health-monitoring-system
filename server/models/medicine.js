@@ -6,7 +6,7 @@ const medicineSchema = mongoose.Schema({
         type: String,
         required: [true, "Name is required!"],
         minlength: [2, "Name is too short!"],
-        unique: [true, "Name must be unique!"]
+        unique: true
     },
     pharmacy_id: {
         type: mongoose.Schema.Types.ObjectId,

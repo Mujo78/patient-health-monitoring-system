@@ -26,7 +26,7 @@ const doctorSchema = mongoose.Schema({
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
-        unique: [true, "Phone number must be unique"],
+        unique: true,
         maxlength: 12,
         validate: {
             validator: async function(value){

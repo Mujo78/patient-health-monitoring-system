@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     email:{
         type: String,
         required: [true, "Email is required!"],
-        unique: [true, 'Email already used!'],
+        unique: true,
         lowercase: true,
         maxlength: 100,
         validate: [validator.isEmail, "Please provide valid email!"]

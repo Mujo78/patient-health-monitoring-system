@@ -82,7 +82,7 @@ const signup = asyncHandler( async (req, res) =>{
 
 const verifyEmail = asyncHandler( async (req, res) => {
 
-    const tokenVerification = crypto.createHash('sha256').update(req.body.verificationToken).digest('hex')
+    const tokenVerification = crypto.createHash('sha256').update(req.params.verificationToken).digest('hex')
 
     const user = await User.findOne({
         verificationToken: tokenVerification,

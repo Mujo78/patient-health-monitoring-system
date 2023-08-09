@@ -32,22 +32,26 @@ const SignUpForm: React.FC = () => {
 
 
   const onSubmit = async (data: PatientUser) => {
-    
     dispatch(signup(data))
-    console.log(data)
   }
+
+  useEffect(() => {
+    if(status === 'idle') reset()
+  }, [status, reset])
 
   return (
     <div className='flex h-screen font-Poppins justify-between flex-row-reverse '>
+      
       <div className='ml-auto'>
         <Logo />
       </div>
+      
       <div className='w-3/4 flex justify-center items-center flex-col'>
+        {status === 'loading' ? <Spinner /> :
+        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className='flex w-full justify-center flex-col items-center'>
         <h1 className='text-4xl font-Poppins flex justify-center mb-6 font-bold'>
             Create a new account
         </h1>
-        {status === 'loading' ? <Spinner /> :
-        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className='flex w-full justify-center flex-col items-center'>
           <div className='w-3/5'>
           <div className='flex justify-between'>
             <div className='border relative rounded-lg'>
@@ -132,9 +136,9 @@ const SignUpForm: React.FC = () => {
               <TextInput id='passwordConfirm' type='password' {...register("passwordConfirm")} color={errors.passwordConfirm && 'failure'}   />
               <ErrorMessage text={errors.passwordConfirm?.message} />
             </div>
-            <div className='flex justify-end'>
-            
-              <CustomButton type='submit'>Sign up</CustomButton>
+            <div className='flex justify-between'>
+              {status === 'idle' && <Alert className='flex items-center justify-center h-10 text-center'><b>Action Required:</b> Please verify your email address.</Alert>}
+              <CustomButton className='ml-auto' type='submit'>Sign up</CustomButton>
             </div>
           </div>
         </form>}

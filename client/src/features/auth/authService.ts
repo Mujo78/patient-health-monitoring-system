@@ -54,7 +54,7 @@ const resetPassword = async (ResetPasswordData: ResetPassword) =>{
 }
 
 const verifyEmail = async (verificationToken:string) => {
-    const response = await axios.patch(`${BASE_URL}/verify/${verificationToken}`, verificationToken)
+    const response = await axios.get(`${BASE_URL}/verify/${verificationToken}`)
 
     return response.data;
 } 

@@ -10,7 +10,7 @@ const pharmacySchema = mongoose.Schema({
     name:{
         type: String,
         required: [true, "Name is required!"],
-        unique: [true, 'Name must be unique!'],
+        unique: true,
     },
     address: {
         type: String,
@@ -23,7 +23,7 @@ const pharmacySchema = mongoose.Schema({
     phone_number: {
         type: String,
         required: [true, "Phone number is required!"],
-        unique: [true, "Phone number must be unique"],
+        unique: true,
         maxlength: 12,
         validate: {
             validator: async function(value){

@@ -8,16 +8,20 @@ import Dashboard from './pages/Dashboard'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import VerificationPage from './pages/auth/VerificationPage'
 import ForgotPasswordRes from './pages/auth/ForgotPasswordRes'
+import VerificationPageRes from './pages/auth/VerificationPageRes'
+import Authorized from './helpers/Authorized'
+import UserRequired from './helpers/UserRequired'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
-    <Route index element={<LandingPage />} />
-    <Route path='/' element={<HomeLayout />}>
+    <Route index element={<LandingPage />} loader={Authorized} />
+    <Route path='/' element={<HomeLayout />} loader={UserRequired}>
       <Route path='/dashboard' element={<Dashboard />} />
     </Route>
     <Route path='api/v1/user/reset-password/:token' element={<ForgotPassword />} />
     <Route path='api/v1/user/reset-password-result' element={<ForgotPasswordRes />} />
     <Route path='api/v1/user/verify/:verificationToken' element={<VerificationPage />} />
+    <Route path='api/v1/user/verify-result' element={<VerificationPageRes />} />
   </Route>
 ))
 
