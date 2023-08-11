@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Patient = require("../models/patient");
+const Doctor = require("../models/doctor");
+const Pharmacy = require("../models/pharmacy")
 const Email = require("../utils/email");
 
 const signToken = (id) =>{
@@ -12,14 +14,30 @@ const signToken = (id) =>{
     })
 }
 
-const createToken = (user, statusCode, res) =>{
+const createToken = async (user, statusCode, res) =>{
     const token = signToken(user._id)
+
+    let ModelToUse;
+    if(user.role === 'PATIENT') ModelToUse = Patient
+    else if(user.role === 'DOCTOR') ModelToUse = Doctor
+    else ModelToUse = Pharmacy
 
     user.password = undefined
 
+    const info = await ModelToUse.findOne({user_id: user._id})
+    let inf = {}
+
+    if(info.name){
+        inf.name = info.name
+    }else{
+        inf.first_name = info.first_name,
+        inf.last_name = info.last_name
+    }
+
     res.status(statusCode).json({
             token: token,
-            data: user
+            data: user,
+            info: inf
         })
 }
 const signup = asyncHandler( async (req, res) =>{

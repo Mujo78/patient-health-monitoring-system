@@ -63,11 +63,11 @@ const SignUpForm: React.FC = () => {
             </div>
             <div className='w-3/5'>
               <Label htmlFor='first_name' value='First Name'  />
-              <TextInput {...register("first_name")} type='text' color={errors.first_name && 'failure'} />
+              <TextInput id='first_name' {...register("first_name")} type='text' color={errors.first_name && 'failure'} />
               <ErrorMessage text={errors.first_name?.message} />
 
               <Label htmlFor='last_name' value='Last Name'  />
-              <TextInput {...register("last_name")} type='text' color={errors.last_name && 'failure'} />
+              <TextInput id='last_name' {...register("last_name")} type='text' color={errors.last_name && 'failure'} />
               <ErrorMessage text={errors.last_name?.message} />
             </div>
           </div>

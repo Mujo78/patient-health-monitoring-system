@@ -1,15 +1,26 @@
 import React from 'react'
-import { logout } from '../features/auth/authSlice'
-import { Button } from 'flowbite-react'
-import { useAppDispatch } from '../app/hooks'
+import { Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { authUser } from '../features/auth/authSlice'
+import PatientSidebar from './patient/PatientSidebar'
+import DoctorSidebar from './doctor/DoctorSidebar'
+import PharmacySidebar from './pharmacy/PharmacySidebar'
+import CustomNavbar from '../components/CustomNavbar'
 
 const HomeLayout: React.FC = () => {
-  const dispatch = useAppDispatch()
 
+  const {accessUser} = useSelector(authUser)
   return (
-    <div>
-      Home
-      <Button onClick={() => dispatch(logout())}>Logout</Button>
+    <div className='flex w-full'>
+      <div className=' flex w-full'>
+        {accessUser.data.role === 'PATIENT' && <PatientSidebar />}
+        {accessUser.data.role === 'DOCTOR' && <DoctorSidebar />}
+        {accessUser.data.role === 'PHARMACY' && <PharmacySidebar />}
+        <div className='flex flex-col w-full'>
+          <CustomNavbar />
+          <Outlet />
+        </div>
+      </div>
     </div>
   )
 }

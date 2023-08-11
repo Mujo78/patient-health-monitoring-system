@@ -2,6 +2,7 @@ const express = require("express")
 const morgan = require("morgan")
 const cors = require('cors')
 const app = express();
+const path = require("path")
 
 const userRoutes = require("./routes/userRoutes")
 const medicineRoutes = require("./routes/medicineRoutes")
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use(cors({
     origin: "*",
 }))
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/department", departmentRoutes)
