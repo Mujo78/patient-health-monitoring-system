@@ -2,9 +2,12 @@ import { redirect } from 'react-router-dom';
 
 const Authorized = () => {
     const user = localStorage.getItem("user")
+    const userObj = user && JSON.parse(user)
 
-    if (user) {
-        return redirect('/dashboard');
+    const route = userObj?.data.role.toLowerCase();
+
+    if (userObj) {
+        return redirect(`/${route}/${userObj.data._id}`);
     }
 
     return null

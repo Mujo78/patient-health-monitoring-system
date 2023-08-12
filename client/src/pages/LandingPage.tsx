@@ -15,15 +15,18 @@ const LandingPage: React.FC = () => {
 
     const [signup, setSignUp] = useState<boolean>(false)
     const user = localStorage.getItem("user")
-  const navigate = useNavigate()
+    const userObj = user && JSON.parse(user)
+    const navigate = useNavigate()
+
+    const route = userObj?.data.role.toLowerCase();
 
   useEffect(() => {
-    if(user){
-      navigate("/dashboard")
+    if(userObj){
+      navigate(`/${route}/${userObj.data._id}`)
     }else{
       navigate("/")
     }
-  }, [user, navigate])
+  }, [userObj,route, navigate])
 
   return (
     <div className='text-start w-full h-screen flex items-center'>

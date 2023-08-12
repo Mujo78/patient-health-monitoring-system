@@ -18,6 +18,10 @@ const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) =>
     const {message, status} = useSelector(authUser)
     const [email, setEmail] = useState<string>("")
 
+    useEffect(() =>{
+      if(forgotPassword) reset()
+    }, [forgotPassword])
+
     const onClose = () => {
         dispatch(reset())
         setForgotPassword(false)

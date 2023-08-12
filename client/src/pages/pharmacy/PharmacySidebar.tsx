@@ -4,7 +4,7 @@ import { Sidebar } from 'flowbite-react'
 
 const PharmacySidebar: React.FC = () => {
   return (
-    <RootSidebar>
+    <RootSidebar color='green-500'>
         <Sidebar.Item>
             Pharmacy Sidebar
         </Sidebar.Item>

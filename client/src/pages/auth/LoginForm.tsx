@@ -28,21 +28,22 @@ const LoginForm: React.FC = () => {
     const dispatch = useAppDispatch();
     const {accessUser, status, message} = useSelector(authUser)
 
+    const route = accessUser?.data.role.toLowerCase();
+
     useEffect(() =>{
         dispatch(resetAuth())
     }, [dispatch])
 
     useEffect(() =>{
         if(accessUser !== null && status === 'idle'){
-            navigate("/dashboard")
+            navigate(`/${route}/${accessUser.data._id}`)
         }else{
             navigate("/")
         }
-    }, [accessUser, status, navigate])
+    }, [accessUser, status, route, navigate])
     
     
     const onSubmit = (data: User) => {
-        console.log(data)
         dispatch(login(data))
     }
 
@@ -109,9 +110,9 @@ const LoginForm: React.FC = () => {
                             <p className='text-red-600 text-xs'>
                                 {errors.password ? errors.password.message : forgotPassword ? "" : message ? message : ""}
                             </p>
-                            <p className='text-xs underline cursor-pointer' onClick={forgotPasswordShow}>
+                            <button className='text-xs underline p-0 m-0 !bg-white text-black cursor-pointer'  disabled={status==='loading'} onClick={forgotPasswordShow}>
                                 Forgot password?
-                            </p>
+                            </button>
                         </div>
                     </div>
                     <CustomButton disabled={status === 'loading'} className='bg-blue-700 hover:!bg-blue-600 transition-colors duration-300' type="submit">
