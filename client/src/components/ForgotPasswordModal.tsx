@@ -3,8 +3,8 @@ import {Button, Label, Modal, Tabs, TextInput } from 'flowbite-react';
 import CustomButton from './CustomButton';
 import { HiEnvelope } from 'react-icons/hi2';
 import { useAppDispatch } from '../app/hooks';
-import { useSelector } from 'react-redux';
-import { authUser, forgotPassword as fPassword, reset } from '../features/auth/authSlice';
+import forgotPasswordMethod from "../service/authSideFunctions"
+import {reset } from '../features/auth/authSlice';
 
 type Props = {
   forgotPassword: boolean,
@@ -15,32 +15,27 @@ type Props = {
 const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) => {
 
     const dispatch = useAppDispatch()
-    const {message, status} = useSelector(authUser)
     const [email, setEmail] = useState<string>("")
+    const [response, setResponse] = useState<string>("")
 
     useEffect(() =>{
-      if(forgotPassword) reset()
-    }, [forgotPassword])
+      if(response.startsWith("Token")){
+        setEmail("")
+      }
+    }, [response])
 
     const onClose = () => {
         dispatch(reset())
         setForgotPassword(false)
     }
 
-    const handleClick = (event: React.FormEvent) => {
-        reset()
+    const handleClick = async (event: React.FormEvent) => {
         event.preventDefault()
         if(email !== ''){
-          dispatch(fPassword(email))
+          const res = await forgotPasswordMethod(email)
+          setResponse(res)
         }
-        if(status === 'idle') setEmail("")
     }
-
-    useEffect(() =>{
-      if(status === 'idle'){
-        setEmail("")
-      }
-    }, [dispatch, status])
 
     const onChange = (event : React.FormEvent<HTMLInputElement>) =>{
         const {value} = event.currentTarget;
@@ -76,13 +71,13 @@ const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) =>
                 placeholder='name@example.com'
                 type='email'
             />
-            {status !== 'loading' && <div className='h-3'>
+            <div className='h-3'>
                 {
-                    message !== "" && <p className={`${status === 'idle' ? 'text-green-600' : 'text-red-600'} text-xs mt-1`}>{message}</p>
+                    response !== "" && <p className={`${response.startsWith("Token") ? 'text-green-600' : 'text-red-600'} text-xs mt-1`}>{response}</p>
                 }
-            </div>}
+            </div>
           </div>
-          <CustomButton  disabled={status === 'loading'} type='submit'>
+          <CustomButton type='submit'>
             Continue
           </CustomButton>
         </form>

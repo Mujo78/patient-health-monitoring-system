@@ -1,33 +1,44 @@
 import React from 'react'
 import RootSidebar from '../../components/RootSidebar'
 import { Sidebar } from 'flowbite-react'
-import {HiOutlineChartBar, HiOutlineCalendarDays,HiOutlineQuestionMarkCircle, HiOutlineBuildingOffice2,HiOutlineCog6Tooth, HiOutlineDocumentText} from "react-icons/hi2"
+import {HiOutlineChartBar,HiOutlineClock, HiOutlineCalendarDays, HiOutlineBuildingOffice2,HiOutlineCog6Tooth, HiOutlineDocumentText} from "react-icons/hi2"
 import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { authUser } from '../../features/auth/authSlice'
 
 const PatientSidebar: React.FC = () => {
+
+  const {accessUser} = useSelector(authUser)
+
   return (
     <RootSidebar color='blue-700'>
         <Sidebar.Item as={NavLink}
           icon={HiOutlineChartBar}
-          to={"/"}
+          to={`/patient/${accessUser?.data._id}`}
         >
             Dashboard
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           icon={HiOutlineCalendarDays}
-          to={"/appoitments"}
+          to={"/my-appointments"}
           >
-            Appointments
+            My Appointments
+        </Sidebar.Item>
+        <Sidebar.Item as={NavLink}
+          icon={HiOutlineClock}
+          to={"/new-appointment"}
+          >
+            Book Appointment
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           icon={HiOutlineBuildingOffice2}
-          to={"/medical-staff"}
+          to={"/staff"}
           >
             Medical staff
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           icon={HiOutlineDocumentText}
-          to={"/medicine"}
+          to={"/medicine-overview"}
           >
             Medicine
         </Sidebar.Item>
@@ -37,12 +48,6 @@ const PatientSidebar: React.FC = () => {
           to={"/settings"}
           >
             Settings
-        </Sidebar.Item>
-        <Sidebar.Item as={NavLink}
-          icon={HiOutlineQuestionMarkCircle}
-          to={"/help"}
-          >
-            Help
         </Sidebar.Item>
         </Sidebar.ItemGroup>
     </RootSidebar>

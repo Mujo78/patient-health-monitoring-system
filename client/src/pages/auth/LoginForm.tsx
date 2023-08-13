@@ -47,8 +47,8 @@ const LoginForm: React.FC = () => {
         dispatch(login(data))
     }
 
-    const forgotPasswordShow = () =>{
-        dispatch(resetAuth())
+    const forgotPasswordShow = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+        event.preventDefault()
         setForgotPassword(true)
     }
 
@@ -107,15 +107,14 @@ const LoginForm: React.FC = () => {
                             type="password"
                             />
                         <div  className='h-4 flex justify-between mt-1'>
-                            <p className='text-red-600 text-xs'>
-                                {errors.password ? errors.password.message : forgotPassword ? "" : message ? message : ""}
-                            </p>
-                            <button className='text-xs underline p-0 m-0 !bg-white text-black cursor-pointer'  disabled={status==='loading'} onClick={forgotPasswordShow}>
+                            {errors.password ? <p className='text-red-600 text-xs'> {errors.password.message} </p> : 
+                                message ? <p className='text-red-600 text-xs'> {message} </p> : "" }
+                            <button className='text-xs ml-auto underline p-0 mt-1 mb-4 !bg-white text-black cursor-pointer'  disabled={status==='loading'} onClick={(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => forgotPasswordShow(event)}>
                                 Forgot password?
                             </button>
                         </div>
                     </div>
-                    <CustomButton disabled={status === 'loading'} className='bg-blue-700 hover:!bg-blue-600 transition-colors duration-300' type="submit">
+                    <CustomButton disabled={status === 'loading'} className='bg-blue-700 hover:!bg-blue-600  transition-colors duration-300' type="submit">
                         Log in
                     </CustomButton>
                     </form>

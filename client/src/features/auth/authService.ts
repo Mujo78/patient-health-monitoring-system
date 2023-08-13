@@ -41,12 +41,6 @@ const logout = () => {
     localStorage.removeItem("user")
 }
 
-const forgotPassword = async(email: string) => {
-    const response = await axios.patch(`${BASE_URL}/forgot-password`, {email})
-
-    return response.data;
-}
-
 const resetPassword = async (ResetPasswordData: ResetPassword) =>{
     const response = await axios.patch(`${BASE_URL}/reset-password/${ResetPasswordData.token}`, ResetPasswordData)
 
@@ -62,7 +56,6 @@ const verifyEmail = async (verificationToken:string) => {
 const authServices = {
     login,
     logout,
-    forgotPassword,
     resetPassword,
     signup,
     verifyEmail

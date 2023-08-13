@@ -77,17 +77,6 @@ export const verifyEmailAddress = createAsyncThunk("/auth/verify",async (verific
     }    
 })
 
-export const forgotPassword = createAsyncThunk("/auth/forgotPassword",  async(email: string, thunkAPI) => {
-    try {
-        return await authServices.forgotPassword(email)
-    } catch (error: any) {
-        console.log(error)
-        const message = error.response.data;
-
-        return thunkAPI.rejectWithValue(message)
-    }
-})
-
 export const resetPassword = createAsyncThunk("/auth/resetPassword",  async(ResetPasswordData: ResetPassword, thunkAPI) => {
     try {
         return await authServices.resetPassword(ResetPasswordData)
@@ -143,17 +132,6 @@ export const authSlice = createSlice({
             .addCase(signup.fulfilled, (state, action) => {
                 state.message = action.payload as string
                 state.status = 'idle'
-            })
-            .addCase(forgotPassword.pending, (state) => {
-                state.status = 'loading'
-            })
-            .addCase(forgotPassword.rejected, (state, action) => {
-                state.status = 'failed',
-                state.message = action.payload as string
-            })
-            .addCase(forgotPassword.fulfilled, (state, action) => {
-                state.status = 'idle'
-                state.message = action.payload as string
             })
             .addCase(resetPassword.pending, (state) => {
                 state.status = 'loading'

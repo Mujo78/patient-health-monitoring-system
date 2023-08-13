@@ -29,8 +29,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/' element={<HomeLayout />} loader={UserRequired}>
       <Route loader={PatientCheck}>
         <Route path='/patient/:id' element={<PatientDashboard />} />
-        <Route path='/new-appointment' element={<MakeAppointment />} />
         <Route path='/my-appointments' element={<MyAppointments />} />
+        <Route path='/new-appointment' element={<MakeAppointment />} />
         <Route path='/staff' element={<MedicalStaff />} />
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />
