@@ -3,6 +3,7 @@ const Doctor = require("../models/doctor")
 const asyncHandler = require("express-async-handler")
 const User = require("../models/user")
 const mongoose = require("mongoose")
+const Department = require("../models/department")
 
 const addDoctor = asyncHandler( async (req, res) =>{
 
@@ -51,10 +52,10 @@ const addDoctor = asyncHandler( async (req, res) =>{
 const getAllDoctors = asyncHandler( async (req, res) => {
 
     let filter = {}
-
-    if(req.params.departmentId){
+    const depr = await Department.findOne({name: req.params.departmentName})
+    if(depr){
         filter = {
-            department_id: req.params.departmentId
+            department_id: depr._id
         }
     }
     

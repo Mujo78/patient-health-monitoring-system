@@ -13,7 +13,7 @@ const router = express.Router()
 
 router.use(protect)
 
-router.get("/:departmentId/doctors", getAllDoctors)
+router.get("/:departmentName/doctors", getAllDoctors)
 router.get("/", getAll)
 router.get("/:id", getDepartment)
 

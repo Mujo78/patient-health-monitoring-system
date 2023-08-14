@@ -10,7 +10,8 @@ const doctorSchema = mongoose.Schema({
     department_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        select: false
     },
     first_name:{
         type: String,
@@ -58,7 +59,7 @@ const doctorSchema = mongoose.Schema({
 doctorSchema.pre(/^find/, function(next) {
     this.populate({
       path: "user_id",
-      select: "email"
+      select: "email, photo"
     });
   
     next();

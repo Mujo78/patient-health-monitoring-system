@@ -12,8 +12,8 @@ import Authorized from './helpers/Authorized'
 import UserRequired from './helpers/UserRequired'
 import ErrorPage from './pages/ErrorPage'
 import PatientCheck from './helpers/PatientCheck'
-import MakeAppointment from './pages/patient/MakeAppointment'
-import MyAppointments from './pages/patient/MyAppointments'
+import MakeAppointment from './pages/patient/appointment/MakeAppointment'
+import MyAppointments from './pages/patient/appointment/MyAppointments'
 import MedicalStaff from './pages/patient/MedicalStaff'
 import Medicine from './pages/patient/Medicine'
 import Settings from './pages/patient/Settings'
@@ -22,6 +22,9 @@ import DoctorCheck from './helpers/DoctorCheck'
 import PharmacyCheck from './helpers/PharmacyCheck'
 import DoctorDashboard from './pages/doctor/DoctorDashboard'
 import PharmacyDashboard from './pages/pharmacy/PharmacyDashboard'
+import AppointmentDepartment from './pages/patient/appointment/AppointmentDepartment'
+import AppointmentLayout from './pages/patient/appointment/AppointmentLayout'
+import AppointmentDoctor from './pages/patient/appointment/AppointmentDoctor'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -30,7 +33,11 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route loader={PatientCheck}>
         <Route path='/patient/:id' element={<PatientDashboard />} />
         <Route path='/my-appointments' element={<MyAppointments />} />
-        <Route path='/new-appointment' element={<MakeAppointment />} />
+        <Route path='/appointment' element={<AppointmentLayout />}>
+          <Route path='new' element={<AppointmentDepartment />}>
+            <Route path=':departmentName' element={<AppointmentDoctor />} />
+          </Route>
+        </Route>
         <Route path='/staff' element={<MedicalStaff />} />
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />

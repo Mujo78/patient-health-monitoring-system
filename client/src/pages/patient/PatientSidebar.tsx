@@ -26,7 +26,7 @@ const PatientSidebar: React.FC = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           icon={HiOutlineClock}
-          to={"/new-appointment"}
+          to={"/appointment"}
           >
             Book Appointment
         </Sidebar.Item>
