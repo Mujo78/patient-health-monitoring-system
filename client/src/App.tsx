@@ -24,7 +24,6 @@ import DoctorDashboard from './pages/doctor/DoctorDashboard'
 import PharmacyDashboard from './pages/pharmacy/PharmacyDashboard'
 import AppointmentDepartment from './pages/patient/appointment/AppointmentDepartment'
 import AppointmentLayout from './pages/patient/appointment/AppointmentLayout'
-import AppointmentDoctor from './pages/patient/appointment/AppointmentDoctor'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -35,7 +34,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/appointment' element={<AppointmentLayout />}>
           <Route path='new' element={<AppointmentDepartment />}>
-            <Route path=':departmentName' element={<AppointmentDoctor />} />
+              <Route path=':doctorId' element={<MakeAppointment />} />
           </Route>
         </Route>
         <Route path='/staff' element={<MedicalStaff />} />

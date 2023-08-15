@@ -2,7 +2,7 @@ import { Button } from 'flowbite-react'
 import React from 'react'
 
 type Props = {
-  children: string,
+  children: string | React.ReactNode,
   onClick?: React.MouseEventHandler<HTMLButtonElement>,
   type?: string,
   disabled?: boolean,

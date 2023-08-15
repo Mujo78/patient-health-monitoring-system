@@ -22,10 +22,12 @@ const HomeLayout: React.FC = () => {
         {accessUser?.data.role === 'PATIENT' && <PatientSidebar />}
         {accessUser?.data.role === 'DOCTOR' && <DoctorSidebar />}
         {accessUser?.data.role === 'PHARMACY' && <PharmacySidebar />}
-        <div className='flex flex-col w-full'>
+        <div className='flex flex-col w-full h-screen'>
           <CustomNavbar color={color} />
+        <div className='overflow-y-auto flex-grow'>
           <Outlet />
         </div>
+      </div>
       </div>
     </div>
   )

@@ -54,7 +54,6 @@ const signup = asyncHandler( async (req, res) =>{
         address, gender, blood_type, date_of_birth
     } = req.body
 
-    console.log(req.body)
     const session = await mongoose.startSession()
     session.startTransaction()
 

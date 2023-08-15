@@ -9,30 +9,25 @@ const AppointmentLayout: React.FC = () => {
     const location = useLocation()
 
     useEffect(() =>{
-        if(location.pathname.startsWith("appointment/new")){
+        if(location.pathname !== "/appointment"){
             setNewApp(true)
-            navigate(location.pathname, {replace: true})
-            console.log(location.pathname)
+        }else{
+            setNewApp(false)
         }
-        console.log(location.pathname)
-    }, [location, navigate])
+    }, [location])
 
     const makeNewAppointment = () => {
         navigate("new", {replace: true})
         setNewApp(true)
     }
 
-    
-
   return (
     <>
-        {newApp || location.pathname === '/appointment/new' ? <Outlet /> :
-            <div className='mx-auto my-auto'>
-                <CustomButton onClick={makeNewAppointment}>
-                    Make appointment
-                </CustomButton>
-            </div>
-        }
+        {newApp ? <Outlet /> : <div className='flex justify-center items-center h-full'>
+            <CustomButton onClick={makeNewAppointment}>
+                Make appointment
+            </CustomButton>
+        </div>}
     </>
   )
 }

@@ -37,7 +37,6 @@ app.use("/api/v1/patient", patientRoutes)
 app.use("/api/v1/appointment", appointmentRoutes)
 
 app.all('*', (req, res, next) =>{
-
     res.status(404).json(`Can't find ${req.originalUrl} on this server!`)
 })
 

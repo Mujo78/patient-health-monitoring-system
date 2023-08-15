@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {getDepartments}  from "../../../service/appointmentSideFunctions"
-import { Table } from 'flowbite-react'
+import {getDepartments, getDoctorsForDepartment}  from "../../../service/appointmentSideFunctions"
+import { Spinner, Table } from 'flowbite-react'
 import CustomButton from '../../../components/CustomButton'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import {HiChevronRight} from "react-icons/hi2"
+import img from "../../../assets/default.jpg"
+
 
 
 type Department = {
@@ -12,65 +15,145 @@ type Department = {
     phone_number: string
 }
 
+type UserInfo = {
+    photo: string,
+    _id: string
+}
+
+type Doctor = {
+    _id: string,
+    address : string,
+    bio: string,
+    first_name: string,
+    last_name: string, 
+    phone_number: string,
+    qualification: string,
+    speciality: string,
+    user_id: UserInfo
+}
+
 const AppointmentDepartment: React.FC = () => {
 
+    const {doctorId} = useParams()
+    const [selectedDep, setSelectedDep] = useState<string>("")
+    const [selectedDoc, setSelectedDoc] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
+    const [loadingDoc, setLoadingDoc] = useState<boolean>(false)
     const navigate = useNavigate()
-    const location = useLocation();
     const [res, setRes] = useState<Department[]>([])
-    const [isDepSet, setIsDepSet] = useState<boolean>(false)
+    const [doc, setDoc] = useState<Doctor[]>([])
 
     useEffect(() => {
         const fetchData = async () =>{
-            const response = await getDepartments()
-            setRes(response)
+            try{
+                setLoading(true)
+                const response = await getDepartments()
+                setRes(response)
+            }finally{
+                setLoading(false)
+            }
         }
         fetchData();
     }, [])
 
     const chooseDepartment = (name: string) => {
-        navigate(`${name}`, {replace: true})
-        setIsDepSet(true)
+        setSelectedDoc("")
+        setSelectedDep(name)
+        const fetchData = async () =>{
+            if(name){
+                try{
+                    setLoadingDoc(true)
+                    const response = await getDoctorsForDepartment(name)
+                    setDoc(response)
+                }finally{
+                    setLoadingDoc(false)
+                }
+            }
+        }
+        fetchData();
     }
 
-  return (
-    <>
-        {isDepSet || location.pathname.startsWith("appointment/new/") ? <Outlet /> : <div className='font-Poppins'>
-            <h1 className='text-3xl font-semibold p-4'>Departments</h1>
-            <p className='text-sm text-gray-400'>Please choose department for appointment. Make sure to choose only one department!</p>
+    const handleNavigate = () =>{
+        console.log(selectedDep + " " + selectedDoc)
+        navigate(`${selectedDoc}`, {replace: true})
+    }
 
-            <div className='flex w-full '>
-                <Table hoverable>
-                    <Table.Head>
-                        <Table.HeadCell>
-                            Name
-                        </Table.HeadCell>
-                        <Table.HeadCell>
-                            Description
-                        </Table.HeadCell>
-                        <Table.HeadCell>
-                        
-                        </Table.HeadCell>
-                    </Table.Head>
-                    <Table.Body className="divide-y">
-                        {res.map((n) => <Table.Row key={n._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                {n.name}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {n.description}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <CustomButton onClick={() => chooseDepartment(n.name)}>
-                                    Choose
-                                </CustomButton>
-                            </Table.Cell>
-                        </Table.Row>)}
-                    </Table.Body>
-                </Table>
-            </div>
-        </div>}
-    </>
-  )
+    return (
+        <>
+            {doctorId ? <Outlet /> : 
+                <div className='font-Poppins flex flex-col h-full' >
+                    <div className='flex justify-between flex-wrap flex-grow'>
+                    <div className=' overflow-y-auto'>
+                        <h1 className='text-3xl font-semibold p-4'>Departments</h1>
+                        <p className='text-sm text-gray-400'>Please choose department for appointment. Make sure to choose only one department!</p>
+                        <div className='flex w-full justify-center mt-2'>
+                            {loading ? <Spinner /> : <Table hoverable>
+                                <Table.Head>
+                                    <Table.HeadCell>
+                                        Name
+                                    </Table.HeadCell>
+                                    <Table.HeadCell>
+                                        Description
+                                    </Table.HeadCell>
+                                    <Table.HeadCell>
+                                    
+                                    </Table.HeadCell>
+                                </Table.Head>
+                                <Table.Body className="divide-y">
+                                    {res.length > 0 &&
+                                        res.map((n) => <Table.Row key={n._id} className={`bg-white dark:border-gray-700 ${selectedDep === n.name && 'bg-blue-200'} dark:bg-gray-800`}>
+                                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                            {n.name}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {n.description}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <CustomButton onClick={() => chooseDepartment(n.name)}>
+                                                <HiChevronRight />
+                                            </CustomButton>
+                                        </Table.Cell>
+                                    </Table.Row>)}
+                                </Table.Body>
+                            </Table>}
+                        </div>
+                    </div>
+                    <div className='mt-2 mb-2 w-2/5'>                       
+                    {loadingDoc ? <div className='mx-auto flex justify-center mt-4'> <Spinner /> </div> :
+                        <Table className='w-4/5 flex flex-col justify-center'>
+                            <Table.Body className='divide-y'> 
+                            {doc.length > 0 &&
+                            doc.map((n) => (
+                                <Table.Row
+                                key={n._id}
+                                className={`w-2/5 ${selectedDoc === n._id && 'bg-blue-200'}`}
+                                onClick={() => setSelectedDoc(n._id)}
+                            >
+                                <Table.Cell>
+                                    <img src={img} className='w-[60px] rounded-full' />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <h1 className='font-bold text-md'>{n.first_name + " " + n.last_name}</h1>
+                                </Table.Cell>
+                                <Table.Cell className='w-1/3'>
+                                    <p className='text-xs'>{n.bio}</p>
+                                </Table.Cell>
+                            
+                            </Table.Row>
+                            ))}
+                            </Table.Body>
+                        </Table>}
+                    </div>
+                    </div>
+                    <div className='w-full mt-auto'>
+                        <hr/>
+                        <CustomButton disabled={selectedDoc === ""} onClick={handleNavigate} className='ml-auto mr-3 my-3'>
+                            Continue
+                        </CustomButton>
+                    </div>
+            </div>}
+        </>
+    )
 }
 
 export default AppointmentDepartment

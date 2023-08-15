@@ -22,8 +22,6 @@ const editPatientData = updateDoc(Patient)
 
 const getMe = asyncHandler( async (req, res) => {
 
-    console.log("object")
-    console.log(req.user._id)
     const patient = await Patient.findOne({user_id: req.user._id})
 
     if(!patient) return res.status(404).json("There was an error, please try again later!")
