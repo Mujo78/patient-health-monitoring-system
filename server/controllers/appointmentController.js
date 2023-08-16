@@ -11,7 +11,7 @@ const Email = require("../utils/email")
 const makeAppointment = asyncHandler( async (req, res) =>{
 
     const {
-        doctor_id, reason, appointment_date, appointment_time
+        doctor_id, reason, appointment_date
     } = req.body;
 
     const patient = await Patient.findOne({user_id: req.user._id})
@@ -22,8 +22,7 @@ const makeAppointment = asyncHandler( async (req, res) =>{
         doctor_id,
         patient_id: patient._id,
         reason,
-        appointment_date,
-        appointment_time
+        appointment_date
     })
 
     patient.health_card.push(newAppointment._id)

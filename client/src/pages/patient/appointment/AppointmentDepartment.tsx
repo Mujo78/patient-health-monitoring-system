@@ -4,7 +4,7 @@ import { Spinner, Table } from 'flowbite-react'
 import CustomButton from '../../../components/CustomButton'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import {HiChevronRight} from "react-icons/hi2"
-import img from "../../../assets/default.jpg"
+import CustomImg from '../../../components/CustomImg'
 
 
 
@@ -20,7 +20,7 @@ type UserInfo = {
     _id: string
 }
 
-type Doctor = {
+export type Doctor = {
     _id: string,
     address : string,
     bio: string,
@@ -78,6 +78,7 @@ const AppointmentDepartment: React.FC = () => {
         navigate(`${selectedDoc}`, {replace: true})
     }
 
+    console.log(doc)
     return (
         <>
             {doctorId ? <Outlet /> : 
@@ -101,7 +102,7 @@ const AppointmentDepartment: React.FC = () => {
                                 </Table.Head>
                                 <Table.Body className="divide-y">
                                     {res.length > 0 &&
-                                        res.map((n) => <Table.Row key={n._id} className={`bg-white dark:border-gray-700 ${selectedDep === n.name && 'bg-blue-200'} dark:bg-gray-800`}>
+                                        res.map((n) => <Table.Row onClick={() => chooseDepartment(n.name)} key={n._id} className={`bg-white cursor-pointer dark:border-gray-700 ${selectedDep === n.name && 'bg-blue-200'} dark:bg-gray-800`}>
                                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                             {n.name}
                                         </Table.Cell>
@@ -109,9 +110,7 @@ const AppointmentDepartment: React.FC = () => {
                                             {n.description}
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <CustomButton onClick={() => chooseDepartment(n.name)}>
-                                                <HiChevronRight />
-                                            </CustomButton>
+                                            <HiChevronRight />
                                         </Table.Cell>
                                     </Table.Row>)}
                                 </Table.Body>
@@ -126,17 +125,17 @@ const AppointmentDepartment: React.FC = () => {
                             doc.map((n) => (
                                 <Table.Row
                                 key={n._id}
-                                className={`w-2/5 ${selectedDoc === n._id && 'bg-blue-200'}`}
+                                className={`w-2/5 ${selectedDoc === n._id && 'bg-blue-200'} cursor-pointer`}
                                 onClick={() => setSelectedDoc(n._id)}
                             >
                                 <Table.Cell>
-                                    <img src={img} className='w-[60px] rounded-full' />
+                                    <CustomImg url={n.user_id.photo} className='w-[60px] rounded-full' />
                                 </Table.Cell>
                                 <Table.Cell>
                                     <h1 className='font-bold text-md'>{n.first_name + " " + n.last_name}</h1>
                                 </Table.Cell>
                                 <Table.Cell className='w-1/3'>
-                                    <p className='text-xs'>{n.bio}</p>
+                                    <p className='text-xs'>{n.bio.split(".")[0]}</p>
                                 </Table.Cell>
                             
                             </Table.Row>

@@ -1,15 +1,14 @@
 import axios from "axios"
 
-const BASE_URL = "http://localhost:3001/api/v1/department/"
+const BASE_URL = "http://localhost:3001/api/v1/"
+const user = localStorage.getItem("user")
+const userObj = user && JSON.parse(user)
 
 export async function getDepartments(){
 
-    const user = localStorage.getItem("user")
-    const {token} = user && JSON.parse(user)
-
-    const response = await axios.get(BASE_URL, {
+    const response = await axios.get(`${BASE_URL}department` , {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${userObj.token}`
         }
     });
 
@@ -17,15 +16,22 @@ export async function getDepartments(){
 }
 
 export async function getDoctorsForDepartment(name:string) {
-    const user = localStorage.getItem("user")
-    const {token} = user && JSON.parse(user)
 
-    const response = await axios.get(`${BASE_URL + name}/doctors`, {
+    const response = await axios.get(`${BASE_URL + "department/" + name}/doctors`, {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${userObj.token}`
         }
     });
 
     return response.data;
+}
 
+export async function getDoctor(id: string) {
+    const response = await axios.get(`${BASE_URL}doctor/${id}`, {
+        headers: {
+            "Authorization": `Bearer ${userObj.token}`
+        }
+    })
+
+    return response.data;
 }
