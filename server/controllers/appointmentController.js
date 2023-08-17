@@ -116,7 +116,46 @@ const getAppointmentForDoctor = asyncHandler ( async (req, res) => {
     return res.status(200).json(allApp)
 })
 
+const getAppointmentForDay = asyncHandler( async (req, res) => {
+    const {
+        date
+    } = req.body;
 
+    const appointmentsDay = await Appointment.aggregate([
+        {
+            $addFields: {
+              formattedDate: {
+                $dateToString: {
+                  format: '%Y-%m-%d',
+                  date: '$appointment_date'
+                }
+              },
+              inputDate: {
+                $dateToString: {
+                  format: '%Y-%m-%d',
+                  date: new Date(date)
+                }
+              }
+            }
+          },
+          {
+            $match: {
+              $expr: {
+                $eq: ['$formattedDate', '$inputDate']
+              }
+            }
+          },
+          {
+            $project: {
+              formattedDate: 0,
+              inputDate: 0
+            }
+          }
+      ]);
+    if(appointmentsDay) return res.status(200).json(appointmentsDay)
+
+    return res.status(403).json("There are no appointments on that day!")
+})
 
 const getOneAppointment = getDoc(Appointment)
 const getAllAppointments = getAllData(Appointment)
@@ -130,5 +169,6 @@ module.exports = {
     cancelAppointment,
     makeAppointment,
     makeAppointmentFinished,
+    getAppointmentForDay
     //editAppointmentInfo
 }

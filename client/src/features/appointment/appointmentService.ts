@@ -17,8 +17,20 @@ const makeAppointment = async (appointmentData: MakeAppointmentData) =>{
     return response.data;
 }
 
+const getAppointmentsForDay = async (date: Date) =>{
+    const response = await axios.post(`${BASE_URL}day`, {date}, {
+        headers: {
+            "Authorization" : `Bearer ${userObj.token}`
+        }
+    })
+
+    return response.data;
+}
+
+
 const appointmentService = {
-    makeAppointment
+    makeAppointment,
+    getAppointmentsForDay
 }
 
 export default appointmentService

@@ -8,12 +8,29 @@ export interface MakeAppointmentData {
     appointment_date: Date
 }
 
+interface Appointment {
+    doctor_id: string,
+    patient_id: string,
+    diagnose: string,
+    therapy: string,
+    other_medicine: string,
+    description: string,
+    reason: string,
+    finished: boolean,
+    notification: boolean,
+    appointment_date: Date
+}
+
 interface AppointmentState {
+    personAppointments: Appointment[],
+    selectedDayAppointments: Appointment[],
     status: 'idle' | 'loading' |'failed' | '',
     message: string
 }
 
 const initialState: AppointmentState = {
+    personAppointments: [],
+    selectedDayAppointments: [],
     status: '',
     message: ''
 }
@@ -21,6 +38,17 @@ const initialState: AppointmentState = {
 export const bookAppointment = createAsyncThunk("appointment/post",async (appointmentData:MakeAppointmentData, thunkAPI) => {
     try {
         return await appointmentService.makeAppointment(appointmentData)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
+export const getAppointmentsForADay = createAsyncThunk("appointment-day/get",async (date:Date, thunkAPI) => {
+    try {
+        return await appointmentService.getAppointmentsForDay(date)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -37,11 +65,29 @@ export const appointmentSlice = createSlice({
         reset: (state) => {
             state.status = '',
             state.message = ''
+        },
+        resetAppointmentDay: (state) => {
+            state.selectedDayAppointments = []
         }
+    },
+    extraReducers: (builder) =>{
+        builder
+            .addCase(getAppointmentsForADay.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(getAppointmentsForADay.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(getAppointmentsForADay.fulfilled, (state, action) => {
+                state.status = 'idle',
+                state.selectedDayAppointments = action.payload
+            })
+ 
     }
 })
 
 export const appointment = (state: RootState) => state.appointment;
 
-export const {reset} = appointmentSlice.actions
+export const {reset, resetAppointmentDay} = appointmentSlice.actions
 export default appointmentSlice.reducer;
