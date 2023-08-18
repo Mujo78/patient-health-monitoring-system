@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const { getAllData, deleteDoc, getDoc } = require("./handleController")
 const cron = require("node-cron")
+const moment = require('moment-timezone');
 const Appointment = require("../models/appointment")
 const Patient = require("../models/patient")
 const Doctor = require("../models/doctor")
@@ -15,14 +16,25 @@ const makeAppointment = asyncHandler( async (req, res) =>{
     } = req.body;
 
     const patient = await Patient.findOne({user_id: req.user._id})
-
     if(!patient) return res.status(404).json("There was an error, please try again later!")
+
+    const appointmentDateWithoutTime = moment(appointment_date).tz("Europe/Sarajevo").format("YYYY-MM-DD");
+
+    const existingAppointment = await Appointment.findOne({
+        doctor_id,
+        patient_id: patient._id,
+        appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')) }
+    });
+
+    if (existingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
+    
+    const newDate = moment.utc(appointment_date).tz("Europe/Sarajevo")
 
     const newAppointment = await Appointment.create({
         doctor_id,
         patient_id: patient._id,
         reason,
-        appointment_date
+        appointment_date: newDate.toDate()
     })
 
     patient.health_card.push(newAppointment._id)
@@ -117,44 +129,27 @@ const getAppointmentForDoctor = asyncHandler ( async (req, res) => {
 })
 
 const getAppointmentForDay = asyncHandler( async (req, res) => {
-    const {
-        date
-    } = req.body;
 
-    const appointmentsDay = await Appointment.aggregate([
-        {
-            $addFields: {
-              formattedDate: {
-                $dateToString: {
-                  format: '%Y-%m-%d',
-                  date: '$appointment_date'
-                }
-              },
-              inputDate: {
-                $dateToString: {
-                  format: '%Y-%m-%d',
-                  date: new Date(date)
-                }
-              }
-            }
-          },
-          {
-            $match: {
-              $expr: {
-                $eq: ['$formattedDate', '$inputDate']
-              }
-            }
-          },
-          {
-            $project: {
-              formattedDate: 0,
-              inputDate: 0
-            }
-          }
-      ]);
-    if(appointmentsDay) return res.status(200).json(appointmentsDay)
+    const { date } = req.body;
 
-    return res.status(403).json("There are no appointments on that day!")
+    const userDate = moment.tz(date, "Europe/Sarajevo");
+
+    if (!userDate.isValid()) {
+        return res.status(400).json("Invalid date format");
+    }
+
+    const startOfDay = userDate.clone().startOf('day').utc().toDate();
+    const endOfDay = userDate.clone().endOf('day').utc().toDate();
+
+    const appointmentsDay = await Appointment.find({
+        appointment_date: {
+            $gte: startOfDay,
+            $lte: endOfDay
+        }
+    });
+
+    if (appointmentsDay) return res.status(200).json(appointmentsDay);
+
 })
 
 const getOneAppointment = getDoc(Appointment)

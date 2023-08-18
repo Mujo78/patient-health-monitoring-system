@@ -14,7 +14,6 @@ const patientRoutes = require("./routes/patientRoutes")
 const appointmentRoutes = require("./routes/appointmentRoutes")
 
 const { errorHandler } = require("./middlewares/errorMiddleware");
-
 // File for the routes
 
 if(process.env.NODE_ENV === 'development'){

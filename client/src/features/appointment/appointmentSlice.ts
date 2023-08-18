@@ -72,6 +72,16 @@ export const appointmentSlice = createSlice({
     },
     extraReducers: (builder) =>{
         builder
+            .addCase(bookAppointment.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(bookAppointment.rejected, (state, action) => {
+                state.status = 'failed'
+                state.message = action.payload as string
+            })
+            .addCase(bookAppointment.fulfilled, (state) => {
+                state.status = 'idle'
+            })
             .addCase(getAppointmentsForADay.pending, (state) => {
                 state.status = 'loading'
             })

@@ -74,11 +74,9 @@ const AppointmentDepartment: React.FC = () => {
     }
 
     const handleNavigate = () =>{
-        console.log(selectedDep + " " + selectedDoc)
         navigate(`${selectedDoc}`, {replace: true})
     }
 
-    console.log(doc)
     return (
         <>
             {doctorId ? <Outlet /> : 

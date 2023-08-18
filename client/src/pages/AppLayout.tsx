@@ -5,7 +5,7 @@ import {Toaster} from "react-hot-toast";
 const AppLayout: React.FC = () => {
   return (
     <div className='flex max-w-full'>
-      <Toaster />
+        <Toaster position='top-right' />
         <main className='w-full'>
             <Outlet />
         </main>
