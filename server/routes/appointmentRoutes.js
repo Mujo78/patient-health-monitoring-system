@@ -5,7 +5,6 @@ const {
     getOneAppointment,
     getAllAppointments,
     getAppointmentForPatient,
-    getAppointmentForDoctor,
     cancelAppointment,
     makeAppointment,
     makeAppointmentFinished,
@@ -23,8 +22,7 @@ router.patch("/:id", restrictTo('DOCTOR'), makeAppointmentFinished)
 
 router.get("/:id", restrictTo('DOCTOR', 'PATIENT'), getOneAppointment)
 
-router.get("/patient/:id", restrictTo('PATIENT'), getAppointmentForPatient)
-router.get("/doctor/:id", restrictTo('DOCTOR'), getAppointmentForDoctor)
+router.get("/person/:id", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForPatient)
 
 //router.patch("/edit-details/:id", restrictTo('PATIENT'), editAppointmentInfo)
 router.delete('/:id', restrictTo('DOCTOR', 'PATIENT'), cancelAppointment)

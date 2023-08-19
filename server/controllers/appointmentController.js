@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler")
-const { getAllData, deleteDoc, getDoc } = require("./handleController")
+const { getAllData, deleteDoc, getDoc, getAllDocForUser } = require("./handleController")
 const cron = require("node-cron")
 const moment = require('moment-timezone');
 const Appointment = require("../models/appointment")
@@ -28,6 +28,14 @@ const makeAppointment = asyncHandler( async (req, res) =>{
 
     if (existingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
     
+    const overlappingAppointment = await Appointment.findOne({
+        doctor_id: { $ne: doctor_id },
+        patient_id: patient._id,
+        appointment_date: new Date(appointment_date)
+    });
+
+    if (overlappingAppointment) return res.status(400).json("You already have an appointment with a different doctor at that time.");
+
     const newDate = moment.utc(appointment_date).tz("Europe/Sarajevo")
 
     const newAppointment = await Appointment.create({
@@ -72,15 +80,7 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
 })
 */
 
-
-const getAppointmentForPatient = asyncHandler ( async (req, res) => {
-
-    const patient = await Patient.findOne({user_id: req.params.id })
-    const allApp = await Appointment.find({patient_id: patient._id})
-
-    if(!allApp) return res.status(404).json("There was an error, please try again later!")
-    return res.status(200).json(allApp)
-})
+const getAppointmentForPatient = getAllDocForUser()
 
 cron.schedule('* * * * *', async () => {
     const allApp = await Appointment.find()
@@ -117,17 +117,6 @@ cron.schedule('* * * * *', async () => {
     })
 })
 
-
-const getAppointmentForDoctor = asyncHandler ( async (req, res) => {
-    
-    const doc = await Doctor.findOne({user_id: req.params.id})
-    const allApp = await Appointment.find({doctor_id : doc._id})
-    
-    if(!allApp) return res.status(404).json("There was an error, please try again later!")
-    
-    return res.status(200).json(allApp)
-})
-
 const getAppointmentForDay = asyncHandler( async (req, res) => {
 
     const { date } = req.body;
@@ -160,7 +149,6 @@ module.exports = {
     getOneAppointment,
     getAllAppointments,
     getAppointmentForPatient,
-    getAppointmentForDoctor,
     cancelAppointment,
     makeAppointment,
     makeAppointmentFinished,

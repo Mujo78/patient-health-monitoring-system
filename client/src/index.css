@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 .react-calendar__tile--active {
-    background: #3b82f6;
-    color: white;
+    background: white;
+    color: blue;
     font-weight: 400;
 }

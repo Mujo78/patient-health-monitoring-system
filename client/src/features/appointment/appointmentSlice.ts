@@ -8,8 +8,20 @@ export interface MakeAppointmentData {
     appointment_date: Date
 }
 
+export interface UserInfo {
+    photo: string,
+    _id: string
+}
+
+interface doctor_id {
+    _id: string,
+    speciality: string,
+    user_id : UserInfo
+}
+
 interface Appointment {
-    doctor_id: string,
+    _id: string,
+    doctor_id: doctor_id,
     patient_id: string,
     diagnose: string,
     therapy: string,
@@ -57,6 +69,17 @@ export const getAppointmentsForADay = createAsyncThunk("appointment-day/get",asy
     }    
 })
 
+export const getAppointmentsForPerson = createAsyncThunk("appointment/get",async (_, thunkAPI) => {
+    try {
+        return await appointmentService.getAppointmentForPerson()
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
 
 export const appointmentSlice = createSlice({
     name: 'appointment',
@@ -68,19 +91,32 @@ export const appointmentSlice = createSlice({
         },
         resetAppointmentDay: (state) => {
             state.selectedDayAppointments = []
+            state.status = '',
+            state.message = ''
+        },
+        resetPersonAppointment: (state) =>{
+            state.personAppointments = []
         }
     },
     extraReducers: (builder) =>{
         builder
-            .addCase(bookAppointment.pending, (state) => {
-                state.status = 'loading'
-            })
             .addCase(bookAppointment.rejected, (state, action) => {
                 state.status = 'failed'
                 state.message = action.payload as string
             })
             .addCase(bookAppointment.fulfilled, (state) => {
                 state.status = 'idle'
+            })
+            .addCase(getAppointmentsForPerson.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(getAppointmentsForPerson.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(getAppointmentsForPerson.fulfilled, (state, action) => {
+                state.status = 'idle',
+                state.personAppointments = action.payload
             })
             .addCase(getAppointmentsForADay.pending, (state) => {
                 state.status = 'loading'
@@ -91,6 +127,7 @@ export const appointmentSlice = createSlice({
             })
             .addCase(getAppointmentsForADay.fulfilled, (state, action) => {
                 state.status = 'idle',
+                state.message = 'OK'
                 state.selectedDayAppointments = action.payload
             })
  
@@ -99,5 +136,5 @@ export const appointmentSlice = createSlice({
 
 export const appointment = (state: RootState) => state.appointment;
 
-export const {reset, resetAppointmentDay} = appointmentSlice.actions
+export const {reset, resetAppointmentDay, resetPersonAppointment} = appointmentSlice.actions
 export default appointmentSlice.reducer;

@@ -5,19 +5,13 @@ import CustomButton from '../../../components/CustomButton'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import {HiChevronRight} from "react-icons/hi2"
 import CustomImg from '../../../components/CustomImg'
-
-
+import { UserInfo } from '../../../features/appointment/appointmentSlice'
 
 type Department = {
     _id: string,
     name: string,
     description: string,
     phone_number: string
-}
-
-type UserInfo = {
-    photo: string,
-    _id: string
 }
 
 export type Doctor = {

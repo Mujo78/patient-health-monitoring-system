@@ -4,14 +4,13 @@ import 'react-calendar/dist/Calendar.css';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Spinner, Table, Textarea } from 'flowbite-react';
-import { TableRow } from 'flowbite-react/lib/esm/components/Table/TableRow';
 import CustomImg from '../../../components/CustomImg';
 import { Doctor } from './AppointmentDepartment';
 import { getDoctor } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
-import { appointment, bookAppointment, getAppointmentsForADay, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
+import { appointment, bookAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import { toast } from 'react-hot-toast';
 
 const workTime = [
@@ -46,17 +45,16 @@ const MakeAppointment: React.FC = () => {
   const [reason, setReason] = useState<string>("")  
   const [doc, setDoc] = useState<Doctor | null>(null)
 
-  useEffect(() => {
-    if(value){
-      dispatch(getAppointmentsForADay(value as Date))
-    }
-  }, [value, dispatch])
-
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value))
     dispatch(resetAppointmentDay())
   }
-  console.log(selectedDayAppointments)
+  
+  useEffect(() =>{
+    if(value){
+      dispatch(getAppointmentsForADay(value as Date))
+    }
+  }, [value, dispatch])
 
   const appTime = selectedDayAppointments.map((n) => {
     const date = new Date(n.appointment_date);
@@ -81,13 +79,14 @@ const MakeAppointment: React.FC = () => {
       reason: reason,
       appointment_date: new Date(newAppDate)
     }
-
+    dispatch(reset())
     if(doctorId && newTime){
-      dispatch(bookAppointment(appointmentData))
-    }
-    if(status === 'idle'){
-      toast.success('Appointment successfully created!')
-      navigate("/appointment", {replace: true})
+      dispatch(bookAppointment(appointmentData)).then((action) =>{
+        if(typeof action.payload === 'object'){
+          toast.success('Appointment successfully created!')
+          navigate("/appointment", {replace: true})
+        }
+      })
     }
   }
 
@@ -118,7 +117,7 @@ const MakeAppointment: React.FC = () => {
           <div className='my-auto h-full flex flex-col justify-evenly'>
             <Table>
                 <Table.Body>
-                  <TableRow>
+                  <Table.Row>
                     { loading ? <Table.Cell className='p-7 flex justify-center'> <Spinner size="xl" /> </Table.Cell> :
                       <>
                       <Table.Cell> <CustomImg url={doc?.user_id.photo} /> </Table.Cell>
@@ -130,7 +129,7 @@ const MakeAppointment: React.FC = () => {
                       </Table.Cell>
                       </>
                       }
-                  </TableRow>
+                  </Table.Row>
                 </Table.Body>
             </Table>
             <div className='flex flex-col justify-around'>
@@ -160,9 +159,9 @@ const MakeAppointment: React.FC = () => {
         <div className='flex flex-col my-auto w-1/3'>
           <h1 className='text-xl font-semibold'>Set Date</h1>
           <div className='text-sm flex justify-between'>
-            <p> <span className='text-yellow-200 text-xl'>•</span> today </p>
-            <p> <span className='text-gray-300 text-xl'>•</span> out of bounds </p>
-            <p> <span className='text-blue-400 text-xl'>•</span>/<span className='text-white'>•</span> choosen </p>
+            <p> <span className='text-yellow-300 text-xl'>•</span> today </p>
+            <p> <span className='text-gray-400 text-xl'>•</span> out of bounds </p>
+            <p> <span className='text-blue-500 text-xl'>•</span> choosen </p>
           </div>
         <Calendar className="font-Poppins mt-3 shadow-xl border-gray-300 text-xl w-full rounded-xl p-4" 
             onChange={setValue}

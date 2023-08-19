@@ -1,6 +1,9 @@
 const {Model} = require("mongoose")
+const asyncHandler = require("express-async-handler");
 
-const asyncHandler = require("express-async-handler")
+const Appointment = require("../models/appointment")
+const Patient = require("../models/patient");
+const Doctor = require("../models/doctor");
 
 const getAllData = Model => asyncHandler (async (req, res) =>{
     const data = await Model.find();
@@ -44,10 +47,23 @@ const getDoc = Model => asyncHandler (async (req, res) =>{
     return res.status(404).json("There was an error")
 })
 
+const getAllDocForUser = () => asyncHandler( async(req, res) => {
+
+    let mod;
+    if(req.user.role === 'PATIENT') mod = Patient
+    if(req.user.role === 'DOCTOR') mod = Doctor
+
+    const model = await mod.findOne({user_id: req.params.id})
+    const allApp = await Appointment.find({patient_id: model._id})
+
+    if(allApp) return res.status(200).json(allApp)
+})
+
 module.exports = {
     getAllData,
     createNewDoc,
     deleteDoc,
     updateDoc,
-    getDoc
+    getDoc,
+    getAllDocForUser
 }
