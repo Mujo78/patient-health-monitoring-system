@@ -28,8 +28,17 @@ const getAppointmentsForDay = async (date: Date) =>{
 }
 
 const getAppointmentForPerson = async () => {
-    console.log(userObj)
+
     const response = await axios.get(`${BASE_URL}person/${userObj.data._id}`, {
+        headers: {
+            "Authorization" : `Bearer ${userObj.token}`
+        }
+    })
+    return response.data;
+}
+
+const getAppointment = async (id: string) =>{
+    const response = await axios.get(`${BASE_URL}/${id}`, {
         headers: {
             "Authorization" : `Bearer ${userObj.token}`
         }
@@ -40,7 +49,8 @@ const getAppointmentForPerson = async () => {
 const appointmentService = {
     makeAppointment,
     getAppointmentsForDay,
-    getAppointmentForPerson
+    getAppointmentForPerson,
+    getAppointment
 }
 
 export default appointmentService

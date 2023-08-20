@@ -51,6 +51,10 @@ const doctorSchema = mongoose.Schema({
     bio: {
         type: String,
         required: [true, "Bio is required!"]
+    },
+    age: {
+        type: String,
+        required: [true, "Age is required!"]
     }
     
 })
@@ -59,7 +63,7 @@ const doctorSchema = mongoose.Schema({
 doctorSchema.pre(/^find/, function(next) {
     this.populate({
       path: "user_id",
-      select: "email, photo"
+      select: "email photo"
     });
   
     next();

@@ -9,13 +9,19 @@ export interface MakeAppointmentData {
 }
 
 export interface UserInfo {
+    _id: string,
     photo: string,
-    _id: string
+    email: string
 }
 
 interface doctor_id {
     _id: string,
+    first_name: string,
+    last_name: string,
     speciality: string,
+    qualification: string,
+    bio: string,
+    age: string,
     user_id : UserInfo
 }
 
@@ -34,6 +40,7 @@ interface Appointment {
 }
 
 interface AppointmentState {
+    selectedAppointment: Appointment | null,
     personAppointments: Appointment[],
     selectedDayAppointments: Appointment[],
     status: 'idle' | 'loading' |'failed' | '',
@@ -41,6 +48,7 @@ interface AppointmentState {
 }
 
 const initialState: AppointmentState = {
+    selectedAppointment: null,
     personAppointments: [],
     selectedDayAppointments: [],
     status: '',
@@ -69,7 +77,7 @@ export const getAppointmentsForADay = createAsyncThunk("appointment-day/get",asy
     }    
 })
 
-export const getAppointmentsForPerson = createAsyncThunk("appointment/get",async (_, thunkAPI) => {
+export const getAppointmentsForPerson = createAsyncThunk("appointments/get",async (_, thunkAPI) => {
     try {
         return await appointmentService.getAppointmentForPerson()
     } catch (error: any) {
@@ -79,6 +87,18 @@ export const getAppointmentsForPerson = createAsyncThunk("appointment/get",async
         return thunkAPI.rejectWithValue(message)
     }    
 })
+
+export const getSelectedAppointment = createAsyncThunk("appointment/get",async (id: string, thunkAPI) => {
+    try {
+        return await appointmentService.getAppointment(id)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
 
 
 export const appointmentSlice = createSlice({
@@ -96,6 +116,9 @@ export const appointmentSlice = createSlice({
         },
         resetPersonAppointment: (state) =>{
             state.personAppointments = []
+        },
+        resetSelectedAppointment: (state) =>{
+            state.selectedAppointment = null
         }
     },
     extraReducers: (builder) =>{
@@ -127,8 +150,18 @@ export const appointmentSlice = createSlice({
             })
             .addCase(getAppointmentsForADay.fulfilled, (state, action) => {
                 state.status = 'idle',
-                state.message = 'OK'
                 state.selectedDayAppointments = action.payload
+            })
+            .addCase(getSelectedAppointment.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(getSelectedAppointment.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(getSelectedAppointment.fulfilled, (state, action) => {
+                state.status = 'idle',
+                state.selectedAppointment = action.payload
             })
  
     }
@@ -136,5 +169,5 @@ export const appointmentSlice = createSlice({
 
 export const appointment = (state: RootState) => state.appointment;
 
-export const {reset, resetAppointmentDay, resetPersonAppointment} = appointmentSlice.actions
+export const {reset, resetAppointmentDay, resetPersonAppointment, resetSelectedAppointment} = appointmentSlice.actions
 export default appointmentSlice.reducer;

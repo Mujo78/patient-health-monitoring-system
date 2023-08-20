@@ -8,6 +8,13 @@ import { appointment, getAppointmentsForPerson, resetPersonAppointment } from '.
 import { Spinner } from 'flowbite-react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 
+type MyEvent = {
+  id: string,
+  start: Date,
+  end: Date,
+  title: string
+}
+
 const localizer = momentLocalizer(moment)
 
 const MyAppointments: React.FC = () => {
@@ -25,7 +32,7 @@ const MyAppointments: React.FC = () => {
     }
   }, [dispatch])
 
-  const myEventsList = personAppointments.map((n) => ({
+  const myEventsList: MyEvent[] = personAppointments.map((n) => ({
     id: n._id,
     start: new Date(n.appointment_date),
     end: new Date(new Date(n.appointment_date).getTime() + 20 * 60000),
@@ -38,10 +45,9 @@ const MyAppointments: React.FC = () => {
 
   return (
     <>
-    {id ? <Outlet /> : <div className='py-2 pr-4 h-full w-full flex-col flex justify-center items-center'>
+    {id ? <Outlet /> : <div className='py-2 pr-4 h-full w-full flex-col font-Poppins text-sm flex justify-center items-center'>
       {status === 'loading' ? <Spinner size="xl" /> :
       <>
-        <h1 className='text-xl font-bold'>My Appointments</h1>
         <Calendar
           className="w-full h-full flex flex-col rounded-xl p-4"
           localizer={localizer}
@@ -49,7 +55,7 @@ const MyAppointments: React.FC = () => {
           onSelectEvent={handleNavigate}
           startAccessor="start"
           endAccessor="end"
-          style={{height: 600}}
+          style={{height: 700}}
           titleAccessor="title"
           min={new Date(0, 0, 0, 9, 0, 0)}
           max={new Date(0, 0, 0, 17, 0, 0, 0)}

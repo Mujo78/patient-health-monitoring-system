@@ -44,7 +44,7 @@ const getDoc = Model => asyncHandler (async (req, res) =>{
     const data = await Model.findById(req.params.id);
 
     if(data) return res.status(200).json(data)
-    return res.status(404).json("There was an error")
+    return res.status(404).json("There is no such document in database!")
 })
 
 const getAllDocForUser = () => asyncHandler( async(req, res) => {

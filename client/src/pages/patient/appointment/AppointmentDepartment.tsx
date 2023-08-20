@@ -6,6 +6,7 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import {HiChevronRight} from "react-icons/hi2"
 import CustomImg from '../../../components/CustomImg'
 import { UserInfo } from '../../../features/appointment/appointmentSlice'
+import Footer from '../../../components/Footer'
 
 type Department = {
     _id: string,
@@ -29,11 +30,11 @@ export type Doctor = {
 const AppointmentDepartment: React.FC = () => {
 
     const {doctorId} = useParams()
+    const navigate = useNavigate()
     const [selectedDep, setSelectedDep] = useState<string>("")
     const [selectedDoc, setSelectedDoc] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const [loadingDoc, setLoadingDoc] = useState<boolean>(false)
-    const navigate = useNavigate()
     const [res, setRes] = useState<Department[]>([])
     const [doc, setDoc] = useState<Doctor[]>([])
 
@@ -124,7 +125,7 @@ const AppointmentDepartment: React.FC = () => {
                                     <CustomImg url={n.user_id.photo} className='w-[60px] rounded-full' />
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <h1 className='font-bold text-md'>{n.first_name + " " + n.last_name}</h1>
+                                    <h1 className='font-bold text-md'>{"Dr. " + n.first_name + " " + n.last_name}</h1>
                                 </Table.Cell>
                                 <Table.Cell className='w-1/3'>
                                     <p className='text-xs'>{n.bio.split(".")[0]}</p>
@@ -136,12 +137,12 @@ const AppointmentDepartment: React.FC = () => {
                         </Table>}
                     </div>
                     </div>
-                    <div className='w-full mt-auto'>
-                        <hr/>
-                        <CustomButton disabled={selectedDoc === ""} onClick={handleNavigate} className='ml-auto mr-3 my-3'>
+                   <Footer variant={1}>
+                        <CustomButton disabled={selectedDoc === ""} onClick={handleNavigate} size='md' className='ml-auto mr-3 my-3'>
                             Continue
                         </CustomButton>
-                    </div>
+                   </Footer>
+               
             </div>}
         </>
     )
