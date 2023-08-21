@@ -35,3 +35,7 @@ export async function getDoctor(id: string) {
 
     return response.data;
 }
+
+export function isSunday(date:Date) {
+    return date.getDay() === 0;
+}

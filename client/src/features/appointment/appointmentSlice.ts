@@ -8,6 +8,32 @@ export interface MakeAppointmentData {
     appointment_date: Date
 }
 
+export interface editObject {
+    appointment_date?: Date,
+    reason?: string
+}
+
+interface Pharmacy {
+    user_id: UserInfo,
+    name: string,
+    address: string,   
+    description: string,
+    phone_number: string,       
+    working_hours: string,  
+}
+
+interface Medicine {
+    _id: string,
+    name: string,
+    pharmacy_id: Pharmacy,
+    description: string,
+    strength: string,
+    category: string,       
+    price: number,   
+    manufacturer:string,
+    expiry_date:Date,
+}
+
 export interface UserInfo {
     _id: string,
     photo: string,
@@ -25,12 +51,12 @@ interface doctor_id {
     user_id : UserInfo
 }
 
-interface Appointment {
+export interface Appointment {
     _id: string,
     doctor_id: doctor_id,
     patient_id: string,
     diagnose: string,
-    therapy: string,
+    therapy: Medicine[],
     other_medicine: string,
     description: string,
     reason: string,
@@ -39,7 +65,7 @@ interface Appointment {
     appointment_date: Date
 }
 
-interface AppointmentState {
+export interface AppointmentState {
     selectedAppointment: Appointment | null,
     personAppointments: Appointment[],
     selectedDayAppointments: Appointment[],
@@ -58,6 +84,17 @@ const initialState: AppointmentState = {
 export const bookAppointment = createAsyncThunk("appointment/post",async (appointmentData:MakeAppointmentData, thunkAPI) => {
     try {
         return await appointmentService.makeAppointment(appointmentData)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
+export const editAppointment = createAsyncThunk("appointment/patch",async ({id, editObjectData}: {id: string, editObjectData: editObject}, thunkAPI) => {
+    try {
+        return await appointmentService.editAppointment(id, editObjectData)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -91,6 +128,17 @@ export const getAppointmentsForPerson = createAsyncThunk("appointments/get",asyn
 export const getSelectedAppointment = createAsyncThunk("appointment/get",async (id: string, thunkAPI) => {
     try {
         return await appointmentService.getAppointment(id)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
+export const cancelAppointment = createAsyncThunk("appointment/delete",async (id: string, thunkAPI) => {
+    try {
+        return await appointmentService.deleteAppointment(id)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -162,6 +210,30 @@ export const appointmentSlice = createSlice({
             .addCase(getSelectedAppointment.fulfilled, (state, action) => {
                 state.status = 'idle',
                 state.selectedAppointment = action.payload
+            })
+            .addCase(cancelAppointment.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(cancelAppointment.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(cancelAppointment.fulfilled, (state, action) => {
+                state.status = 'idle',
+                state.personAppointments = state.personAppointments.filter((n) => n._id !== action.payload._id)
+                state.selectedAppointment = null
+            })
+            .addCase(editAppointment.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(editAppointment.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(editAppointment.fulfilled, (state, action) => {
+                const i = state.personAppointments.findIndex(el => el._id === action.payload._id)
+                if(i !== -1) state.personAppointments[i] = action.payload
+                state.status = 'idle'
             })
  
     }

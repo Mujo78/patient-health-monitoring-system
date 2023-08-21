@@ -8,8 +8,8 @@ const {
     cancelAppointment,
     makeAppointment,
     makeAppointmentFinished,
-    getAppointmentForDay
-   // editAppointmentInfo
+    getAppointmentForDay,
+    editAppointmentInfo
 } = require("../controllers/appointmentController")
 
 const router = express.Router()
@@ -24,7 +24,7 @@ router.get("/:id", restrictTo('DOCTOR', 'PATIENT'), getOneAppointment)
 
 router.get("/person/:id", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForPatient)
 
-//router.patch("/edit-details/:id", restrictTo('PATIENT'), editAppointmentInfo)
+router.patch("/edit-details/:id", restrictTo('PATIENT'), editAppointmentInfo)
 router.delete('/:id', restrictTo('DOCTOR', 'PATIENT'), cancelAppointment)
 
 router.get("/", getAllAppointments)

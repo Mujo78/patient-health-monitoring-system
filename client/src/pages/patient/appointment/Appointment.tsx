@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
-import { appointment, getSelectedAppointment, resetSelectedAppointment } from '../../../features/appointment/appointmentSlice';
-import { Button, Card, Spinner, Tabs } from 'flowbite-react';
+import { appointment, cancelAppointment, getSelectedAppointment, resetSelectedAppointment } from '../../../features/appointment/appointmentSlice';
+import { Button, Card, Spinner } from 'flowbite-react';
 import ErrorMessage from '../../../components/ErrorMessage';
 import CustomImg from '../../../components/CustomImg';
 import Footer from '../../../components/Footer';
-
+import AppointmentOverviewEdit from './AppointmentOverviewEdit';
+import moment from 'moment-timezone';
 
 const Appointment: React.FC = () => {
     const {id} = useParams();
-
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const {selectedAppointment : selected, status, message} = useSelector(appointment)
     useEffect(() =>{
@@ -25,8 +26,26 @@ const Appointment: React.FC = () => {
     }, [id, dispatch])
 
     const mailtoLink = `mailto:${selected?.doctor_id.user_id.email}`
+    const appDate = selected?.appointment_date.toString().slice(0, 10)
+    const appDateTime = moment.utc(selected?.appointment_date).add(2, "hours");
+    const startTime = moment.utc(appDateTime).format('hh:mm A');
+    const endTime = moment.utc(appDateTime).add(20, 'minutes').format('hh:mm A');
+    const appointmentTime = `${startTime} - ${endTime}`;
 
-    console.log(selected)
+    const date = new Date(selected?.appointment_date as Date).getTime()
+    const diff = date - new Date().getTime()
+    const canCancel = (diff / (1000 * 60)).toFixed(0)
+
+    const cancelAppointmentNow = () => {
+        if(selected) {
+          dispatch(cancelAppointment(selected._id)).then((action) => {
+            if(typeof action.payload === 'object'){
+              navigate("../", {replace: true})
+            }
+          })
+        }
+      }
+
   return (
     <>
         {status === 'loading' ? 
@@ -35,10 +54,10 @@ const Appointment: React.FC = () => {
         </div>
       : 
       <>
-        {selected ?
+        {selected !== null ?
             <div className='h-full flex flex-col mr-3'>
                 <div className='flex justify-between mt-4'>
-                    <Card horizontal className='flex mt-4 w-2/5 font-Poppins'>
+                    <Card horizontal className='flex w-2/5 font-Poppins'>
                         <div className='flex items-center p-0'>
                             <CustomImg url={selected.doctor_id.user_id.photo} className='mr-3 w-[130px] h-[130px]'/>
                             <div className=''>
@@ -59,25 +78,16 @@ const Appointment: React.FC = () => {
                             </div>
                         </div>
                     </Card>
+                    <div className='flex flex-col divide-y h-full'>
+                        <p><span className='text-md font-semibold'>Date&Time:</span> {appDate} ({appointmentTime})</p>
+                        {selected.reason.length > 0 && <p><span className='text-md font-semibold'>Reason:</span> {selected.reason}</p> }   
+                    </div>
                     <div className='mt-auto'>
-                        <Button color="failure"> Cancel Appointment</Button>
+                        {(Number(canCancel) > 60) && <Button onClick={cancelAppointmentNow} color="failure">Cancel Appointment</Button>}
                     </div>
                 </div>
                 <div className='flex justify-between flex-col h-full mt-6'>
-                    <Tabs.Group aria-label="Default tabs" style="default">
-                        <Tabs.Item
-                            active
-                            title="Overview"
-                        >
-                           <p>Overview</p>
-                        </Tabs.Item>
-                        <Tabs.Item
-                            active
-                            title="Edit"
-                        >
-                           <p>Editing</p>
-                        </Tabs.Item>
-                    </Tabs.Group>
+                    <AppointmentOverviewEdit />
                     <Footer variant={2} />
                 </div>
                 <div>

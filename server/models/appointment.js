@@ -17,16 +17,11 @@ const appointmentSchema = mongoose.Schema({
         required: false,
         default: ""
     },
-    therapy: {
-        type: String,
-        required: false,
-        default: ""
-    },
-    medicine_id:{
+    therapy: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Medicine',
         required: false
-    },
+    }],
     other_medicine: {
         type: String,
         required: false,

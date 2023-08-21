@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Calendar from "react-calendar"
-import 'react-calendar/dist/Calendar.css';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Spinner, Textarea } from 'flowbite-react';
 import CustomImg from '../../../components/CustomImg';
 import { Doctor } from './AppointmentDepartment';
-import { getDoctor } from '../../../service/appointmentSideFunctions';
+import { getDoctor, isSunday } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
@@ -14,6 +12,7 @@ import { appointment, bookAppointment, getAppointmentsForADay, resetAppointmentD
 import { toast } from 'react-hot-toast';
 import Footer from '../../../components/Footer';
 import ErrorMessage from '../../../components/ErrorMessage';
+import CalendarAppointment from '../../../components/CalendarAppointment';
 
 const workTime = [
     "9:00","9:20","9:40","10:00",
@@ -23,17 +22,13 @@ const workTime = [
     "3:00","3:20","3:40","4:00"
 ]
 
-const isSunday = (date: Date) => {
-  return date.getDay() === 0;
-};
-
 function convert12HourTo24Hour(time12Hour: string) {
   const [hours, minutes] = time12Hour.split(":").map(Number);
   return `${hours <= 4 ? hours + 12 : hours}:${minutes}`;
 }
 
 type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const MakeAppointment: React.FC = () => {
 
@@ -60,11 +55,12 @@ const MakeAppointment: React.FC = () => {
 
   const appTime = selectedDayAppointments.map((n) => {
     const date = new Date(n.appointment_date);
-    const localTime = new Date(date.getTime() - (2 * 60 * 60 * 1000));
+    const localTime = new Date(date.getTime());
     const formattedTime = localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const newTime = formattedTime.slice(0,5).trim()
     return newTime;
   });
+  console.log(appTime)
 
   const availableTime = workTime.filter(m => !appTime.includes(m));
 
@@ -154,25 +150,7 @@ const MakeAppointment: React.FC = () => {
             <p> <span className='text-gray-400 text-xl'>•</span> out of bounds </p>
             <p> <span className='text-blue-500 text-xl'>•</span> choosen </p>
           </div>
-        <Calendar className="font-Poppins mt-3 shadow-xl border-gray-300 text-xl w-full rounded-xl p-4" 
-            onChange={setValue}
-            onClickDay={handleGetAppForADay}
-            locale='eng'
-            minDate={new Date()}
-            maxDate={new Date("01/01/2024")}
-            value={value}
-            prev2Label={<span className="text-gray-500">&lt;&lt;</span>}
-            next2Label={<span className="text-gray-500">&gt;&gt;</span>}
-            prevLabel={<span className="text-gray-800">&lt;</span>}
-            nextLabel={<span className="text-gray-800">&gt;</span>}
-            tileClassName={({ date, view }) =>
-              view === 'month' ? 
-                ` rounded-full p-3 hover:bg-blue-100 cursor-pointer${value &&
-                    value.toString() === date.toDateString() ? 'bg-blue-500 text-white' : ''
-                  } ` : ''
-            }
-            tileDisabled={({ date }) => isSunday(date)}
-          />
+          <CalendarAppointment variant={1} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} />
           <Textarea placeholder='Note for the doctor' title='Note' rows={4} className='mt-6 text-sm' value={reason} name='reason' onChange={(e) => setReason(e.target.value)} />
           <div className='h-3 mt-2'>  {status === 'failed' && <p className='text-xs text-red-600 font-bold'>{message}</p>} </div>
         </div>

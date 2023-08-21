@@ -53,8 +53,8 @@ const makeAppointment = asyncHandler( async (req, res) =>{
 
 const makeAppointmentFinished = asyncHandler( async (req, res) => {
 
-    if(req.body.doctor_id || req.body.patient_id || req.body.reason || req.body.appointment_date || req.body.appointment_time){
-        return res.status(404).json("You can't edit fields: reason, date or time of appointment!")
+    if(req.body.doctor_id || req.body.patient_id || req.body.reason || req.body.appointment_date){
+        return res.status(404).json("You can't edit fields: reason, date of an appointment!")
     }
 
     const app = await Appointment.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
@@ -64,21 +64,46 @@ const makeAppointmentFinished = asyncHandler( async (req, res) => {
     return res.status(200).json(app)
 })
 
-/*
 const editAppointmentInfo = asyncHandler ( async (req, res) => {
 
-    if(req.body.doctor_id || req.body.diagnose || req.body.therapy || req.bodydescription || req.body.finished){
-        return res.status(404).json("You can't edit fields: diagnose, therapy, description!")
-    }
-
     const appToEdit = await Appointment.findById(req.params.id)
+    if(!appToEdit) return res.status(200).json("Appointment not found!")
 
-    const date = new Date()
-    const d = date.toISOString().toString().slice(0, 10)
-    const time = date.toLocaleTimeString().toString()
-    console.log("object")
+    const current = new Date();
+    const appDate = new Date(appToEdit.appointment_date);
+
+    if(appDate <= current) return res.status(200).json("You can't edit past appointments!")
+
+    const timeDifference = appDate - current;
+    const minutesDifference = timeDifference / (1000 * 60);
+    if (minutesDifference < 60) return res.status(400).json("You can't edit appointments within 1 hour of the appointment time.");
+
+    if(req.body.reason !== undefined) appToEdit.reason = req.body.reason
+    if(req.body.appointment_date !== undefined) appToEdit.appointment_date = req.body.appointment_date
+
+    const appointmentDateWithoutTime = new Date(appToEdit.appointment_date).toISOString().slice(0, 10);
+    const existingAppointment = await Appointment.findOne({
+        doctor_id: appToEdit.doctor_id,
+        patient_id: appToEdit.patient_id,
+        appointment_date: {
+        $gte: new Date(appointmentDateWithoutTime),
+        $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')),
+        },
+    });
+
+    if (existingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
+
+    const overlappingAppointment = await Appointment.findOne({
+        doctor_id: { $ne: appToEdit.doctor_id },
+        patient_id: appToEdit.patient_id,
+        appointment_date: new Date(req.body.appointment_date),
+    });
+
+    if (overlappingAppointment) return res.status(400).json("You already have an appointment with a different doctor at that time.");
+
+    await appToEdit.save();
+    return res.status(200).json(appToEdit)
 })
-*/
 
 const getAppointmentForPatient = getAllDocForUser()
 
@@ -152,6 +177,6 @@ module.exports = {
     cancelAppointment,
     makeAppointment,
     makeAppointmentFinished,
-    getAppointmentForDay
-    //editAppointmentInfo
+    getAppointmentForDay,
+    editAppointmentInfo
 }
