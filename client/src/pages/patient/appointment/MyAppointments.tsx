@@ -23,6 +23,7 @@ const MyAppointments: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {personAppointments, status} = useSelector(appointment)
+
   
   useEffect(() =>{
     dispatch(getAppointmentsForPerson())

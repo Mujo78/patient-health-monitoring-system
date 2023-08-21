@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Tabs, ListGroup, Textarea , Badge   } from 'flowbite-react';
-import { appointment, editAppointment, getAppointmentsForADay, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
+import { appointment, editAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import ErrorMessage from '../../../components/ErrorMessage';
 import { useSelector } from 'react-redux';
 import {HiOutlinePencilSquare, HiOutlineDocumentDuplicate} from "react-icons/hi2"
@@ -11,6 +11,7 @@ import { isSunday } from '../../../service/appointmentSideFunctions';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import moment from 'moment';
 
 const workTime = [
   "9:00","9:20","9:40","10:00",
@@ -31,10 +32,12 @@ const AppointmentOverviewEdit: React.FC = () => {
   const {selectedAppointment: sApp, selectedDayAppointments, status, message} = useSelector(appointment)
   const d = sApp?.appointment_date;
   const r = sApp?.reason === '' ? '' : sApp?.reason as string
+  const t = convert12HourTo24Hour(moment.utc(sApp?.appointment_date).add(2, "hours").toString().slice(15, 21) as string)
 
   const [value, setValue] = useState<Value>(new Date(sApp?.appointment_date as Date))
-  const [newTime, setNewTime] = useState<string>("")
+  const [newTime, setNewTime] = useState<string>(t)
   const [reason, setReason] = useState<string>(r)
+  let active;
 
   const dispatch = useAppDispatch()
 
@@ -62,27 +65,36 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   const handleEdit = () => {
     const time = convert12HourTo24Hour(newTime)
-    const newAppDate = value?.toLocaleString().slice(0, 9) + "," + time;
+    const newAppDate = value?.toLocaleString().slice(0,10) + "," + time;
 
     const editObjectData = {
       reason,
       appointment_date: new Date(newAppDate)
     }
-
-    if(reason !== sApp?.reason || new Date(newAppDate) !== sApp.appointment_date){
+    
+    if(reason !== sApp?.reason || new Date(newAppDate).getTime() !== new Date(sApp.appointment_date).getTime()){
       if(id) {
         dispatch(editAppointment({id, editObjectData})).then((action) =>{
           if(typeof action.payload === 'object'){
             toast.success("Successfully edited appointment.")
             navigate("../")
+            dispatch(reset())
           }
         })
       }
     }
+    active = 1;
+  }
+
+  const handleGet = (tab: number) => {
+    if(tab === 1){
+      dispatch(getAppointmentsForADay(value as Date))
+      dispatch(resetAppointmentDay())
+    }
   }
   
   return (
-    <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins'>
+    <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
       <Tabs.Item active title="Overview" icon={HiOutlineDocumentDuplicate}>
       {sApp?.finished ? <div className='flex divide-x divide-gray-300 h-[280px] w-full justify-between'>
         <div className='h-full w-1/4 flex flex-col flex-grow'>
@@ -123,7 +135,7 @@ const AppointmentOverviewEdit: React.FC = () => {
     </div> }
       </Tabs.Item>
       {Number(canEdit) > 60 ? 
-      <Tabs.Item title="Edit" className='flex' icon={HiOutlinePencilSquare}>
+      <Tabs.Item title="Edit" className='flex' active={active === 1} icon={HiOutlinePencilSquare}>
         <div className='flex w-full flex-col'>
           <div className='flex w-full justify-between'>
               <div className='w-1/5 ml-1 flex flex-col'>

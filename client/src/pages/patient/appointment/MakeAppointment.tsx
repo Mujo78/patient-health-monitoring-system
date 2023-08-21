@@ -52,8 +52,9 @@ const MakeAppointment: React.FC = () => {
       dispatch(getAppointmentsForADay(value as Date))
     }
   }, [value, dispatch])
+  console.log(selectedDayAppointments)
 
-  const appTime = selectedDayAppointments.map((n) => {
+  const appTime = selectedDayAppointments && selectedDayAppointments.map((n) => {
     const date = new Date(n.appointment_date);
     const localTime = new Date(date.getTime());
     const formattedTime = localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });

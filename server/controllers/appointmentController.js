@@ -69,39 +69,38 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
     const appToEdit = await Appointment.findById(req.params.id)
     if(!appToEdit) return res.status(200).json("Appointment not found!")
 
-    const current = new Date();
+    const patientEditing = await Patient.findById(appToEdit.patient_id)
+    const currentUserPatient = await Patient.findOne({user_id: req.user._id})
+    if(patientEditing._id !== currentUserPatient._id) return res.status(400).json("This is not your appointment, you can't edit it!")
+
+    
     const appDate = new Date(appToEdit.appointment_date);
+    if(appDate <= new Date()) return res.status(400).json("You can't edit past appointments!")
 
-    if(appDate <= current) return res.status(200).json("You can't edit past appointments!")
-
-    const timeDifference = appDate - current;
+    const timeDifference = appDate - new Date();
     const minutesDifference = timeDifference / (1000 * 60);
     if (minutesDifference < 60) return res.status(400).json("You can't edit appointments within 1 hour of the appointment time.");
+    
+    const appointmentDateWithoutTime = moment(req.body.appointment_date).tz("Europe/Sarajevo").format("YYYY-MM-DD");
 
-    if(req.body.reason !== undefined) appToEdit.reason = req.body.reason
-    if(req.body.appointment_date !== undefined) appToEdit.appointment_date = req.body.appointment_date
-
-    const appointmentDateWithoutTime = new Date(appToEdit.appointment_date).toISOString().slice(0, 10);
     const existingAppointment = await Appointment.findOne({
         doctor_id: appToEdit.doctor_id,
         patient_id: appToEdit.patient_id,
-        appointment_date: {
-        $gte: new Date(appointmentDateWithoutTime),
-        $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')),
-        },
+        appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')) }
     });
-
-    if (existingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
-
+    if (existingAppointment && req.body.reason === appToEdit.reason) return res.status(400).json("You already have an appointment with this doctor on this day.");
+    
     const overlappingAppointment = await Appointment.findOne({
         doctor_id: { $ne: appToEdit.doctor_id },
         patient_id: appToEdit.patient_id,
         appointment_date: new Date(req.body.appointment_date),
     });
-
     if (overlappingAppointment) return res.status(400).json("You already have an appointment with a different doctor at that time.");
+    
+    if(req.body.reason) appToEdit.reason = req.body.reason
+    if(req.body.appointment_date) appToEdit.appointment_date = req.body.appointment_date
 
-    await appToEdit.save();
+    await appToEdit.save({validateBeforeSave: false});
     return res.status(200).json(appToEdit)
 })
 

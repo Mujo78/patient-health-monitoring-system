@@ -106,7 +106,11 @@ export const authSlice = createSlice({
         reset: (state) => {
             state.status = '',
             state.message = ''
+        },
+        resetAccessUser: (state) =>{
+            state.accessUser = null
         }
+
     },
     extraReducers(builder) {
         builder
@@ -144,6 +148,7 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.accessUser = null
+                state.status = 'idle'
             })
             .addCase(verifyEmailAddress.pending, (state) =>{
                 state.status = 'loading'
@@ -161,5 +166,5 @@ export const authSlice = createSlice({
 
 export const authUser = (state: RootState) => state.auth;
 
-export const {reset} = authSlice.actions
+export const {reset, resetAccessUser} = authSlice.actions
 export default authSlice.reducer;
