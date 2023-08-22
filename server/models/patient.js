@@ -37,6 +37,14 @@ const patientSchema = mongoose.Schema({
         enum: ["Male", "Female", "Other"],
         required: [true, "Gender is required!"]
     },
+    height: {
+        type: String,
+        required: false
+    },
+    weight: {
+        type: String,
+        required: false
+    },
     blood_type: {
         type: String,
         required: [true, "Blood type is required!"]

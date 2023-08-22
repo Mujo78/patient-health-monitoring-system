@@ -28,7 +28,7 @@ const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForA
             tileClassName={({ date, view }) =>
               view === 'month' ? 
                 ` rounded-full ${variant === 1 ? 'p-3' : 'p-2'} hover:bg-blue-100 cursor-pointer${value &&
-                    value.toString() === date.toDateString() ? 'bg-blue-500 text-white' : ''
+                    value.toString() === date.toString() ? '!bg-blue-700 hover:!bg-700 hover:!text-white' : ''
                   } ` : ''
             }
             tileDisabled={({ date }) => isSunday(date)}

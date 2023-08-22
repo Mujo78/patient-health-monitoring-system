@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import appointmentService from "./appointmentService"
 import { RootState } from "../../app/store"
+import { Medicine } from "../medicine/medicineSlice"
 
 export interface MakeAppointmentData {
     doctor_id: string,
@@ -11,27 +12,6 @@ export interface MakeAppointmentData {
 export interface editObject {
     appointment_date?: Date,
     reason?: string
-}
-
-interface Pharmacy {
-    user_id: UserInfo,
-    name: string,
-    address: string,   
-    description: string,
-    phone_number: string,       
-    working_hours: string,  
-}
-
-interface Medicine {
-    _id: string,
-    name: string,
-    pharmacy_id: Pharmacy,
-    description: string,
-    strength: string,
-    category: string,       
-    price: number,   
-    manufacturer:string,
-    expiry_date:Date,
 }
 
 export interface UserInfo {
