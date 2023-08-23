@@ -1,5 +1,5 @@
 import axios from "axios"
-import { MakeAppointmentData, editObject } from "./appointmentSlice"
+import { MakeAppointmentData, editObject, finishAppointmentObj } from "./appointmentSlice"
 
 const BASE_URL = "http://localhost:3001/api/v1/appointment/"
 
@@ -61,13 +61,23 @@ const editAppointment =async (id: string, editObjectData: editObject, token: str
     return response.data;
 }
 
+const finishAppointment = async (id: string, finishAppointmentObj: finishAppointmentObj,  token: string) => {
+    const response = await axios.patch(`${BASE_URL}${id}`, finishAppointmentObj, {
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+    return response.data;
+} 
+
 const appointmentService = {
     makeAppointment,
     getAppointmentsForDay,
     getAppointmentForPerson,
     getAppointment,
     deleteAppointment,
-    editAppointment
+    editAppointment,
+    finishAppointment
 }
 
 export default appointmentService

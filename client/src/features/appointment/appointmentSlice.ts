@@ -9,6 +9,15 @@ export interface MakeAppointmentData {
     appointment_date: Date
 }
 
+export interface finishAppointmentObj {
+    other_medicine?: string,
+    description?: string,
+    diagnose?: string,
+    therapy?: string[],
+    finished: boolean
+}
+
+
 export interface editObject {
     appointment_date?: Date,
     reason?: string
@@ -30,11 +39,23 @@ interface doctor_id {
     age: string,
     user_id : UserInfo
 }
+interface patient_id {
+    blood_type: string,
+    date_of_birth: Date,
+    first_name: string, 
+    gender: string,
+    height: string,
+    last_name: string,
+    user_id: UserInfo,
+    weight:string,
+    address: string,
+    _id: string
+}
 
 export interface Appointment {
     _id: string,
     doctor_id: doctor_id,
-    patient_id: string,
+    patient_id: patient_id,
     diagnose: string,
     therapy: Medicine[],
     other_medicine: string,
@@ -87,6 +108,24 @@ export const editAppointment = createAsyncThunk<
     try {
         const token = thunkAPI.getState().auth.accessUser.token;
         return await appointmentService.editAppointment(id, editObjectData, token)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }    
+})
+
+
+export const makeAppointmentFinished = createAsyncThunk<
+        Appointment,
+        {id: string, finishAppointment: finishAppointmentObj},
+        {state: RootState}
+        >
+("appointment-finish/patch",async ({id, finishAppointment}, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.accessUser.token;
+        return await appointmentService.finishAppointment(id, finishAppointment, token)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -246,6 +285,16 @@ export const appointmentSlice = createSlice({
             .addCase(editAppointment.fulfilled, (state, action) => {
                 const i = state.personAppointments.findIndex(el => el._id === action.payload._id)
                 if(i !== -1) state.personAppointments[i] = action.payload
+                state.status = 'idle'
+            })
+            .addCase(makeAppointmentFinished.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(makeAppointmentFinished.rejected, (state, action) => {
+                state.status = 'failed',
+                state.message = action.payload as string
+            })
+            .addCase(makeAppointmentFinished.fulfilled, (state) => {
                 state.status = 'idle'
             })
  

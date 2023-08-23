@@ -108,7 +108,7 @@ const AppointmentOverviewEdit: React.FC = () => {
           <ListGroup>
           {sApp?.therapy?.length > 0 && sApp.therapy.map((n) =>
           <ListGroup.Item
-            key={n._id}
+            key={1}
             active
           >
             <p>

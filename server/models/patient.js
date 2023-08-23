@@ -52,15 +52,18 @@ const patientSchema = mongoose.Schema({
     date_of_birth: {
         type: Date,
         required: [true, "Date of birth is required!"]
-    },
-    health_card: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'Appointment' 
-        }
-    ]
+    }
 }, {
     timestamps: true
 })
+
+patientSchema.pre(/^find/, function(next) {
+    this.populate({
+      path: "user_id",
+      select: "email photo"
+    });
+  
+    next();
+  });
 
 module.exports = mongoose.model('Patient', patientSchema);

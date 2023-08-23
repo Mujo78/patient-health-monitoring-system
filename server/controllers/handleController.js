@@ -6,6 +6,7 @@ const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
 
 const getAllData = Model => asyncHandler (async (req, res) =>{
+    
     const data = await Model.find();
     if(data) return res.status(200).json(data)
     return res.status(404).json("There was an error")
@@ -49,12 +50,21 @@ const getDoc = Model => asyncHandler (async (req, res) =>{
 
 const getAllDocForUser = () => asyncHandler( async(req, res) => {
 
-    let mod;
-    if(req.user.role === 'PATIENT') mod = Patient
-    if(req.user.role === 'DOCTOR') mod = Doctor
+    let mod, mod_id;
+    if(req.user.role === 'PATIENT') {
+        mod = Patient
+        mod_id = "patient_id"
+    }
+    if(req.user.role === 'DOCTOR') {
+        mod = Doctor
+        mod_id = "doctor_id"
+    }
 
+    const query = {};
+    
     const model = await mod.findOne({user_id: req.params.id})
-    const allApp = await Appointment.find({patient_id: model._id})
+    query[mod_id] = model._id;
+    const allApp = await Appointment.find(query)
 
     if(allApp) return res.status(200).json(allApp)
 })

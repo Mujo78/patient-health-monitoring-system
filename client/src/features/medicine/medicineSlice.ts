@@ -41,7 +41,7 @@ export const getMedicine = createAsyncThunk<
     Medicine[],
     undefined,
     {state: RootState}
->("appointments/get",async (_, thunkAPI) => {
+>("medicine/get",async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.accessUser.token;
         return await medicineService.getAllMedicine(token)
