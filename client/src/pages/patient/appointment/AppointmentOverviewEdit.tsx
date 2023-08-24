@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Tabs, ListGroup, Textarea , Badge   } from 'flowbite-react';
+import { Tabs, ListGroup, Textarea , Badge, Modal, Button   } from 'flowbite-react';
 import { appointment, editAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import ErrorMessage from '../../../components/ErrorMessage';
 import { useSelector } from 'react-redux';
@@ -7,11 +7,12 @@ import {HiOutlinePencilSquare, HiOutlineDocumentDuplicate} from "react-icons/hi2
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { Value } from './MakeAppointment';
 import { useAppDispatch } from '../../../app/hooks';
-import { isSunday } from '../../../service/appointmentSideFunctions';
+import { isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
+import { Medicine } from '../../../features/medicine/medicineSlice';
 
 const workTime = [
   "9:00","9:20","9:40","10:00",
@@ -37,6 +38,8 @@ const AppointmentOverviewEdit: React.FC = () => {
   const [value, setValue] = useState<Value>(new Date(sApp?.appointment_date as Date))
   const [newTime, setNewTime] = useState<string>(t)
   const [reason, setReason] = useState<string>(r)
+  const [medicine, setMedicine] = useState<Medicine>()
+  const [show, setShow] = useState<boolean>(false)
   let active;
 
   const dispatch = useAppDispatch()
@@ -65,7 +68,9 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   const handleEdit = () => {
     const time = convert12HourTo24Hour(newTime)
-    const newAppDate = value?.toLocaleString().slice(0,10) + "," + time;
+    const index = value?.toLocaleString().indexOf(",")
+    const date = value?.toLocaleString().slice(0, index)
+    const newAppDate = date+ ", " + time;
 
     const editObjectData = {
       reason,
@@ -92,8 +97,17 @@ const AppointmentOverviewEdit: React.FC = () => {
       dispatch(resetAppointmentDay())
     }
   }
+
+  const handleShowMedicine = (med : Medicine) => {
+    setMedicine(med)
+    setShow(true)
+  }
+  const onClose = () => {
+    setShow(false)
+  }
   
   return (
+    <>
     <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
       <Tabs.Item active title="Overview" icon={HiOutlineDocumentDuplicate}>
       {sApp?.finished ? <div className='flex divide-x divide-gray-300 h-[280px] w-full justify-between'>
@@ -105,14 +119,15 @@ const AppointmentOverviewEdit: React.FC = () => {
         <div className='h-full w-1/4 flex flex-grow flex-col'>
           <h1 className='text-center'>Therapy</h1>
           <hr className="border-b border-gray-300" />
-          <ListGroup>
+          <ListGroup >
           {sApp?.therapy?.length > 0 && sApp.therapy.map((n) =>
           <ListGroup.Item
-            key={1}
-            active
+            key={n._id}
+            onClick={() => handleShowMedicine(n)}
+          
           >
             <p>
-              Profile
+              {n.name} - {n.strength}
             </p>
           </ListGroup.Item>
           )}
@@ -143,13 +158,13 @@ const AppointmentOverviewEdit: React.FC = () => {
                   <Textarea placeholder='Reason' name='reason' className='text-sm' onChange={(e) => setReason(e.currentTarget.value)} value={reason} rows={11} />
               </div>
               <div className='flex justify-between w-3/4'>
-                <CalendarAppointment variant={2} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} />
+                <CalendarAppointment variant={2} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} docAvailable={sApp?.doctor_id.available_days as string[]} />
                 <div className='w-1/3 flex flex-col my-auto mr-4 justify-around h-full'>
-                  <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)}</h1>
+                  <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)} {(availableTime.length)}</h1>
                   <div className='flex flex-wrap w-full p-1.5 border-gray-300 border rounded-lg'>
-                    {isSunday(value as Date) ?
+                    {isDoctorAvailable(value as Date, sApp?.doctor_id.available_days as string[]) ?
                       <div className='my-auto mx-auto'>
-                      <ErrorMessage text='You can not make appointment today' size='sm' /> 
+                        <ErrorMessage text='You can not make appointment today' size='sm' /> 
                       </div> 
                       : availableTime.length > 0 ? availableTime.map((n) => 
                       <Badge  size="sm" key={n} onClick={() => setTimeForDate(n)} color="gray" className={`m-1 ${newTime === n && 'bg-blue-700 text-white hover:text-white'} cursor-pointer  focus:!ring-blue-600`}>{
@@ -172,6 +187,23 @@ const AppointmentOverviewEdit: React.FC = () => {
   
       </Tabs.Item> : ""}
     </Tabs.Group>
+    <Modal show={show} onClose={onClose} className='font-Poppins'>
+        <Modal.Header>{medicine?.name} - {medicine?.strength}</Modal.Header>
+        <Modal.Body>
+          <div className="space-y-6 text-black">
+            <p> <span className='font-semibold'>Category:</span> {medicine?.category}</p>
+            <p> <span className='font-semibold'>About:</span> {medicine?.description}</p>
+            <p> <span className='font-semibold'>Manufacturer:</span> {medicine?.manufacturer}</p>
+            <p className='ml-auto'> <span className='font-semibold'>Price:</span> {medicine?.price} BAM</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button color="gray" onClick={onClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   )
 }
 

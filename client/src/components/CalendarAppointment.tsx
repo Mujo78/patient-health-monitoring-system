@@ -2,16 +2,17 @@ import React from 'react'
 import Calendar, { OnClickFunc } from "react-calendar"
 import 'react-calendar/dist/Calendar.css';
 import { Value } from '../pages/patient/appointment/MakeAppointment';
-import { isSunday } from '../service/appointmentSideFunctions';
+import { isDoctorAvailable } from '../service/appointmentSideFunctions';
 
 type Props = {
     value: Value,
     setValue: React.Dispatch<React.SetStateAction<Value>>
     handleGetAppForADay: OnClickFunc,
-    variant: number
+    variant: number,
+    docAvailable:string[]
 }
 
-const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForADay, variant}) => {
+const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForADay,docAvailable, variant}) => {
 
   return (
     <Calendar className={`font-Poppins shadow-xl border-gray-300 ${variant === 1 ? 'text-xl mt-3 w-full rounded-xl' : ''} p-4`} 
@@ -31,7 +32,7 @@ const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForA
                     value.toString() === date.toString() ? '!bg-blue-700 hover:!bg-700 hover:!text-white' : ''
                   } ` : ''
             }
-            tileDisabled={({ date }) => isSunday(date)}
+            tileDisabled={({ date }) => isDoctorAvailable(date, docAvailable)}
           />
   )
 }

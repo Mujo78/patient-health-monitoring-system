@@ -16,7 +16,7 @@ const Footer: React.FC<Props> = ({variant, children}) => {
       }
   
     return (
-    <div className='w-full mt-auto'>
+    <div className='w-full mt-auto font-Poppins'>
         <hr/>
         <div className={`flex justify-${variant === 1 ? "end" : "between  mb-3 mt-3"}`}>
             {variant === 2 && <Button color="light" onClick={goBack}>

@@ -39,3 +39,8 @@ export async function getDoctor(id: string) {
 export function isSunday(date:Date) {
     return date.getDay() === 0;
 }
+
+export function isDoctorAvailable(date: Date, available_days: string[]) {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+    return !available_days.includes(dayOfWeek);
+  }

@@ -24,7 +24,8 @@ export type Doctor = {
     phone_number: string,
     qualification: string,
     speciality: string,
-    user_id: UserInfo
+    user_id: UserInfo,
+    available_days: string[]
 }
 
 const AppointmentDepartment: React.FC = () => {

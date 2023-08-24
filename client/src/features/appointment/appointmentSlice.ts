@@ -37,7 +37,8 @@ interface doctor_id {
     qualification: string,
     bio: string,
     age: string,
-    user_id : UserInfo
+    user_id : UserInfo,
+    available_days: string[]
 }
 interface patient_id {
     blood_type: string,

@@ -23,7 +23,7 @@ const AppointmentLayout: React.FC = () => {
 
   return (
     <>
-        {newApp ? <Outlet /> : <div className='flex justify-center items-center h-full'>
+        {newApp ? <Outlet /> : <div className='flex justify-center font-Poppins items-center h-full'>
             <CustomButton onClick={makeNewAppointment}>
                 Make appointment
             </CustomButton>

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Spinner, Textarea } from 'flowbite-react';
 import CustomImg from '../../../components/CustomImg';
 import { Doctor } from './AppointmentDepartment';
-import { getDoctor, isSunday } from '../../../service/appointmentSideFunctions';
+import { getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
@@ -40,54 +40,7 @@ const MakeAppointment: React.FC = () => {
   const [value, setValue] = useState<Value>(new Date());
   const [newTime, setNewTime] = useState<string>("")
   const [reason, setReason] = useState<string>("")  
-  const [doc, setDoc] = useState<Doctor | null>(null)
-
-  const handleGetAppForADay = (value: Date) => {
-    dispatch(getAppointmentsForADay(value))
-    dispatch(resetAppointmentDay())
-  }
-  
-  useEffect(() =>{
-    if(value && !isSunday(value as Date)){
-      dispatch(getAppointmentsForADay(value as Date))
-    }
-  }, [value, dispatch])
-  console.log(selectedDayAppointments)
-
-  const appTime = selectedDayAppointments && selectedDayAppointments.map((n) => {
-    const date = new Date(n.appointment_date);
-    const localTime = new Date(date.getTime());
-    const formattedTime = localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const newTime = formattedTime.slice(0,5).trim()
-    return newTime;
-  });
-  console.log(appTime)
-
-  const availableTime = workTime.filter(m => !appTime.includes(m));
-
-  const setTimeForDate = (time: string) => {
-    setNewTime(time)
-  }
-  console.log(selectedDayAppointments)
-
-  const makeNewAppointment = () => {
-    const time = convert12HourTo24Hour(newTime)
-    const newAppDate = value?.toLocaleString().slice(0, 9) + "," + time;
-
-    const appointmentData = {
-      doctor_id: doctorId ? doctorId : "",
-      reason: reason,
-      appointment_date: new Date(newAppDate)
-    }
-    if(doctorId && newTime && !isSunday(value as Date)){
-      dispatch(bookAppointment(appointmentData)).then((action) =>{
-        if(typeof action.payload === 'object'){
-          toast.success('Appointment successfully created!')
-          navigate("/appointment", {replace: true})
-        }
-      })
-    }
-  }
+  const [doc, setDoc] = useState<Doctor>()
 
   useEffect(() => {
     const fetchData = async (id: string) => {
@@ -95,6 +48,7 @@ const MakeAppointment: React.FC = () => {
         setLoading(true)
         const response = await getDoctor(id)
         setDoc(response)
+        setLoading(false);
       } finally {
         setLoading(false)
       }
@@ -104,8 +58,60 @@ const MakeAppointment: React.FC = () => {
       fetchData(doctorId)
     }
   }, [doctorId])
+  console.log(doc)
+
+  const handleGetAppForADay = (value: Date) => {
+    dispatch(getAppointmentsForADay(value))
+    dispatch(resetAppointmentDay())
+  }
+
+  const makeNewAppointment = () => {
+    const time = convert12HourTo24Hour(newTime)
+    const index = value?.toLocaleString().indexOf(",")
+    const date = value?.toLocaleString().slice(0, index)
+    const newAppDate = date+ ", " + time;
+
+    
+    const appointmentData = {
+      doctor_id: doctorId ? doctorId : "",
+      reason: reason,
+      appointment_date: new Date(newAppDate)
+    }
+    if(doctorId && newTime){
+      dispatch(bookAppointment(appointmentData)).then((action) =>{
+        if(typeof action.payload === 'object'){
+          toast.success('Appointment successfully created!')
+          navigate("/appointment", {replace: true})
+        }
+      })
+    }
+  }
+  
+  useEffect(() =>{
+    if(value && doc){
+       if(isDoctorAvailable(value as Date, doc.available_days as string[])){
+        dispatch(getAppointmentsForADay(value as Date))
+    }
+  }
+  }, [value, dispatch, doc])
+
+  const appTime = selectedDayAppointments && selectedDayAppointments.map((n) => {
+    const date = new Date(n.appointment_date);
+    const localTime = new Date(date.getTime());
+    const formattedTime = localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const newTime = formattedTime.slice(0,5).trim()
+    return newTime;
+  });
+
+  const availableTime = workTime.filter(m => !appTime.includes(m));
+
+  const setTimeForDate = (time: string) => {
+    setNewTime(time)
+  }
 
   return (
+    <>
+    {!doc ? <div className='h-full flex justify-center items-center'> <Spinner size="xl" /> </div> :
     <div className='flex font-Poppins flex-col h-full'>
       <div className='flex w-full h-full justify-between'>
         <div className='w-1/4 my-auto h-full'>
@@ -151,14 +157,14 @@ const MakeAppointment: React.FC = () => {
             <p> <span className='text-gray-400 text-xl'>•</span> out of bounds </p>
             <p> <span className='text-blue-500 text-xl'>•</span> choosen </p>
           </div>
-          <CalendarAppointment variant={1} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} />
+          <CalendarAppointment variant={1} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} docAvailable={doc?.available_days as string[]} />
           <Textarea placeholder='Note for the doctor' title='Note' rows={4} className='mt-6 text-sm' value={reason} name='reason' onChange={(e) => setReason(e.target.value)} />
           <div className='h-3 mt-2'>  {status === 'failed' && <p className='text-xs text-red-600 font-bold'>{message}</p>} </div>
         </div>
         <div className='w-1/4 flex flex-col my-auto mr-4 justify-evenly h-full'>
-            <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)} ({isSunday(value as Date) ? 0 : availableTime.length})</h1>
+            <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)} ({availableTime.length})</h1>
             <div className='flex flex-wrap h-3/4 w-full p-1.5 border-gray-300 border rounded-lg'>
-              {isSunday(value as Date) ?
+              {isDoctorAvailable(value as Date, doc?.available_days as string[]) ?
                 <div className='my-auto mx-auto'>
                  <ErrorMessage text='You can not make appointment today' size='sm' /> 
                 </div> 
@@ -171,13 +177,14 @@ const MakeAppointment: React.FC = () => {
         </div>
       </div>
       <Footer variant={2}>
-            <CustomButton disabled={!value || !newTime || isSunday(value as Date)} size='md' className='mr-3 w-1/12' onClick={makeNewAppointment}>
+            <CustomButton disabled={!value || !newTime || isDoctorAvailable(value as Date, doc?.available_days as string[])} size='md' className='mr-3 w-1/12' onClick={makeNewAppointment}>
               Finish
             </CustomButton>
       </Footer>
        
       
-    </div>
+    </div>}
+    </>
   )
 }
 

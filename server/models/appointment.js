@@ -55,13 +55,12 @@ const appointmentSchema = mongoose.Schema({
 appointmentSchema.pre(/^find/, function(next) {
     this.populate({
       path: "doctor_id",
-      select: "_id speciality bio qualification first_name last_name age"
+      select: "_id speciality bio qualification first_name last_name age available_days"
     }).populate({
         path: "patient_id",
         select: "first_name last_name weight height gender date_of_birth blood_type user_id address"
     }).populate({
-        path: "therapy",
-        select: "name strength"
+        path: "therapy"
     })
   
     next();

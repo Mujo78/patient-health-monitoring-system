@@ -71,8 +71,7 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
 
     const patientEditing = await Patient.findById(appToEdit.patient_id)
     const currentUserPatient = await Patient.findOne({user_id: req.user._id})
-    if(patientEditing._id !== currentUserPatient._id) return res.status(400).json("This is not your appointment, you can't edit it!")
-
+    if(patientEditing._id.toString() !== currentUserPatient._id.toString()) return res.status(400).json("This is not your appointment, you can't edit it!")
     
     const appDate = new Date(appToEdit.appointment_date);
     if(appDate <= new Date()) return res.status(400).json("You can't edit past appointments!")

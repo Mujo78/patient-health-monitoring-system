@@ -55,6 +55,13 @@ const doctorSchema = mongoose.Schema({
     age: {
         type: String,
         required: [true, "Age is required!"]
+    },
+    available_days: {
+        type: [{
+            type: String,
+            enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        }],
+        required: false
     }
     
 })

@@ -69,6 +69,9 @@ const DocAppointment: React.FC = () => {
     const endTime = moment.utc(appDateTime).add(20, 'minutes').format('hh:mm A');
     const appointmentTime = `${startTime} - ${endTime}`;
 
+    let laterAppointment;
+    if(selected) laterAppointment = new Date(selected?.appointment_date) > new Date()
+    
 
     const handleChange = (value: readonly { value: string; label: string; }[]) =>{
         const newOnes = value.map((n) => n.value)
@@ -145,28 +148,28 @@ const DocAppointment: React.FC = () => {
                         <div className='flex w-full justify-between'>
                             <div className='w-2/4 pr-4'>
                                 <Label htmlFor="diagnose" className='mb-1 block' value="Diagnose" />
-                                <Textarea {...register("diagnose")} disabled={selected?.finished} rows={4} className='text-sm' />
+                                <Textarea {...register("diagnose")} disabled={selected?.finished || laterAppointment} rows={4} className='text-sm' />
                             </div>
                             <div className='w-2/4 pl-3'>
                                 <Label htmlFor="therapy" className="mb-1 block" value="Therapy" />
-                                <Select options={options} id='therapy' defaultValue={ifIsFinished} isDisabled={selected?.finished} className='mt-1 text-xs' isMulti closeMenuOnSelect={false} onChange={(value) => handleChange(value)} />
+                                <Select options={options} id='therapy' defaultValue={ifIsFinished} isDisabled={selected?.finished || laterAppointment} className='mt-1 text-xs' isMulti closeMenuOnSelect={false} onChange={(value) => handleChange(value)} />
                             </div>
                         </div>
                         <div className='flex w-full justify-between'>
                             <div className='flex-grow pr-6'>
                                 <Label htmlFor="other_medicine" className="mb-1 block" value="Other medicine" />
-                                <Textarea {...register("other_medicine")}  disabled={selected?.finished} rows={4} className='text-sm' />
+                                <Textarea {...register("other_medicine")}  disabled={selected?.finished || laterAppointment} rows={4} className='text-sm' />
                             </div>
                             <div className='flex-grow'>
                                 <Label htmlFor="description" className="mb-1 block" value="Description" />
-                                <Textarea {...register("description")} disabled={selected?.finished}  rows={4} className='text-sm' />
+                                <Textarea {...register("description")} disabled={selected?.finished || laterAppointment}  rows={4} className='text-sm' />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className='w-full pr-6'>
                     <Footer variant={2}>
-                       {!selected?.finished && <CustomButton onClick={makeFinished}>Save changes</CustomButton>}    
+                       {!selected?.finished || !laterAppointment && <CustomButton onClick={makeFinished}>Save changes</CustomButton>}    
                     </Footer>
                 </div>
             </div>
