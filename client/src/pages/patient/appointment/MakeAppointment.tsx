@@ -58,7 +58,6 @@ const MakeAppointment: React.FC = () => {
       fetchData(doctorId)
     }
   }, [doctorId])
-  console.log(doc)
 
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value))

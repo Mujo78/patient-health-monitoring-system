@@ -2,7 +2,7 @@ import {Card, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import { Value } from './appointment/MakeAppointment'
-import { isSunday } from '../../service/appointmentSideFunctions'
+import { formatStartEnd, isSunday } from '../../service/appointmentSideFunctions'
 import { useSelector } from 'react-redux'
 import { appointment, getAppointmentsForADay } from '../../features/appointment/appointmentSlice'
 import { useAppDispatch } from '../../app/hooks'
@@ -84,7 +84,7 @@ const PatientDashboard: React.FC = () => {
             <Table.Cell className='w-full'>
               <div className='text-xs flex flex-col'>
                 <span className='text-black font-semibold text-xs mb-1'>Dr. {n.doctor_id.first_name + " " + n.doctor_id.last_name}</span>
-                <span className='text-gray-600'>{new Date(n.appointment_date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
+                <span className='text-gray-600 text-[10px]'>{formatStartEnd(n.appointment_date)}</span>
               </div>
             </Table.Cell>
             <Table.Cell className='w-1/6'>

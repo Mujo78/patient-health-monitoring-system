@@ -8,7 +8,7 @@ import ErrorMessage from '../../../components/ErrorMessage';
 import CustomImg from '../../../components/CustomImg';
 import Footer from '../../../components/Footer';
 import AppointmentOverviewEdit from './AppointmentOverviewEdit';
-import moment from 'moment-timezone';
+import { formatStartEnd } from '../../../service/appointmentSideFunctions';
 
 const Appointment: React.FC = () => {
     const {id} = useParams();
@@ -27,10 +27,6 @@ const Appointment: React.FC = () => {
 
     const mailtoLink = `mailto:${selected?.doctor_id.user_id.email}`
     const appDate = selected?.appointment_date.toString().slice(0, 10)
-    const appDateTime = moment.utc(selected?.appointment_date).add(2, "hours");
-    const startTime = moment.utc(appDateTime).format('hh:mm A');
-    const endTime = moment.utc(appDateTime).add(20, 'minutes').format('hh:mm A');
-    const appointmentTime = `${startTime} - ${endTime}`;
 
     const date = new Date(selected?.appointment_date as Date).getTime()
     const diff = date - new Date().getTime()
@@ -79,7 +75,7 @@ const Appointment: React.FC = () => {
                         </div>
                     </Card>
                     <div className='flex flex-col divide-y h-full'>
-                        <p><span className='text-md font-semibold'>Date&Time:</span> {appDate} ({appointmentTime})</p>
+                        <p><span className='text-md font-semibold'>Date&Time:</span> {appDate} ({formatStartEnd(selected.appointment_date)})</p>
                         {selected.reason.length > 0 && <p><span className='text-md font-semibold'>Reason:</span> {selected.reason}</p> }   
                     </div>
                     <div className='mt-auto'>

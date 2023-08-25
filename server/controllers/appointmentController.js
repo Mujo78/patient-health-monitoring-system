@@ -6,8 +6,7 @@ const Appointment = require("../models/appointment")
 const Patient = require("../models/patient")
 const Doctor = require("../models/doctor")
 const User = require("../models/user")
-const Email = require("../utils/email")
-
+const Email = require("../utils/email");
 
 const makeAppointment = asyncHandler( async (req, res) =>{
 
@@ -105,6 +104,35 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
 
 const getAppointmentForPatient = getAllDocForUser()
 
+const getLatestAppointmentForPatient = asyncHandler( async (req, res) => {
+    
+    const patient = await Patient.findOne({user_id: req.params.patientUserId})
+    const app = await Appointment.findOne({patient_id: patient._id, finished: true}).sort({appointment_date: -1})
+
+    return res.status(200).json(app)
+})
+
+const getLatestAppointmentForPatientWithDoctor = asyncHandler( async (req, res) => {
+    
+    const {
+        patient_id,
+        appointment_id
+    } = req.body;
+
+    const doctor = await Doctor.findOne({user_id: req.params.id})
+    if(!doctor) return res.status(404).json("This doctor is not in database!")
+
+    const patient = await Patient.findById(patient_id)
+    if(!patient) return res.status(404).json("This patient is not in database!")
+
+    const currentAppointment = await Appointment.findById(appointment_id)
+    const app = await Appointment.findOne({_id: {$ne: appointment_id}, appointment_date: {$lt: currentAppointment.appointment_date},  patient_id: patient._id, doctor_id: doctor._id,  finished: true}).sort({appointment_date: -1}).limit(1)
+
+    if(!app) return res.status(404).json("No finished appointment found for this patient!")
+
+    return res.status(200).json(app)
+})
+
 cron.schedule('* * * * *', async () => {
     const allApp = await Appointment.find()
 
@@ -162,6 +190,8 @@ const getAppointmentForDay = asyncHandler( async (req, res) => {
 
     if (appointmentsDay) return res.status(200).json(appointmentsDay);
 
+    return res.status(404).json("There was an error, please try again later!")
+
 })
 
 const getOneAppointment = getDoc(Appointment)
@@ -176,5 +206,7 @@ module.exports = {
     makeAppointment,
     makeAppointmentFinished,
     getAppointmentForDay,
-    editAppointmentInfo
+    editAppointmentInfo,
+    getLatestAppointmentForPatient,
+    getLatestAppointmentForPatientWithDoctor
 }

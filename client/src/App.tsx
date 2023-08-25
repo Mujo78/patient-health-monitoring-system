@@ -25,11 +25,12 @@ import PharmacyDashboard from './pages/pharmacy/PharmacyDashboard'
 import AppointmentDepartment from './pages/patient/appointment/AppointmentDepartment'
 import AppointmentLayout from './pages/patient/appointment/AppointmentLayout'
 import Appointment from './pages/patient/appointment/Appointment'
-import DoctorAppointments from './pages/doctor/DoctorAppointments'
-import DocAppointment from './pages/doctor/DocAppointment'
+import DoctorAppointments from './pages/doctor/appointment/DoctorAppointments'
+import DocAppointment from './pages/doctor/appointment/DocAppointment'
 import MyPatients from './pages/doctor/MyPatients'
 import MyDepartment from './pages/doctor/MyDepartment'
 import DocSettings from './pages/doctor/DocSettings'
+import Patient from './pages/doctor/Patient'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -54,7 +55,9 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/appointments' element={<DoctorAppointments />}>
           <Route path=':id' element={<DocAppointment />} />
         </Route>
-        <Route path='/my-patients' element={<MyPatients />} />
+        <Route path='/my-patients' element={<MyPatients />}>
+          <Route path=':id' element={<Patient/>} />
+        </Route>
         <Route path='/my-department' element={<MyDepartment />} />
         <Route path='/settings' element={<DocSettings />} />
       </Route>

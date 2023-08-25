@@ -61,7 +61,7 @@ const doctorSchema = mongoose.Schema({
             type: String,
             enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         }],
-        required: false
+        required: true
     }
     
 })

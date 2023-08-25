@@ -3,10 +3,10 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useSelector } from 'react-redux';
-import { appointment, getAppointmentsForPerson, resetPersonAppointment } from '../../features/appointment/appointmentSlice';
+import { appointment, getAppointmentsForPerson, resetPersonAppointment } from '../../../features/appointment/appointmentSlice';
 import { Spinner } from 'flowbite-react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../../app/hooks';
 
 type MyEvent = {
   id: string,
