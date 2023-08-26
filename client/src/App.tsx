@@ -58,6 +58,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/my-patients' element={<MyPatients />}>
           <Route path=':id' element={<Patient/>} />
         </Route>
+        <Route path='/my-patients/search' element={<MyPatients />} />
         <Route path='/my-department' element={<MyDepartment />} />
         <Route path='/settings' element={<DocSettings />} />
       </Route>

@@ -24,6 +24,20 @@ export interface Medicine {
     expiry_date:Date,
 }
 
+export interface Patient {
+    _id: string,
+    user_id: UserInfo
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    address: string,
+    gender: string,
+    blood_type: string,
+    date_of_birth: Date,
+    height: string,
+    weight: string
+}
+
 interface MedicineState {
     medicine: Medicine[],
     status: 'idle' | 'loading' |'failed' | '',

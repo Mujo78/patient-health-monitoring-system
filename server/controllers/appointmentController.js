@@ -194,6 +194,85 @@ const getAppointmentForDay = asyncHandler( async (req, res) => {
 
 })
 
+const getPatientsForDoctor = asyncHandler( async (req, res) => {
+
+    const {page} = req.query;
+
+    const doc = await Doctor.findOne({user_id: req.params.id})
+
+    if(!doc) return res.status(404).json("That doctor doesn't exists!")
+
+    const app = await Appointment.aggregate([
+        { $match: { doctor_id: doc._id } },
+        { $group: { _id: "$patient_id" } },
+      ]);
+
+    if(!app) return res.status(404).json("There are no patients right now!")
+
+    const patientIds = app.map((item) => item._id);
+
+    const LIMIT = 1;
+    const startIndx = (Number(page) - 1) * LIMIT
+
+    const total = patientIds.length;
+    const patients = await Patient.find({ _id: { $in: patientIds } }).sort({_id: -1}).limit(LIMIT).skip(startIndx);
+    
+    return res.status(200).json({data: patients, currentPage: Number(page), numOfPages: Math.ceil(total / LIMIT)})
+})
+
+
+const getPatientsForDoctorBySearch = asyncHandler ( async (req, res) => {
+
+    const {searchQuery, page} = req.query;
+
+    const doc = await Doctor.findOne({user_id: req.params.id})
+    if(!doc) return res.status(404).json("That doctor doesn't exists!")
+
+    const app = await Appointment.aggregate([
+        { $match: { doctor_id: doc._id } },
+        { $group: { _id: "$patient_id" } },
+    ]);
+    if(!app) return res.status(403).json("There are no patients right now!")
+
+    const patientIds = app.map((item) => item._id);
+
+    const LIMIT = 1;
+    const startIndx = (Number(page) - 1) * LIMIT  
+
+    let first, last;
+    if(searchQuery.split(' ')){
+        first = searchQuery.split(' ')[0]
+        last = searchQuery.split(' ')[1]
+    } 
+    console.log(first + ":" + last)
+    const name = new RegExp(searchQuery.trim(), "i")
+    console.log(name)
+
+    const patients = await Patient.find(
+        {$and : [
+            { _id: { $in: patientIds }},
+            {$or : [ 
+                {
+                    first_name: name
+                }, 
+                {
+                    last_name: name
+                }, 
+                {
+                    first_name: new RegExp(first, "i"), 
+                    last_name: new RegExp(last, "i")
+                }
+            ]}
+        ]}
+    ).sort({_id: -1}).limit(LIMIT).skip(startIndx);
+
+    if(patients.length === 0) return res.status(403).json("There are no patients with such name!")
+    
+    const total = patients.length;  
+    return res.status(200).json({data: patients, currentPage: Number(page), numOfPages: Math.ceil(total / LIMIT)})
+
+})
+
 const getOneAppointment = getDoc(Appointment)
 const getAllAppointments = getAllData(Appointment)
 const cancelAppointment = deleteDoc(Appointment)
@@ -208,5 +287,7 @@ module.exports = {
     getAppointmentForDay,
     editAppointmentInfo,
     getLatestAppointmentForPatient,
-    getLatestAppointmentForPatientWithDoctor
+    getLatestAppointmentForPatientWithDoctor,
+    getPatientsForDoctor,
+    getPatientsForDoctorBySearch
 }

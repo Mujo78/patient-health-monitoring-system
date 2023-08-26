@@ -1,12 +1,22 @@
+import { Button } from 'flowbite-react'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const Patient:React.FC = () => {
 
+    const navigate = useNavigate()
     const {id} = useParams()
 
+    const navigatePrevious = () => {
+        const route = localStorage.getItem("route")
+        navigate(`${route}`);
+    }
+
   return (
-    <div>{id}</div>
+    <>
+        <p>{id}</p>
+        <Button color="failure" onClick={navigatePrevious}>Go Back</Button>
+    </>
   )
 }
 

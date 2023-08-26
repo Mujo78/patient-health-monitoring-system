@@ -23,13 +23,15 @@ const RootSidebar: React.FC<Props> = ({children, color}) => {
           <Sidebar.ItemGroup>
             <Sidebar.Item as={NavLink}
               to={`/${route}/${accessUser?.data._id}`}
-            >
+              >
               <div>
                 <Avatar img={hospitalImage} rounded size="lg" />
               </div>
 
             </Sidebar.Item>
-            {children}
+              <Sidebar.ItemGroup>
+                {children}
+              </Sidebar.ItemGroup>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
