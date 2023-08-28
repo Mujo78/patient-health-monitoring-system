@@ -7,6 +7,8 @@ import {HiChevronRight} from "react-icons/hi2"
 import CustomImg from '../../../components/CustomImg'
 import { UserInfo } from '../../../features/appointment/appointmentSlice'
 import Footer from '../../../components/Footer'
+import { useSelector } from 'react-redux'
+import { authUser } from '../../../features/auth/authSlice'
 
 type Department = {
     _id: string,
@@ -36,6 +38,8 @@ const AppointmentDepartment: React.FC = () => {
     const [selectedDoc, setSelectedDoc] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const [loadingDoc, setLoadingDoc] = useState<boolean>(false)
+
+    const {accessUser} = useSelector(authUser)
     const [res, setRes] = useState<Department[]>([])
     const [doc, setDoc] = useState<Doctor[]>([])
 
@@ -43,14 +47,14 @@ const AppointmentDepartment: React.FC = () => {
         const fetchData = async () =>{
             try{
                 setLoading(true)
-                const response = await getDepartments()
+                const response = await getDepartments(accessUser.token)
                 setRes(response)
             }finally{
                 setLoading(false)
             }
         }
         fetchData();
-    }, [])
+    }, [accessUser])
 
     const chooseDepartment = (name: string) => {
         setSelectedDoc("")
@@ -59,7 +63,7 @@ const AppointmentDepartment: React.FC = () => {
             if(name){
                 try{
                     setLoadingDoc(true)
-                    const response = await getDoctorsForDepartment(name)
+                    const response = await getDoctorsForDepartment(accessUser.token, name)
                     setDoc(response)
                 }finally{
                     setLoadingDoc(false)

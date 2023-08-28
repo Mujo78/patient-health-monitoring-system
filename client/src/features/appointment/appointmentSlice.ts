@@ -40,7 +40,7 @@ interface doctor_id {
     user_id : UserInfo,
     available_days: string[]
 }
-interface patient_id {
+export interface patient_id {
     blood_type: string,
     date_of_birth: Date,
     first_name: string, 

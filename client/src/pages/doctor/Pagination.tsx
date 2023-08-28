@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {HiArrowLongLeft, HiArrowLongRight} from "react-icons/hi2"
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 type Props = {
     page: number,
@@ -12,6 +12,11 @@ type Props = {
 const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, className}) => {
 
     const [pageNum, setPageNum] = useState<number>(page || 1)
+    const location = useLocation()
+    let searchParam: string = '';
+    if(location.search.includes('searchQuery')){
+        searchParam = location.search.slice(1, location.search.indexOf('&') + 1)
+    }
 
     const handlePageChange = (newPage: number) => {
         if (newPage >= 1 && newPage <= totalPages) {
@@ -34,7 +39,7 @@ const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, classNam
           <div className='w-2/12'>
             {pageNum > 1 && (
                 <Link
-                to={`?page=${pageNum - 1}`}
+                to={`?${searchParam && searchParam}page=${pageNum - 1}`}
                 onClick={() => handlePageChange(pageNum - 1)}
                 className="relative inline-flex justify-start items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
                 >
@@ -46,7 +51,7 @@ const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, classNam
             {pagesToDisplay.map((pageNumber) => (
                 <Link
                 key={pageNumber}
-                to={`?page=${pageNumber}`}
+                to={`?${searchParam && searchParam}page=${pageNumber}`}
                 onClick={() => handlePageChange(pageNumber)}
                 className={`relative inline-flex items-center mx-auto justify-center rounded-lg px-4 py-2 text-sm font-medium ${
                     pageNumber === pageNum
@@ -61,7 +66,7 @@ const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, classNam
           <div className='flex justify-end w-2/12'>
             {pageNum < totalPages && (
                 <Link
-                to={`?page=${ pageNum + 1}`}
+                to={`?${searchParam && searchParam}page=${ pageNum + 1}`}
                 onClick={() => handlePageChange(pageNum + 1)}
                 className="relative inline-flex items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
                 >

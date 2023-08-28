@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 import Footer from '../../../components/Footer';
 import ErrorMessage from '../../../components/ErrorMessage';
 import CalendarAppointment from '../../../components/CalendarAppointment';
+import { authUser } from '../../../features/auth/authSlice';
 
 const workTime = [
     "9:00","9:20","9:40","10:00",
@@ -33,6 +34,7 @@ export type Value = ValuePiece | [ValuePiece, ValuePiece];
 const MakeAppointment: React.FC = () => {
 
   const dispatch = useAppDispatch()
+  const {accessUser} = useSelector(authUser)
   const {status, message, selectedDayAppointments} = useSelector(appointment)
   const {doctorId} = useParams()
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ const MakeAppointment: React.FC = () => {
     const fetchData = async (id: string) => {
       try {
         setLoading(true)
-        const response = await getDoctor(id)
+        const response = await getDoctor(accessUser.token, id)
         setDoc(response)
         setLoading(false);
       } finally {
@@ -57,7 +59,7 @@ const MakeAppointment: React.FC = () => {
     if(doctorId){
       fetchData(doctorId)
     }
-  }, [doctorId])
+  }, [doctorId, accessUser])
 
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value))

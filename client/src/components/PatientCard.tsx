@@ -7,10 +7,11 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 type Props = {
     data: Patient,
-    variant: 1 | 2
+    variant: 1 | 2,
+    className?: string
 }
 
-const PatientCard: React.FC<Props> = ({data, variant}) => {
+const PatientCard: React.FC<Props> = ({data, variant, className}) => {
     
     const location = useLocation()
     const navigate = useNavigate()
@@ -22,7 +23,7 @@ const PatientCard: React.FC<Props> = ({data, variant}) => {
         }
     }
     return (
-    <Card onClick={handleNavigate} className={`max-w-xs w-full font-Poppins h-fit ${variant === 2 && 'cursor-pointer'}`}>
+    <Card onClick={handleNavigate} className={` ${className} max-w-[290px] w-full font-Poppins h-fit ${variant === 2 && 'cursor-pointer'}`}>
     {variant === 1 && <p className='text-blue-700 font-semibold'>Patient</p>}
     {variant === 2 && <CustomImg url={data.user_id.photo} className='w-[70px] mx-auto' />}
     <h1 className='text-xl font-bold text-center'>{data.first_name + " " + data.last_name}</h1>

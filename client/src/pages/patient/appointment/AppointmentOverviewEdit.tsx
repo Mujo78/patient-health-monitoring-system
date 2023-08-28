@@ -110,7 +110,8 @@ const AppointmentOverviewEdit: React.FC = () => {
     <>
     <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
       <Tabs.Item active title="Overview" icon={HiOutlineDocumentDuplicate}>
-      {sApp?.finished ? <div className='flex divide-x divide-gray-300 h-[280px] w-full justify-between'>
+      {sApp?.finished ? 
+        <div className='flex divide-x divide-gray-300 h-[280px] w-full justify-between'>
         <div className='h-full w-1/4 flex flex-col flex-grow'>
           <h1 className='text-center'>Diagnose</h1>
           <hr className="border-b border-gray-300" />

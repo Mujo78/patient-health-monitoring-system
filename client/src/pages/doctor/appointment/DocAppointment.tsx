@@ -15,6 +15,7 @@ import { formatStartEnd, getLatestAppointment } from '../../../service/appointme
 import PatientEditCard from './PatientEditCard';
 import PatientModal from './PatientModal';
 import ErrorMessage from '../../../components/ErrorMessage';
+import { authUser } from '../../../features/auth/authSlice';
 
 type AppointmentFinished = {
     diagnose: string,
@@ -24,6 +25,7 @@ type AppointmentFinished = {
 
 const DocAppointment: React.FC = () => {
 
+    const {accessUser} = useSelector(authUser)
     const [selectedValues, setSelectedValues] = useState<string[]>([])
     const [latestAppState, setLatestAppState] = useState<Appointment>()
     const [loading, setLoading] = useState<boolean>(false)
@@ -85,7 +87,7 @@ const DocAppointment: React.FC = () => {
                         appointment_id: selected._id,
                         patient_id: selected?.patient_id._id
                     }
-                    const response = await getLatestAppointment(latestApp)
+                    const response = await getLatestAppointment(accessUser.token, accessUser.data._id, latestApp)
                     setLatestAppState(response)
                 } catch (error: unknown) {
                     setLoading(false)
@@ -95,7 +97,7 @@ const DocAppointment: React.FC = () => {
             }
         }
         postData()
-    }, [selected])
+    }, [selected, accessUser])
 
     const cancelAppointmentNow = () => {
         if(selected){
@@ -110,7 +112,7 @@ const DocAppointment: React.FC = () => {
 
     let ifIsFinished;
 
-    if(selected?.finished){
+    if(selected?.finished && selected.therapy){
         ifIsFinished = selected.therapy.map((t) => ({
             value: t._id,
             label: `${t.name + "(" + t.strength + ")"}`
@@ -193,7 +195,7 @@ const DocAppointment: React.FC = () => {
                     <div className='ml-auto w-2/6'>
                         <PatientEditCard setShowMore={setMore}  />
                     </div>
-                    <PatientModal loading={loading} latestAppState={latestAppState} setMore={setMore} more={more} />
+                    <PatientModal variant={1} loading={loading} latestAppState={latestAppState} setMore={setMore} more={more} />
                 </div> : 
                 <div>
                     <ErrorMessage text={message} size='md' />

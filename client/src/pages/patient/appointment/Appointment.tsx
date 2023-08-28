@@ -34,7 +34,7 @@ const Appointment: React.FC = () => {
 
     const cancelAppointmentNow = () => {
         if(selected) {
-          dispatch(cancelAppointment(selected._id)).then((action) => {
+          dispatch(cancelAppointment(selected._id)).then((action : any) => {
             if(typeof action.payload === 'object'){
               navigate("../", {replace: true})
             }

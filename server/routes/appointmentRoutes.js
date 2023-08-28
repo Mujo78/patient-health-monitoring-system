@@ -13,7 +13,8 @@ const {
     getLatestAppointmentForPatient,
     getLatestAppointmentForPatientWithDoctor,
     getPatientsForDoctor,
-    getPatientsForDoctorBySearch
+    getPatientsForDoctorBySearch,
+    getFinishedAppointmentForPatient
 } = require("../controllers/appointmentController")
 
 const router = express.Router()
@@ -32,6 +33,7 @@ router.get("/:patientUserId", restrictTo("DOCTOR", "PATIENT"), getLatestAppointm
 router.post("/:id/patient-latest-record", restrictTo("DOCTOR", "PATIENT"), getLatestAppointmentForPatientWithDoctor)
 
 router.get("/person/:id", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForPatient)
+router.get("/patient/:id", restrictTo('DOCTOR'), getFinishedAppointmentForPatient)
 
 router.patch("/edit-details/:id", restrictTo('PATIENT'), editAppointmentInfo)
 router.delete('/:id', restrictTo('DOCTOR', 'PATIENT'), cancelAppointment)

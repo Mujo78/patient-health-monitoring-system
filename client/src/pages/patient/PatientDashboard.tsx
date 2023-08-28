@@ -1,4 +1,4 @@
-import {Card, Table } from 'flowbite-react'
+import {Card, Table, Button } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import { Value } from './appointment/MakeAppointment'
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { appointment, getAppointmentsForADay } from '../../features/appointment/appointmentSlice'
 import { useAppDispatch } from '../../app/hooks'
 import CustomImg from '../../components/CustomImg'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 const PatientDashboard: React.FC = () => {
 
@@ -54,6 +54,8 @@ const PatientDashboard: React.FC = () => {
             </p>
         </Card>
       </div>
+      <Button onClick={() => navigate('/notification')} color='failure'>Notif</Button>
+            <Outlet />
       <div className='w-full h-full'>
         <Card className='max-w-xs font-Poppins flex justify-start items-start flex-col h-full'>
           <div className='mb-auto'>

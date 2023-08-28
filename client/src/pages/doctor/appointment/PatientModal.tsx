@@ -1,25 +1,20 @@
 import React from 'react'
-import { Appointment } from '../../../features/appointment/appointmentSlice'
 import ErrorMessage from '../../../components/ErrorMessage'
 import { Button, Modal, Spinner } from 'flowbite-react'
-import { formatStartEnd } from '../../../service/appointmentSideFunctions'
+import { formatDate, formatStartEnd } from '../../../service/appointmentSideFunctions'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import { modalDataType } from '../Patient'
 
 type Props = {
     more: boolean,
     setMore: React.Dispatch<React.SetStateAction<boolean>>,
-    latestAppState: Appointment | undefined,
-    loading: boolean
+    latestAppState: modalDataType | undefined,
+    loading: boolean,
+    variant: 1 | 2
 }
 
-const PatientModal: React.FC<Props> = ({more, setMore, latestAppState, loading}) => {
-
-    const index = latestAppState?.appointment_date.toString().indexOf("T")
-    const appDate = latestAppState?.appointment_date.toString().slice(0, index)
-
-    const dateOfBirth = latestAppState?.appointment_date.toString().slice(0, index)
-    console.log(latestAppState)
+const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, loading}) => {
 
   return (
     <Modal show={more} size="6xl" className='font-Poppins' position="center-right" onClose={() => setMore(false)}>
@@ -40,7 +35,7 @@ const PatientModal: React.FC<Props> = ({more, setMore, latestAppState, loading})
                                 <span className='font-semibold'>Name: </span> {latestAppState.patient_id.first_name + " " + latestAppState.patient_id.last_name}
                             </p>
                             <p>
-                                <span className='font-semibold'>Date of birth: </span> {dateOfBirth}
+                                <span className='font-semibold'>Date of birth: </span> {formatDate(latestAppState.patient_id.date_of_birth)}
                             </p>
                             <p>
                                 <span className='font-semibold'>Blood type: </span> {latestAppState.patient_id.blood_type}
@@ -107,17 +102,17 @@ const PatientModal: React.FC<Props> = ({more, setMore, latestAppState, loading})
                     <div className='text-sm flex mt-8 justify-between items-center'>
                         <div>
                             <p>
-                                <span className='font-semibold'>Date: </span> {appDate}
+                                <span className='font-semibold'>Date: </span> {formatDate(latestAppState.appointment_date)}
                             </p>
                             <p>
                                 <span className='font-semibold'>Time: </span> {formatStartEnd(latestAppState.appointment_date)}
                             </p>
                         </div>
-                        <div>
+                       {variant === 1 && <div>
                             <Link className='text-blue-700 text-sm hover:underline ' to={`/my-patients/${latestAppState.patient_id._id}`}>
                                 See patient history {"->"}
                             </Link>
-                        </div>
+                        </div>}
                     </div>
                     </div>
                 </div>: <div className='flex justify-center items-center'>

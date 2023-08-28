@@ -5,15 +5,20 @@ import { useNavigate } from 'react-router-dom'
 type Props = {
     variant: number,
     children?: React.ReactNode
+    route?: string
 }
 
 
-const Footer: React.FC<Props> = ({variant, children}) => {
+const Footer: React.FC<Props> = ({variant,route, children}) => {
   
     const navigate = useNavigate();
     const goBack = () => {
-        navigate("../", {replace: true})
-      }
+        if(route){
+          navigate(route)
+        }else{
+          navigate("../", {replace: true})
+        }
+    }
   
     return (
     <div className='w-full mt-auto font-Poppins'>

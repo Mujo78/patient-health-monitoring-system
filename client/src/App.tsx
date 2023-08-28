@@ -31,6 +31,7 @@ import MyPatients from './pages/doctor/MyPatients'
 import MyDepartment from './pages/doctor/MyDepartment'
 import DocSettings from './pages/doctor/DocSettings'
 import Patient from './pages/doctor/Patient'
+import Notification from './pages/Notification'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -49,6 +50,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/staff' element={<MedicalStaff />} />
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />
+        <Route path='/notification' element={<Notification />} />
       </Route>
       <Route loader={DoctorCheck}>
         <Route path='/doctor/:id' element={<DoctorDashboard />} />

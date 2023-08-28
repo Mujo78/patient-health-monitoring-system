@@ -36,7 +36,6 @@ const MyPatients: React.FC = () => {
       if (!id) {
         try {
           setLoading(true);
-  
           if (searchQuery) {
             const response = await searchForPatient(searchQuery, Number(page));
             setPatients(response);
@@ -58,7 +57,6 @@ const MyPatients: React.FC = () => {
   const handleNavigatePage = async (newPage: number) => {
     try {
       setLoading(true);
-      console.log(searchQuery)
       if (searchQuery !== null) {
         const response = await searchForPatient(searchQuery, newPage);
         setPatients(response);
@@ -81,9 +79,9 @@ const MyPatients: React.FC = () => {
   
       try {
         setLoading(true);
+        navigate(`/my-patients/search?searchQuery=${search}&page=1`);
         const response = await searchForPatient(search, 1);
         setPatients(response);
-        navigate(`/my-patients/search?searchQuery=${search}&page=1`);
       } catch (err:any) {
         setMessage(err.response?.data || 'An error occurred');
       } finally {
@@ -92,7 +90,7 @@ const MyPatients: React.FC = () => {
   };
 
   return (
-    <div className='h-fit mr-3'>
+    <div className='h-fit mr-3 font-Poppins'>
     {id ? <Outlet /> : 
     <div className='h-[90vh]'>
       <>
@@ -108,17 +106,17 @@ const MyPatients: React.FC = () => {
               />
             <CustomButton onClick={handleSearch} disabled={search === ''} size='sm'>Search</CustomButton>
           </div>
-          {loading ? <Spinner /> : 
+          {loading ? <div className='flex justify-center mt-24'> <Spinner size="lg" /> </div> : 
             patients && patients.data?.length > 0 ?
             <>
               <div className='w-full h-5/6'>
                 {loading ?
-                <div className='flex justify-center mt-32'>
-                  <Spinner size="xl" />   
+                <div className='flex justify-center mt-24'>
+                  <Spinner size="lg" />   
                   </div> : 
                   <div className='flex w-full flex-center flex-wrap'>
                     {patients?.data.map((n) => (
-                    <PatientCard key={n._id} data={n} variant={2} />
+                      <PatientCard key={n._id} className='m-1' data={n} variant={2} />
                   ))}
                     </div>
                 }
@@ -128,7 +126,7 @@ const MyPatients: React.FC = () => {
               </div>
             </>
           :
-          <div>
+          <div className='flex justify-center h-[70vh] items-center'>
             < ErrorMessage text={message} size='md' />
           </div>}
         </div>

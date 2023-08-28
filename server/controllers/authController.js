@@ -6,6 +6,7 @@ const User = require("../models/user");
 const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
 const Pharmacy = require("../models/pharmacy")
+const Notification = require("../models/notification")
 const Email = require("../utils/email");
 
 const signToken = (id) =>{
@@ -60,7 +61,7 @@ const signup = asyncHandler( async (req, res) =>{
     try{
         newUser = await User.create([{
             email, role: 'PATIENT', photo : photo !== 'undefined' ? photo : "",
-            password, passwordConfirm, passwordChangedAt
+            password, passwordConfirm, passwordChangedAt, first: false
         }], {session})
 
         newPatient = await Patient.create([{
@@ -131,6 +132,8 @@ const login = asyncHandler( async (req, res) => {
     const {
         email, password
     } = req.body;
+
+    console.log(req.body)
 
     if(!email || !password){
         return res.status(400).json("Please provide email and password!")
@@ -217,11 +220,22 @@ const resetPassword = asyncHandler(async (req, res) =>{
     return res.status(200).json("Password reset: Success!")
 })
 
+const firstTimeUsing = asyncHandler(async(req, res) => {
+    const user = await User.findById(req.user._id)
+
+    if(!user) return res.status(404).json("There is no user with that ID")
+    user.first = true
+    user.save({validateBeforeSave: false})
+
+    return res.status(200).json(user)
+})
+
 module.exports = {
     signup,
     login,
     changeMyPassword,
     resetPassword,
     forgotPassword,
-    verifyEmail
+    verifyEmail,
+    firstTimeUsing
 }
