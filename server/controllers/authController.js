@@ -227,7 +227,7 @@ const firstTimeUsing = asyncHandler(async(req, res) => {
     user.first = true
     user.save({validateBeforeSave: false})
 
-    return res.status(200).json(user)
+    return res.status(200).json(user.first)
 })
 
 module.exports = {

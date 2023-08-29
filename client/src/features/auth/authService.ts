@@ -51,14 +51,25 @@ const verifyEmail = async (verificationToken:string) => {
     const response = await axios.get(`${BASE_URL}/verify/${verificationToken}`)
 
     return response.data;
-} 
+}
+
+const firstTimeUsing = async (token: string) => {
+    const response = await axios.patch(`${BASE_URL}/`,{}, {
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+
+    return response.data;
+}
 
 const authServices = {
     login,
     logout,
     resetPassword,
     signup,
-    verifyEmail
+    verifyEmail,
+    firstTimeUsing
 }
 
 export default authServices

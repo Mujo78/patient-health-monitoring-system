@@ -17,10 +17,11 @@ app.use(express.json())
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 
+const {Server} = require("socket.io")
 const server = require('http').createServer(app)
-const io = require("socket.io")(server, {
+const io = new Server(server, {
     transports: ['polling'],
-    cors: { origin: '*' },
+    cors: { origin: 'http://localhost:5173' },
 })
 require('./socketio.js')(io)
 
@@ -32,6 +33,7 @@ const hospitalRoutes = require("./routes/hospitalRoutes")
 const doctorRoutes = require("./routes/doctorRoutes")
 const patientRoutes = require("./routes/patientRoutes")
 const appointmentRoutes = require("./routes/appointmentRoutes")
+const notificationRoutes = require("./routes/notificationRoutes")
 
 const { errorHandler } = require("./middlewares/errorMiddleware");
 // File for the routes
@@ -45,6 +47,7 @@ app.use("/api/v1/hospital", hospitalRoutes)
 app.use("/api/v1/doctor", doctorRoutes)
 app.use("/api/v1/patient", patientRoutes)
 app.use("/api/v1/appointment", appointmentRoutes)
+app.use("/api/v1/notification", notificationRoutes)
 
 app.all('*', (req, res, next) =>{
     res.status(404).json(`Can't find ${req.originalUrl} on this server!`)

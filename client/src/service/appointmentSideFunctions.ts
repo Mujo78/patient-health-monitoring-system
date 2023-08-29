@@ -77,7 +77,7 @@ export function isDoctorAvailable(date: Date, available_days: string[]) {
 }
 
 export function formatStartEnd(date: Date) {
-    const appDateTime = moment.utc(date).add(1, "hours");
+    const appDateTime = moment.utc(date).add(2, "hours");
     const startTime = moment.utc(appDateTime).format('hh:mm A');
     const endTime = moment.utc(appDateTime).add(20, 'minutes').format('hh:mm A');
     const appointmentTime = `${startTime} - ${endTime}`;

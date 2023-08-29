@@ -12,7 +12,6 @@ import {HiEnvelope, HiLockClosed} from "react-icons/hi2"
 import ForgotPasswordModal from '../../components/ForgotPasswordModal';
 import CustomButton from '../../components/CustomButton';
 import Logo from '../../components/Logo';
-import socket from '../../socket';
 
 type User = {
     email: string,
@@ -38,19 +37,12 @@ const LoginForm: React.FC = () => {
     useEffect(() =>{
         if(accessUser !== null && status === 'idle'){
             navigate(`/${route}/${accessUser.data._id}`)
-            socket.emit('userLogin', accessUser.data._id)
         }else{
             navigate("/")
         }
-    }, [accessUser, status, route, navigate])
-    
-    
+    }, [accessUser,dispatch, status, route, navigate])
     const onSubmit = (data: User) => {
-        dispatch(login(data)).then((action : any) => {
-            if(typeof action.payload === 'object'){
-                socket.emit('userLogin', accessUser.data._id)
-            }
-        })
+        dispatch(login(data))
     }
 
     const forgotPasswordShow = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{

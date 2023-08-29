@@ -11,11 +11,12 @@ import Footer from '../../../components/Footer';
 import {HiXCircle} from "react-icons/hi2"
 import { toast } from 'react-hot-toast';
 import CustomButton from '../../../components/CustomButton';
-import { formatStartEnd, getLatestAppointment } from '../../../service/appointmentSideFunctions';
+import { formatDate, formatStartEnd, getLatestAppointment } from '../../../service/appointmentSideFunctions';
 import PatientEditCard from './PatientEditCard';
 import PatientModal from './PatientModal';
 import ErrorMessage from '../../../components/ErrorMessage';
 import { authUser } from '../../../features/auth/authSlice';
+import socket from '../../../socket';
 
 type AppointmentFinished = {
     diagnose: string,
@@ -103,6 +104,12 @@ const DocAppointment: React.FC = () => {
         if(selected){
             dispatch(cancelAppointment(selected._id)).then((action) => {
                 if(typeof action.payload === 'object'){
+                    const selectedInfo = {
+                        app_date: `${formatDate(selected.appointment_date)}, ${formatStartEnd(selected.appointment_date)}`,
+                        doctor_name: `${selected.doctor_id.first_name + ' ' + selected.doctor_id.last_name}`,
+                        doctor_spec: selected.doctor_id.speciality
+                    }
+                    socket.emit('appointment_cancel', selectedInfo, selected.patient_id.user_id._id, accessUser.data.role)
                     navigate("../", {replace: true})
                     toast.error("Appointment cancelled")
                 }

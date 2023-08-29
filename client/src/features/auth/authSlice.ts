@@ -99,6 +99,22 @@ export const logout = createAsyncThunk("/auth/logout", async(_, thunkAPI) => {
     }
 })
 
+export const firstTime = createAsyncThunk<
+    boolean,
+    undefined,
+    {state: RootState}
+>("/auth/first-using", async(_, thunkAPI) => {
+    try{
+        const token = thunkAPI.getState().auth.accessUser.token;
+        return authServices.firstTimeUsing(token)
+    }catch(error: any){
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -146,10 +162,6 @@ export const authSlice = createSlice({
             .addCase(resetPassword.rejected, (state) => {
                 state.status = 'failed'
             })
-            .addCase(logout.fulfilled, (state) => {
-                state.accessUser = null
-                state.status = 'idle'
-            })
             .addCase(verifyEmailAddress.pending, (state) =>{
                 state.status = 'loading'
             })
@@ -161,8 +173,12 @@ export const authSlice = createSlice({
                 state.status = 'idle'
                 state.message = action.payload as string
             })
-    }
-})
+            .addCase(logout.fulfilled, (state) => {
+                state.accessUser = null
+                state.status = 'idle'
+            })
+        }
+    })
 
 export const authUser = (state: RootState) => state.auth;
 
