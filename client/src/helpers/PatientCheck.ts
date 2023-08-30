@@ -4,7 +4,7 @@ const PatientCheck = () => {
     const user = localStorage.getItem("user")
     const userObj = user && JSON.parse(user)
 
-    if (userObj.data.role !== 'PATIENT') {
+    if (userObj?.data.role !== 'PATIENT') {
         return redirect('/error-page');
     }
 

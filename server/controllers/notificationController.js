@@ -9,7 +9,7 @@ const markNotificationAsRead = updateDoc(Notification)
 const getAllNotificationsForPerson = asyncHandler( async(req, res) => {
     const user = req.user;
 
-    const notificationsForUser = await Notification.find({user_id: user._id})
+    const notificationsForUser = await Notification.find({user_id: user._id}).sort({createdAt: -1}).exec()
 
     if(!notificationsForUser) return res.status(404).json("There are no notifications!")
     return res.status(200).json(notificationsForUser)

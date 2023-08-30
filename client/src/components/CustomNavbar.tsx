@@ -7,7 +7,7 @@ import {HiOutlineArrowRightOnRectangle, HiOutlineBell} from "react-icons/hi2"
 import { useAppDispatch } from '../app/hooks';
 import CustomImg from './CustomImg';
 import socket from '../socket';
-import { addNotification, notification, restartNotifications } from '../features/notification/notificationSlice';
+import { addNotification, getPersonNotifications, notification, restartNotifications, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
 
 type Props = {
@@ -19,11 +19,9 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
 
     const [show, setShow] = useState<boolean>(false)
 
-    const {notifications} = useSelector(notification)
+    const {notifications, personNotifications} = useSelector(notification)
     const {accessUser} = useSelector(authUser)
     const dispatch = useAppDispatch()
-
-    const notifyLength = notifications.length;
     
     useEffect(() =>{
         socket.emit("userLogin", accessUser?.data._id)
@@ -42,19 +40,30 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
 
     }, [dispatch, accessUser])
 
+    useEffect(() =>{
+        dispatch(getPersonNotifications())
+
+        return () => {
+            dispatch(restartPersonNotifications())
+        }
+    }, [dispatch, notifications])
+
     const logOut = () =>{
         if(!accessUser.data.first){
             dispatch(firstTime())
         }
         dispatch(restartNotifications())
-        navigate("/", {replace: true})
         dispatch(logout())
+        navigate("/", {replace: true})
         dispatch(reset())
     }
 
     const showNotifications = () =>{
         setShow((n) => !n)
     }
+
+    const notReaded = personNotifications?.map((n) => n.read === false);
+    const readed = notReaded.some((value) => value === true)
 
     const date = new Date();
 
@@ -64,7 +73,7 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
       <div className='flex items-center relative'>
         <Link to="/dashboard">
           <div className='flex items-center'>
-            <CustomImg url={accessUser?.data.photo} className='w-[50px] mr-1' />
+            {accessUser && <CustomImg url={accessUser.data.photo} className='w-[50px] mr-1' />}
             <p className='text-xs font-semibold mr-6'>{accessUser?.info.name ? accessUser?.info.name : accessUser?.info.first_name + " " + accessUser?.info.last_name}</p>
           </div>
         </Link>
@@ -73,7 +82,7 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
             <Avatar
                 onClick={showNotifications}
                 img={HiOutlineBell}
-                status={notifications.length > notifyLength - 1 && notifications.length !== 0 && !show ? 'busy' : undefined}
+                status={readed ? 'busy' : undefined}
                 statusPosition='top-right'
                 size="xs"
                 rounded
@@ -81,7 +90,7 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
             />
           </div>
           {show && <div className='h-80 absolute top-9 left-0 z-10 -ml-54 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 '>
-                <NavBarDropdown />
+                <NavBarDropdown setShow={setShow} />
             </div>}
         </div>
       </div>

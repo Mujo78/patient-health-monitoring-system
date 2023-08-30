@@ -10,7 +10,7 @@ module.exports = function (io) {
         if (oneUser) {
           usersIo[userId] = socket;
           console.log(`Socket: User with id ${userId} connected`);
-          if(!oneUser.first){
+          if(oneUser.first === false){
             const welcome = await Notification.create({
               user_id: oneUser._id,
               name: 'Welcome to the PHM System!',
@@ -30,10 +30,12 @@ module.exports = function (io) {
       const user = await User.findById(userId)
       if(user && doc === 'DOCTOR'){
         
+          const message = `Dear, \nWe regret to inform you that your appointment scheduled for ${app.app_date} with Dr. ${app.doctor_name} (${app.doctor_spec}) has been canceled.\nWe apologize for any inconvenience this may have caused. If you have any questions or need to reschedule, please don't hesitate to contact us.\nSincerely`
+
           const appointmentCanceledEvent = await Notification.create({
             user_id: user._id,
             name: 'Appointment cancelled!',
-            content: `Your appointment on ${app.app_date} with Dr. ${app.doctor_name} (${app.doctor_spec}) has been canceled.`,
+            content: message,
             type: 'ALERT',
             read: false
           })

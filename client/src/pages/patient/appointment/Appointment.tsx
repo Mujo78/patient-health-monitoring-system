@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
 import { appointment, cancelAppointment, getSelectedAppointment, resetSelectedAppointment } from '../../../features/appointment/appointmentSlice';
@@ -65,9 +65,9 @@ const Appointment: React.FC = () => {
                                     <p className='mt-2 mb'><span className='text-gray-600'> Qualification:</span> {selected.doctor_id.qualification}</p>
                                     <p>
                                     <span className='text-gray-600'> Email: {" "}</span>
-                                    <a href={mailtoLink} className='text-blue-500 underline hover:text-blue-700 cursor-pointer'>
+                                    <Link to={mailtoLink} className='text-blue-500 underline hover:text-blue-700 cursor-pointer'>
                                         {selected.doctor_id.user_id.email}
-                                    </a>
+                                    </Link>
                                     </p>
                                 </div>
                                 <p className='text-xs text-gray-500 mt-2 text-justify'> {selected.doctor_id.bio}</p>

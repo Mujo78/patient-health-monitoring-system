@@ -3,17 +3,20 @@ import { RootState } from "../../app/store"
 import notificationServices from "./notificationService"
 
 
-interface Notification {
+export interface Notification {
     _id: string,
+    name: string,
     user_id: string,
     content: string,
     type: string,
-    read: boolean
+    read: boolean,
+    createdAt: Date
 }
 
 interface initialState {
     personNotifications: Notification[],
     notifications: Notification[],
+    oneNotification?: Notification,
     status: '' | 'idle' | 'failed' | 'loading',
     message: string
 }
@@ -144,6 +147,9 @@ export const notificationSlice = createSlice({
         },
         restartPersonNotifications: (state) => {
             state.personNotifications = []
+        },
+        restartNotification: (state) => {
+            state.oneNotification = undefined
         }
     },
     extraReducers: (builder) => {
@@ -158,6 +164,17 @@ export const notificationSlice = createSlice({
             .addCase(getPersonNotifications.fulfilled, (state, action) =>{
                 state.status = 'idle'
                 state.personNotifications = action.payload
+            })
+            .addCase(getOneNotification.pending, (state) =>{
+                state.status = 'loading'
+            })
+            .addCase(getOneNotification.rejected, (state, action) =>{
+                state.message = action.payload as string,
+                state.status = 'failed'
+            })
+            .addCase(getOneNotification.fulfilled, (state, action) =>{
+                state.status = 'idle'
+                state.oneNotification = action.payload
             })
             .addCase(markAllAsRead.rejected, (state, action) => {
                 state.status = 'failed'
@@ -194,7 +211,7 @@ export const notificationSlice = createSlice({
                 state.message = action.payload as string
             })
             .addCase(deleteOneNotification.fulfilled, (state, action) => {
-                state.personNotifications.filter(el => el._id !== action.payload._id)         
+                state.personNotifications = state.personNotifications.filter(el => el._id !== action.payload._id)         
                 state.status = 'idle'
             })
 
@@ -202,5 +219,5 @@ export const notificationSlice = createSlice({
       
 
 export const notification = (state: RootState) => state.notification;
-export const {  addNotification, restartNotifications } = notificationSlice.actions
+export const {  addNotification, restartNotifications,restartNotification, restartPersonNotifications, restart } = notificationSlice.actions
 export default notificationSlice.reducer;

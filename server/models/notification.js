@@ -15,9 +15,7 @@ const notificationSchema = mongoose.Schema({
     },
     content: {
         type: String,
-        required: [true, 'Content is required!'],
-        minlength: 5,
-        maxlength: 120
+        required: [true, 'Content is required!']
     },
     type:{
         type: String,
