@@ -63,7 +63,6 @@ const ForgotPassword: React.FC<Props> = ({forgotPassword, setForgotPassword}) =>
             />
             <TextInput
                 id='email'
-                disabled={status === 'loading'}
                 name='email'
                 value={email}
                 onChange={onChange}

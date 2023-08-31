@@ -18,7 +18,7 @@ const SignUpForm: React.FC = () => {
   const photo = watch('photo')
   const selectedOne = photo?.length > 0 ? photo[0] : null;
   const dispatch = useAppDispatch()
-  const {status, message} = useSelector(authUser)
+  const {status} = useSelector(authUser)
 
   useEffect(() => {
     let objectURL: string;

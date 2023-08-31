@@ -1,4 +1,4 @@
-import {Card, Table, Button } from 'flowbite-react'
+import {Card, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 import { Value } from './appointment/MakeAppointment'
@@ -7,22 +7,27 @@ import { useSelector } from 'react-redux'
 import { appointment, getAppointmentsForADay } from '../../features/appointment/appointmentSlice'
 import { useAppDispatch } from '../../app/hooks'
 import CustomImg from '../../components/CustomImg'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { authUser, firstTime } from '../../features/auth/authSlice'
 
 const PatientDashboard: React.FC = () => {
 
   const navigate = useNavigate();
   const [value, setValue] = useState<Value>(new Date())
+  const {accessUser} = useSelector(authUser)
   const monthyear = value?.toLocaleString('en-US', {month: 'long', year: 'numeric'})
 
   const {selectedDayAppointments} = useSelector(appointment)
   const dispatch = useAppDispatch()
+
   useEffect(() => {
+    if(!accessUser?.data.first){
+      dispatch(firstTime())
+    }
     if(value && !isSunday(value as Date)){
       dispatch(getAppointmentsForADay(value as Date))
-      console.log("first")
     }
-  }, [dispatch, value])
+  }, [dispatch, value, accessUser])
 
   const handleNavigate = (id: string) => {
     navigate(`/my-appointments/${id}`)
@@ -33,29 +38,27 @@ const PatientDashboard: React.FC = () => {
       <div className='w-full'>
         <Card className='max-w-xs font-Poppins h-fit'>
           <p className='text-blue-700 font-semibold'>Patient</p>
-          <h1 className='text-xl font-bold text-center'>Ime prezime</h1>
+          <h1 className='text-md font-bold text-center'>Ime prezime</h1>
             <p className='text-gray-500'>Details</p>
             <hr/>
-            <p className="flex text-sm text-gray-500 justify-between">
+            <p className="flex text-xs text-gray-500 justify-between">
               <span>Age :</span>
               <span className="ml-auto text-black">56</span>
             </p>
-            <p className="flex text-sm text-gray-500 justify-between">
+            <p className="flex text-xs text-gray-500 justify-between">
               <span>Blood type :</span>
               <span className="ml-auto text-black">A+</span>
             </p>
-            <p className="flex text-sm text-gray-500 justify-between">
+            <p className="flex text-xs text-gray-500 justify-between">
               <span>Height (m) :</span>
               <span className="ml-auto text-black">1.70</span>
             </p>
-            <p className="flex text-sm text-gray-500 justify-between">
+            <p className="flex text-xs text-gray-500 justify-between">
               <span>Weight (kg) :</span>
               <span className="ml-auto text-black">60</span>
             </p>
         </Card>
       </div>
-      <Button onClick={() => navigate('/notification')} color='failure'>Notif</Button>
-            <Outlet />
       <div className='w-full h-full'>
         <Card className='max-w-xs font-Poppins flex justify-start items-start flex-col h-full'>
           <div className='mb-auto'>

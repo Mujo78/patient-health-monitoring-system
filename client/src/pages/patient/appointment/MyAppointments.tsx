@@ -24,7 +24,6 @@ const MyAppointments: React.FC = () => {
   const dispatch = useAppDispatch()
   const {personAppointments, status} = useSelector(appointment)
 
-  
   useEffect(() =>{
     dispatch(getAppointmentsForPerson())
 

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { deleteAllNotifications, deleteOneNotification, getOneNotification, markAllAsRead, markOneAsRead, notification, restartNotification } from '../features/notification/notificationSlice'
+import { deleteOneNotification, getOneNotification, markOneAsRead, notification, restartNotification } from '../features/notification/notificationSlice'
 import { useAppDispatch } from '../app/hooks'
-import { authUser } from '../features/auth/authSlice'
 import imgLogo from "../assets/hospital-logo.jpg"
 import Footer from '../components/Footer'
 import { Button } from 'flowbite-react'
@@ -13,9 +12,7 @@ const Notification: React.FC = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const {oneNotification, personNotifications,  status, message} = useSelector(notification)
-    const {accessUser} = useSelector(authUser)
-    const route = accessUser.data.role.toLowerCase() + '/' + accessUser.data._id
+    const {oneNotification} = useSelector(notification)
 
     useEffect(() => {
 

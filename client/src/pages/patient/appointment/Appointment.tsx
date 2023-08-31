@@ -70,7 +70,7 @@ const Appointment: React.FC = () => {
                                     </Link>
                                     </p>
                                 </div>
-                                <p className='text-xs text-gray-500 mt-2 text-justify'> {selected.doctor_id.bio}</p>
+                                <p className='text-xs text-gray-500 mt-2 text-justify'> {selected.doctor_id.bio.split('.')[0]}</p>
                             </div>
                         </div>
                     </Card>

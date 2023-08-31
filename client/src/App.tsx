@@ -33,6 +33,10 @@ import DocSettings from './pages/doctor/DocSettings'
 import Patient from './pages/doctor/Patient'
 import Notification from './pages/Notification'
 import Notifications from './pages/Notifications'
+import MedicineOverview from './pages/pharmacy/MedicineOverview'
+import AddMedicine from './pages/pharmacy/AddMedicine'
+import PhSettings from './pages/pharmacy/PhSettings'
+import OneMedicine from './pages/pharmacy/OneMedicine'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -65,10 +69,21 @@ const router = createBrowserRouter(createRoutesFromElements(
         </Route>
         <Route path='/my-patients/search' element={<MyPatients />} />
         <Route path='/my-department' element={<MyDepartment />} />
-        <Route path='/settings' element={<DocSettings />} />
+        <Route path='/doctor-notifications' element={<Notifications />} >
+          <Route path=':id' element={<Notification />} />
+        </Route>
+        <Route path='/doctor-settings' element={<DocSettings />} />
       </Route>
       <Route loader={PharmacyCheck}>
         <Route path='/pharmacy/:id' element={<PharmacyDashboard />} />
+        <Route path='/medicine' element={<MedicineOverview />}>
+          <Route path=':id' element={<OneMedicine />} />
+        </Route>
+        <Route path='/add-medicine' element={<AddMedicine />} />
+        <Route path='/pharmacy-notifications' element={<Notifications />} >
+          <Route path=':id' element={<Notification />} />
+        </Route>
+        <Route path='/pharmacy-settings' element={<PhSettings />} />
       </Route>
     </Route>
     <Route path='api/v1/user/reset-password/:token' element={<ForgotPassword />} />

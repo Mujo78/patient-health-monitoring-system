@@ -92,7 +92,7 @@ const AppointmentOverviewEdit: React.FC = () => {
   }
 
   const handleGet = (tab: number) => {
-    if(tab === 1){
+    if(tab === 1 && status !== 'failed'){
       dispatch(getAppointmentsForADay(value as Date))
       dispatch(resetAppointmentDay())
     }
@@ -105,7 +105,7 @@ const AppointmentOverviewEdit: React.FC = () => {
   const onClose = () => {
     setShow(false)
   }
-  
+
   return (
     <>
     <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
@@ -156,13 +156,13 @@ const AppointmentOverviewEdit: React.FC = () => {
           <div className='flex w-full justify-between'>
               <div className='w-1/5 ml-1 flex flex-col'>
                   <h1 className='mb-2 font-semibold text-sm'>Reason</h1>
-                  <Textarea placeholder='Reason' name='reason' className='text-sm' onChange={(e) => setReason(e.currentTarget.value)} value={reason} rows={11} />
+                  <Textarea placeholder='Reason' name='reason' className='text-sm' onChange={(e) => setReason(e.currentTarget.value)} value={reason} rows={10} />
               </div>
               <div className='flex justify-between w-3/4'>
                 <CalendarAppointment variant={2} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} docAvailable={sApp?.doctor_id.available_days as string[]} />
-                <div className='w-1/3 flex flex-col my-auto mr-4 justify-around h-full'>
-                  <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)} {(availableTime.length)}</h1>
-                  <div className='flex flex-wrap w-full p-1.5 border-gray-300 border rounded-lg'>
+                <div className='w-2/5 flex flex-col my-auto mr-3 justify-around h-full'>
+                  <h1 className='font-semibold text-md'>Date: {value?.toLocaleString().slice(0, 10)} {(availableTime.length)}</h1>
+                  <div className='flex flex-wrap w-full p-1 border-gray-300 border rounded-lg'>
                     {isDoctorAvailable(value as Date, sApp?.doctor_id.available_days as string[]) ?
                       <div className='my-auto mx-auto'>
                         <ErrorMessage text='You can not make appointment today' size='sm' /> 

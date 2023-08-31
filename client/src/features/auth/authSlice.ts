@@ -105,7 +105,7 @@ export const firstTime = createAsyncThunk<
     {state: RootState}
 >("/auth/first-using", async(_, thunkAPI) => {
     try{
-        const token = thunkAPI.getState().auth.accessUser.token;
+        const token = thunkAPI.getState().auth.accessUser?.token;
         return authServices.firstTimeUsing(token)
     }catch(error: any){
         console.log(error)

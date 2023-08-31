@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Avatar, Button } from 'flowbite-react';
 import { useSelector } from 'react-redux';
-import { authUser, firstTime, logout, reset } from '../features/auth/authSlice';
+import { authUser, logout, reset } from '../features/auth/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import {HiOutlineArrowRightOnRectangle, HiOutlineBell} from "react-icons/hi2"
 import { useAppDispatch } from '../app/hooks';
@@ -10,11 +10,7 @@ import socket from '../socket';
 import { addNotification, getPersonNotifications, notification, restartNotifications, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
 
-type Props = {
-    color: string
-}
-
-const CustomNavbar: React.FC<Props> = ({color}) => {
+const CustomNavbar: React.FC = () => {
     const navigate = useNavigate()
 
     const [show, setShow] = useState<boolean>(false)
@@ -49,9 +45,6 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
     }, [dispatch, notifications])
 
     const logOut = () =>{
-        if(!accessUser.data.first){
-            dispatch(firstTime())
-        }
         dispatch(restartNotifications())
         dispatch(logout())
         navigate("/", {replace: true})
@@ -68,7 +61,7 @@ const CustomNavbar: React.FC<Props> = ({color}) => {
     const date = new Date();
 
   return (
-    <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-${color}`}>
+    <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}>
       <p className='text-sm font-semibold'>{date.toString().slice(0, 16)}</p>
       <div className='flex items-center relative'>
         <Link to="/dashboard">

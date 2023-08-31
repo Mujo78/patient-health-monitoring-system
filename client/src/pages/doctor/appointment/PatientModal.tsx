@@ -72,7 +72,7 @@ const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, l
                                 </p>
                             </div>
                         </div>}
-                        {latestAppState.reason.length !== 0 && <div className='pt-2'>
+                        {latestAppState.therapy.length !== 0 && <div className='pt-2'>
                             <h1 className='font-semibold text-sm'>Therapy</h1>
                             <div className='flex'>
                                 {latestAppState.therapy.map((n) => (
@@ -82,7 +82,7 @@ const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, l
                                 ))}
                             </div>
                         </div>}
-                        {latestAppState.reason.length !== 0 && <div className='pt-2'>
+                        {latestAppState.other_medicine.length !== 0 && <div className='pt-2'>
                             <h1 className='font-semibold text-sm'>Other medicine</h1>
                             <div>
                                 <p className='text-sm'>
@@ -90,7 +90,7 @@ const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, l
                                 </p>
                             </div>
                         </div>}
-                        {latestAppState.reason.length !== 0 && <div className='pt-2'>
+                        {latestAppState.description.length !== 0 && <div className='pt-2'>
                             <h1 className='font-semibold text-sm'>Description</h1>
                             <div>
                                 <p className='text-sm'>

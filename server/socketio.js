@@ -51,14 +51,3 @@ module.exports = function (io) {
     });
   });
 };
-
-/*
-     const welcome = await Notification.create({
-                        user_id: userId,
-                        content: `${oneUser.first ? 'Welcome back!' : 'Welcome to the PHM System!'}`,
-                        type: 'MESSAGE',
-                        read: false
-                    })
-                    usersIo[userId].emit("welcomeMessage", "Welcome to the PHM system!")
-               
-                    */

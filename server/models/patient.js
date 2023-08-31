@@ -50,7 +50,7 @@ const patientSchema = mongoose.Schema({
         required: [true, "Blood type is required!"]
     },
     date_of_birth: {
-        type: Date,
+        type: String,
         required: [true, "Date of birth is required!"]
     }
 }, {

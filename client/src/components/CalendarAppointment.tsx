@@ -15,7 +15,7 @@ type Props = {
 const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForADay,docAvailable, variant}) => {
 
   return (
-    <Calendar className={`font-Poppins shadow-xl border-gray-300 ${variant === 1 ? 'text-xl mt-3 w-full rounded-xl' : ''} p-4`} 
+    <Calendar className={`font-Poppins shadow-xl border-gray-300 ${variant === 1 ? 'text-xl mt-3 w-full rounded-xl p-4' : 'text-sm mt-0  h-fit p-2'}`} 
             onChange={setValue}
             onClickDay={handleGetAppForADay}
             locale='eng'
@@ -28,7 +28,7 @@ const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForA
             nextLabel={<span className="text-gray-800">&gt;</span>}
             tileClassName={({ date, view }) =>
               view === 'month' ? 
-                ` rounded-full ${variant === 1 ? 'p-3' : 'p-2'} hover:bg-blue-100 cursor-pointer${value &&
+                ` rounded-full ${variant === 1 ? 'p-3' : 'p-1.5'} hover:bg-blue-100 cursor-pointer${value &&
                     value.toString() === date.toString() ? '!bg-blue-700 hover:!bg-700 hover:!text-white' : ''
                   } ` : ''
             }

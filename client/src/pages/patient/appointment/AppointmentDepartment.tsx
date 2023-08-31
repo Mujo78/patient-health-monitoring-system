@@ -123,17 +123,19 @@ const AppointmentDepartment: React.FC = () => {
                             doc.map((n) => (
                                 <Table.Row
                                 key={n._id}
-                                className={`w-2/5 ${selectedDoc === n._id && 'bg-blue-200'} cursor-pointer`}
+                                className={`${selectedDoc === n._id && 'bg-blue-200'} flex justify-between items-center w-full cursor-pointer`}
                                 onClick={() => setSelectedDoc(n._id)}
                             >
-                                <Table.Cell>
+                                <Table.Cell className='pr-2 w-1/3'>
                                     <CustomImg url={n.user_id.photo} className='w-[60px] rounded-full' />
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className='p-2'>
                                     <h1 className='font-bold text-md'>{"Dr. " + n.first_name + " " + n.last_name}</h1>
                                 </Table.Cell>
-                                <Table.Cell className='w-1/3'>
-                                    <p className='text-xs'>{n.bio.split(".")[0]}</p>
+                                <Table.Cell className=' px-2 w-1/3'>
+                                    <div className='h-2/5 flex'>
+                                        <p className='text-xs'>{n.bio.split(".")[0]}</p>
+                                    </div>
                                 </Table.Cell>
                             
                             </Table.Row>

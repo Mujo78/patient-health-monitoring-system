@@ -16,10 +16,8 @@ const Notifications: React.FC = () => {
 
   const handleNavigate = (id: string) => {
     navigate(`${id}`)
-    console.log(id)
     setSelected(id)
   }
-  console.log(personNotifications)
 
   useEffect(() => {
     dispatch(getPersonNotifications())

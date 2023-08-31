@@ -11,13 +11,13 @@ const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userControl
 
 const router = express.Router()
 
-router.use(protect)
+//router.use(protect)
 
 router.get("/:departmentName/doctors", getAllDoctors)
 router.get("/", getAll)
 router.get("/:id", getDepartment)
 
-router.use(restrictTo("HOSPITAL"))
+//router.use(restrictTo("HOSPITAL"))
 
 router.post("/:departmentId/add-doctor", uploadUserPhoto, resizeUserPhoto, addDoctor)
 router.route("/").post(createDepartment)

@@ -7,6 +7,8 @@ import { Spinner, TextInput } from 'flowbite-react'
 import ErrorMessage from '../../components/ErrorMessage'
 import CustomButton from '../../components/CustomButton'
 import Pagination from './Pagination'
+import { useSelector } from 'react-redux'
+import { authUser } from '../../features/auth/authSlice'
 
 type patients = {
   currentPage: number | null,
@@ -26,7 +28,7 @@ const MyPatients: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const page = query.get('page') || 1
   const searchQuery = query.get('searchQuery');
-
+  const {accessUser} = useSelector(authUser)
   const [search, setSearch] = useState("")
   const [patients, setPatients] = useState<patients | undefined>()
   const [message, setMessage] = useState<string>("") 
@@ -37,10 +39,10 @@ const MyPatients: React.FC = () => {
         try {
           setLoading(true);
           if (searchQuery) {
-            const response = await searchForPatient(searchQuery, Number(page));
+            const response = await searchForPatient(accessUser.token, accessUser.data._id, searchQuery, Number(page));
             setPatients(response);
           } else {
-            const response = await getPatientsForDoctor(Number(page));
+            const response = await getPatientsForDoctor(accessUser.token, accessUser.data._id, Number(page));
             setPatients(response);
           }
         } catch (err: any) {
@@ -52,17 +54,17 @@ const MyPatients: React.FC = () => {
     };
   
     fetchData();
-  }, [page, searchQuery, id]);
+  }, [page, searchQuery, id, accessUser]);
 
   const handleNavigatePage = async (newPage: number) => {
     try {
       setLoading(true);
       if (searchQuery !== null) {
-        const response = await searchForPatient(searchQuery, newPage);
+        const response = await searchForPatient(accessUser.token, accessUser.data._id, searchQuery, newPage);
         setPatients(response);
         navigate(`/my-patients/search?searchQuery=${searchQuery}&page=${newPage}`);
       } else {
-        const response = await getPatientsForDoctor(newPage);
+        const response = await getPatientsForDoctor(accessUser.token, accessUser.data._id,newPage);
         setPatients(response);
         navigate(`/my-patients?page=${newPage}`);
       }
@@ -80,7 +82,7 @@ const MyPatients: React.FC = () => {
       try {
         setLoading(true);
         navigate(`/my-patients/search?searchQuery=${search}&page=1`);
-        const response = await searchForPatient(search, 1);
+        const response = await searchForPatient(accessUser.token, accessUser.data._id, search, 1);
         setPatients(response);
       } catch (err:any) {
         setMessage(err.response?.data || 'An error occurred');

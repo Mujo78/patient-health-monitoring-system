@@ -7,11 +7,13 @@ const departmentSchema = mongoose.Schema({
         required: [true, "Name is required!"],
         unique: [true, 'Name must be unique!'],
     },
+    /*
     hospital_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Hospital',
         select: false
     },
+    */
     description:{
         type: String,
         required: [true, "Description is required!"],

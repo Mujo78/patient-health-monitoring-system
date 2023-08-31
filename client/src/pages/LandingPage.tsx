@@ -4,29 +4,28 @@ import LoginForm from "./auth/LoginForm"
 import SignUpInfo from "./auth/SignUpInfo"
 import LoginInfo from "./auth/LoginInfo"
 import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { authUser } from "../features/auth/authSlice"
 
 
 export type Props = {
     setSignUp: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-
 const LandingPage: React.FC = () => {
 
     const [signup, setSignUp] = useState<boolean>(false)
-    const user = localStorage.getItem("user")
-    const userObj = user && JSON.parse(user)
+    const {accessUser} = useSelector(authUser)
     const navigate = useNavigate()
-
-    const route = userObj?.data.role.toLowerCase();
+    const route = accessUser?.data.role.toLowerCase();
 
   useEffect(() => {
-    if(userObj){
-      navigate(`/${route}/${userObj.data._id}`)
+    if(accessUser){
+      navigate(`/${route}/${accessUser.data._id}`)
     }else{
       navigate("/")
     }
-  }, [userObj,route, navigate])
+  }, [accessUser,route, navigate])
 
   return (
     <div className='text-start w-full h-screen flex items-center'>

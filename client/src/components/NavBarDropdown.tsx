@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import ErrorMessage from './ErrorMessage'
 import moment from 'moment'
 import { useAppDispatch } from '../app/hooks'
+import { authUser } from '../features/auth/authSlice'
 
 type Props = {
     setShow: React.Dispatch<React.SetStateAction<boolean>>
@@ -19,6 +20,11 @@ const NavBarDropdown: React.FC<Props> = ({setShow}) => {
     const dispatch = useAppDispatch()
     const {personNotifications, status, message} = useSelector(notification)
     const readed = personNotifications?.some((value) => value.read === false)
+    const {accessUser} = useSelector(authUser)
+    let route = '';
+    if(accessUser.data.role === 'PATIENT') route = '/notifications'
+    if(accessUser.data.role === 'DOCTOR') route = '/doctor-notifications'
+    if(accessUser.data.role === 'PHARMACY') route = '/pharmacy-notifications'
 
     const markAll = () => {
         if(readed){
@@ -27,13 +33,18 @@ const NavBarDropdown: React.FC<Props> = ({setShow}) => {
     }
 
     const navigateNotifications = () => {
-        setShow(false)
-        navigate('/notifications')
+        if(route !== ''){
+            setShow(false)
+            navigate(route)
+        }
     }
 
     const handleNavigateNotification = (id: string) => {
-        setShow(false)
-        navigate(`/notifications/${id}`)
+        console.log(route)
+        if(route !== ''){
+            setShow(false)
+            navigate(`${route}/${id}`)
+        }
     }
 
     const oldOnes = personNotifications?.filter((n) => n.read === true).slice(personNotifications.length - 3, personNotifications.length).reverse()

@@ -67,7 +67,8 @@ const signup = asyncHandler( async (req, res) =>{
         newPatient = await Patient.create([{
             user_id: newUser[0]._id,
             first_name, last_name, phone_number,
-            address, gender, blood_type, date_of_birth
+            address, gender, blood_type,
+            date_of_birth: date_of_birth.toString()
         }], {session})
 
         const verificationToken = newUser[0].createVerificationToken()
@@ -132,8 +133,6 @@ const login = asyncHandler( async (req, res) => {
     const {
         email, password
     } = req.body;
-
-    console.log(req.body)
 
     if(!email || !password){
         return res.status(400).json("Please provide email and password!")

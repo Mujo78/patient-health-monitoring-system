@@ -10,16 +10,17 @@ const addDoctor = asyncHandler( async (req, res) =>{
     if(req.file) req.body.photo = req.file.filename
 
     const {
-        first_name, last_name, photo, phone_number, address, speciality, passwordChangedAt, qualification, bio
+        first_name, last_name, photo, phone_number,age, address, speciality, available_days, passwordChangedAt, qualification, bio
     } = req.body;
 
+    const days = available_days.split(',')
     
     const session = await mongoose.startSession()
     session.startTransaction()
-    const email = req.user.email;
-    const docEmail = email.slice(email.indexOf('@'))
+    //const email = req.user.email;
+    //const docEmail = email.slice(email.indexOf('@'))
     const emailID = phone_number.substr(phone_number.length - 3, phone_number.length)
-    const doctorEmail = `${first_name.toLowerCase()}.${last_name.toLowerCase() + emailID + docEmail}` 
+    const doctorEmail = `${first_name.toLowerCase()}.${last_name.toLowerCase() + emailID + '@hs.com'}` 
 
 
     try{
@@ -33,7 +34,7 @@ const addDoctor = asyncHandler( async (req, res) =>{
         }], {session})
         
         const newDoctor = await Doctor.create([{
-            first_name, user_id: newUserDoctor[0]._id, department_id: req.params.departmentId, last_name, phone_number, address, speciality, qualification, bio
+            first_name, user_id: newUserDoctor[0]._id, department_id: req.params.departmentId,available_days: days, last_name, phone_number, address,age, speciality, qualification, bio
         }], {session})
 
         await session.commitTransaction()

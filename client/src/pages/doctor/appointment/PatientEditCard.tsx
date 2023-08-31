@@ -18,7 +18,8 @@ const PatientEditCard: React.FC<Props> = ({setShowMore}) => {
     }
 
   return (
-    <Card className='max-w-xs font-Poppins h-fit ml-auto'>
+    <>
+    {selected && <Card className='max-w-xs font-Poppins h-fit ml-auto'>
         <p className='text-blue-700 font-semibold'>Patient</p>
         <CustomImg url={selected?.patient_id.user_id.photo} className='w-[150px] mx-auto rounded-xl' />
         <h1 className='text-xl font-bold text-center'>{selected?.patient_id.first_name + " " + selected?.patient_id.last_name}</h1>
@@ -26,7 +27,7 @@ const PatientEditCard: React.FC<Props> = ({setShowMore}) => {
         <hr/>
         <p className="flex text-sm text-gray-500 justify-between">
             <span>Age :</span>
-            <span className="ml-auto text-black">{moment().diff(moment(selected?.patient_id.date_of_birth), 'years')}</span>
+            <span className="ml-auto text-black">{moment().diff(moment(new Date(selected.patient_id.date_of_birth)), 'years')}</span>
         </p>
         <p className="flex text-sm text-gray-500 justify-between">
             <span>Address :</span>
@@ -52,7 +53,8 @@ const PatientEditCard: React.FC<Props> = ({setShowMore}) => {
         <Button color="light" onClick={showMore} className="focus:!ring-gray-100"> 
             See more
         </Button>
-    </Card>
+    </Card>}
+    </>
   )
 }
 

@@ -19,7 +19,6 @@ type PasswordReset = {
 const ForgotPassword: React.FC = () => {
 
   const {token} = useParams()
-  console.log(token)
   const navigate = useNavigate()
   const {register,handleSubmit, formState, getValues} = useForm<PasswordReset>({ resolver: yupResolver(resetPasswordValidationSchema)})
   const {errors} = formState

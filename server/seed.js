@@ -3,47 +3,49 @@ const Hospital = require("./models/hospital")
 const User = require("./models/user")
 const asyncHandler = require('express-async-handler')
 const connectDB = require('./config/db')
+const Pharmacy = require('./models/pharmacy')
 const dotenv = require("dotenv").config()
 
 connectDB()
 
-const hospitalData = {
-    name: process.env.H_NAME,
-    address: process.env.H_ADDRESS,
-    description: process.env.H_DESCRIPTION,
-    phone_number: process.env.H_PHONE_NUMBER,
-    email: process.env.H_EMAIL,
-    password: process.env.H_PASSWORD
+const pharmacyData = {
+    name: process.env.PH_NAME,
+    address: process.env.PH_ADDRESS,
+    description: process.env.PH_DESCRIPTION,
+    phone_number: process.env.PH_PHONE_NUMBER,
+    working_hours: process.env.PH_HOURS,
+    email: process.env.PH_EMAIL,
+    password: process.env.PH_PASSWORD
 }
-
 
 const seedDb = asyncHandler( async () =>{
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try{
-        const image = 'default.jpg'
-        const existingOne = await Hospital.find();
+        const image = 'pharmacy.png'
+        const existingOne = await Pharmacy.find();
         
         if(existingOne.length === 0){
             
-            const newUserHospital = await User.create([{
-                email: hospitalData.email,
-                role: 'HOSPITAL',
+            const newPharmacyUser = await User.create([{
+                email: pharmacyData.email,
+                role: 'PHARMACY',
                 photo: image,
-                password: hospitalData.password,
-                passwordConfirm: hospitalData.password
+                password: pharmacyData.password,
+                passwordConfirm: pharmacyData.password
             }], {session})
     
-            const newHospital = await Hospital.create([{
-                user_id: newUserHospital[0]._id,
-                name: hospitalData.name,
-                address: hospitalData.address,
-                description: hospitalData.description,
-                phone_number: hospitalData.phone_number
+            const newPharmacy = await Pharmacy.create([{
+                user_id: newPharmacyUser[0]._id,
+                name: pharmacyData.name,
+                address: pharmacyData.address,
+                working_hours: pharmacyData.working_hours,
+                description: pharmacyData.description,
+                phone_number: pharmacyData.phone_number
             }], {session})
     
-            console.log(`Hospital: ${newHospital[0].name} successfully created!`)
+            console.log(`Pharmacy: ${newPharmacy[0].name} successfully created!`)
             
             await session.commitTransaction()
             session.endSession()
@@ -58,6 +60,7 @@ const seedDb = asyncHandler( async () =>{
 
 
 })
+
 
 seedDb().then(() => {
     mongoose.disconnect()

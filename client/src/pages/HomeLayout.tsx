@@ -11,11 +11,6 @@ const HomeLayout: React.FC = () => {
 
   const {accessUser} = useSelector(authUser)
 
-  let color = "";
-  if(accessUser?.data.role === 'PATIENT') color = "blue-700"
-  if(accessUser?.data.role === 'DOCTOR') color = "gray-300"
-  if (accessUser?.data.role === 'PHARMACY') color = "green-500"
-
   return (
     <div className='flex w-full'>
       <div className=' flex w-full'>
@@ -23,7 +18,7 @@ const HomeLayout: React.FC = () => {
         {accessUser?.data.role === 'DOCTOR' && <DoctorSidebar />}
         {accessUser?.data.role === 'PHARMACY' && <PharmacySidebar />}
         <div className='flex flex-col w-full h-screen'>
-          <CustomNavbar color={color} />
+          <CustomNavbar />
         <div className='overflow-y-auto flex-grow'>
           <Outlet />
         </div>

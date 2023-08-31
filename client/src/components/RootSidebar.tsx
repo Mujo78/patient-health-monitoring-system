@@ -7,10 +7,9 @@ import { authUser } from '../features/auth/authSlice'
 
 type Props = {
   children: React.ReactNode,
-  color: string
 }
 
-const RootSidebar: React.FC<Props> = ({children, color}) => {
+const RootSidebar: React.FC<Props> = ({children}) => {
   
   const {accessUser} = useSelector(authUser)
 
@@ -19,7 +18,7 @@ const RootSidebar: React.FC<Props> = ({children, color}) => {
   return (
     <div className="w-fit h-screen">
       <Sidebar>
-        <Sidebar.Items className={`h-full font-Poppins border-r-2 border-r-${color} flex flex-col justify`}>
+        <Sidebar.Items className={`h-full font-Poppins border-r-2 border-r-gray-200 flex flex-col justify`}>
           <Sidebar.ItemGroup>
             <Sidebar.Item as={NavLink}
               to={`/${route}/${accessUser?.data._id}`}
