@@ -305,6 +305,110 @@ const getFinishedAppointmentForPatient = asyncHandler (async (req, res) => {
 
 })
 
+const getLatestFinishedAppointment = asyncHandler(async(req, res) => {
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json('There is no user with such ID!')
+
+    const patient = await Patient.findOne({user_id: user._id})    
+    if(!patient) return res.status(404).json('There is no patient with such ID!')
+
+    const latestApp = await Appointment.findOne({
+        patient_id: patient._id,
+        finished:true
+    })
+    .sort({appointment_date: -1})
+    .select('appointment_date doctor_id')
+    .exec()
+
+    const latest = {}
+
+    latest.patient = patient
+    
+    if(latestApp){
+        latest.appointment = {
+            _id: latestApp._id,
+            doctor_id: latestApp.doctor_id,
+            appointment_date: latestApp.appointment_date
+        }
+    }
+
+    return res.status(200).json(latest)
+})
+
+const numberOfAppointmentsPerMonthForDepartments = asyncHandler( async(req, res) => {
+
+    const {month} = req.params;
+
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json('There is no user with such ID!')
+
+    const patient = await Patient.findOne({user_id: user._id})    
+    if(!patient) return res.status(404).json('There is no patient with such ID!')
+
+    let year = new Date().getFullYear()
+    let newYearMonth;
+    const start = new Date(`${year}/${month}/01 GMT`)
+    if(start.getMonth() + 2 === 13){
+        newYearMonth = 1
+        year++
+    }else{
+        newYearMonth = start.getMonth() + 2
+    }
+    const end = new Date(`${year}/${newYearMonth}/01 GMT`)
+
+    const result = await Appointment.aggregate([
+        {
+            $match: {
+                appointment_date: { $gte: start, $lt: end },
+            },
+        },
+        {
+            $lookup: {
+                from: 'doctors',
+                localField: 'doctor_id',
+                foreignField: '_id',
+                as: 'doctor',
+            },
+        },
+        {
+            $unwind: '$doctor',
+        },
+        {
+            $group: {
+                _id: '$doctor.speciality',
+                count: { $sum: 1 },
+            },
+        },
+        {
+            $project: {
+                name: '$_id',
+                count: 1,
+                _id: 0,
+            },
+        },
+    ]);
+
+    const allSpecialties = await Doctor.distinct('speciality');
+
+    const counts = {};
+
+    allSpecialties.forEach((specialty) => {
+        counts[specialty] = 0;
+    });
+
+    result.forEach((item) => {
+        counts[item.name] = item.count;
+    });
+
+    const final = Object.keys(counts).map((name) => ({
+        name,
+        visited: counts[name],
+    })).sort((a,b) => b.visited - a.visited).slice(0, 5);
+
+    return res.status(200).json(final);
+
+})
+
 const getOneAppointment = getDoc(Appointment)
 const getAllAppointments = getAllData(Appointment)
 const cancelAppointment = deleteDoc(Appointment)
@@ -322,5 +426,7 @@ module.exports = {
     getLatestAppointmentForPatientWithDoctor,
     getPatientsForDoctor,
     getPatientsForDoctorBySearch,
-    getFinishedAppointmentForPatient
+    getFinishedAppointmentForPatient,
+    getLatestFinishedAppointment,
+    numberOfAppointmentsPerMonthForDepartments
 }

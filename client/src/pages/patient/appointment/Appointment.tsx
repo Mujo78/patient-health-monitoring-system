@@ -79,7 +79,7 @@ const Appointment: React.FC = () => {
                         {selected.reason.length > 0 && <p><span className='text-md font-semibold'>Reason:</span> {selected.reason}</p> }   
                     </div>
                     <div className='mt-auto'>
-                        {(Number(canCancel) > 60) && <Button onClick={cancelAppointmentNow} color="failure">Cancel Appointment</Button>}
+                        {(Number(canCancel) > 60 && !selected.finished) && <Button onClick={cancelAppointmentNow} color="failure">Cancel Appointment</Button>}
                     </div>
                 </div>
                 <div className='flex justify-between flex-col h-full mt-6'>

@@ -150,7 +150,7 @@ const AppointmentOverviewEdit: React.FC = () => {
         <p className='text-xs text-gray-400 mt-2'>You will be able to see overview after appointment is finished</p>
     </div> }
       </Tabs.Item>
-      {Number(canEdit) > 60 ? 
+      {Number(canEdit) > 60 && !sApp?.finished ? 
       <Tabs.Item title="Edit" className='flex' active={active === 1} icon={HiOutlinePencilSquare}>
         <div className='flex w-full flex-col'>
           <div className='flex w-full justify-between'>

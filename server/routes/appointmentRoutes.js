@@ -14,7 +14,9 @@ const {
     getLatestAppointmentForPatientWithDoctor,
     getPatientsForDoctor,
     getPatientsForDoctorBySearch,
-    getFinishedAppointmentForPatient
+    getFinishedAppointmentForPatient,
+    getLatestFinishedAppointment,
+    numberOfAppointmentsPerMonthForDepartments
 } = require("../controllers/appointmentController")
 
 const router = express.Router()
@@ -35,9 +37,11 @@ router.post("/:id/patient-latest-record", restrictTo("DOCTOR", "PATIENT"), getLa
 router.get("/person/:id", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForPatient)
 router.get("/patient/:id", restrictTo('DOCTOR'), getFinishedAppointmentForPatient)
 
+router.get('/per-month/:month', restrictTo('PATIENT'), numberOfAppointmentsPerMonthForDepartments)
+
+router.get('/', restrictTo('PATIENT'), getLatestFinishedAppointment)
+
 router.patch("/edit-details/:id", restrictTo('PATIENT'), editAppointmentInfo)
 router.delete('/:id', restrictTo('DOCTOR', 'PATIENT'), cancelAppointment)
-
-router.get("/", getAllAppointments)
 
 module.exports = router;

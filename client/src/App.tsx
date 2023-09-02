@@ -37,6 +37,9 @@ import MedicineOverview from './pages/pharmacy/MedicineOverview'
 import AddMedicine from './pages/pharmacy/AddMedicine'
 import PhSettings from './pages/pharmacy/PhSettings'
 import OneMedicine from './pages/pharmacy/OneMedicine'
+import PatientProfile from './pages/patient/PatientProfile'
+import DoctorProfile from './pages/doctor/DoctorProfile'
+import PharmacyProfile from './pages/pharmacy/PharmacyProfile'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -52,6 +55,7 @@ const router = createBrowserRouter(createRoutesFromElements(
               <Route path=':doctorId' element={<MakeAppointment />} />
           </Route>
         </Route>
+        <Route path='/profile/p/:id' element={<PatientProfile />} />
         <Route path='/staff' element={<MedicalStaff />} />
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />
@@ -67,6 +71,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/my-patients' element={<MyPatients />}>
           <Route path=':id' element={<Patient/>} />
         </Route>
+        <Route path='/profile/d/:id' element={<DoctorProfile />} />
         <Route path='/my-patients/search' element={<MyPatients />} />
         <Route path='/my-department' element={<MyDepartment />} />
         <Route path='/doctor-notifications' element={<Notifications />} >
@@ -83,6 +88,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/pharmacy-notifications' element={<Notifications />} >
           <Route path=':id' element={<Notification />} />
         </Route>
+        <Route path='/profile/ph/:id' element={<PharmacyProfile />} />
         <Route path='/pharmacy-settings' element={<PhSettings />} />
       </Route>
     </Route>

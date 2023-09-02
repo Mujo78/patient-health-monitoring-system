@@ -30,7 +30,6 @@ export async function getDoctor(token: string, id: string) {
             "Authorization": `Bearer ${token}`
         }
     })
-
     return response.data;
 }
 
@@ -46,7 +45,6 @@ export async function getLatestAppointment(token: string, id: string, latestApp:
             "Authorization": `Bearer ${token}`
         }
     })
-
     return response.data;
 }
 
@@ -57,7 +55,26 @@ export async function getPatientFinishedAppointments(token: string, id: string, 
             "Authorization": `Bearer ${token}`
         }
     })
+    return response.data;
+}
 
+export async function getLatestFinished(token: string) {
+
+    const response = await axios.get(`${BASE_URL}appointment/`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return response.data;
+}
+
+export async function numberOfAppointmentsPerMonthForDepartments(token: string, month: string) {
+
+    const response = await axios.get(`${BASE_URL}appointment/per-month/${month}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
     return response.data;
 }
 
@@ -83,3 +100,11 @@ export function formatStartEnd(date: Date) {
     const appointmentTime = `${startTime} - ${endTime}`;
     return appointmentTime
 }
+
+export function isCurrentAppointment(appointmentDate: Date) {
+    const appDate = new Date(appointmentDate);
+    const currentDate = new Date();
+    const endTime = new Date(appDate);
+    endTime.setMinutes(endTime.getMinutes() + 20);
+    return currentDate >= appDate && currentDate <= endTime;
+  }

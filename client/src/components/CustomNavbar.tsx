@@ -13,11 +13,16 @@ import NavBarDropdown from './NavBarDropdown';
 const CustomNavbar: React.FC = () => {
     const navigate = useNavigate()
 
+    let route;
     const [show, setShow] = useState<boolean>(false)
 
     const {notifications, personNotifications} = useSelector(notification)
     const {accessUser} = useSelector(authUser)
     const dispatch = useAppDispatch()
+
+    if(accessUser?.data.role === 'PATIENT') route=`/profile/p/${accessUser.data._id}`
+    else if(accessUser?.data.role === 'DOCTOR') route=`/profile/d/${accessUser.data._id}`
+    else route=`/profile/ph/${accessUser.data._id}`
     
     useEffect(() =>{
         socket.emit("userLogin", accessUser?.data._id)
@@ -64,7 +69,7 @@ const CustomNavbar: React.FC = () => {
     <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}>
       <p className='text-sm font-semibold'>{date.toString().slice(0, 16)}</p>
       <div className='flex items-center relative'>
-        <Link to="/dashboard">
+        <Link to={route}>
           <div className='flex items-center'>
             {accessUser && <CustomImg url={accessUser.data.photo} className='w-[50px] mr-1' />}
             <p className='text-xs font-semibold mr-6'>{accessUser?.info.name ? accessUser?.info.name : accessUser?.info.first_name + " " + accessUser?.info.last_name}</p>

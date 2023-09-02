@@ -29,7 +29,7 @@ export interface UserInfo {
     email: string
 }
 
-interface doctor_id {
+export interface doctor_id {
     _id: string,
     first_name: string,
     last_name: string,
