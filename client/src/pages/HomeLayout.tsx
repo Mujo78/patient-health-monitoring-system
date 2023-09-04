@@ -1,15 +1,26 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { authUser } from '../features/auth/authSlice'
+import { authUser, logout } from '../features/auth/authSlice'
 import PatientSidebar from './patient/PatientSidebar'
 import DoctorSidebar from './doctor/DoctorSidebar'
 import PharmacySidebar from './pharmacy/PharmacySidebar'
 import CustomNavbar from '../components/CustomNavbar'
+import { useAppDispatch } from '../app/hooks'
 
 const HomeLayout: React.FC = () => {
 
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const {accessUser} = useSelector(authUser)
+
+  useEffect(() =>{
+    if(!accessUser?.data.active && !accessUser?.data.isVerified){
+      dispatch(logout()).then(()=> {
+        navigate("/", {replace: true})
+      })
+    }
+  }, [accessUser,navigate, dispatch])
 
   return (
     <div className='flex w-full'>

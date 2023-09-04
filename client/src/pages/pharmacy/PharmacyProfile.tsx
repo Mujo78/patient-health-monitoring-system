@@ -1,8 +1,11 @@
 import React from 'react'
+import ProfileLayout from '../../components/ProfileLayout'
 
 const PharmacyProfile: React.FC = () => {
   return (
-    <div>PharmacyProfile</div>
+    <ProfileLayout>
+      <div>PharmacyProfile</div>
+    </ProfileLayout>
   )
 }
 

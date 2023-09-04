@@ -1,6 +1,6 @@
 
 import axios from "axios"
-import { LoginUser, PatientUser, ResetPassword } from "./authSlice"
+import { LoginUser, PatientUser, ResetPassword, UpdateUserInterface, changePasswordInterface } from "./authSlice"
 
 const BASE_URL = "http://localhost:3001/api/v1/user"
 
@@ -53,8 +53,53 @@ const verifyEmail = async (verificationToken:string) => {
     return response.data;
 }
 
+const updateUser = async (token:string, data: UpdateUserInterface ) => {
+    const response = await axios.patch(`${BASE_URL}/update-me`, data, {
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+
+    return response.data;
+}
+
+const deactivateMyAccount = async (token:string, data: {activte: boolean} ) => {
+    const response = await axios.patch(`${BASE_URL}/deactivate`, data, {
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+
+    return response.data;
+}
+
+
+export async function updatePhoto(token: string, photo: File) {
+
+    const form = new FormData()
+    form.append("photo", photo)
+    
+    const response = await axios.patch(`${BASE_URL}/update-photo`, form, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    return response.data;
+}
+
 const firstTimeUsing = async (token: string) => {
     const response = await axios.patch(`${BASE_URL}/`,{}, {
+        headers: {
+            "Authorization" : `Bearer ${token}`
+        }
+    })
+
+    return response.data;
+}
+
+const changeMyPassword = async (token: string, changePasswordData: changePasswordInterface) => {
+    const response = await axios.patch(`${BASE_URL}/change-password`,changePasswordData, {
         headers: {
             "Authorization" : `Bearer ${token}`
         }
@@ -69,7 +114,11 @@ const authServices = {
     resetPassword,
     signup,
     verifyEmail,
-    firstTimeUsing
+    firstTimeUsing,
+    updatePhoto,
+    updateUser,
+    deactivateMyAccount,
+    changeMyPassword
 }
 
 export default authServices

@@ -22,9 +22,9 @@ const NavBarDropdown: React.FC<Props> = ({setShow}) => {
     const readed = personNotifications?.some((value) => value.read === false)
     const {accessUser} = useSelector(authUser)
     let route = '';
-    if(accessUser.data.role === 'PATIENT') route = '/notifications'
-    if(accessUser.data.role === 'DOCTOR') route = '/doctor-notifications'
-    if(accessUser.data.role === 'PHARMACY') route = '/pharmacy-notifications'
+    if(accessUser?.data.role === 'PATIENT') route = '/notifications'
+    if(accessUser?.data.role === 'DOCTOR') route = '/doctor-notifications'
+    if(accessUser?.data.role === 'PHARMACY') route = '/pharmacy-notifications'
 
     const markAll = () => {
         if(readed){

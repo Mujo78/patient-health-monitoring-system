@@ -22,7 +22,7 @@ const CustomNavbar: React.FC = () => {
 
     if(accessUser?.data.role === 'PATIENT') route=`/profile/p/${accessUser.data._id}`
     else if(accessUser?.data.role === 'DOCTOR') route=`/profile/d/${accessUser.data._id}`
-    else route=`/profile/ph/${accessUser.data._id}`
+    else route=`/profile/ph/${accessUser?.data._id}`
     
     useEffect(() =>{
         socket.emit("userLogin", accessUser?.data._id)
@@ -71,7 +71,7 @@ const CustomNavbar: React.FC = () => {
       <div className='flex items-center relative'>
         <Link to={route}>
           <div className='flex items-center'>
-            {accessUser && <CustomImg url={accessUser.data.photo} className='w-[50px] mr-1' />}
+            {accessUser && <CustomImg url={accessUser.data.photo} className='w-[30px] mr-1' />}
             <p className='text-xs font-semibold mr-6'>{accessUser?.info.name ? accessUser?.info.name : accessUser?.info.first_name + " " + accessUser?.info.last_name}</p>
           </div>
         </Link>
@@ -87,7 +87,7 @@ const CustomNavbar: React.FC = () => {
                 className={`p-2 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${show && 'bg-gray-100'} `}
             />
           </div>
-          {show && <div className='h-80 absolute top-9 left-0 z-10 -ml-54 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 '>
+          {show && <div className='h-80 absolute top-9 left-0 z-30 -ml-54 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 '>
                 <NavBarDropdown setShow={setShow} />
             </div>}
         </div>

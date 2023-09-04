@@ -4,7 +4,7 @@ import { Sidebar } from 'flowbite-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
-import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays, HiOutlineCog6Tooth} from "react-icons/hi2"
+import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays} from "react-icons/hi2"
 
 const DoctorSidebar: React.FC  = () => {
   
@@ -41,15 +41,6 @@ const DoctorSidebar: React.FC  = () => {
         >
             Department
         </Sidebar.Item>
-        <Sidebar.ItemGroup>
-        <Sidebar.Item as={NavLink}
-          icon={HiOutlineCog6Tooth}
-          active={location.pathname.startsWith('/doctor-settings')}
-          to={"/doctor-settings"}
-          >
-            Settings
-        </Sidebar.Item>
-        </Sidebar.ItemGroup>
     </RootSidebar>
   )
 }

@@ -48,8 +48,10 @@ const MakeAppointment: React.FC = () => {
     const fetchData = async (id: string) => {
       try {
         setLoading(true)
-        const response = await getDoctor(accessUser.token, id)
-        setDoc(response)
+        if(accessUser){
+          const response = await getDoctor(accessUser.token, id)
+          setDoc(response)
+        }
         setLoading(false);
       } finally {
         setLoading(false)

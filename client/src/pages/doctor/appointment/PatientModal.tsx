@@ -35,7 +35,7 @@ const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, l
                                 <span className='font-semibold'>Name: </span> {latestAppState.patient_id.first_name + " " + latestAppState.patient_id.last_name}
                             </p>
                             <p>
-                                <span className='font-semibold'>Date of birth: </span> {formatDate(latestAppState.patient_id.date_of_birth)}
+                                <span className='font-semibold'>Date of birth: </span> {latestAppState.patient_id.date_of_birth.toString()}
                             </p>
                             <p>
                                 <span className='font-semibold'>Blood type: </span> {latestAppState.patient_id.blood_type}

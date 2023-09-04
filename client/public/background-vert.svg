@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="-19.54 -480.991 630.412 1841.592" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="SvgjsMask1015">
+      <rect width="1440" height="250" fill="#ffffff"/>
+    </mask>
+    <linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="SvgjsLinearGradient1016">
+      <stop stop-color="rgba(37, 99, 235, 1)" offset="0"/>
+      <stop stop-opacity="0" stop-color="rgba(37, 99, 235, 1)" offset="0.66"/>
+    </linearGradient>
+    <linearGradient x1="100%" y1="100%" x2="0%" y2="0%" id="SvgjsLinearGradient1017">
+      <stop stop-color="rgba(37, 99, 235, 1)" offset="0"/>
+      <stop stop-opacity="0" stop-color="rgba(37, 99, 235, 1)" offset="0.66"/>
+    </linearGradient>
+  </defs>
+  <g mask="url(&quot;#SvgjsMask1015&quot;)" fill="none" style="transform-origin: 720px 125px;" transform="matrix(0, -1.278832, 2.521167, 0, -423.853876, 314.904933)">
+    <rect width="1440" height="250" x="0" y="0" fill="rgba(29, 78, 216, 1)"/>
+    <path d="M24 250L274 0L416.5 0L166.5 250z" fill="url(&quot;#SvgjsLinearGradient1016&quot;)"/>
+    <path d="M271.6 250L521.6 0L848.6 0L598.6 250z" fill="url(&quot;#SvgjsLinearGradient1016&quot;)"/>
+    <path d="M490.20000000000005 250L740.2 0L1089.7 0L839.7 250z" fill="url(&quot;#SvgjsLinearGradient1016&quot;)"/>
+    <path d="M719.8000000000001 250L969.8000000000001 0L1326.8000000000002 0L1076.8000000000002 250z" fill="url(&quot;#SvgjsLinearGradient1016&quot;)"/>
+    <path d="M1432 250L1182 0L1111.5 0L1361.5 250z" fill="url(&quot;#SvgjsLinearGradient1017&quot;)"/>
+    <path d="M1194.4 250L944.4000000000001 0L771.9000000000001 0L1021.9000000000001 250z" fill="url(&quot;#SvgjsLinearGradient1017&quot;)"/>
+    <path d="M916.8 250L666.8 0L543.8 0L793.8 250z" fill="url(&quot;#SvgjsLinearGradient1017&quot;)"/>
+    <path d="M701.1999999999999 250L451.19999999999993 0L169.19999999999993 0L419.19999999999993 250z" fill="url(&quot;#SvgjsLinearGradient1017&quot;)"/>
+    <path d="M1312.8880392069893 250L1440 122.8880392069894L1440 250z" fill="url(&quot;#SvgjsLinearGradient1016&quot;)"/>
+    <path d="M0 250L127.1119607930106 250L 0 122.8880392069894z" fill="url(&quot;#SvgjsLinearGradient1017&quot;)"/>
+  </g>
+</svg>

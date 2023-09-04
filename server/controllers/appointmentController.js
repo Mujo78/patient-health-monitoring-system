@@ -157,10 +157,12 @@ cron.schedule('* * * * *', async () => {
             const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${el.appointment_date}`;
             const subject = "Appointment reminder!"
 
-            await new Email(user).send(subject, message)
-
-            el.notification = true
-            await el.save()
+            if(user.notification === true){
+                await new Email(user).send(subject, message)
+    
+                el.notification = true
+                await el.save()
+            }
 
         }catch(err) {
             console.log(err.message)
@@ -359,6 +361,7 @@ const numberOfAppointmentsPerMonthForDepartments = asyncHandler( async(req, res)
     const result = await Appointment.aggregate([
         {
             $match: {
+                patient_id: patient._id,
                 appointment_date: { $gte: start, $lt: end },
             },
         },

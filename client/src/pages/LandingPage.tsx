@@ -39,8 +39,9 @@ const LandingPage: React.FC = () => {
               </div>
         }
   </div>
-  <div className={`bg-blue-700 w-1/4 h-screen flex-col flex items-center justify-center ${signup ? 'animate-slide-left' : ' animate-slide-back-left'}`}>
-    <div className='w-full px-10 mx-5 flex flex-col justify-center'>
+  <div className={`bg-photo-vertical w-1/4 h-screen flex-col relative flex items-center justify-center ${signup ? 'animate-slide-left' : ' animate-slide-back-left'}`}>
+    <img src="./background-vert.svg" className="absolute h-full"  />
+    <div className='w-full px-10 mx-5 flex flex-col z-10 justify-center'>
       {signup ?
             <SignUpInfo setSignUp={setSignUp}/>
           : <LoginInfo setSignUp={setSignUp} />   

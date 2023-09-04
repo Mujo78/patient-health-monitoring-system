@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -6,6 +7,11 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'photo-profile': "url('/background.svg')",
+        'second-photo-profile': "url('/second-bg.svg')",
+        'photo-vertical': "url('/background-vert.svg')",
+      },
       fontFamily: {
         'Poppins': ['Poppins', 'sans-serif'],
         'Roboto': ['Roboto', 'sans-serif']
@@ -36,8 +42,6 @@ export default {
       },
     },
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
+  plugins: [require('flowbite/plugin')],
 }
 

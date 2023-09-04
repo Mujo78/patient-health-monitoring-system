@@ -1,7 +1,7 @@
 import React from 'react'
 import RootSidebar from '../../components/RootSidebar'
 import { Sidebar } from 'flowbite-react'
-import {HiOutlineChartBar,HiOutlineClock, HiOutlineCalendarDays, HiOutlineBuildingOffice2,HiOutlineCog6Tooth, HiOutlineDocumentText} from "react-icons/hi2"
+import {HiOutlineChartBar,HiOutlineClock, HiOutlineCalendarDays, HiOutlineBuildingOffice2, HiOutlineDocumentText} from "react-icons/hi2"
 import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
@@ -48,15 +48,6 @@ const PatientSidebar: React.FC = () => {
           >
             Medicine
         </Sidebar.Item>
-        <Sidebar.ItemGroup>
-        <Sidebar.Item as={NavLink}
-          icon={HiOutlineCog6Tooth}
-          active={location.pathname.startsWith('/settings')}
-          to={"/settings"}
-          >
-            Settings
-        </Sidebar.Item>
-        </Sidebar.ItemGroup>
     </RootSidebar>
   )
 }

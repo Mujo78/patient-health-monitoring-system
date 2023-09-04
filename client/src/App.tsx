@@ -37,9 +37,12 @@ import MedicineOverview from './pages/pharmacy/MedicineOverview'
 import AddMedicine from './pages/pharmacy/AddMedicine'
 import PhSettings from './pages/pharmacy/PhSettings'
 import OneMedicine from './pages/pharmacy/OneMedicine'
-import PatientProfile from './pages/patient/PatientProfile'
+import PatientProfile from './pages/patient/profile/PatientProfile'
 import DoctorProfile from './pages/doctor/DoctorProfile'
 import PharmacyProfile from './pages/pharmacy/PharmacyProfile'
+import GeneralSettings from './pages/patient/profile/GeneralSettings'
+import PersonalInformation from './pages/patient/profile/PersonalInformation'
+import Security from './pages/patient/profile/Security'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -55,7 +58,11 @@ const router = createBrowserRouter(createRoutesFromElements(
               <Route path=':doctorId' element={<MakeAppointment />} />
           </Route>
         </Route>
-        <Route path='/profile/p/:id' element={<PatientProfile />} />
+        <Route path='/profile/p/:id' element={<PatientProfile />}>
+          <Route index element={<GeneralSettings />} />
+          <Route path='personal-info' element={<PersonalInformation />} />
+          <Route path='security' element={<Security />} />
+        </Route>
         <Route path='/staff' element={<MedicalStaff />} />
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />

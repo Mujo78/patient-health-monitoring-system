@@ -1,4 +1,4 @@
-const { updateDoc, getDoc } = require("./handleController")
+const { updateDoc, getDoc, getMyInfo } = require("./handleController")
 const Doctor = require("../models/doctor")
 const asyncHandler = require("express-async-handler")
 const User = require("../models/user")
@@ -81,10 +81,13 @@ const deleteDoctor = asyncHandler( async (req, res) =>{
 
 })
 
+const getMe = getMyInfo(Doctor)
+
 module.exports = {
     addDoctor,
     getAllDoctors,
     getDoctor,
     updateDoctor,
-    deleteDoctor
+    deleteDoctor,
+    getMe
 }

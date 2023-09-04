@@ -20,9 +20,9 @@ const AppointmentsChart: React.FC = () => {
 
     useEffect(() =>{
       const fetchData = async () => {
-        if(month){
+        if(month && accessUser){
           try {
-            const response = await numberOfAppointmentsPerMonthForDepartments(accessUser?.token, month);
+            const response = await numberOfAppointmentsPerMonthForDepartments(accessUser.token, month);
             setDataApps(response)
           } catch (err: any) {
             console.log(err)
@@ -34,17 +34,15 @@ const AppointmentsChart: React.FC = () => {
 
 
     const handleSelect = async () => {
-        if(month){
+        if(month && accessUser){
           try {
-            const response = await numberOfAppointmentsPerMonthForDepartments(accessUser?.token, month);
+            const response = await numberOfAppointmentsPerMonthForDepartments(accessUser.token, month);
             setDataApps(response)
           } catch (err: any) {
             console.log(err)
           }
       }
     }
-
-    console.log(dataApps)
 
   return (
     <Card className='w-full h-2/4 flex flex-col '>

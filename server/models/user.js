@@ -54,6 +54,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    notification: {
+        type: Boolean,
+        default: true
+    },
     passwordChangedAt: {
         type: Date
     },
@@ -63,6 +67,8 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 })
 
 userSchema.pre('save', async function(next){

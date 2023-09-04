@@ -83,13 +83,13 @@ export function isSunday(date:Date) {
 }
 
 export function formatDate(date:Date) {
-    const index = date.toString().indexOf("T")
-    const newDate = date.toString().slice(0, index)
+    const index = date?.toString().indexOf("T")
+    const newDate = date?.toString().slice(0, index)
     return newDate
 }
 
 export function isDoctorAvailable(date: Date, available_days: string[]) {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+    const dayOfWeek = date?.toLocaleDateString('en-US', { weekday: 'long' });
     return !available_days.includes(dayOfWeek);
 }
 

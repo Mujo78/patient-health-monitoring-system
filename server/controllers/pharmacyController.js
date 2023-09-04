@@ -1,5 +1,5 @@
 
-const { getAllData, deleteDoc, updateDoc } = require("./handleController")
+const { getAllData, deleteDoc, updateDoc, getMyInfo } = require("./handleController")
 const Pharmacy = require("../models/pharmacy")
 const asyncHandler = require("express-async-handler")
 const { default: mongoose } = require("mongoose")
@@ -50,9 +50,12 @@ const addPharmacy = asyncHandler( async (req, res) =>{
 const deletePharmacy = deleteDoc(Pharmacy)
 const updatePharmacy = updateDoc(Pharmacy)
 
+const getMe = getMyInfo(Pharmacy)
+
 module.exports = {
     getPharmacy,
     addPharmacy,
     deletePharmacy,
-    updatePharmacy
+    updatePharmacy,
+    getMe
 }

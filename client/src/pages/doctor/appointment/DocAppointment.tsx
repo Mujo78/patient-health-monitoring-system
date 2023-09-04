@@ -81,7 +81,7 @@ const DocAppointment: React.FC = () => {
 
     useEffect(() =>{
         const postData = async () =>{
-            if(selected){
+            if(selected && accessUser){
                 try {
                     setLoading(true)
                     const latestApp = {
@@ -101,7 +101,7 @@ const DocAppointment: React.FC = () => {
     }, [selected, accessUser])
 
     const cancelAppointmentNow = () => {
-        if(selected){
+        if(selected && accessUser){
             dispatch(cancelAppointment(selected._id)).then((action) => {
                 if(typeof action.payload === 'object'){
                     const selectedInfo = {

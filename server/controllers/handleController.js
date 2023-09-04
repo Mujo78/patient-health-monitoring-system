@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const Appointment = require("../models/appointment")
 const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
+const User = require("../models/user");
 
 const getAllData = Model => asyncHandler (async (req, res) =>{
     
@@ -48,6 +49,18 @@ const getDoc = Model => asyncHandler (async (req, res) =>{
     return res.status(404).json("There is no such document in database!")
 })
 
+const getMyInfo = Model => asyncHandler( async(req, res) => {
+    const user = await User.findById(req.user._id)
+    
+    if(!user) return res.status(404).json("There is no user with such ID!");
+
+    const model = await Model.findOne({user_id: user._id})    
+    if(!model) return res.status(404).json("There is no doc with such ID!");
+
+    return res.status(200).json(model)
+
+})
+
 const getAllDocForUser = () => asyncHandler( async(req, res) => {
 
     let mod, mod_id;
@@ -75,5 +88,6 @@ module.exports = {
     deleteDoc,
     updateDoc,
     getDoc,
-    getAllDocForUser
+    getAllDocForUser,
+    getMyInfo
 }

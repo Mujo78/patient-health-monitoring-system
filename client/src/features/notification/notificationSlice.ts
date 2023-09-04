@@ -35,8 +35,9 @@ export const getOneNotification = createAsyncThunk<
 >
 ("notification/get",async (id, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.getOneNotification(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.getOneNotification(id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -52,8 +53,9 @@ export const getPersonNotifications = createAsyncThunk<
 >
 ("notifications/get",async (_, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.getAllNotificationsForPerson(token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.getAllNotificationsForPerson(safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -69,8 +71,9 @@ export const deleteAllNotifications = createAsyncThunk<
 >
 ("notifications/delete",async (_, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.deleteAllNotifications(token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.deleteAllNotifications(safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -86,8 +89,9 @@ export const deleteOneNotification = createAsyncThunk<
 >
 ("notification/delete",async (id, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.deleteOneNotification(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.deleteOneNotification(id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -103,8 +107,9 @@ export const markOneAsRead = createAsyncThunk<
 >
 ("notification/update",async (id, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.markOneNotificationAsRead(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.markOneNotificationAsRead(id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -120,8 +125,9 @@ export const markAllAsRead = createAsyncThunk<
 >
 ("notifications/update",async (_, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await notificationServices.markAllAsRead(token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken= token || '';
+        return await notificationServices.markAllAsRead(safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;

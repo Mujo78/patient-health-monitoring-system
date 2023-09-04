@@ -17,7 +17,6 @@ export interface finishAppointmentObj {
     finished: boolean
 }
 
-
 export interface editObject {
     appointment_date?: Date,
     reason?: string
@@ -43,12 +42,13 @@ export interface doctor_id {
 export interface patient_id {
     blood_type: string,
     date_of_birth: Date,
-    first_name: string, 
+    first_name: string,
+    phone_number: string,
     gender: string,
-    height: string,
+    height: string | "",
     last_name: string,
     user_id: UserInfo,
-    weight:string,
+    weight:string | "",
     address: string,
     _id: string
 }
@@ -90,8 +90,9 @@ export const bookAppointment = createAsyncThunk<
 >
 ("appointment/post",async (appointmentData, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.makeAppointment(appointmentData, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.makeAppointment(appointmentData, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -107,8 +108,9 @@ export const editAppointment = createAsyncThunk<
         >
 ("appointment/patch",async ({id, editObjectData}, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.editAppointment(id, editObjectData, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.editAppointment(id, editObjectData, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -125,8 +127,9 @@ export const makeAppointmentFinished = createAsyncThunk<
         >
 ("appointment-finish/patch",async ({id, finishAppointment}, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.finishAppointment(id, finishAppointment, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.finishAppointment(id, finishAppointment, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -141,8 +144,9 @@ export const getAppointmentsForADay = createAsyncThunk<
     {state: RootState}
 >("appointment-day/get",async (date, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.getAppointmentsForDay(date, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.getAppointmentsForDay(date, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -157,9 +161,11 @@ export const getAppointmentsForPerson = createAsyncThunk<
     {state: RootState}
 >("appointments/get",async (_, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        const id = thunkAPI.getState().auth.accessUser?.data._id
-        return await appointmentService.getAppointmentForPerson(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        const id = thunkAPI.getState().auth.accessUser?.data._id as string | undefined;
+        const _id = id || ''
+        return await appointmentService.getAppointmentForPerson(_id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -174,8 +180,9 @@ export const getSelectedAppointment = createAsyncThunk<
     {state: RootState}
 >("appointment/get",async (id, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.getAppointment(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.getAppointment(id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
@@ -190,8 +197,9 @@ export const cancelAppointment = createAsyncThunk<
     {state: RootState}
 >("appointment/delete",async (id, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await appointmentService.deleteAppointment(id, token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token || '';
+        return await appointmentService.deleteAppointment(id, safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;

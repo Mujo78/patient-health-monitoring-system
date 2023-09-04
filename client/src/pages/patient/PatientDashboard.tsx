@@ -48,8 +48,10 @@ const PatientDashboard: React.FC = () => {
     const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await getLatestFinished(accessUser?.token);
-          setLatestFinished(response)
+          if(accessUser){
+            const response = await getLatestFinished(accessUser.token);
+            setLatestFinished(response)
+          }
         } catch (err: any) {
           console.log(err)
         } finally {
@@ -116,13 +118,13 @@ const PatientDashboard: React.FC = () => {
                   }
                 </div>
               </Card>
-              {latestFinished && <Card onClick={handleNavigateApp} className='cursor-pointer'>
+              {latestFinished?.appointment !== undefined && <Card onClick={handleNavigateApp} className='cursor-pointer'>
                   <div className='flex items-center'>
-                    <CustomImg url={latestFinished?.appointment.doctor_id.user_id.photo} className='w-[75px]' />
+                    <CustomImg url={latestFinished?.appointment?.doctor_id.user_id.photo} className='w-[75px]' />
                     <div className='mx-auto'>
-                      <h1 className='text-xl font-semibold'>{latestFinished?.appointment.doctor_id.first_name + ' ' + latestFinished?.appointment.doctor_id.last_name}</h1>
-                      <p className='text-sm'>{latestFinished?.appointment.doctor_id.speciality}</p>
-                      <p className='text-sm text-gray-400'>{formatDate(latestFinished?.appointment.appointment_date)} ({formatStartEnd(latestFinished.appointment.appointment_date)})</p>
+                      <h1 className='text-xl font-semibold'>{latestFinished?.appointment?.doctor_id.first_name + ' ' + latestFinished?.appointment?.doctor_id.last_name}</h1>
+                      <p className='text-sm'>{latestFinished?.appointment?.doctor_id.speciality}</p>
+                      <p className='text-xs text-gray-400'>{formatDate(latestFinished?.appointment?.appointment_date)} ({formatStartEnd(latestFinished?.appointment?.appointment_date)})</p>
                     </div>
                   </div>
               </Card>}
@@ -156,11 +158,11 @@ const PatientDashboard: React.FC = () => {
             !n.finished &&
             <Table.Row key={n._id} onClick={() => handleNavigate(n._id)} className='flex cursor-pointer rounded-sm hover:!bg-gray-100 transition-colors duration-300 !p-0 justify-center border-b border-gray-300'>
               <Table.Cell className='p-2'>
-                <CustomImg url={n.doctor_id.user_id.photo} className='!w-[120px]' />
+                <CustomImg url={n?.doctor_id.user_id.photo} className='!w-[120px]' />
               </Table.Cell>
               <Table.Cell className='w-full'>
                 <div className='text-xs flex flex-col'>
-                  <span className='text-black font-semibold text-xs mb-1'>Dr. {n.doctor_id.first_name + " " + n.doctor_id.last_name}</span>
+                  <span className='text-black font-semibold text-xs mb-1'>Dr. {n?.doctor_id.first_name + " " + n?.doctor_id.last_name}</span>
                   <span className='text-gray-600 text-[10px]'>{formatStartEnd(n.appointment_date)}</span>
                 </div>
               </Table.Cell>

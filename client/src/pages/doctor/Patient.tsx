@@ -63,7 +63,7 @@ const Patient:React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (id) {
+            if (id && accessUser) {
               try {
                 setLoading(true);
                 const response = await getPatientFinishedAppointments(accessUser.token, id, 1)
@@ -96,7 +96,7 @@ const Patient:React.FC = () => {
     }
 
     const handleNavigatePage = async (newPage: number) => {
-        if(id) {
+        if(id && accessUser) {
             try {
                 setAppLoading(true);
                 const response = await getPatientFinishedAppointments(accessUser.token, id, newPage);
@@ -146,7 +146,7 @@ const Patient:React.FC = () => {
                             <hr/>
                             <p className="flex text-sm text-gray-500 justify-between">
                                 <span>Date of birth :</span>
-                                <span className="ml-auto text-black">{formatDate(appointments?.patient_id.date_of_birth)}</span>
+                                <span className="ml-auto text-black">{appointments?.patient_id.date_of_birth.toString()}</span>
                             </p>
                             <p className="flex text-sm text-gray-500 justify-between">
                                 <span>Address :</span>

@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const mongoose = require("mongoose")
 const Patient = require("../models/patient")
-const { deleteDoc, getAllData, getDoc, updateDoc } = require("./handleController")
+const { deleteDoc, getAllData, getDoc, updateDoc, getMyInfo } = require("./handleController")
 const User = require("../models/user")
 
 
@@ -20,14 +20,7 @@ const getAllPatients = getAllData(Patient)
 const getPatient = getDoc(Patient)
 const editPatientData = updateDoc(Patient)
 
-const getMe = asyncHandler( async (req, res) => {
-
-    const patient = await Patient.findOne({user_id: req.user._id})
-
-    if(!patient) return res.status(404).json("There was an error, please try again later!")
-
-    return res.status(200).json(patient)
-})
+const getMe = getMyInfo(Patient)
 
 const banUserProfile = asyncHandler( async (req, res) =>{
 

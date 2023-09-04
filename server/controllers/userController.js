@@ -2,6 +2,7 @@ const multer = require('multer')
 const sharp = require('sharp')
 const { v4 : uuidv4 } = require ('uuid');
 const User = require("../models/user");
+const Appointment = require("../models/appointment");
 const asyncHandler = require('express-async-handler');
 
 const multerStorage = multer.memoryStorage();
@@ -59,16 +60,46 @@ const updateUserProfile = asyncHandler ( async(req, res) =>{
     return res.status(200).json(user)
 })
 
-const updateMe = asyncHandler(async (req, res) =>{
+const updateMe = asyncHandler( async(req, res) =>{
+    console.log(req.body)
+    const updatedDoc = await User.findByIdAndUpdate(req.user._id, req.body, {
+        new: true,
+        runValidators: true
+    });
+
+    if(!updatedDoc)  return res.status(404).json("User doesn't exists!")
+
+    return res.status(200).json(updatedDoc)
+})
+
+const updatePhoto = asyncHandler(async (req, res) =>{
     
-    if(req.body.password ||req.body.passwordConfirm) {
-        return res.status(400).json("This route is not for updating password!")
+    if(req.file) req.body.photo = req.file.filename
+
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true, runValidators: true})
+    if(!user) return res.status(404).json('User doesn\'t\ exists')
+    return res.status(200).json(user.photo)
+})
+
+const deactivateMyAccount = asyncHandler(async(req, res) =>{
+    const {active} = req.body
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json('User doesn\'t\ exists')
+
+    user.active = active
+    user.save()
+
+    if(!user.active){
+        const newApps = await Appointment.find({
+            appointment_date: { $gte: new Date()}
+        })
+
+        if(newApps.length > 0){
+            const ids = newApps.map((n) => n._id)
+            await Appointment.deleteMany({_id: {$in: ids}})
+
+        }
     }
-
-    const fillterBody = fillterObj(req.body, 'email', 'phone_number')
-    if(req.file) fillterBody.photo = req.file.filename
-
-    const user = await User.findByIdAndUpdate(req.user._id, fillterBody, {new: true, runValidators: true})
 
     return res.status(200).json(user)
 })
@@ -78,5 +109,7 @@ module.exports = {
     uploadUserPhoto,
     resizeUserPhoto,
     updateUserProfile,
-    updateMe
+    updateMe,
+    updatePhoto,
+    deactivateMyAccount
 }

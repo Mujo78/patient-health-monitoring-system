@@ -68,7 +68,7 @@ const signup = asyncHandler( async (req, res) =>{
             user_id: newUser[0]._id,
             first_name, last_name, phone_number,
             address, gender, blood_type,
-            date_of_birth: date_of_birth.toString()
+            date_of_birth: new Date(date_of_birth).toISOString().split('T')[0]
         }], {session})
 
         const verificationToken = newUser[0].createVerificationToken()
@@ -140,8 +140,13 @@ const login = asyncHandler( async (req, res) => {
 
     const user = await User.findOne({email}).select('+password')
 
-    if(!user || !(await user.correctPassword(password, user.password)) || user.active === false){
+    if(!user || !(await user.correctPassword(password, user.password)) || (user.active === false && user.isVerified === false)){
         return res.status(404).json("Incorrect password or email!")
+    }
+
+    if(user.active === false && user.isVerified === true){
+        user.active = true
+        await user.save({validateBeforeSave: false})
     }
 
     createToken(user, 200, res)

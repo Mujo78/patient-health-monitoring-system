@@ -35,7 +35,7 @@ const MyPatients: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!id) {
+      if (!id && accessUser) {
         try {
           setLoading(true);
           if (searchQuery) {
@@ -57,37 +57,40 @@ const MyPatients: React.FC = () => {
   }, [page, searchQuery, id, accessUser]);
 
   const handleNavigatePage = async (newPage: number) => {
-    try {
-      setLoading(true);
-      if (searchQuery !== null) {
-        const response = await searchForPatient(accessUser.token, accessUser.data._id, searchQuery, newPage);
-        setPatients(response);
-        navigate(`/my-patients/search?searchQuery=${searchQuery}&page=${newPage}`);
-      } else {
-        const response = await getPatientsForDoctor(accessUser.token, accessUser.data._id,newPage);
-        setPatients(response);
-        navigate(`/my-patients?page=${newPage}`);
+    if(accessUser){
+      try {
+        setLoading(true);
+        if (searchQuery !== null) {
+          const response = await searchForPatient(accessUser.token, accessUser.data._id, searchQuery, newPage);
+          setPatients(response);
+          navigate(`/my-patients/search?searchQuery=${searchQuery}&page=${newPage}`);
+        } else {
+          const response = await getPatientsForDoctor(accessUser.token, accessUser.data._id,newPage);
+          setPatients(response);
+          navigate(`/my-patients?page=${newPage}`);
+        }
+      } catch (err: any) {
+        setMessage(err.response?.data || 'An error occurred');
+      } finally {
+        setLoading(false);
       }
-    } catch (err: any) {
-      setMessage(err.response?.data || 'An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
   
 
   const handleSearch = async () => {
       setPatients(undefined);
-  
-      try {
-        setLoading(true);
-        navigate(`/my-patients/search?searchQuery=${search}&page=1`);
-        const response = await searchForPatient(accessUser.token, accessUser.data._id, search, 1);
-        setPatients(response);
-      } catch (err:any) {
-        setMessage(err.response?.data || 'An error occurred');
-      } finally {
-        setLoading(false);
+      if(accessUser){
+        try {
+          setLoading(true);
+          navigate(`/my-patients/search?searchQuery=${search}&page=1`);
+          const response = await searchForPatient(accessUser.token, accessUser.data._id, search, 1);
+          setPatients(response);
+        } catch (err:any) {
+          setMessage(err.response?.data || 'An error occurred');
+        } finally {
+          setLoading(false);
+        }
       }
   };
 

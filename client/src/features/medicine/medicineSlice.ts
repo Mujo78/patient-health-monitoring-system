@@ -57,8 +57,9 @@ export const getMedicine = createAsyncThunk<
     {state: RootState}
 >("medicine/get",async (_, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.accessUser?.token;
-        return await medicineService.getAllMedicine(token)
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token ||'';
+        return await medicineService.getAllMedicine(safeToken)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;

@@ -4,7 +4,8 @@ const {
     getPharmacy,
     addPharmacy,
     deletePharmacy,
-    updatePharmacy
+    updatePharmacy,
+    getMe
 } = require("../controllers/pharmacyController");
 const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userController");
 
@@ -12,6 +13,7 @@ const router = express.Router()
 
 router.use(protect)
 
+router.get("/get-me", getMe)
 router.get("/", getPharmacy)
 
 router.patch("/:id", restrictTo('PHARMACY'), updatePharmacy)

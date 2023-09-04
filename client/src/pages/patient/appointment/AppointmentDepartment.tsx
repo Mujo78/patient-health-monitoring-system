@@ -47,8 +47,10 @@ const AppointmentDepartment: React.FC = () => {
         const fetchData = async () =>{
             try{
                 setLoading(true)
-                const response = await getDepartments(accessUser.token)
-                setRes(response)
+                if(accessUser){
+                    const response = await getDepartments(accessUser.token)
+                    setRes(response)
+                }
             }finally{
                 setLoading(false)
             }
@@ -60,7 +62,7 @@ const AppointmentDepartment: React.FC = () => {
         setSelectedDoc("")
         setSelectedDep(name)
         const fetchData = async () =>{
-            if(name){
+            if(name && accessUser){
                 try{
                     setLoadingDoc(true)
                     const response = await getDoctorsForDepartment(accessUser.token, name)
