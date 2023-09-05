@@ -82,6 +82,17 @@ const getAllDocForUser = () => asyncHandler( async(req, res) => {
     if(allApp) return res.status(200).json(allApp)
 })
 
+const updateMyInfo = Model => asyncHandler( async (req, res) => {
+    
+    const info = await Model.findOneAndUpdate({user_id: req.user._id}, req.body, {new: true, runValidators: true})
+
+    if(!info) return res.status(404).json("There is no user with that ID!")
+
+    return res.status(200).json(info)
+
+})
+
+
 module.exports = {
     getAllData,
     createNewDoc,
@@ -89,5 +100,6 @@ module.exports = {
     updateDoc,
     getDoc,
     getAllDocForUser,
-    getMyInfo
+    getMyInfo,
+    updateMyInfo
 }

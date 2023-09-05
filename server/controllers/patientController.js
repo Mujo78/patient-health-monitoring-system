@@ -1,19 +1,11 @@
 const asyncHandler = require("express-async-handler")
 const mongoose = require("mongoose")
 const Patient = require("../models/patient")
-const { deleteDoc, getAllData, getDoc, updateDoc, getMyInfo } = require("./handleController")
+const { deleteDoc, getAllData, getDoc, updateDoc, getMyInfo, updateMyInfo } = require("./handleController")
 const User = require("../models/user")
 
 
-const updateMyInfo = asyncHandler( async (req, res) => {
-    
-    const patientInfo = await Patient.findOneAndUpdate({user_id: req.user._id}, req.body, {new: true, runValidators: true})
-
-    if(!patientInfo) return res.status(404).json("There is no patient with that ID!")
-
-    return res.status(200).json(patientInfo)
-
-})
+const updateInfo = updateMyInfo(Patient)
 
 const deleteMyAccount = deleteDoc(Patient)
 const getAllPatients = getAllData(Patient)
@@ -31,7 +23,7 @@ const banUserProfile = asyncHandler( async (req, res) =>{
 })
 
 module.exports = {
-    updateMyInfo,
+    updateInfo,
     deleteMyAccount,
     getMe,
     getAllPatients,

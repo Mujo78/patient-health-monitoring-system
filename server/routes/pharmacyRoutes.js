@@ -16,7 +16,7 @@ router.use(protect)
 router.get("/get-me", getMe)
 router.get("/", getPharmacy)
 
-router.patch("/:id", restrictTo('PHARMACY'), updatePharmacy)
+router.patch("/", restrictTo('PHARMACY'), updatePharmacy)
 
 router.post("/", restrictTo('HOSPITAL'), uploadUserPhoto, resizeUserPhoto,  addPharmacy)
 router.delete("/:id",restrictTo('HOSPITAL', 'PHARMACY'),  deletePharmacy)

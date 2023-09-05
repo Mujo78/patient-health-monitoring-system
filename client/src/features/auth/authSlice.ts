@@ -237,7 +237,12 @@ export const authSlice = createSlice({
         },
         resetAccessUser: (state) =>{
             state.accessUser = null
-        }
+        },
+        setInfoAccessUser: (state, action) => {
+            if(state.accessUser){
+                state.accessUser.info = action.payload
+            }
+        } 
 
     },
     extraReducers(builder) {
@@ -345,5 +350,5 @@ export const authSlice = createSlice({
 
 export const authUser = (state: RootState) => state.auth;
 
-export const {reset, resetAccessUser} = authSlice.actions
+export const {reset, resetAccessUser, setInfoAccessUser} = authSlice.actions
 export default authSlice.reducer;

@@ -1,4 +1,4 @@
-const { updateDoc, getDoc, getMyInfo } = require("./handleController")
+const { getDoc, getMyInfo, updateMyInfo } = require("./handleController")
 const Doctor = require("../models/doctor")
 const asyncHandler = require("express-async-handler")
 const User = require("../models/user")
@@ -69,7 +69,7 @@ const getAllDoctors = asyncHandler( async (req, res) => {
 })
 
 const getDoctor = getDoc(Doctor)
-const updateDoctor = updateDoc(Doctor)
+const updateDoctor = updateMyInfo(Doctor)
 const deleteDoctor = asyncHandler( async (req, res) =>{
 
     const doc = await Doctor.findById(req.params.id)

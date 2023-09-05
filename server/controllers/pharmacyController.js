@@ -1,5 +1,5 @@
 
-const { getAllData, deleteDoc, updateDoc, getMyInfo } = require("./handleController")
+const { getAllData, deleteDoc, updateDoc, getMyInfo, updateMyInfo } = require("./handleController")
 const Pharmacy = require("../models/pharmacy")
 const asyncHandler = require("express-async-handler")
 const { default: mongoose } = require("mongoose")
@@ -48,7 +48,7 @@ const addPharmacy = asyncHandler( async (req, res) =>{
 
 
 const deletePharmacy = deleteDoc(Pharmacy)
-const updatePharmacy = updateDoc(Pharmacy)
+const updatePharmacy = updateMyInfo(Pharmacy)
 
 const getMe = getMyInfo(Pharmacy)
 

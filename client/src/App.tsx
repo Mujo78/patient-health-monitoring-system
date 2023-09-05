@@ -29,20 +29,20 @@ import DoctorAppointments from './pages/doctor/appointment/DoctorAppointments'
 import DocAppointment from './pages/doctor/appointment/DocAppointment'
 import MyPatients from './pages/doctor/MyPatients'
 import MyDepartment from './pages/doctor/MyDepartment'
-import DocSettings from './pages/doctor/DocSettings'
 import Patient from './pages/doctor/Patient'
 import Notification from './pages/Notification'
 import Notifications from './pages/Notifications'
 import MedicineOverview from './pages/pharmacy/MedicineOverview'
 import AddMedicine from './pages/pharmacy/AddMedicine'
-import PhSettings from './pages/pharmacy/PhSettings'
 import OneMedicine from './pages/pharmacy/OneMedicine'
 import PatientProfile from './pages/patient/profile/PatientProfile'
-import DoctorProfile from './pages/doctor/DoctorProfile'
-import PharmacyProfile from './pages/pharmacy/PharmacyProfile'
+import DoctorProfile from './pages/doctor/profile/DoctorProfile'
+import PharmacyProfile from './pages/pharmacy/profile/PharmacyProfile'
 import GeneralSettings from './pages/patient/profile/GeneralSettings'
 import PersonalInformation from './pages/patient/profile/PersonalInformation'
-import Security from './pages/patient/profile/Security'
+import Security from './pages/Security'
+import PersonalInfoDoc from './pages/doctor/profile/PersonalInfoDoc'
+import InfoPharmacy from './pages/pharmacy/profile/InfoPharmacy'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -78,13 +78,15 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/my-patients' element={<MyPatients />}>
           <Route path=':id' element={<Patient/>} />
         </Route>
-        <Route path='/profile/d/:id' element={<DoctorProfile />} />
+        <Route path='/profile/d/:id' element={<DoctorProfile />}>
+          <Route index element={<PersonalInfoDoc />} />
+          <Route path='security-page' element={<Security />} />
+        </Route>
         <Route path='/my-patients/search' element={<MyPatients />} />
         <Route path='/my-department' element={<MyDepartment />} />
         <Route path='/doctor-notifications' element={<Notifications />} >
           <Route path=':id' element={<Notification />} />
         </Route>
-        <Route path='/doctor-settings' element={<DocSettings />} />
       </Route>
       <Route loader={PharmacyCheck}>
         <Route path='/pharmacy/:id' element={<PharmacyDashboard />} />
@@ -95,8 +97,10 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path='/pharmacy-notifications' element={<Notifications />} >
           <Route path=':id' element={<Notification />} />
         </Route>
-        <Route path='/profile/ph/:id' element={<PharmacyProfile />} />
-        <Route path='/pharmacy-settings' element={<PhSettings />} />
+        <Route path='/profile/ph/:id' element={<PharmacyProfile />}>
+            <Route index element={<InfoPharmacy />} />
+            <Route path='page-security' element={<Security />} />
+        </Route>
       </Route>
     </Route>
     <Route path='api/v1/user/reset-password/:token' element={<ForgotPassword />} />

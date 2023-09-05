@@ -9,15 +9,17 @@ import { Label, TextInput, Select, Spinner } from 'flowbite-react'
 import ErrorMessage from '../../../components/ErrorMessage'
 import { getMe, updateMe } from '../../../service/personSideFunctions'
 import { useSelector } from 'react-redux'
-import { authUser } from '../../../features/auth/authSlice'
+import { authUser, setInfoAccessUser } from '../../../features/auth/authSlice'
 import { toast } from 'react-hot-toast'
+import { useAppDispatch } from '../../../app/hooks'
 
 const PersonalInformation: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
   const {accessUser} = useSelector(authUser)
+  const dispatch = useAppDispatch()
   const { register, handleSubmit, formState, reset} = useForm<patient>({resolver: yupResolver(personValidationSchema)})
-  const {errors} = formState
+  const {errors, isDirty} = formState
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +52,11 @@ const PersonalInformation: React.FC = () => {
           date_of_birth: new Date(response?.date_of_birth).toISOString().split('T')[0]
         }
         reset(responseData)
+        const userInfo = {
+          first_name: response.first_name,
+          last_name: response.last_name
+        }
+        dispatch(setInfoAccessUser(userInfo))
         toast.success('Successfully updated profile.')
       }catch(err: any){
         console.log(err)
@@ -131,19 +138,19 @@ const PersonalInformation: React.FC = () => {
                 <ErrorMessage text={errors.date_of_birth?.message} />
               </div>
               <div>
-                <Label htmlFor='weight' className='text-xs' value='Weight'  />
-                <TextInput type='text' id='weight' {...register("weight")} color={errors.weight && "failure"} />
+                <Label htmlFor='weight' className='text-xs' value='Weight (kg)'  />
+                <TextInput type='number' id='weight' {...register("weight")} color={errors.weight && "failure"} />
                 <ErrorMessage text={errors.weight?.message} />
               </div>
               <div>
-                <Label htmlFor='height' className='text-xs' value='Height'  />
-                <TextInput type='text' id='height' {...register("height")} color={errors.height && "failure"} />
+                <Label htmlFor='height' className='text-xs' value='Height (cm)'  />
+                <TextInput type='number' id='height' {...register("height")} color={errors.height && "failure"} />
                 <ErrorMessage text={errors.height?.message} />
               </div>
             </div>
           </div>}
             <Footer variant={1}>
-              <CustomButton type='submit' className='mt-3' disabled={loading}>
+              <CustomButton type='submit' className='mt-3' disabled={!isDirty}>
                 Save
               </CustomButton>
             </Footer>

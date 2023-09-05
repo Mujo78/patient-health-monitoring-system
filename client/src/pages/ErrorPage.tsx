@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 const ErrorPage: React.FC = () => {
 
+  const mailsupport = `mailto:${import.meta.env.VITE_EMAIL_SUPPORT}`
+
   return (
     <main className="h-screen w-full font-Poppins flex justify-center items-center">
       <div className="text-center my-auto">
@@ -17,9 +19,9 @@ const ErrorPage: React.FC = () => {
             Go back home
           </Link>
           <Link 
-            to={"/"} 
+            to={mailsupport}
             className="rounded-md bg-gray-600 border-gray-50 px-3.5 py-2.5 transition-colors duration-300 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
-            Contact support <span aria-hidden="true">&rarr;</span>
+            Contact support
           </Link>
         </div>
       </div>

@@ -17,7 +17,7 @@ router.get("/:id", getDoctor)
 
 router.use(restrictTo('HOSPITAL', 'DOCTOR'))
 
-router.patch("/:id", updateDoctor)
+router.patch("/", updateDoctor)
 router.patch("/deactivate/:id", deleteDoctor)
 
 module.exports = router;

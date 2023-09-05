@@ -7,7 +7,7 @@ const {
 } = require("../middlewares/authMiddlewares")
 const { 
     getMe,
-    updateMyInfo,
+    updateInfo,
     deleteMyAccount,
     banUserProfile,
     editPatientData,
@@ -18,7 +18,7 @@ const {
 router.use(protect)
 
 router.get("/get-me", restrictTo('PATIENT'), getMe)
-router.patch("/edit-my-profile", restrictTo('PATIENT'), updateMyInfo)
+router.patch("/edit-my-profile", restrictTo('PATIENT'), updateInfo)
 router.delete("/delete-my-account", restrictTo('PATIENT'), deleteMyAccount)
 
 router.patch("/ban-user/:id",restrictTo('HOSPITAL'), banUserProfile)

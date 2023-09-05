@@ -86,7 +86,7 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
         patient_id: appToEdit.patient_id,
         appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')) }
     });
-    if (existingAppointment && req.body.reason === appToEdit.reason) return res.status(400).json("You already have an appointment with this doctor on this day.");
+    if (existingAppointment && req.body.reason === appToEdit.reason && existingAppointment.finished) return res.status(400).json("You already have an appointment with this doctor on this day.");
     
     const overlappingAppointment = await Appointment.findOne({
         doctor_id: { $ne: appToEdit.doctor_id },
