@@ -17,7 +17,7 @@ const RootSidebar: React.FC<Props> = ({children}) => {
 
   return (
     <div className="w-fit h-screen">
-      <Sidebar>
+      <Sidebar className='h-screen'>
         <Sidebar.Items className={`h-full font-Poppins border-r-2 border-r-gray-200 flex flex-col justify`}>
           <Sidebar.ItemGroup>
             <Sidebar.Item as={NavLink}
@@ -28,7 +28,7 @@ const RootSidebar: React.FC<Props> = ({children}) => {
               </div>
 
             </Sidebar.Item>
-              <Sidebar.ItemGroup>
+              <Sidebar.ItemGroup className='h-full'>
                 {children}
               </Sidebar.ItemGroup>
           </Sidebar.ItemGroup>

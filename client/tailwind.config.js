@@ -11,6 +11,7 @@ export default {
         'photo-profile': "url('/background.svg')",
         'second-photo-profile': "url('/second-bg.svg')",
         'photo-vertical': "url('/background-vert.svg')",
+        'photo-second-vertical': "url('/background-second-vertical.svg')",
       },
       fontFamily: {
         'Poppins': ['Poppins', 'sans-serif'],

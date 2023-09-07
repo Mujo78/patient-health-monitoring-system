@@ -16,6 +16,14 @@ const medicineSchema = mongoose.Schema({
         type: String,
         required: [true, "Description is required!"]
     },
+    photo: {
+        type: String,
+        default: "default-medicine.jpg"
+    },
+    available: {
+        type: Boolean,
+        default: true
+    },
     strength: {
         type: String,
         required: [true, "Strength is required!"]
@@ -34,7 +42,7 @@ const medicineSchema = mongoose.Schema({
         required: [true, "Manufacturer is required!"]
     },
     expiry_date: {
-        type: Date,
+        type: String,
         required: [true, "Expiry date is required!"],
         select: false
     }

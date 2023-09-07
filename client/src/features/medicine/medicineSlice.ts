@@ -15,13 +15,26 @@ export interface Pharmacy {
 export interface Medicine {
     _id: string,
     name: string,
+    photo: string,
     pharmacy_id: Pharmacy,
     description: string,
     strength: string,
+    available: boolean,
     category: string,       
     price: number,   
     manufacturer:string,
     expiry_date:Date,
+}
+
+export interface MedicineDataType {
+    name: string,
+    strength: string,
+    category: string,
+    description:string,
+    price: string,
+    photo: string,
+    manufacturer: string,
+    expiry_date: string
 }
 
 export interface Patient {
@@ -68,6 +81,22 @@ export const getMedicine = createAsyncThunk<
     }    
 })
 
+export const addNewMedicine = createAsyncThunk<
+    Medicine,
+    MedicineDataType,
+    {state: RootState}
+>("medicine/post",async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
+        const safeToken = token ||'';
+        return await medicineService.addMedicine(safeToken, data)
+    } catch (error: any) {
+        console.log(error)
+        const message = error.response.data;
+
+        return thunkAPI.rejectWithValue(message)
+    }  
+})
 
 export const medicineSlice = createSlice({
     name: "medicine",
@@ -80,6 +109,19 @@ export const medicineSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+
+        .addCase(addNewMedicine.rejected, (state, action) => {
+            state.status = 'failed'
+            state.message = action.payload as string
+        })
+        .addCase(addNewMedicine.fulfilled, (state, action) => {
+            state.medicine.push(action.payload)
+            state.status = 'idle'
+        })
+        .addCase(addNewMedicine.pending, (state) => {
+            state.status = 'loading'
+        })
+
         .addCase(getMedicine.rejected, (state, action) => {
             state.status = 'failed'
             state.message = action.payload as string

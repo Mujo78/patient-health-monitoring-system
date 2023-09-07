@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { Medicine } from '../../../features/medicine/medicineSlice';
+import defaultImg from "../../../assets/default-medicine.jpg"
 
 const workTime = [
   "9:00","9:20","9:40","10:00",
@@ -106,6 +107,10 @@ const AppointmentOverviewEdit: React.FC = () => {
     setShow(false)
   }
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = defaultImg
+}
+
   return (
     <>
     <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
@@ -188,9 +193,16 @@ const AppointmentOverviewEdit: React.FC = () => {
   
       </Tabs.Item> : ""}
     </Tabs.Group>
-    <Modal show={show} onClose={onClose} className='font-Poppins'>
+    <Modal show={show} onClose={onClose} size="3xl" className='font-Poppins'>
         <Modal.Header>{medicine?.name} - {medicine?.strength}</Modal.Header>
-        <Modal.Body>
+        <Modal.Body className='flex justify-around'>
+          <div>
+            <img 
+              className='w-[200px] h-[200px]' 
+              src={medicine?.photo.startsWith(medicine.name) ? `http://localhost:3001/uploads/${medicine.photo}` : !medicine?.photo.startsWith('default-medicine') ? medicine?.photo : defaultImg}
+              onError={handleImageError}
+            />
+          </div>
           <div className="space-y-6 text-black">
             <p> <span className='font-semibold'>Category:</span> {medicine?.category}</p>
             <p> <span className='font-semibold'>About:</span> {medicine?.description}</p>
@@ -198,10 +210,16 @@ const AppointmentOverviewEdit: React.FC = () => {
             <p className='ml-auto'> <span className='font-semibold'>Price:</span> {medicine?.price} BAM</p>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className='flex justify-between'>
           <Button color="gray" onClick={onClose}>
             Close
           </Button>
+          <p className='font-semibold'>
+            Available now: 
+            <span className={medicine?.available ? 'text-green-500 font-bold' : 'text-red-600 font-bold'}>
+              {medicine?.available ? ' Yes' : ' No'}
+            </span>
+          </p>
         </Modal.Footer>
       </Modal>
     </>

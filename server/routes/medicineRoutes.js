@@ -1,5 +1,6 @@
 const express = require("express");
 const { protect, restrictTo } = require("../middlewares/authMiddlewares");
+const { uploadUserPhoto } = require("../controllers/userController");
 
 
 const {
@@ -7,7 +8,8 @@ const {
     getMedicines,
     createMedicine,
     updateMedicine,
-    deleteMedicine
+    deleteMedicine,
+    resizeMedicinePhoto
 } = require("../controllers/medicineController")
 
 
@@ -19,7 +21,7 @@ router.get("/", getMedicines)
 router.get("/:id", getMedicine)
 
 router.use(restrictTo("PHARMACY"))
-router.post("/", createMedicine)
+router.post("/",uploadUserPhoto, resizeMedicinePhoto, createMedicine)
 router.route("/:id").patch(updateMedicine).delete(deleteMedicine)
 
 

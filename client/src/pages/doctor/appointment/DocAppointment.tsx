@@ -53,7 +53,8 @@ const DocAppointment: React.FC = () => {
     }, [dispatch, selected])
 
     const {medicine : m} = useSelector(medicine)
-    const {register, getValues, setValue} = useForm<AppointmentFinished>()
+    const {register, getValues, formState, setValue} = useForm<AppointmentFinished>()
+    const {isDirty} = formState
 
     const options = m.map((n) => ({
             value: n._id,
@@ -195,7 +196,7 @@ const DocAppointment: React.FC = () => {
                         </div>
                         <div className='w-full pr-6'>
                             <Footer variant={2}>
-                            {selected?.finished || !laterAppointment && <CustomButton onClick={makeFinished}>Save changes</CustomButton>}    
+                            {selected?.finished || !laterAppointment && <CustomButton disabled={!isDirty} onClick={makeFinished}>Save changes</CustomButton>}    
                             </Footer>
                         </div>
                     </div>

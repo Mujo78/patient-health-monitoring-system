@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import RootSidebar from '../../components/RootSidebar'
-import { Sidebar } from 'flowbite-react'
+import { Alert, Button, Sidebar } from 'flowbite-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
@@ -8,8 +8,13 @@ import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCal
 
 const DoctorSidebar: React.FC  = () => {
   
-  const location = useLocation()
   const {accessUser} = useSelector(authUser)
+  const location = useLocation()
+  const [show, setShow] = useState<boolean>(true)
+
+  const handleDissmis = () => {
+    setShow(false)
+  }
   
   return (
     <RootSidebar>
@@ -41,6 +46,25 @@ const DoctorSidebar: React.FC  = () => {
         >
             Department
         </Sidebar.Item>
+        {location.pathname.startsWith('/doctor/') && <div className='flex h-2/3 flex-col justify-center mr-3 flex-grow w-full items-center'>
+            {show && <Alert 
+              className='bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit'
+              additionalContent={
+                <div className='flex flex-col gap-3'>
+                  <p className='text-xs'>We're thrilled to have you here! Best wishes for another impactful day in healthcare.</p>
+                  <Button className='bg-white ml-auto text-blue-700 mt-3 hover:!bg-gray-200' onClick={handleDissmis} size='xs'>
+                  Dismiss
+                </Button>
+                </div>
+              }
+              rounded
+              >
+                <div className='w-full'>
+                <p className='text-[16px] mt-3 font-semibold'>{`Welcome, Dr. ${accessUser?.info.last_name}`}!</p>
+                
+                </div>
+            </Alert>}
+        </div>}
     </RootSidebar>
   )
 }
