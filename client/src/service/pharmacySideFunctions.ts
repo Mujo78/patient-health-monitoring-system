@@ -21,6 +21,16 @@ export async function getData(token: string){
     return response.data;
 }
 
+export async function getPharmacy(token: string){
+
+    const response = await axios.get(`${BASE_URL}`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    return response.data;
+}
+
 
 export async function updateData(data: PharmacyUpdateType, token: string){
 

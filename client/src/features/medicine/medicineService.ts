@@ -3,8 +3,9 @@ import { MedicineDataType } from "./medicineSlice";
 
 const BASE_URL = "http://localhost:3001/api/v1/medicine/"
 
-const getAllMedicine = async (token:string) => {
+const getAllMedicine = async (token:string, page?: number, search?:string, category?:string) => {
     const response = await axios.get(`${BASE_URL}`, {
+        params: {page: page, searchQuery: search, category: category},
         headers: {
             "Authorization" : `Bearer ${token}`
         }

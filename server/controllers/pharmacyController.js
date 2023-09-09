@@ -5,7 +5,12 @@ const asyncHandler = require("express-async-handler")
 const { default: mongoose } = require("mongoose")
 const User = require("../models/user")
 
-const getPharmacy = getAllData(Pharmacy)
+const getPharmacy = asyncHandler( async (req, res) =>{
+    
+    const pharmacy = await Pharmacy.findOne().populate('user_id')
+    if(!pharmacy) return res.status(404).json("There was an error, please try again later!")
+    return res.status(200).json(pharmacy)
+})
 
 const addPharmacy = asyncHandler( async (req, res) =>{
     

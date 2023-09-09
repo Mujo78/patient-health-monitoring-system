@@ -16,7 +16,7 @@ export interface Medicine {
     _id: string,
     name: string,
     photo: string,
-    pharmacy_id: Pharmacy,
+    pharmacy_id: string,
     description: string,
     strength: string,
     available: boolean,
@@ -51,34 +51,40 @@ export interface Patient {
     weight: string
 }
 
+export interface getMedicineType {
+    data: Medicine[],
+    currentPage: number,
+    numOfPages: number
+}
+
 interface MedicineState {
-    medicine: Medicine[],
+    medicine: getMedicineType | null,
     status: 'idle' | 'loading' |'failed' | '',
     message: string
 }
 
 const initialState: MedicineState = {
-    medicine: [],
+    medicine: null,
     status: '',
     message: ''
 }
 
 
 export const getMedicine = createAsyncThunk<
-    Medicine[],
-    undefined,
+    getMedicineType,
+    {page?: number, searchQuery?:string, category?: string},
     {state: RootState}
->("medicine/get",async (_, thunkAPI) => {
+>("medicine/get",async ({page, searchQuery, category}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.accessUser?.token as string | undefined;
         const safeToken = token ||'';
-        return await medicineService.getAllMedicine(safeToken)
+        return await medicineService.getAllMedicine(safeToken, page, searchQuery, category)
     } catch (error: any) {
         console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
-    }    
+    }
 })
 
 export const addNewMedicine = createAsyncThunk<
@@ -115,7 +121,7 @@ export const medicineSlice = createSlice({
             state.message = action.payload as string
         })
         .addCase(addNewMedicine.fulfilled, (state, action) => {
-            state.medicine.push(action.payload)
+            state.medicine?.data.push(action.payload)
             state.status = 'idle'
         })
         .addCase(addNewMedicine.pending, (state) => {
@@ -124,6 +130,7 @@ export const medicineSlice = createSlice({
 
         .addCase(getMedicine.rejected, (state, action) => {
             state.status = 'failed'
+            console.log(action.payload)
             state.message = action.payload as string
         })
         .addCase(getMedicine.fulfilled, (state, action) => {

@@ -48,7 +48,7 @@ const DocAppointment: React.FC = () => {
 
     useEffect(() =>{
         if(!selected?.finished){
-            dispatch(getMedicine())
+            dispatch(getMedicine({}))
         }
     }, [dispatch, selected])
 
@@ -56,7 +56,7 @@ const DocAppointment: React.FC = () => {
     const {register, getValues, formState, setValue} = useForm<AppointmentFinished>()
     const {isDirty} = formState
 
-    const options = m.map((n) => ({
+    const options = m?.data.map((n) => ({
             value: n._id,
             label: `${n.name + "(" + n.strength + ")"}`
         }

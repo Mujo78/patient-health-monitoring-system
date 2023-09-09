@@ -18,7 +18,39 @@ const resizeMedicinePhoto = (req, res, next) =>{
     next()
 }
 
-const getMedicines = getAllData(Medicine)
+const getMedicines = asyncHandler( async (req, res) => {
+
+    const {page, searchQuery, category} = req.query;
+
+    let responseObj = {};
+    let query = Medicine.find();
+
+    if(page) {
+        const limit = 8
+        const startIndx = (Number(page) - 1) * limit
+        
+        const total = await Medicine.countDocuments();
+        query = query.sort({category: -1}).limit(limit).skip(startIndx)
+
+        responseObj.currentPage = Number(page);
+        responseObj.numOfPages = Math.ceil(total / limit)
+    }
+
+    if(searchQuery){
+        if(category){
+            query = query.where({name: new RegExp(searchQuery, 'i'), category: category})
+        }
+        query = query.where({name: new RegExp(searchQuery, 'i')})
+    }
+
+    const result = await query.exec();
+    if(result.length === 0) return res.status(404).json("There are no results!")
+    responseObj.data = result;
+
+    return res.status(200).json(responseObj)
+})
+
+
 const getMedicine = getDoc(Medicine)
 
 const createMedicine = asyncHandler( async (req, res) => {
