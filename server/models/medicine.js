@@ -40,11 +40,6 @@ const medicineSchema = mongoose.Schema({
     manufacturer: {
         type: String,
         required: [true, "Manufacturer is required!"]
-    },
-    expiry_date: {
-        type: String,
-        required: [true, "Expiry date is required!"],
-        select: false
     }
 }, {
     timestamps: true

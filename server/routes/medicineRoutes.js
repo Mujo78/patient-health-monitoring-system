@@ -22,7 +22,7 @@ router.get("/:id", getMedicine)
 
 router.use(restrictTo("PHARMACY"))
 router.post("/",uploadUserPhoto, resizeMedicinePhoto, createMedicine)
-router.route("/:id").patch(updateMedicine).delete(deleteMedicine)
+router.route("/:id").patch(uploadUserPhoto, resizeMedicinePhoto, updateMedicine).delete(deleteMedicine)
 
 
 module.exports = router;

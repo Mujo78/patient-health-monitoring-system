@@ -5,11 +5,10 @@ export type MedicineType = {
     strength: string,
     category: string,
     description:string,
+    available: boolean,
     price: string,
     photo: string | File | any,
-    manufacturer: string,
-    from: Date,
-    to: Date
+    manufacturer: string
 }
 
 export const medicineValidationSchema = Yup.object({
@@ -25,8 +24,5 @@ export const medicineValidationSchema = Yup.object({
         return false;
     }),
     manufacturer: Yup.string().required("Manufacturer is required!"),
-    from: Yup.date().typeError('Invalid date').required('Expiry date is required!'),
-    to: Yup.date().typeError('Invalid date').required('Expiry date is required!').test('date-bigger','Last date must be bigger than first one!', function (value) {
-        return value > this.parent.from
-    })
+    available: Yup.boolean().required("Availability is required!")
 })

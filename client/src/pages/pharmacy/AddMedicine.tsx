@@ -1,6 +1,6 @@
-import { Label, Select, Spinner, TextInput, Textarea, Tooltip } from 'flowbite-react'
+import { Label, Select, Spinner, TextInput, Textarea, ToggleSwitch, Tooltip } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import ErrorMessage from '../../components/ErrorMessage'
 import Footer from '../../components/Footer'
 import CustomButton from '../../components/CustomButton'
@@ -16,7 +16,7 @@ import {HiXCircle} from "react-icons/hi2"
 const AddMedicine: React.FC = () => {
 
   const {status, message} = useSelector(medicine)
-  const {register, handleSubmit, formState, reset} = useForm<MedicineType>({resolver: yupResolver(medicineValidationSchema)})
+  const {register, handleSubmit, formState, control, reset} = useForm<MedicineType>({resolver: yupResolver(medicineValidationSchema)})
   const {isDirty, errors} = formState
   const [img, setImg] = useState<string | null>(null)
   const [selectedImg, setSelectedImg] = useState<File | null>()
@@ -36,11 +36,11 @@ const AddMedicine: React.FC = () => {
   }, [selectedImg])
 
   const onSubmit = (data: MedicineType) => {
+    console.log(data)
     
     const newData: MedicineDataType = {
       ...data,
       photo: selectedImg ? selectedImg : data.photo,
-      expiry_date: data.from.toLocaleDateString() + " - " + data.to.toLocaleDateString()
     }
 
     console.log(newData)
@@ -106,19 +106,15 @@ const AddMedicine: React.FC = () => {
                 <ErrorMessage text={errors.price?.message} className='text-xs mt-1' />
               </div>
             </div>
-            <div className='flex justify-between'>
-              <div className='w-4/5'>
+            <div className='flex justify-between items-center'>
+              <div className='w-3/4'>
                 <Label htmlFor='manufacturer' className='text-xs' value='Manufacturer'  />
                 <TextInput id='manufacturer' className='mt-1' {...register("manufacturer")} type='text' color={errors.manufacturer && 'failure'} />
                 <ErrorMessage text={errors.manufacturer?.message} className='text-xs mt-1' />
               </div>
-              <div className='flex-grow pl-3'>
-                <Label htmlFor='from' className='text-xs' value='Expiry date (from - to)'  />
-                <div className='flex'>
-                  <TextInput id='from' className='mt-1 mr-3' {...register("from")} type='date' color={errors.from && 'failure'} />
-                  <TextInput id='to' className='mt-1' {...register("to")} type='date' color={errors.to && 'failure'} />
-                </div>
-                <ErrorMessage text={errors.from?.message || errors.to?.message} className='mt-1 text-xs' />
+              <div className='w-1/3 ml-6'>
+              <Controller control={control} name="available" render={({ field: {value, onChange } }) => 
+                <ToggleSwitch label="Available now?" color='success' checked={value} onChange={onChange} />}/>
               </div>
             </div>
               <div>

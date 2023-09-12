@@ -179,8 +179,8 @@ const Medicine: React.FC = () => {
           {med?.data && status !== 'failed' ?
           <>
             <div className='w-full h-full flex-wrap items-start flex'>
-              {med?.data?.map((m) => (
-                <Card className='h-fit w-fit cursor-pointer hover:bg-gray-50 w-md m-3' key={m._id} onClick={() => handleShow(m)}>
+              {med?.data?.map((m: MedicineType) => (
+                <Card className='h-fit w-1/5 cursor-pointer hover:bg-gray-50 w-md m-3' key={m._id} onClick={() => handleShow(m)}>
                   <div className='flex flex-col gap-2 w-full justify-around'>
                       <CustomMedicineImg url={m.photo.startsWith(m.name) ? `http://localhost:3001/uploads/${m.photo}` : m.photo} className='mx-auto w-[100px] h-[100px]' />
                       <p className='text-xl font-semibold'>{m.name}</p>

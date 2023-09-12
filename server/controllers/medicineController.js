@@ -58,7 +58,7 @@ const createMedicine = asyncHandler( async (req, res) => {
     if(req.file) req.body.photo = req.file.filename
 
     const {
-        name, description, strength, category, price,photo, manufacturer, expiry_date
+        name, description, strength, category, price,photo, manufacturer, available
     } = req.body;
 
     const oldOne = await Medicine.findOne({name, category, strength})
@@ -73,16 +73,37 @@ const createMedicine = asyncHandler( async (req, res) => {
         pharmacy_id: ph._id,
         strength,
         category,
+        available,
         photo,
         price,
-        manufacturer,
-        expiry_date
+        manufacturer
     })
 
     return res.status(200).json(newMedicine)
 })
 
-const updateMedicine = updateDoc(Medicine)
+const updateMedicine = asyncHandler( async (req, res) => {
+
+    if(req.file) req.body.photo = req.file.filename
+
+    const {
+        name, strength, category
+    } = req.body;
+
+    const oldOne = await Medicine.findOne({name, category, strength, _id: {$ne: req.params.id}})
+    if(oldOne) return res.status(400).json("Medicine already in database!")
+
+    const ph = await Pharmacy.findOne()
+    if(!ph) return res.status(400).json("There is no pharmacy for medicine!")
+
+    const updated = await Medicine.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    console.log(updated)
+    
+    if(!updated) return res.status(404).json("There was an error, please try again later!")
+    
+    return res.status(200).json(updated)
+})
+
 const deleteMedicine = deleteDoc(Medicine)
 
 module.exports = {
