@@ -5,7 +5,7 @@ import { deleteMedicineById, getMedicine, medicine } from '../../features/medici
 import { useAppDispatch } from '../../app/hooks'
 import { Button, Card, Modal, Select, Spinner, TextInput } from 'flowbite-react'
 import CustomMedicineImg from '../../components/CustomMedicineImg'
-import Pagination from '../doctor/Pagination'
+import Pagination from '../../components/Pagination'
 import ErrorMessage from '../../components/ErrorMessage'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'

@@ -5,7 +5,7 @@ import { Medicine as MedicineType, Pharmacy, getMedicine, medicine } from '../..
 import { useAppDispatch } from '../../app/hooks'
 import { Button, Card, Select, Spinner, TextInput } from 'flowbite-react'
 import CustomMedicineImg from '../../components/CustomMedicineImg'
-import Pagination from '../doctor/Pagination'
+import Pagination from '../../components/Pagination'
 import MedicineModal from '../../components/MedicineModal'
 import { getPharmacy} from '../../service/pharmacySideFunctions'
 import { authUser } from '../../features/auth/authSlice'

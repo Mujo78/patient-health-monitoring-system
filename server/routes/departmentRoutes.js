@@ -2,8 +2,8 @@ const express = require("express");
 const { protect, restrictTo } = require("../middlewares/authMiddlewares");
 
 const {
-    getAll, createDepartment,
-    getDepartment, updateDepartment, deleteDepartment
+    getAll, createDepartment, getMyDepartment,
+    getDepartment, updateDepartment, deleteDepartment, myDepartmentAppointments
 } = require("../controllers/departmentController")
 
 const { addDoctor, getAllDoctors } = require("../controllers/doctorController");
@@ -12,6 +12,9 @@ const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userControl
 const router = express.Router()
 
 //router.use(protect)
+
+router.get("/my-department", protect, restrictTo("DOCTOR"), getMyDepartment)
+router.get("/my-department-appointments", protect, restrictTo("DOCTOR"), myDepartmentAppointments)
 
 router.get("/:departmentName/doctors", getAllDoctors)
 router.get("/", getAll)
@@ -22,7 +25,5 @@ router.get("/:id", getDepartment)
 router.post("/:departmentId/add-doctor", uploadUserPhoto, resizeUserPhoto, addDoctor)
 router.route("/").post(createDepartment)
 router.route("/:id").patch(updateDepartment).delete(deleteDepartment)
-
-
 
 module.exports = router;

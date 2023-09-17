@@ -85,6 +85,7 @@ const createMedicine = asyncHandler( async (req, res) => {
 const updateMedicine = asyncHandler( async (req, res) => {
 
     if(req.file) req.body.photo = req.file.filename
+    if(req.body.available) req.body.available = Boolean(req.body.available)
 
     const {
         name, strength, category

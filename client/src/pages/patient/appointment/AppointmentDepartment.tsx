@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {getDepartments, getDoctorsForDepartment}  from "../../../service/appointmentSideFunctions"
+import {getDepartments, getDoctorsForDepartment}  from "../../../service/departmentSideFunctions"
 import { Spinner, Table } from 'flowbite-react'
 import CustomButton from '../../../components/CustomButton'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'

@@ -9,7 +9,7 @@ import CustomImg from '../../components/CustomImg'
 import moment from 'moment'
 import PatientModal from './appointment/PatientModal'
 import ErrorMessage from '../../components/ErrorMessage'
-import Pagination from './Pagination'
+import Pagination from '../../components/Pagination'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 

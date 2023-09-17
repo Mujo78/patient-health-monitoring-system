@@ -53,8 +53,20 @@ const deleteOneMedicine = async (token: string, id: string) => {
 }
 
 const updateMedicine = async (token: string, id: string, data: Medicine) => {
-    const response = await axios.patch(`${BASE_URL}/${id}`, data, {
+
+    const form = new FormData()
+    form.append("category",data.category)
+    form.append("available",data.available.toString())
+    form.append("name",data.name)
+    form.append("strength",data.strength)
+    form.append("description",data.description)
+    form.append("manufacturer",data.manufacturer)
+    form.append("price",data.price)
+    form.append("photo",data.photo)
+
+    const response = await axios.patch(`${BASE_URL}/${id}`, form, {
         headers: {
+            "Content-Type" : "multipart/form-data",
             "Authorization" : `Bearer ${token}`
         }
     })

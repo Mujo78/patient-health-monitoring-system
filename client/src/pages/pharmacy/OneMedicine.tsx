@@ -41,6 +41,8 @@ const OneMedicine: React.FC = () => {
 
   useEffect(() => {
     if(id) {
+      setSelectedImg(null)
+      setImg("")
       dispatch(getMedicineById(id))
     }
 
@@ -64,6 +66,7 @@ const OneMedicine: React.FC = () => {
         pharmacy_id: specificMedicine.pharmacy_id,
         photo: selectedImg ? selectedImg : newData.photo
       }
+      console.log(data)
       dispatch(updateMedicineById({id, data})).then((action) => {
         if(typeof action.payload === 'object'){
           toast.success("Successfully updated medicine!")

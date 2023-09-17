@@ -40,6 +40,11 @@ const doctorSchema = mongoose.Schema({
         type: String,
         required: [true, "Address is required!"]
     },
+    gender: {
+        type: String,
+        enum: ["Male", "Female", "Other"],
+        required: [true, "Gender is required!"]
+    },
     speciality: {
         type: String,
         required: [true, "Speciality is required!"]

@@ -3,27 +3,6 @@ import moment from "moment"
 
 const BASE_URL = "http://localhost:3001/api/v1/"
 
-export async function getDepartments(token: string){
-
-    const response = await axios.get(`${BASE_URL}department` , {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return response.data;
-}
-
-export async function getDoctorsForDepartment(token: string, name:string) {
-    const response = await axios.get(`${BASE_URL + "department/" + name}/doctors`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return response.data;
-}
-
 export async function getDoctor(token: string, id: string) {
     const response = await axios.get(`${BASE_URL}doctor/${id}`, {
         headers: {

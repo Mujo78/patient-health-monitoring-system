@@ -6,7 +6,7 @@ import { Patient } from '../../features/medicine/medicineSlice'
 import { Spinner, TextInput } from 'flowbite-react'
 import ErrorMessage from '../../components/ErrorMessage'
 import CustomButton from '../../components/CustomButton'
-import Pagination from './Pagination'
+import Pagination from '../../components/Pagination'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 
