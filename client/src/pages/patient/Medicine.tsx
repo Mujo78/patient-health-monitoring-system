@@ -146,7 +146,7 @@ const Medicine: React.FC = () => {
           <Header text='Medicine' className='mt-2' />
             <div className='flex justify-center my-4 items-center'>
               <TextInput 
-                className='w-3/4'
+                className='w-3/4 mr-3'
                 placeholder='Amoxicilline'
                 name='search'
                 onChange={(e) => setSearch(e.target.value)}

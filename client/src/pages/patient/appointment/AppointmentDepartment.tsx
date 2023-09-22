@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {getDepartments, getDoctorsForDepartment}  from "../../../service/departmentSideFunctions"
+import {getDepartments, getDoctorsForDepartment, Department}  from "../../../service/departmentSideFunctions"
 import { Spinner, Table } from 'flowbite-react'
 import CustomButton from '../../../components/CustomButton'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
@@ -9,13 +9,6 @@ import { UserInfo } from '../../../features/appointment/appointmentSlice'
 import Footer from '../../../components/Footer'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../../features/auth/authSlice'
-
-type Department = {
-    _id: string,
-    name: string,
-    description: string,
-    phone_number: string
-}
 
 export type Doctor = {
     _id: string,
@@ -106,8 +99,8 @@ const AppointmentDepartment: React.FC = () => {
                                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                             {n.name}
                                         </Table.Cell>
-                                        <Table.Cell>
-                                            {n.description}
+                                        <Table.Cell className='text-[9px]'>
+                                            {n.description.slice(0,n.description.indexOf("."))}
                                         </Table.Cell>
                                         <Table.Cell>
                                             <HiChevronRight />

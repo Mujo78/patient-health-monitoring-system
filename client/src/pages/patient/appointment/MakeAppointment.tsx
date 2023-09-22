@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Spinner, Textarea } from 'flowbite-react';
 import CustomImg from '../../../components/CustomImg';
 import { Doctor } from './AppointmentDepartment';
-import { getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
+import { convert12HourTo24Hour, getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
@@ -22,11 +22,6 @@ const workTime = [
     "1:40","2:00", "2:20","2:40",
     "3:00","3:20","3:40","4:00"
 ]
-
-function convert12HourTo24Hour(time12Hour: string) {
-  const [hours, minutes] = time12Hour.split(":").map(Number);
-  return `${hours <= 4 ? hours + 12 : hours}:${minutes}`;
-}
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -70,16 +65,16 @@ const MakeAppointment: React.FC = () => {
 
   const makeNewAppointment = () => {
     const time = convert12HourTo24Hour(newTime)
-    const index = value?.toLocaleString().indexOf(",")
-    const date = value?.toLocaleString().slice(0, index)
-    const newAppDate = date+ ", " + time;
+    const index = value?.toLocaleString().indexOf(new Date().getFullYear().toString())
+    const date = value?.toLocaleString().slice(0, Number(index) + 4).replace(/\s+/g, '').replace(/\./g, '-')
+    const newAppDate = date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$2-$1')+ "T"+ time+ ":00";
 
-    
     const appointmentData = {
       doctor_id: doctorId ? doctorId : "",
       reason: reason,
-      appointment_date: new Date(newAppDate)
+      appointment_date: new Date(newAppDate.replace(/\./g, '-').trim())
     }
+    
     if(doctorId && newTime){
       dispatch(bookAppointment(appointmentData)).then((action) =>{
         if(typeof action.payload === 'object'){

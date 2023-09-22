@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { authUser, firstTime } from '../../features/auth/authSlice'
+import AppointmentReviewCalendar from '../../components/AppointmentReviewCalendar'
 
 const DoctorDashboard: React.FC = () => {
 
@@ -16,7 +17,11 @@ const DoctorDashboard: React.FC = () => {
   }, [dispatch, accessUser])
 
   return (
-    <div>s</div>
+    <div className='h-full w-full p-6'>
+      <div className=' h-full w-2/5 flex justify-end'>
+          <AppointmentReviewCalendar variant={2} />
+        </div>
+    </div>
   )
 }
 

@@ -169,6 +169,22 @@ const myDepartmentAppointments = asyncHandler( async (req, res) =>{
     return res.status(200).json({todayAppointment: { total, finished, pending }, appointmentsByDay})
 })
 
+const getAllInfoAboutDepartment = asyncHandler( async(req, res) => {
+  const {departmentName} = req.params;
+
+  const department = await Department.findOne({name: departmentName})
+  if(!department) return res.status(404).json("There is no department with such name!")
+  
+  const departmentDoctors = await Doctor.find({department_id: department._id}).select("_id user_id first_name last_name speciality qualification")
+
+  const result = {
+    department,
+    doctors: departmentDoctors ? departmentDoctors : "There are no doctors for this department!"
+  }
+
+  return res.status(200).json(result)
+})
+
 module.exports = {
     getAll,
     createDepartment,
@@ -176,7 +192,8 @@ module.exports = {
     deleteDepartment,
     getDepartment,
     getMyDepartment,
-    myDepartmentAppointments
+    myDepartmentAppointments,
+    getAllInfoAboutDepartment
 }
 
 

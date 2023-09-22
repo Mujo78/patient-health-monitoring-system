@@ -3,7 +3,7 @@ const { protect, restrictTo } = require("../middlewares/authMiddlewares");
 
 const {
     getAll, createDepartment, getMyDepartment,
-    getDepartment, updateDepartment, deleteDepartment, myDepartmentAppointments
+    getDepartment, updateDepartment, deleteDepartment, myDepartmentAppointments, getAllInfoAboutDepartment
 } = require("../controllers/departmentController")
 
 const { addDoctor, getAllDoctors } = require("../controllers/doctorController");
@@ -11,11 +11,12 @@ const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userControl
 
 const router = express.Router()
 
-//router.use(protect)
+router.use(protect)
 
 router.get("/my-department", protect, restrictTo("DOCTOR"), getMyDepartment)
 router.get("/my-department-appointments", protect, restrictTo("DOCTOR"), myDepartmentAppointments)
 
+router.get("/:departmentName", getAllInfoAboutDepartment)
 router.get("/:departmentName/doctors", getAllDoctors)
 router.get("/", getAll)
 router.get("/:id", getDepartment)

@@ -23,7 +23,7 @@ const router = express.Router()
 
 router.use(protect)
 
-router.post("/day", restrictTo('PATIENT'), getAppointmentForDay)
+router.post("/day", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForDay)
 router.post("/", restrictTo('PATIENT'), makeAppointment)
 router.patch("/:id", restrictTo('DOCTOR'), makeAppointmentFinished)
 

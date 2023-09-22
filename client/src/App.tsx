@@ -14,7 +14,7 @@ import ErrorPage from './pages/ErrorPage'
 import PatientCheck from './helpers/PatientCheck'
 import MakeAppointment from './pages/patient/appointment/MakeAppointment'
 import MyAppointments from './pages/patient/appointment/MyAppointments'
-import MedicalStaff from './pages/patient/MedicalStaff'
+import MedicalStaff from './pages/patient/staff/MedicalStaff'
 import Medicine from './pages/patient/Medicine'
 import Settings from './pages/patient/Settings'
 import PatientDashboard from './pages/patient/PatientDashboard'
@@ -43,6 +43,7 @@ import PersonalInformation from './pages/patient/profile/PersonalInformation'
 import Security from './pages/Security'
 import PersonalInfoDoc from './pages/doctor/profile/PersonalInfoDoc'
 import InfoPharmacy from './pages/pharmacy/profile/InfoPharmacy'
+import MedicalStaffDepartment from './pages/patient/staff/MedicalStaffDepartment'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<AppLayout />}>
@@ -63,7 +64,9 @@ const router = createBrowserRouter(createRoutesFromElements(
           <Route path='personal-info' element={<PersonalInformation />} />
           <Route path='security' element={<Security />} />
         </Route>
-        <Route path='/staff' element={<MedicalStaff />} />
+        <Route path='/staff' element={<MedicalStaff />}>
+          <Route path=':departmentName' element={<MedicalStaffDepartment />} />
+        </Route>
         <Route path='/medicine-overview' element={<Medicine />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/notifications' element={<Notifications />}>

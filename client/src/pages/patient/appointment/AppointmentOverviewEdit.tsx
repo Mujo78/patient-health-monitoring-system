@@ -7,7 +7,7 @@ import {HiOutlinePencilSquare, HiOutlineDocumentDuplicate} from "react-icons/hi2
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { Value } from './MakeAppointment';
 import { useAppDispatch } from '../../../app/hooks';
-import { isDoctorAvailable } from '../../../service/appointmentSideFunctions';
+import { convert12HourTo24Hour, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -22,10 +22,6 @@ const workTime = [
   "1:40","2:00", "2:20","2:40",
   "3:00","3:20","3:40","4:00"
 ]
-function convert12HourTo24Hour(time12Hour: string) {
-  const [hours, minutes] = time12Hour.split(":").map(Number);
-  return `${hours <= 4 ? hours + 12 : hours}:${minutes}`;
-}
 
 const AppointmentOverviewEdit: React.FC = () => {
 
@@ -69,16 +65,17 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   const handleEdit = () => {
     const time = convert12HourTo24Hour(newTime)
-    const index = value?.toLocaleString().indexOf(",")
-    const date = value?.toLocaleString().slice(0, index)
-    const newAppDate = date+ ", " + time;
+    const index = value?.toLocaleString().indexOf(new Date().getFullYear().toString())
+    const date = value?.toLocaleString().slice(0, Number(index) + 4).replace(/\s+/g, '').replace(/\./g, '-')
+    const newAppDate = date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$2-$1')+ "T"+ time+ ":00";
+    const formattedDate = newAppDate.replace(/\./g, '-').trim()
 
     const editObjectData = {
       reason,
-      appointment_date: new Date(newAppDate)
+      appointment_date: new Date(newAppDate.replace(/\./g, '-').trim())
     }
-    
-    if(reason !== sApp?.reason || new Date(newAppDate).getTime() !== new Date(sApp.appointment_date).getTime()){
+
+    if(reason !== sApp?.reason || new Date(formattedDate).getTime() !== new Date(sApp.appointment_date).getTime()){
       if(id) {
         dispatch(editAppointment({id, editObjectData})).then((action) =>{
           if(typeof action.payload === 'object'){

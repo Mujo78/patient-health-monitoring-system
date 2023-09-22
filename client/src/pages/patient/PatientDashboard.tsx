@@ -1,16 +1,15 @@
-import {Card, Spinner, Table } from 'flowbite-react'
+import {Card, Spinner} from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import Calendar from 'react-calendar'
-import { Value } from './appointment/MakeAppointment'
-import { formatDate, formatStartEnd, getLatestFinished, isCurrentAppointment } from '../../service/appointmentSideFunctions'
+import { formatDate, formatStartEnd, getLatestFinished } from '../../service/appointmentSideFunctions'
 import { useSelector } from 'react-redux'
-import { appointment, doctor_id, getAppointmentsForADay, patient_id } from '../../features/appointment/appointmentSlice'
+import { appointment, doctor_id, patient_id } from '../../features/appointment/appointmentSlice'
 import { useAppDispatch } from '../../app/hooks'
 import CustomImg from '../../components/CustomImg'
 import { useNavigate } from 'react-router-dom'
 import { authUser, firstTime } from '../../features/auth/authSlice'
 import moment from 'moment'
 import AppointmentsChart from './AppointmentsChart'
+import AppointmentReviewCalendar from '../../components/AppointmentReviewCalendar'
 
 type appointment = {
   _id: string,
@@ -26,23 +25,18 @@ type latestFinishedType = {
 const PatientDashboard: React.FC = () => {
 
   const navigate = useNavigate();
-  const [value, setValue] = useState<Value>(new Date())
   const [latestFinished, setLatestFinished] = useState<latestFinishedType>()
   const [loading, setLoading] = useState<boolean>(false)
   const {accessUser} = useSelector(authUser)
-  const monthyear = value?.toLocaleString('en-US', {month: 'long', year: 'numeric'})
   
-  const {selectedDayAppointments, status} = useSelector(appointment)
+  const {status} = useSelector(appointment)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if(!accessUser?.data.first){
       dispatch(firstTime())
     }
-    if(value){
-      dispatch(getAppointmentsForADay(value as Date))
-    }
-  }, [dispatch, value, accessUser])
+  }, [dispatch, accessUser])
 
   useEffect(() =>{
     const fetchData = async () => {
@@ -61,10 +55,6 @@ const PatientDashboard: React.FC = () => {
   
     fetchData();
   }, [accessUser])
-
-  const handleNavigate = (id: string) => {
-    navigate(`/my-appointments/${id}`)
-  }
 
   const handleNavigateApp = () => {
     if(latestFinished){
@@ -133,63 +123,7 @@ const PatientDashboard: React.FC = () => {
             <AppointmentsChart />
         </div>
         <div className=' h-full w-2/5 flex justify-end'>
-          <Card className='max-w-xs flex justify-end items-start flex-col h-full'>
-            <div className='mb-auto'>
-              <p className='text-center mb-1 font-semibold'>{monthyear}</p>
-              <Calendar className='shadow-xl border-gray-300 text-xs w-full rounded-md p-3'
-                    onChange={setValue}
-                    locale='eng'
-                    onViewChange={({view}) => view === 'month'}
-                    minDate={new Date()}
-                    maxDate={new Date("01/01/2024")}
-                    value={value}
-                    showNavigation={false}
-                    tileClassName={({ date }) =>
-                      date.toDateString() === new Date().toDateString()
-                        ? 'rounded-full p-1 !bg-blue-500 text-white hover:!bg-blue-450 cursor-pointer'
-                        : '!bg-white'
-                    }
-                    tileDisabled={() => true}
-                  />
-            <Table className='mt-3'>
-            <Table.Body>
-        {selectedDayAppointments.length > 0 ? (
-          selectedDayAppointments.map((n) => (
-            !n.finished &&
-            <Table.Row key={n._id} onClick={() => handleNavigate(n._id)} className='flex cursor-pointer rounded-sm hover:!bg-gray-100 transition-colors duration-300 !p-0 justify-center border-b border-gray-300'>
-              <Table.Cell className='p-2'>
-                <CustomImg url={n?.doctor_id.user_id.photo} className='!w-[120px]' />
-              </Table.Cell>
-              <Table.Cell className='w-full'>
-                <div className='text-xs flex flex-col'>
-                  <span className='text-black font-semibold text-xs mb-1'>Dr. {n?.doctor_id.first_name + " " + n?.doctor_id.last_name}</span>
-                  <span className='text-gray-600 text-[10px]'>{formatStartEnd(n.appointment_date)}</span>
-                </div>
-              </Table.Cell>
-              <Table.Cell className='w-1/6'>
-                {isCurrentAppointment(n.appointment_date) ? (
-                  <div className='w-4 h-4 bg-green-300 rounded-full'></div>
-                ) :
-                new Date() > new Date(n.appointment_date) ? (
-                  <div className='w-4 h-4 bg-red-500 rounded-full'></div>
-                ):
-                new Date() < new Date(n.appointment_date) && (
-                  <div className='w-4 h-4 bg-yellow-300 rounded-full'></div>
-                )}
-              </Table.Cell>
-            </Table.Row>
-          ))
-        ) : (
-          <Table.Row>
-            <Table.Cell className='text-center py-3 text-gray-500'>
-              You don't have any appointments today!
-            </Table.Cell>
-          </Table.Row>
-        )}
-      </Table.Body>
-            </Table>
-            </div>
-          </Card>
+          <AppointmentReviewCalendar variant={1} />
         </div>
 
       </div>}
