@@ -58,7 +58,7 @@ export async function getDoctorsForDepartment(token: string, name:string) {
 }
 
 
-type GenderArray = {
+export type GenderArray = {
     name: string,
     value: number
 }

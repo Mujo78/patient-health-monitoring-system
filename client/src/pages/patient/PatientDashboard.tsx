@@ -33,7 +33,7 @@ const PatientDashboard: React.FC = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if(!accessUser?.data.first){
+    if(accessUser && !accessUser.data.first){
       dispatch(firstTime())
     }
   }, [dispatch, accessUser])

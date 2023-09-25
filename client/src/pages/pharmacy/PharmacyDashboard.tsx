@@ -9,7 +9,7 @@ const PharmacyDashboard: React.FC = () => {
   const {accessUser} = useSelector(authUser)
 
   useEffect(() => {
-    if(!accessUser?.data.first){
+    if(accessUser && !accessUser.data.first){
       dispatch(firstTime())
     }
   }, [dispatch, accessUser])

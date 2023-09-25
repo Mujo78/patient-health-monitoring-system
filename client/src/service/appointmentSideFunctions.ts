@@ -1,5 +1,7 @@
 import axios from "axios"
 import moment from "moment"
+import { Patient } from "../features/medicine/medicineSlice";
+import { GenderArray } from "./departmentSideFunctions";
 
 const BASE_URL = "http://localhost:3001/api/v1/"
 
@@ -56,6 +58,51 @@ export async function numberOfAppointmentsPerMonthForDepartments(token: string, 
     })
     return response.data;
 }
+
+type Latest = {
+    _id: string,
+    patient_id: Patient,
+    appointment_date: Date
+}
+
+export type DocDashboardInfoType = {
+    latest: Latest,
+    department_name: string,
+    gender: GenderArray[]
+} 
+
+export async function doctorDashboardInfo(token: string) {
+
+    const response = await axios.get(`${BASE_URL}appointment/doctor-dashboard-info`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return response.data;
+}
+
+type PatientStatistic = {
+    name: string,
+    value: number,
+}
+
+export type DocDashboardType = {
+    patientStatistic: PatientStatistic[],
+    averageAge: number,
+    apps: PatientStatistic[]
+}
+
+export async function doctorDashboard(token: string) {
+
+    const response = await axios.get(`${BASE_URL}appointment/doctor-dashboard`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return response.data;
+}
+
+
 
 export function isSunday(date:Date) {
     return date.getDay() === 0;

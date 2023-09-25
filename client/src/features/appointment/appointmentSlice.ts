@@ -282,6 +282,8 @@ export const appointmentSlice = createSlice({
             .addCase(cancelAppointment.fulfilled, (state, action) => {
                 state.status = 'idle',
                 state.personAppointments = state.personAppointments.filter((n) => n._id !== action.payload._id)
+                const i = state.selectedDayAppointments.findIndex(el => el._id === action.payload._id)
+                if(i !== -1) state.selectedDayAppointments = state.selectedDayAppointments.filter((n) => n._id !== action.payload._id)
                 state.selectedAppointment = null
             })
             .addCase(editAppointment.pending, (state) => {

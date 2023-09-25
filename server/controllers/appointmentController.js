@@ -412,6 +412,167 @@ const numberOfAppointmentsPerMonthForDepartments = asyncHandler( async(req, res)
 
 })
 
+const doctorAppointmentDashboard = asyncHandler( async(req, res) =>{
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json('There is no user with such ID!')
+
+    const doctor = await Doctor.findOne({user_id: user._id}).select("+department_id").populate("department_id")    
+    if(!doctor) return res.status(404).json('There is no doctor with such ID!')
+
+    const finishedLatest = await Appointment.findOne({
+        doctor_id: doctor._id,
+        finished: true
+    }).sort({appointment_date: -1})
+    .select({
+        doctor_id: 0,
+        patient_id: 1,
+        therapy:0,
+        appointment_date: 1,
+        _id: 1
+    }).lean().exec()
+
+    const startOfYear = new Date((new Date().getFullYear()).toString() + "-01-01")
+
+    const app = await Appointment.aggregate([
+        { $match: { doctor_id: doctor._id, appointment_date: { $gte: startOfYear, $lte: new Date() }} },
+        { $group: { _id: "$patient_id" } },
+      ]);
+    if(!app) return res.status(404).json("There are no patients right now!")
+
+    const patientIds = app.map((item) => item._id);
+    const patients = await Patient.find({ _id: { $in: patientIds } });
+    
+    const { male, female, other } = patients.reduce(
+        (result, doc) => {
+          if (doc.gender === 'Male') {
+            result.male += 1;
+          } else if (doc.gender === 'Female') {
+            result.female += 1;
+          }else{
+            result.other += 1
+          }
+
+          return result
+        },
+        { male: 0, female: 0, other: 0 }
+      );
+
+    return res.status(200).json({
+        latest: finishedLatest,
+        department_name: doctor.department_id.name,
+        gender: [
+            {name: "Male", value: male},
+            {name: "Female", value: female},
+            {name: "Other", value: other},
+        ]
+    });
+})
+
+const doctorDasboard = asyncHandler (async (req, res) =>{
+
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json('There is no user with such ID!')
+
+    const doctor = await Doctor.findOne({user_id: user._id}).select("+department_id").populate("department_id")    
+    if(!doctor) return res.status(404).json('There is no doctor with such ID!')
+
+    const startOfYear = new Date((new Date().getFullYear()).toString() + "-01-01")
+
+    const patients = await Appointment.aggregate([
+        {
+            $match: {
+              doctor_id: doctor._id,
+              appointment_date: { $gte: startOfYear, $lte: new Date() }
+            }
+          },
+          {
+            $group: {
+              _id: "$patient_id",
+              count: { $sum: 1 }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              patient_id: 1,
+              count: 1
+            }
+          }
+    ])
+
+
+    const userDate = moment.tz(new Date(), "Europe/Sarajevo");
+
+    const startOfDay =  moment(userDate).startOf('day');
+    const endOfDay = moment(userDate).endOf("day");
+
+    const tomorrow = moment(userDate).add(1, "day")
+
+    const startOfTomorrowDay =  moment(tomorrow).startOf('day');
+    const endOfTomorrowDay = moment(tomorrow).endOf("day");
+    
+    const todays = await Appointment.find({
+        doctor_id: doctor._id,
+        appointment_date: {
+            $gte: startOfDay,
+            $lte: endOfDay
+        }
+    }).countDocuments()
+
+    const tomorrows = await Appointment.find({
+        doctor_id: doctor._id,
+        appointment_date: {
+            $gte: startOfTomorrowDay,
+            $lte: endOfTomorrowDay
+        }
+    }).countDocuments()
+
+    const startOfMonth = moment(userDate).startOf('month');
+    const endOfMonth = moment(userDate).endOf("month");
+
+    const apps = await Appointment.find({
+        doctor_id: doctor._id,
+        appointment_date: {
+            $gte: startOfMonth,
+            $lte: endOfMonth
+        }
+    })
+
+    const totalAge = apps.reduce((acc, app) => {
+        const dateOfBirthString = app.patient_id.date_of_birth;
+        const age = moment().diff(dateOfBirthString, 'years');
+        return acc + age;
+      }, 0);
+      
+      const averageAge = apps.length > 0 ? totalAge / apps.length : 0;
+
+    let newPatients = 0;
+    let oldPatients = 0;
+
+    for (const appointment of patients) {
+        if (appointment.count === 1) {
+            newPatients++;
+        } else {
+            oldPatients++;
+        }
+    }
+
+    const totalPatients = newPatients + oldPatients;
+
+    return res.status(200).json({
+        patientStatistic: [
+            {name: "Total patients", value: totalPatients},
+            {name: "Old patients", value: oldPatients},
+            {name: "New patients", value: newPatients}
+        ],
+        averageAge: averageAge.toFixed(2),
+        apps: [
+            {name: userDate.format("dddd") + " (today)", value: todays},
+            {name: tomorrow.format("dddd") + " (tomorrow)", value: tomorrows}
+        ]
+    })
+})
+
 const getOneAppointment = getDoc(Appointment)
 const getAllAppointments = getAllData(Appointment)
 const cancelAppointment = deleteDoc(Appointment)
@@ -431,5 +592,7 @@ module.exports = {
     getPatientsForDoctorBySearch,
     getFinishedAppointmentForPatient,
     getLatestFinishedAppointment,
-    numberOfAppointmentsPerMonthForDepartments
+    numberOfAppointmentsPerMonthForDepartments,
+    doctorAppointmentDashboard,
+    doctorDasboard
 }
