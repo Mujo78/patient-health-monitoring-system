@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux'
 import { MedicineDataType, addNewMedicine, medicine } from '../../features/medicine/medicineSlice'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MedicineType, medicineValidationSchema } from '../../validations/medicineValidation'
-import Header from '../../components/Header'
 import { useAppDispatch } from '../../app/hooks'
 import { toast } from 'react-hot-toast'
 import {HiXCircle} from "react-icons/hi2"
@@ -64,7 +63,6 @@ const AddMedicine: React.FC = () => {
   return (
     <div className='h-full flex justify-center items-center w-full'>
       <div className='flex-grow flex-col flex h-full justify-between mr-3'>
-        <Header text='Add new medicine' className='mt-3' />
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className='flex w-full h-full flex-col items-center'>
           {status === 'loading' ? <div className='mx-auto my-auto'>
             <Spinner />

@@ -1,17 +1,20 @@
 import React, {useEffect, useState} from 'react'
-import { Avatar, Button } from 'flowbite-react';
+import { Avatar } from 'flowbite-react';
 import { useSelector } from 'react-redux';
-import { authUser, logout, reset } from '../features/auth/authSlice';
-import { Link, useNavigate } from 'react-router-dom';
-import {HiOutlineArrowRightOnRectangle, HiOutlineBell} from "react-icons/hi2"
+import { authUser } from '../features/auth/authSlice';
+import { Link } from 'react-router-dom';
+import {HiOutlineBell} from "react-icons/hi2"
 import { useAppDispatch } from '../app/hooks';
 import CustomImg from './CustomImg';
 import socket from '../socket';
-import { addNotification, getPersonNotifications, notification, restartNotifications, restartPersonNotifications } from '../features/notification/notificationSlice';
+import { addNotification, getPersonNotifications, notification, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
 
-const CustomNavbar: React.FC = () => {
-    const navigate = useNavigate()
+type Props = {
+  selectedLink: string
+}
+
+const CustomNavbar: React.FC<Props> = ({selectedLink}) => {
 
     let route;
     const [show, setShow] = useState<boolean>(false)
@@ -49,13 +52,6 @@ const CustomNavbar: React.FC = () => {
         }
     }, [dispatch, notifications])
 
-    const logOut = () =>{
-        dispatch(restartNotifications())
-        dispatch(logout())
-        navigate("/", {replace: true})
-        dispatch(reset())
-    }
-
     const showNotifications = () =>{
         setShow((n) => !n)
     }
@@ -67,8 +63,13 @@ const CustomNavbar: React.FC = () => {
 
   return (
     <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}>
-      <p className='text-sm font-semibold'>{date.toString().slice(0, 16)}</p>
-      <div className='flex items-center relative'>
+      <div className='w-1/3'>
+        <p className='text-xl font-semibold'>{selectedLink ? selectedLink : "Dashboard"}</p>
+      </div>
+      <div className='w-1/3'>
+        <p className='text-sm font-semibold'>{date.toString().slice(0, 16)}</p>
+      </div>
+      <div className='flex flex-row-reverse items-center relative'>
         <Link to={route}>
           <div className='flex items-center'>
             {accessUser && <CustomImg url={accessUser.data.photo} className='w-[30px] mr-1' />}
@@ -87,14 +88,11 @@ const CustomNavbar: React.FC = () => {
                 className={`p-2 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${show && 'bg-gray-100'} `}
             />
           </div>
-          {show && <div className='h-80 absolute top-9 left-0 z-30 -ml-54 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 '>
+          {show && <div className='h-80 absolute top-9 right-0 z-30 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 '>
                 <NavBarDropdown setShow={setShow} />
             </div>}
         </div>
       </div>
-      <Button color="light" onClick={logOut} className='flex items-center ml-3 mr-5'>
-        <HiOutlineArrowRightOnRectangle />
-      </Button>
     </nav>
   )
 }

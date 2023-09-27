@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authUser, logout } from '../features/auth/authSlice'
@@ -13,6 +13,7 @@ const HomeLayout: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const {accessUser} = useSelector(authUser)
+  const [selectedLink, setSelectedLink] = useState<string>("")
 
   useEffect(() =>{
     if(!accessUser?.data.active && !accessUser?.data.isVerified){
@@ -25,11 +26,11 @@ const HomeLayout: React.FC = () => {
   return (
     <div className='flex w-full'>
       <div className=' flex w-full'>
-        {accessUser?.data.role === 'PATIENT' && <PatientSidebar />}
-        {accessUser?.data.role === 'DOCTOR' && <DoctorSidebar />}
-        {accessUser?.data.role === 'PHARMACY' && <PharmacySidebar />}
+        {accessUser?.data.role === 'PATIENT' && <PatientSidebar setSelectedLink={setSelectedLink} />}
+        {accessUser?.data.role === 'DOCTOR' && <DoctorSidebar setSelectedLink={setSelectedLink} />}
+        {accessUser?.data.role === 'PHARMACY' && <PharmacySidebar setSelectedLink={setSelectedLink} />}
         <div className='flex flex-col w-full h-screen'>
-          <CustomNavbar />
+          <CustomNavbar selectedLink={selectedLink} />
         <div className='overflow-y-auto flex-grow'>
           <Outlet />
         </div>

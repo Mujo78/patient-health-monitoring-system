@@ -6,7 +6,11 @@ import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays} from "react-icons/hi2"
 
-const DoctorSidebar: React.FC  = () => {
+type Props = {
+  setSelectedLink: React.Dispatch<React.SetStateAction<string>>
+}
+
+const DoctorSidebar: React.FC<Props>  = ({setSelectedLink}) => {
   
   const {accessUser} = useSelector(authUser)
   const location = useLocation()
@@ -17,8 +21,9 @@ const DoctorSidebar: React.FC  = () => {
   }
   
   return (
-    <RootSidebar>
+    <RootSidebar setSelectedLink={setSelectedLink}>
         <Sidebar.Item as={NavLink}
+          onClick={() => setSelectedLink("Dashboard")}
           to={`/doctor/${accessUser?.data._id}`}
           active={location.pathname.startsWith('/doctor/')}
           icon={HiOutlineChartPie}
@@ -27,19 +32,22 @@ const DoctorSidebar: React.FC  = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/appointments`}
-          active={location.pathname.startsWith('/appointments/')}
+          onClick={() => setSelectedLink("My appointments")}
+          active={location.pathname.startsWith('/appointments')}
           icon={HiOutlineCalendarDays}
         >
             My Appointments
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/my-patients`}
+          onClick={() => setSelectedLink("My patients")}
           active={location.pathname.startsWith('/my-patients')}
           icon={HiOutlineUsers}
         >
             My Patients
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
+          onClick={() => setSelectedLink("Department")}
           active={location.pathname.startsWith('/my-department')}
           to='/my-department'
           icon={HiOutlineBuildingOffice2}

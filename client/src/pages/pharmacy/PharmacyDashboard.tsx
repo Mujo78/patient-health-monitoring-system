@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useAppDispatch } from '../../app/hooks'
 import { useSelector } from 'react-redux'
 import { authUser, firstTime } from '../../features/auth/authSlice'
+import { Card } from 'flowbite-react'
 
 const PharmacyDashboard: React.FC = () => {
 
@@ -15,7 +16,11 @@ const PharmacyDashboard: React.FC = () => {
   }, [dispatch, accessUser])
 
   return (
-    <div>PharmacyDashboard</div>
+    <div>
+      <Card>
+
+      </Card>
+    </div>
   )
 }
 
