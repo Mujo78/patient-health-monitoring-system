@@ -44,7 +44,7 @@ const PDashboard: React.FC<Props> = ({data}) => {
             <div className='flex flex-col w-full justify-around'>
                 <Card className='max-w-xs'>
                     <p className='text-center text-sm'>Price of medicine</p>
-                    <h1 className='text-4xl mx-auto text-green-500 font-semi-bold my-auto'>{data.total.total_price}</h1>
+                    <h1 className='text-4xl mx-auto text-green-500 font-semi-bold my-auto'>{data.total.total_price} <span className='text-sm'>BAM</span></h1>
                 </Card>
                 <Card className='max-w-xs'>
                     <p className='text-center text-sm'>Total not available</p>
@@ -53,7 +53,7 @@ const PDashboard: React.FC<Props> = ({data}) => {
             </div>
         </div>
             <Card className='w-1/3'>
-                <div className=''>
+                {data.recentMedicine.length !== 0 ? <div className=''>
                     <p>Recent added medicine</p>
                     <div className='divide-y mt-3'>
                         {data.recentMedicine.map((m) => (
@@ -64,7 +64,10 @@ const PDashboard: React.FC<Props> = ({data}) => {
                             </Link>
                         ))}
                     </div>
-                </div>
+                </div> : 
+                <div className='flex justify-center items-center'>
+                    <p>There are no recent added medicines</p>    
+                </div>}
             </Card>
         </>
   )

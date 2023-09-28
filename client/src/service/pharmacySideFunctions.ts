@@ -78,7 +78,40 @@ export async function pharmacyDashboard(token: string){
             "Authorization": `Bearer ${token}`
         }
     });
-    console.log(response.data)
+
+    return response.data;
+}
+
+type PieCategories = {
+    name: string,
+    value: number
+}
+
+type topExpensive = {
+    name: string,
+    value: number
+}
+
+type usedMedicine = {
+    _id: string,
+    name: string,
+    value: number
+}
+
+export type PharmacyDashboardInfoType = {
+    data: PieCategories[],
+    topExpensive: topExpensive[],
+    usedMedicine: usedMedicine[]
+}
+
+export async function pharmacyDashboardInfo(token: string){
+
+    const response = await axios.get(`${BASE_URL}/dashboard-info`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+console.log(response.data)
     return response.data;
 }
 

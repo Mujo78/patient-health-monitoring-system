@@ -5,6 +5,8 @@ const Medicine = require("../models/medicine")
 const asyncHandler = require("express-async-handler")
 const { default: mongoose } = require("mongoose")
 const User = require("../models/user")
+const Appointment = require("../models/appointment")
+const moment = require("moment-timezone")
 
 const getPharmacy = asyncHandler( async (req, res) =>{
     
@@ -112,14 +114,12 @@ const pharmacyDashboard = asyncHandler( async(req, res) => {
 
 const pharmacyDashboardInfo = asyncHandler(async(req, res) => {
 
-
-
     const medicine = await Medicine.aggregate([
         {
           $group: {
             _id: "$category",
-            totalPrice: {
-                $sum: { $toDouble:  '$price' }
+            total: {
+                $sum: 1
             }
           }
         },
@@ -128,10 +128,78 @@ const pharmacyDashboardInfo = asyncHandler(async(req, res) => {
         },
         {
           $limit: 5
+        },
+        {
+            $project: {
+                _id: 0,
+                name: '$_id',
+                value: '$total'
+            }
         }
-      ]);
+    ]);
+    
+    const topExpensive = await Medicine.aggregate([
+        {
+            $addFields: {
+                priceNumeric: { $toDouble: "$price" }
+            }
+        },
+        {
+            $sort: { priceNumeric: -1 }
+        },
+        {
+            $limit: 5
+        },
+        {
+            $project: {
+                _id: 0,
+                name: 1,
+                value: "$priceNumeric"
+            }
+        }
+    ])
 
-      return res.status(200).json(medicine)
+    const threeDaysAgo = moment().subtract(3, "days").toDate();
+
+    const topUsedMedicines = await Appointment.aggregate([
+        {
+            $match: {
+            appointment_date: { $gte: threeDaysAgo, $lte: new Date() }
+            },
+        },
+        {
+            $unwind: "$therapy"
+        },
+        {
+            $group: {
+                _id: "$therapy",
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $sort: { count: -1 }
+        },
+        {
+            $limit: 5
+        },
+    ]);
+
+    const medicineIds = topUsedMedicines.map((item) => item._id);
+    const medicineNames = await Medicine.find({ _id: { $in: medicineIds } }, "name");
+
+    const usedMedicine = topUsedMedicines.map((item) => ({
+        _id: item._id,
+        name: medicineNames.find((medicine) => medicine._id.equals(item._id)).name,
+        value: item.count,
+    }));
+
+    const result = {
+        data: medicine,
+        topExpensive,
+        usedMedicine
+    }
+      
+    return res.status(200).json(result)
 })
 
 

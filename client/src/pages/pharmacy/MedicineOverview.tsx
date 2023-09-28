@@ -165,7 +165,7 @@ const MedicineOverview: React.FC = () => {
                 <Card className={`h-fit w-1/5 relative cursor-pointer hover:bg-gray-50 w-md m-3 ${medicineId === m._id ? '!bg-green-50': ''} `} key={m._id} onClick={() => handleShow(m._id)}>
                   <HiXCircle onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => deleteMedicine(e, m._id)} className='absolute top-3 right-3 hover:w-[27px] hover:h-[27px] transition-all duration-300 text-red-600 w-[25px] h-[25px]' />
                   <div className='flex flex-col gap-2 w-full justify-around'>
-                      <CustomMedicineImg url={m.photo.startsWith(m.name) ? `http://localhost:3001/uploads/${m.photo}` : m.photo} className='mx-auto w-[100px] h-[100px]' />
+                      <CustomMedicineImg url={m.photo.startsWith(m.name) ? `http://localhost:3001/uploads/${m.photo}` : m.photo} className='mx-auto w-[100px] h-[100px] rounded-xl' />
                         <p className='text-xl font-semibold'>{m.name}</p>
                         <p className='text-xs'>{m.category}</p>
                         <p className='text-md font-bold mt-auto ml-auto'>{m.available ? <span className='text-green-500'> {m.price} BAM</span> : <span className='text-red-600'>Not available</span>}</p>
