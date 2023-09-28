@@ -6,20 +6,21 @@ import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 import {HiOutlineChartBarSquare,HiOutlineDocumentText,HiOutlineDocumentPlus} from "react-icons/hi2"
 
-type Props = {
-  setSelectedLink: React.Dispatch<React.SetStateAction<string>>
-}
 
-const PharmacySidebar: React.FC<Props> = ({setSelectedLink}) => {
+const PharmacySidebar: React.FC = () => {
   
   const location = useLocation()
   const {accessUser} = useSelector(authUser)
+
+  const handleClick = (name: string) => {
+    localStorage.setItem("selectedLink", name)
+  }
   
   return (
-    <RootSidebar setSelectedLink={setSelectedLink}>
+    <RootSidebar setSelectedLink={handleClick}>
         <Sidebar.Item as={NavLink}
           to={`/pharmacy/${accessUser?.data._id}`}
-          onClick={() => setSelectedLink("Dashboard")}
+          onClick={() => handleClick("Dashboard")}
           active={location.pathname.startsWith('/pharmacy/')}
           icon={HiOutlineChartBarSquare}
         >
@@ -27,7 +28,7 @@ const PharmacySidebar: React.FC<Props> = ({setSelectedLink}) => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/medicine`}
-          onClick={() => setSelectedLink("Medicine overview")}
+          onClick={() => handleClick("Medicine overview")}
           active={location.pathname.startsWith('/medicine')}
           icon={HiOutlineDocumentText}
         >
@@ -35,7 +36,7 @@ const PharmacySidebar: React.FC<Props> = ({setSelectedLink}) => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/add-medicine`}
-          onClick={() => setSelectedLink("Add medicine")}
+          onClick={() => handleClick("Add medicine")}
           active={location.pathname === '/add-medicine'}
           icon={HiOutlineDocumentPlus}
         >

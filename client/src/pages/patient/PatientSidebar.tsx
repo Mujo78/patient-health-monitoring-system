@@ -6,19 +6,19 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 
-type Props = {
-  setSelectedLink: React.Dispatch<React.SetStateAction<string>>
-}
-
-const PatientSidebar: React.FC<Props> = ({setSelectedLink}) => {
+const PatientSidebar: React.FC= () => {
 
   const location = useLocation()
   const {accessUser} = useSelector(authUser)
 
+  const handleClick = (name: string) => {
+    localStorage.setItem("selectedLink", name)
+  }
+
   return (
-    <RootSidebar setSelectedLink={setSelectedLink}>
+    <RootSidebar setSelectedLink={handleClick}>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Dashboard")}
+          onClick={() => handleClick("Dashboard")}
           icon={HiOutlineChartBar}
           active={location.pathname.startsWith('/patient/')}
           to={`/patient/${accessUser?.data._id}`}
@@ -26,7 +26,7 @@ const PatientSidebar: React.FC<Props> = ({setSelectedLink}) => {
             Dashboard
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("My appointments")}
+          onClick={() => handleClick("My appointments")}
           icon={HiOutlineCalendarDays}
           active={location.pathname.startsWith('/my-appointments')}
           to={"/my-appointments"}
@@ -34,7 +34,7 @@ const PatientSidebar: React.FC<Props> = ({setSelectedLink}) => {
             My Appointments
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Book Appointment")}
+          onClick={() => handleClick("Book Appointment")}
           icon={HiOutlineClock}
           active={location.pathname.startsWith('/appointment')}
           to={"/appointment"}
@@ -42,7 +42,7 @@ const PatientSidebar: React.FC<Props> = ({setSelectedLink}) => {
             Book Appointment
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Medical staff")}
+          onClick={() => handleClick("Medical staff")}
           icon={HiOutlineBuildingOffice2}
           active={location.pathname.startsWith('/staff')}
           to={"/staff"}
@@ -50,7 +50,7 @@ const PatientSidebar: React.FC<Props> = ({setSelectedLink}) => {
             Medical staff
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Medicine")}
+          onClick={() => handleClick("Medicine")}
           icon={HiOutlineDocumentText}
           active={location.pathname === '/medicine-overview'}
           to={"/medicine-overview"}

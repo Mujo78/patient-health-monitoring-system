@@ -5,7 +5,9 @@ const {
     addPharmacy,
     deletePharmacy,
     updatePharmacy,
-    getMe
+    getMe,
+    pharmacyDashboardInfo,
+    pharmacyDashboard
 } = require("../controllers/pharmacyController");
 const { uploadUserPhoto, resizeUserPhoto } = require("../controllers/userController");
 
@@ -15,6 +17,9 @@ router.use(protect)
 
 router.get("/get-me", getMe)
 router.get("/", getPharmacy)
+
+router.get("/dashboard", pharmacyDashboard)
+router.get("/dashboard-info", pharmacyDashboardInfo)
 
 router.patch("/", restrictTo('PHARMACY'), updatePharmacy)
 

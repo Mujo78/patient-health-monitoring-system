@@ -41,3 +41,44 @@ export async function updateData(data: PharmacyUpdateType, token: string){
     });
     return response.data;
 }
+
+type PharmacyMainInfo = {
+    _id: string,
+    name: string,
+    address: string,
+    phone_number: string,
+    working_hours: string
+}
+
+type Total = {
+    total_price: number,
+    total_number: number,
+    total_available: number,
+    total_not_available: number
+}
+
+type recentMedicine = {
+    _id: string,
+    name: string,
+    photo: string,
+    strength: string,
+    createdAt: Date
+}
+
+export type PharmacyDashboardType = {
+    pharmacy: PharmacyMainInfo,
+    total: Total,
+    recentMedicine: recentMedicine[]
+}
+
+export async function pharmacyDashboard(token: string){
+
+    const response = await axios.get(`${BASE_URL}/dashboard`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    console.log(response.data)
+    return response.data;
+}
+

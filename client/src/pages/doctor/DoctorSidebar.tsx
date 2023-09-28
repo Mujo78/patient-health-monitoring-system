@@ -6,11 +6,7 @@ import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays} from "react-icons/hi2"
 
-type Props = {
-  setSelectedLink: React.Dispatch<React.SetStateAction<string>>
-}
-
-const DoctorSidebar: React.FC<Props>  = ({setSelectedLink}) => {
+const DoctorSidebar: React.FC = () => {
   
   const {accessUser} = useSelector(authUser)
   const location = useLocation()
@@ -19,11 +15,16 @@ const DoctorSidebar: React.FC<Props>  = ({setSelectedLink}) => {
   const handleDissmis = () => {
     setShow(false)
   }
+
+  const handleClick = (name: string) => {
+    localStorage.setItem("selectedLink", name)
+  }
+  
   
   return (
-    <RootSidebar setSelectedLink={setSelectedLink}>
+    <RootSidebar setSelectedLink={handleClick}>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Dashboard")}
+          onClick={() => handleClick("Dashboard")}
           to={`/doctor/${accessUser?.data._id}`}
           active={location.pathname.startsWith('/doctor/')}
           icon={HiOutlineChartPie}
@@ -32,7 +33,7 @@ const DoctorSidebar: React.FC<Props>  = ({setSelectedLink}) => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/appointments`}
-          onClick={() => setSelectedLink("My appointments")}
+          onClick={() => handleClick("My appointments")}
           active={location.pathname.startsWith('/appointments')}
           icon={HiOutlineCalendarDays}
         >
@@ -40,14 +41,14 @@ const DoctorSidebar: React.FC<Props>  = ({setSelectedLink}) => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/my-patients`}
-          onClick={() => setSelectedLink("My patients")}
+          onClick={() => handleClick("My patients")}
           active={location.pathname.startsWith('/my-patients')}
           icon={HiOutlineUsers}
         >
             My Patients
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => setSelectedLink("Department")}
+          onClick={() => handleClick("Department")}
           active={location.pathname.startsWith('/my-department')}
           to='/my-department'
           icon={HiOutlineBuildingOffice2}

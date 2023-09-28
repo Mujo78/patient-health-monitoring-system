@@ -10,11 +10,8 @@ import socket from '../socket';
 import { addNotification, getPersonNotifications, notification, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
 
-type Props = {
-  selectedLink: string
-}
 
-const CustomNavbar: React.FC<Props> = ({selectedLink}) => {
+const CustomNavbar: React.FC = () => {
 
     let route;
     const [show, setShow] = useState<boolean>(false)
@@ -60,6 +57,7 @@ const CustomNavbar: React.FC<Props> = ({selectedLink}) => {
     const readed = notReaded.some((value) => value === true)
 
     const date = new Date();
+    const selectedLink = localStorage.getItem("selectedLink")
 
   return (
     <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}>

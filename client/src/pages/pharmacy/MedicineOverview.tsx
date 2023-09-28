@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../../components/Header'
 import { useSelector } from 'react-redux'
 import { deleteMedicineById, getMedicine, medicine } from '../../features/medicine/medicineSlice'
 import { useAppDispatch } from '../../app/hooks'
@@ -127,7 +126,6 @@ const MedicineOverview: React.FC = () => {
         :
         <div className='w-full mr-3'>
           <div className='flex-grow w-full flex flex-col h-full justify-between'>
-          <Header text='Medicine' className='mt-2' />
             <div className='flex justify-center my-4 items-center'>
               <TextInput 
                 className='w-3/4'

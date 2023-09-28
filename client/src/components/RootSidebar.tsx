@@ -10,7 +10,7 @@ import { restartNotifications } from '../features/notification/notificationSlice
 
 type Props = {
   children: React.ReactNode,
-  setSelectedLink: React.Dispatch<React.SetStateAction<string>>
+  setSelectedLink: (name: string) => void
 }
 
 const RootSidebar: React.FC<Props> = ({children, setSelectedLink}) => {
@@ -26,6 +26,7 @@ const RootSidebar: React.FC<Props> = ({children, setSelectedLink}) => {
     dispatch(restartNotifications())
     dispatch(logout())
     navigate("/", {replace: true})
+    localStorage.removeItem("selectedLink")
     dispatch(reset())
 }
 
