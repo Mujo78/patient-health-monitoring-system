@@ -14,6 +14,7 @@ import Footer from '../../../components/Footer';
 import ErrorMessage from '../../../components/ErrorMessage';
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { authUser } from '../../../features/auth/authSlice';
+import useSelectedPage from '../../../hooks/useSelectedPage';
 
 const workTime = [
     "9:00","9:20","9:40","10:00",
@@ -38,6 +39,8 @@ const MakeAppointment: React.FC = () => {
   const [newTime, setNewTime] = useState<string>("")
   const [reason, setReason] = useState<string>("")  
   const [doc, setDoc] = useState<Doctor>()
+
+  useSelectedPage("Book appointment")
 
   useEffect(() => {
     const fetchData = async (id: string) => {

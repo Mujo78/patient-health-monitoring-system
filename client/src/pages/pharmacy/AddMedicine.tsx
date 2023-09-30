@@ -11,6 +11,7 @@ import { MedicineType, medicineValidationSchema } from '../../validations/medici
 import { useAppDispatch } from '../../app/hooks'
 import { toast } from 'react-hot-toast'
 import {HiXCircle} from "react-icons/hi2"
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 const AddMedicine: React.FC = () => {
 
@@ -21,6 +22,8 @@ const AddMedicine: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<File | null>()
   const fileInputRef = useRef(null);
   const dispatch = useAppDispatch()
+
+  useSelectedPage("Add medicine")
 
   useEffect(() => {
     let objectURL: string;
@@ -35,14 +38,11 @@ const AddMedicine: React.FC = () => {
   }, [selectedImg])
 
   const onSubmit = (data: MedicineType) => {
-    console.log(data)
     
     const newData: MedicineDataType = {
       ...data,
       photo: selectedImg ? selectedImg : data.photo,
     }
-
-    console.log(newData)
     
     dispatch(addNewMedicine(newData)).then((action) =>{
       if(typeof action.payload === 'object'){
@@ -113,6 +113,7 @@ const AddMedicine: React.FC = () => {
               <div className='w-1/3 ml-6'>
               <Controller control={control} name="available" render={({ field: {value, onChange } }) => 
                 <ToggleSwitch label="Available now?" color='success' checked={value} onChange={onChange} />}/>
+                <ErrorMessage text={errors.available?.message} />
               </div>
             </div>
               <div>

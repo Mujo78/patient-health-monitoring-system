@@ -9,6 +9,7 @@ import ErrorMessage from '../../components/ErrorMessage'
 import {HiOutlineUser,HiOutlineUserGroup, HiOutlineCalendarDays, HiOutlineCheckCircle, HiOutlineClock} from "react-icons/hi2"
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell, BarChart, CartesianGrid, Bar, YAxis, XAxis } from 'recharts';
 import CustomCardTooltip from '../../components/CustomCardTooltip'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 const COLORS = ['#2986cc','#c90076', '#cccccc']
 
@@ -53,6 +54,8 @@ const MyDepartment: React.FC = () => {
     }
     fetchData();
   }, [accessUser])
+
+  useSelectedPage("My department")
 
   return (
     <div className='font-Poppins h-full transition-all duration-900 pr-3'>

@@ -10,6 +10,7 @@ import { authUser, firstTime } from '../../features/auth/authSlice'
 import moment from 'moment'
 import AppointmentsChart from './AppointmentsChart'
 import AppointmentReviewCalendar from '../../components/AppointmentReviewCalendar'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 type appointment = {
   _id: string,
@@ -31,6 +32,8 @@ const PatientDashboard: React.FC = () => {
   
   const {status} = useSelector(appointment)
   const dispatch = useAppDispatch()
+
+  useSelectedPage("Dashboard")
 
   useEffect(() => {
     if(accessUser && !accessUser.data.first){
@@ -71,7 +74,7 @@ const PatientDashboard: React.FC = () => {
     <div className='flex duration-300 transition-all  justify-between font-Poppins h-full w-full p-6'>
         <div className='flex flex-col flex-grow w-full justify-between'>
           <div className='w-full flex flex-grow justify-between'>
-              {latestFinished && <Card className='w-1/3 h-fit'>
+              {latestFinished && <Card className='w-1/3 h-fit' href={`/profile/p/${latestFinished.patient._id}`}>
                 <p className='text-blue-700 font-semibold'>Patient</p>
                 <h1 className='text-md font-bold text-center'>{latestFinished?.patient.first_name + ' ' + latestFinished?.patient.last_name}</h1>
                   <p className='text-gray-500'>Details</p>

@@ -62,7 +62,6 @@ const InfoPharmacy: React.FC = () => {
       setLoading(false)      
     } catch (error) {
       setLoading(false)
-      console.log(error)
     }finally{
       setLoading(false)
     }

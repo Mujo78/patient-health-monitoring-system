@@ -75,6 +75,7 @@ interface accessUserType {
 
 interface AuthState {
     accessUser: accessUserType | null,
+    selected?: string,
     status: 'idle' | 'loading' | 'failed' | '',
     message: string
 }
@@ -84,6 +85,7 @@ const storedObj = user !== null ? JSON.parse(user) : null
 
 const initialState: AuthState = {
     accessUser: storedObj,
+    selected: '',
     status: '',
     message: ''
 }
@@ -242,7 +244,13 @@ export const authSlice = createSlice({
             if(state.accessUser){
                 state.accessUser.info = action.payload
             }
-        } 
+        },
+        setSelected: (state, action) => {
+            state.selected = action.payload
+        },
+        resetSelected: (state) => {
+            state.selected = undefined
+        }
 
     },
     extraReducers(builder) {
@@ -350,5 +358,5 @@ export const authSlice = createSlice({
 
 export const authUser = (state: RootState) => state.auth;
 
-export const {reset, resetAccessUser, setInfoAccessUser} = authSlice.actions
+export const {reset, resetAccessUser, setInfoAccessUser, setSelected, resetSelected} = authSlice.actions
 export default authSlice.reducer;

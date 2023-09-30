@@ -65,7 +65,7 @@ const Profile: React.FC<Props> = ({children}) => {
           <hr/>
           </div>
           <div className='h-full flex flex-col gap-6 divide-y'>
-            <p className='text-[10px] font-semibold w-[180px] break-words'>{accessUser?.data.email}</p>
+            <p className='text-[10px] text-center font-semibold w-[180px] break-words'>{accessUser?.data.email}</p>
             <ul>
               {children}
             </ul>

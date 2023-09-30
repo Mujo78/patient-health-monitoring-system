@@ -6,6 +6,7 @@ import { PharmacyDashboardInfoType, PharmacyDashboardType, pharmacyDashboard, ph
 import PDashboard from './PDashboard'
 import { Spinner } from 'flowbite-react'
 import PDashboardInfo from './PDashboardInfo'
+import useSelectedPage from '../../../hooks/useSelectedPage'
 
 const PharmacyDashboard: React.FC = () => {
 
@@ -16,6 +17,7 @@ const PharmacyDashboard: React.FC = () => {
   const [phDash, setPhDash] = useState<PharmacyDashboardType | undefined>()
   const [phDashInfo, setPhDashInfo] = useState<PharmacyDashboardInfoType | undefined>()
 
+  useSelectedPage("Dashboard")
 
   useEffect(() => {
     if(accessUser && !accessUser.data.first){
@@ -32,7 +34,7 @@ const PharmacyDashboard: React.FC = () => {
             setPhDash(response)
           }
         } catch (err: any) {
-          console.log(err)
+          setLoading(false);
         } finally {
           setLoading(false);
         }
@@ -50,7 +52,7 @@ const PharmacyDashboard: React.FC = () => {
             setPhDashInfo(response)
           }
         } catch (err: any) {
-          console.log(err)
+          setLoading(false);
         } finally {
           setLoading(false);
         }

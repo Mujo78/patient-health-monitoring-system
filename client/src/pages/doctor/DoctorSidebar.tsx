@@ -3,28 +3,29 @@ import RootSidebar from '../../components/RootSidebar'
 import { Alert, Button, Sidebar } from 'flowbite-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { authUser } from '../../features/auth/authSlice'
+import { authUser, setSelected } from '../../features/auth/authSlice'
 import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays} from "react-icons/hi2"
+import { useAppDispatch } from '../../app/hooks'
 
 const DoctorSidebar: React.FC = () => {
   
   const {accessUser} = useSelector(authUser)
+  const dispatch = useAppDispatch()
   const location = useLocation()
   const [show, setShow] = useState<boolean>(true)
 
   const handleDissmis = () => {
     setShow(false)
   }
-
-  const handleClick = (name: string) => {
-    localStorage.setItem("selectedLink", name)
+  const onClickSelect = (name: string) => {
+    dispatch(setSelected(name))
   }
-  
+
   
   return (
-    <RootSidebar setSelectedLink={handleClick}>
+    <RootSidebar>
         <Sidebar.Item as={NavLink}
-          onClick={() => handleClick("Dashboard")}
+          onClick={() => onClickSelect("Dashboard")}
           to={`/doctor/${accessUser?.data._id}`}
           active={location.pathname.startsWith('/doctor/')}
           icon={HiOutlineChartPie}
@@ -33,7 +34,7 @@ const DoctorSidebar: React.FC = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/appointments`}
-          onClick={() => handleClick("My appointments")}
+          onClick={() => onClickSelect("My appointments")}
           active={location.pathname.startsWith('/appointments')}
           icon={HiOutlineCalendarDays}
         >
@@ -41,14 +42,14 @@ const DoctorSidebar: React.FC = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/my-patients`}
-          onClick={() => handleClick("My patients")}
+          onClick={() => onClickSelect("My patients")}
           active={location.pathname.startsWith('/my-patients')}
           icon={HiOutlineUsers}
         >
             My Patients
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
-          onClick={() => handleClick("Department")}
+          onClick={() => onClickSelect("Department")}
           active={location.pathname.startsWith('/my-department')}
           to='/my-department'
           icon={HiOutlineBuildingOffice2}

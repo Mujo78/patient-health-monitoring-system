@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import moment from 'moment'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../app/hooks'
+import useSelectedPage from '../hooks/useSelectedPage'
 
 const Notifications: React.FC = () => {
 
@@ -13,6 +14,8 @@ const Notifications: React.FC = () => {
   const dispatch = useAppDispatch()
   const [selected, setSelected] = useState<string>("")
   const {personNotifications} = useSelector(notification)
+
+  useSelectedPage("Notifications")
 
   const handleNavigate = (id: string) => {
     navigate(`${id}`)

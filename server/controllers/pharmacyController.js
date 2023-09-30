@@ -186,13 +186,12 @@ const pharmacyDashboardInfo = asyncHandler(async(req, res) => {
 
     const medicineIds = topUsedMedicines.map((item) => item._id);
     const medicineNames = await Medicine.find({ _id: { $in: medicineIds } }, "name");
-
     const usedMedicine = topUsedMedicines.map((item) => ({
         _id: item._id,
-        name: medicineNames.find((medicine) => medicine._id.equals(item._id)).name,
+        name: medicineNames.find((medicine) => medicine._id.equals(item._id))?.name ?? "",
         value: item.count,
-    }));
-
+    })).filter((item) => item.name !== "");
+    
     const result = {
         data: medicine,
         topExpensive,

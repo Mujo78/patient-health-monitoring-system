@@ -8,6 +8,7 @@ import DocDashboardInfo from './DocDashboardInfo'
 import DocDashboard from './DocDashboard'
 import { DocDashboardInfoType, DocDashboardType, doctorDashboard, doctorDashboardInfo } from '../../../service/appointmentSideFunctions'
 import { Spinner } from 'flowbite-react'
+import useSelectedPage from '../../../hooks/useSelectedPage'
 
 const DoctorDashboard: React.FC = () => {
 
@@ -56,6 +57,8 @@ const DoctorDashboard: React.FC = () => {
     }
     fetchData();
   }, [accessUser])
+
+  useSelectedPage("Dashboard")
 
   return (
     <div className='h-full w-full p-6 gap-5 font-Poppins flex transition-all duration-600'>

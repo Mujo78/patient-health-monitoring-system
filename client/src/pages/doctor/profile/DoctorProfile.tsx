@@ -2,8 +2,11 @@ import React from 'react'
 import { HiOutlineIdentification, HiOutlineLockClosed } from "react-icons/hi2"
 import { Link } from 'react-router-dom'
 import Profile from '../../../components/Profile'
+import useSelectedPage from '../../../hooks/useSelectedPage'
 
 const DoctorProfile: React.FC = () => {
+
+  useSelectedPage("Profile")
 
   return (
       <Profile>

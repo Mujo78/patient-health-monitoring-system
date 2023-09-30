@@ -10,14 +10,13 @@ import socket from '../socket';
 import { addNotification, getPersonNotifications, notification, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
 
-
 const CustomNavbar: React.FC = () => {
 
     let route;
     const [show, setShow] = useState<boolean>(false)
 
     const {notifications, personNotifications} = useSelector(notification)
-    const {accessUser} = useSelector(authUser)
+    const {accessUser, selected} = useSelector(authUser)
     const dispatch = useAppDispatch()
 
     if(accessUser?.data.role === 'PATIENT') route=`/profile/p/${accessUser.data._id}`
@@ -57,12 +56,11 @@ const CustomNavbar: React.FC = () => {
     const readed = notReaded.some((value) => value === true)
 
     const date = new Date();
-    const selectedLink = localStorage.getItem("selectedLink")
 
   return (
     <nav className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}>
       <div className='w-1/3'>
-        <p className='text-xl font-semibold'>{selectedLink ? selectedLink : "Dashboard"}</p>
+        <p className='text-xl font-semibold'>{selected ? selected : "Dashboard"}</p>
       </div>
       <div className='w-1/3'>
         <p className='text-sm font-semibold'>{date.toString().slice(0, 16)}</p>
@@ -70,7 +68,7 @@ const CustomNavbar: React.FC = () => {
       <div className='flex flex-row-reverse items-center relative'>
         <Link to={route}>
           <div className='flex items-center'>
-            {accessUser && <CustomImg url={accessUser.data.photo} className='w-[30px] mr-1' />}
+            {accessUser !== null && <CustomImg url={accessUser.data.photo} className='w-[30px] mr-1' />}
             <p className='text-xs font-semibold mr-6'>{accessUser?.info.name ? accessUser?.info.name : accessUser?.info.first_name + " " + accessUser?.info.last_name}</p>
           </div>
         </Link>

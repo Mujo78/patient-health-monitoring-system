@@ -40,7 +40,7 @@ const DocDashboard: React.FC<Props> = ({docDashInfo}) => {
                         <p >
                             Month: <span className='font-semibold'> {currentMonth} </span>
                         </p>
-                        <p className='text-5xl mx-auto font-bold my-auto'>
+                        <p className='text-5xl mx-auto font-normal text-blue-600 my-auto'>
                             {docDashInfo.averageAge}
                         </p>
                     </div>

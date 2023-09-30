@@ -6,6 +6,7 @@ import { Spinner, Table } from 'flowbite-react'
 import {HiChevronRight} from "react-icons/hi2"
 import ErrorMessage from '../../../components/ErrorMessage'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import useSelectedPage from '../../../hooks/useSelectedPage'
 
 const MedicalStaff: React.FC = () => {
 
@@ -14,7 +15,9 @@ const MedicalStaff: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const {accessUser} = useSelector(authUser)
-    
+  
+  useSelectedPage("Medical staff")
+
   useEffect(() => {
       const fetchData = async () =>{
           try{

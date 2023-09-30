@@ -26,7 +26,6 @@ const OneMedicine: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<File | null>()
   const fileInputRef = useRef(null);
 
-
   useEffect(() => {
     let objectURL: string;
     if(selectedImg){
@@ -66,12 +65,15 @@ const OneMedicine: React.FC = () => {
         pharmacy_id: specificMedicine.pharmacy_id,
         photo: selectedImg ? selectedImg : newData.photo
       }
-      console.log(data)
-      dispatch(updateMedicineById({id, data})).then((action) => {
-        if(typeof action.payload === 'object'){
-          toast.success("Successfully updated medicine!")
-        }
-      })
+
+      if(isDirty || (selectedImg && selectedImg.name !== specificMedicine.photo)){
+        dispatch(updateMedicineById({id, data})).then((action) => {
+          if(typeof action.payload === 'object'){
+            toast.success("Successfully updated medicine!")
+            navigate("..")
+          }
+        })
+      }
     }
   }
 
@@ -180,7 +182,7 @@ const OneMedicine: React.FC = () => {
                 </div>
                 </div>
             <Footer variant={1}>
-              <CustomButton type='submit' className='m-3 ' disabled={!isDirty || status === 'loading'}>
+              <CustomButton type='submit' className='m-3'>
                 Save
               </CustomButton>
             </Footer>

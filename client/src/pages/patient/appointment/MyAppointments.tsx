@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { appointment, getAppointmentsForPerson, resetPersonAppointment } from '../../../features/appointment/appointmentSlice';
 import { Spinner } from 'flowbite-react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import useSelectedPage from '../../../hooks/useSelectedPage';
 
 type MyEvent = {
   id: string,
@@ -23,6 +24,8 @@ const MyAppointments: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const {personAppointments, status} = useSelector(appointment)
+
+  useSelectedPage("My appointments")
 
   useEffect(() =>{
     dispatch(getAppointmentsForPerson())

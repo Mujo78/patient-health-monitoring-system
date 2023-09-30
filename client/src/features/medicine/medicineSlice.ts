@@ -79,7 +79,6 @@ export const getMedicine = createAsyncThunk<
         const safeToken = token ||'';
         return await medicineService.getAllMedicine(safeToken, page, searchQuery, category)
     } catch (error: any) {
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
@@ -96,7 +95,6 @@ export const getMedicineById = createAsyncThunk<
         const safeToken = token ||'';
         return await medicineService.getMedicine(safeToken, id)
     } catch (error: any) {
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
@@ -113,13 +111,13 @@ export const updateMedicineById = createAsyncThunk<
         const safeToken = token ||'';
         return await medicineService.updateMedicine(safeToken, id, data)
     } catch (error: any) {
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
     }
 })
 
+/*
 export const deleteMedicineById = createAsyncThunk<
     Medicine,
     string,
@@ -130,12 +128,12 @@ export const deleteMedicineById = createAsyncThunk<
         const safeToken = token ||'';
         return await medicineService.deleteOneMedicine(safeToken, id)
     } catch (error: any) {
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
     }
 })
+*/
 
 export const addNewMedicine = createAsyncThunk<
     Medicine,
@@ -147,7 +145,6 @@ export const addNewMedicine = createAsyncThunk<
         const safeToken = token ||'';
         return await medicineService.addMedicine(safeToken, data)
     } catch (error: any) {
-        console.log(error)
         const message = error.response.data;
 
         return thunkAPI.rejectWithValue(message)
@@ -205,21 +202,6 @@ export const medicineSlice = createSlice({
         .addCase(getMedicineById.pending, (state) => {
             state.status = 'loading'
         })
-
-        .addCase(deleteMedicineById.rejected, (state, action) => {
-            state.status = 'failed'
-            state.message = action.payload as string
-        })
-        .addCase(deleteMedicineById.fulfilled, (state, action) => {
-            state.status = 'idle'
-            if(state.medicine?.data){
-                state.medicine.data = state.medicine?.data.filter((m) => m._id !== action.payload._id)
-            }
-        })
-        .addCase(deleteMedicineById.pending, (state) => {
-            state.status = 'loading'
-        })
-
         .addCase(updateMedicineById.rejected, (state, action) => {
             state.status = 'failed'
             state.message = action.payload as string
@@ -234,6 +216,23 @@ export const medicineSlice = createSlice({
         .addCase(updateMedicineById.pending, (state) => {
             state.status = 'loading'
         })
+
+        /*
+        .addCase(deleteMedicineById.rejected, (state, action) => {
+            state.status = 'failed'
+            state.message = action.payload as string
+        })
+        .addCase(deleteMedicineById.fulfilled, (state, action) => {
+            state.status = 'idle'
+            if(state.medicine?.data){
+                state.medicine.data = state.medicine?.data.filter((m) => m._id !== action.payload._id)
+            }
+        })
+        .addCase(deleteMedicineById.pending, (state) => {
+            state.status = 'loading'
+        })
+        */
+
     }
 })
 

@@ -3,17 +3,16 @@ import { Avatar, Button, Sidebar } from 'flowbite-react'
 import hospitalImage from "../assets/hospital-logo.jpg"
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { authUser, logout, reset } from '../features/auth/authSlice'
+import { authUser, logout, reset, setSelected } from '../features/auth/authSlice'
 import {HiOutlineArrowRightOnRectangle} from "react-icons/hi2"
 import { useAppDispatch } from '../app/hooks'
 import { restartNotifications } from '../features/notification/notificationSlice'
 
 type Props = {
   children: React.ReactNode,
-  setSelectedLink: (name: string) => void
 }
 
-const RootSidebar: React.FC<Props> = ({children, setSelectedLink}) => {
+const RootSidebar: React.FC<Props> = ({children}) => {
   
   const {accessUser} = useSelector(authUser)
 
@@ -26,8 +25,12 @@ const RootSidebar: React.FC<Props> = ({children, setSelectedLink}) => {
     dispatch(restartNotifications())
     dispatch(logout())
     navigate("/", {replace: true})
-    localStorage.removeItem("selectedLink")
+    dispatch(setSelected(""))
     dispatch(reset())
+}
+
+const onClickSelect = (name: string) => {
+  dispatch(setSelected(name))
 }
 
   return (
@@ -37,7 +40,7 @@ const RootSidebar: React.FC<Props> = ({children, setSelectedLink}) => {
           <Sidebar.ItemGroup className='h-full flex flex-col justify-between'>
               <Sidebar.ItemGroup>
                 <Sidebar.Item as={NavLink}
-                  onClick={() => setSelectedLink("Dashboard")}
+                  onClick={() => onClickSelect("Dashboard")}
                   to={`/${route}/${accessUser?.data._id}`}
                   >
                   <div>

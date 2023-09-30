@@ -3,24 +3,28 @@ import RootSidebar from '../../components/RootSidebar'
 import { Sidebar } from 'flowbite-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { authUser } from '../../features/auth/authSlice'
+import { authUser, setSelected } from '../../features/auth/authSlice'
 import {HiOutlineChartBarSquare,HiOutlineDocumentText,HiOutlineDocumentPlus} from "react-icons/hi2"
+import { useAppDispatch } from '../../app/hooks'
+import { reset } from '../../features/medicine/medicineSlice'
 
 
 const PharmacySidebar: React.FC = () => {
   
   const location = useLocation()
   const {accessUser} = useSelector(authUser)
+  const dispatch = useAppDispatch()
 
-  const handleClick = (name: string) => {
-    localStorage.setItem("selectedLink", name)
+  const onClickSelect = (name: string) => {
+    dispatch(reset())
+    dispatch(setSelected(name))
   }
   
   return (
-    <RootSidebar setSelectedLink={handleClick}>
+    <RootSidebar>
         <Sidebar.Item as={NavLink}
           to={`/pharmacy/${accessUser?.data._id}`}
-          onClick={() => handleClick("Dashboard")}
+          onClick={() => onClickSelect("Dashboard")}
           active={location.pathname.startsWith('/pharmacy/')}
           icon={HiOutlineChartBarSquare}
         >
@@ -28,7 +32,7 @@ const PharmacySidebar: React.FC = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/medicine`}
-          onClick={() => handleClick("Medicine overview")}
+          onClick={() => onClickSelect("Medicine overview")}
           active={location.pathname.startsWith('/medicine')}
           icon={HiOutlineDocumentText}
         >
@@ -36,7 +40,7 @@ const PharmacySidebar: React.FC = () => {
         </Sidebar.Item>
         <Sidebar.Item as={NavLink}
           to={`/add-medicine`}
-          onClick={() => handleClick("Add medicine")}
+          onClick={() => onClickSelect("Add medicine")}
           active={location.pathname === '/add-medicine'}
           icon={HiOutlineDocumentPlus}
         >

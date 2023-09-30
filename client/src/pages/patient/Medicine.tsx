@@ -13,6 +13,7 @@ import CustomImg from '../../components/CustomImg'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
 import Footer from '../../components/Footer'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 
 function useQuery() {
@@ -125,6 +126,8 @@ const Medicine: React.FC = () => {
     navigate('/medicine-overview?page=1')
   }
 
+  useSelectedPage("Medicine overview")
+
   const mailTo = `mailto:${pharmacy?.user_id.email}`
   
   return (
@@ -209,7 +212,7 @@ const Medicine: React.FC = () => {
               </div> :
               pharmacy ?
             <div className='flex flex-col items-center h-full gap-3 justify-center bg-green-50'>
-                <CustomImg url={pharmacy.user_id.photo} className='w-[120px] h-[120px]' />
+                <CustomImg url={pharmacy.user_id.photo} className='w-[140px] h-[120px] rounded-full' />
                 <div className='flex flex-col gap-2'>
                   <p>Name: <span className='text-blue-700'> {pharmacy.name}</span></p>
                   <p>Address: <span className='text-blue-700'>{pharmacy.address}</span></p>

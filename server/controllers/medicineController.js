@@ -61,7 +61,15 @@ const createMedicine = asyncHandler( async (req, res) => {
         name, description, strength, category, price,photo, manufacturer, available
     } = req.body;
 
-    const oldOne = await Medicine.findOne({name, category, strength})
+    const conditionals = [
+        {name: name},
+        {name, strength, category}
+    ]
+
+    const oldOne = await Medicine.findOne({$and : [
+        { _id: { $ne: req.params.id }},
+        {$or : conditionals}
+    ]})
     if(oldOne) return res.status(400).json("Medicine already in database!")
 
     const ph = await Pharmacy.findOne()
@@ -85,20 +93,27 @@ const createMedicine = asyncHandler( async (req, res) => {
 const updateMedicine = asyncHandler( async (req, res) => {
 
     if(req.file) req.body.photo = req.file.filename
-    if(req.body.available) req.body.available = Boolean(req.body.available)
+    if(req.body.available) req.body.available = JSON.parse(req.body.available.toLowerCase())
 
     const {
         name, strength, category
     } = req.body;
 
-    const oldOne = await Medicine.findOne({name, category, strength, _id: {$ne: req.params.id}})
+    const conditionals = [
+        {name: name},
+        {name, strength, category}
+    ]
+
+    const oldOne = await Medicine.findOne({$and : [
+        { _id: { $ne: req.params.id }},
+        {$or : conditionals}
+    ]})
     if(oldOne) return res.status(400).json("Medicine already in database!")
 
     const ph = await Pharmacy.findOne()
     if(!ph) return res.status(400).json("There is no pharmacy for medicine!")
 
     const updated = await Medicine.findByIdAndUpdate(req.params.id, req.body, {new: true})
-    console.log(updated)
     
     if(!updated) return res.status(404).json("There was an error, please try again later!")
     

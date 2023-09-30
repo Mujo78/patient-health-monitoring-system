@@ -53,12 +53,13 @@ const PDashboard: React.FC<Props> = ({data}) => {
             </div>
         </div>
             <Card className='w-1/3'>
-                {data.recentMedicine.length !== 0 ? <div className=''>
+                {data.recentMedicine.length !== 0 ? 
+                <div className=''>
                     <p>Recent added medicine</p>
                     <div className='divide-y mt-3'>
                         {data.recentMedicine.map((m) => (
                             <Link to={`/medicine/${m._id}`} key={m._id} className='flex gap-3 items-center p-4 transition-all duration-100 hover:bg-gray-100 cursor-pointer'>
-                                <CustomMedicineImg url={m.photo} className='w-[40px] h-[40px] rounded-full' />
+                                <CustomMedicineImg url={m.photo.startsWith(m.name) ? `http://localhost:3001/uploads/${m.photo}` : m.photo} className='w-[40px] h-[40px] rounded-full' />
                                 <p className='text-xs'>{m.name}({m.strength + " mg"})</p>
                                 <p className='text-xs ml-auto'>{formatDate(m.createdAt)}</p>
                             </Link>
@@ -66,7 +67,7 @@ const PDashboard: React.FC<Props> = ({data}) => {
                     </div>
                 </div> : 
                 <div className='flex justify-center items-center'>
-                    <p>There are no recent added medicines</p>    
+                    <p className='text-sm text-gray-400'>There are no recent added medicines</p>    
                 </div>}
             </Card>
         </>

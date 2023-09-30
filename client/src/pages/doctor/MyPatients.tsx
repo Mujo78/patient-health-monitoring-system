@@ -9,6 +9,7 @@ import CustomButton from '../../components/CustomButton'
 import Pagination from '../../components/Pagination'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
+import useSelectedPage from '../../hooks/useSelectedPage'
 
 type patients = {
   currentPage: number | null,
@@ -32,6 +33,8 @@ const MyPatients: React.FC = () => {
   const [search, setSearch] = useState("")
   const [patients, setPatients] = useState<patients | undefined>()
   const [message, setMessage] = useState<string>("") 
+
+  useSelectedPage("My patients")
 
   useEffect(() => {
     const fetchData = async () => {

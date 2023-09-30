@@ -7,6 +7,7 @@ import { appointment, getAppointmentsForPerson, resetPersonAppointment } from '.
 import { Spinner } from 'flowbite-react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/hooks';
+import useSelectedPage from '../../../hooks/useSelectedPage';
 
 type MyEvent = {
   id: string,
@@ -42,6 +43,8 @@ const DoctorAppointments: React.FC = () => {
     const handleNavigate = ({id} : {id: string}) => {
         navigate(id)
     }
+
+    useSelectedPage("My appointments")
 
     return (
             <>
