@@ -84,6 +84,7 @@ const MyDepartment: React.FC = () => {
                 active
                 title="Active"
               >
+              {response && response?.todayActiveDoctors.length > 0 ?
                 <Table>
                   <Table.Body className="divide-y">
                     {response?.todayActiveDoctors.map((d) =>(
@@ -99,7 +100,9 @@ const MyDepartment: React.FC = () => {
                       </Table.Row>
                     ))}
                   </Table.Body>
-                </Table>
+                </Table>: 
+                  <p className='text-gray-400 text-sm text-center'>No data available.</p>
+                }
               </Tabs.Item>
               <Tabs.Item
                 title="Other"
@@ -122,7 +125,9 @@ const MyDepartment: React.FC = () => {
                     }
                   </Table.Body>
                 </Table>
-                    : <ErrorMessage text='There are no more doctors!' size='md' />}
+                    : 
+                      <p className='text-sm text-gray-400 text-center'>No data available.</p>
+                }
               </Tabs.Item>
             </Tabs.Group>
           </div>
@@ -151,6 +156,7 @@ const MyDepartment: React.FC = () => {
             </div>
             <div className='w-full flex h-fit'>
               <Card className='w-3/4 mr-4 text-xs'>
+              <p>Num. of appointments for next 7 days</p>
                 <ResponsiveContainer width="100%" height="100%" className="!p-0">
                   <BarChart
                     width={500}
@@ -172,6 +178,10 @@ const MyDepartment: React.FC = () => {
                 </ResponsiveContainer>
               </Card>
               <Card className='w-1/3 ml-auto h-[350px]'>
+                {response?.gender.every((d) => d.value === 0) ? 
+                (
+                  <p className='text-center text-sm text-gray-400'>No data available</p>
+                )  :
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart width={300} height={300} margin={{
                     top: 0,
@@ -188,7 +198,7 @@ const MyDepartment: React.FC = () => {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {response?.gender.map((entry, index) => (
+                      {response?.gender.map((_entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -196,6 +206,7 @@ const MyDepartment: React.FC = () => {
                     <Legend layout='vertical' />
                   </PieChart>
                 </ResponsiveContainer>
+              }
               </Card>
             </div>
           </div>

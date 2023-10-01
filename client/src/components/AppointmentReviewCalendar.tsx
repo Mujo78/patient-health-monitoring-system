@@ -128,7 +128,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({variant}) => {
                                             ) }
                                         </>
                                     : 
-                                    !n.finished && <button className="h-[30px] w-[30px]" onClick={(e) => cancelAppointmentNow(e, n)}>
+                                    !n.finished && !isCurrentAppointment(n.appointment_date) && <button className="h-[30px] w-[30px]" onClick={(e) => cancelAppointmentNow(e, n)}>
                                     <HiXCircle className="text-red-600 hover:!text-red-700 !h-[30px] !w-[30px]" />
                                 </button>}
                                 </Table.Cell>

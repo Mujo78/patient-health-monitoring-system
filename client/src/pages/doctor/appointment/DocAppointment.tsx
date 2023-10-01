@@ -167,7 +167,7 @@ const DocAppointment: React.FC = () => {
                         <div className='my-auto h-full pr-6 w-full justify-center flex flex-col'>
                             <div className='flex justify-between'>
                                 <p className='text-xl font-semibold'>Appointment result</p>
-                                {!selected?.finished && <button className="h-[60px] w-[60px]" onClick={cancelAppointmentNow}>
+                                {!selected?.finished && new Date() < new Date(selected.appointment_date) && <button className="h-[60px] w-[60px]" onClick={cancelAppointmentNow}>
                                     <HiXCircle className="text-red-600 hover:!text-red-700 !h-[40px] !w-[40px]" />
                                 </button>}
                             </div>

@@ -7,6 +7,15 @@ import { authUser, setSelected } from '../../features/auth/authSlice'
 import {HiOutlineChartPie,HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineCalendarDays} from "react-icons/hi2"
 import { useAppDispatch } from '../../app/hooks'
 
+const welcomeMessages = [
+  "Welcome! We're excited to have you on board.",
+  "Hello there! Wishing you a great day in healthcare.",
+  "Glad you're here! Best wishes for an impactful day.",
+  "Hello and welcome! We're here to make healthcare better.",
+  "Thanks for joining us! Your work in healthcare matters.",
+  "We're thrilled to have you here! Best wishes for another impactful day in healthcare."
+];
+
 const DoctorSidebar: React.FC = () => {
   
   const {accessUser} = useSelector(authUser)
@@ -21,6 +30,7 @@ const DoctorSidebar: React.FC = () => {
     dispatch(setSelected(name))
   }
 
+  const randomNumber = Math.floor(Math.random() * 6)
   
   return (
     <RootSidebar>
@@ -61,7 +71,7 @@ const DoctorSidebar: React.FC = () => {
               className='bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit'
               additionalContent={
                 <div className='flex flex-col gap-3'>
-                  <p className='text-xs'>We're thrilled to have you here! Best wishes for another impactful day in healthcare.</p>
+                  <p className='text-xs'>{welcomeMessages[randomNumber]}</p>
                   <Button className='bg-white ml-auto text-blue-700 mt-3 hover:!bg-gray-200' onClick={handleDissmis} size='xs'>
                   Dismiss
                 </Button>

@@ -66,7 +66,7 @@ type Latest = {
 }
 
 export type DocDashboardInfoType = {
-    latest: Latest,
+    latest: Latest | null,
     department_name: string,
     gender: GenderArray[]
 } 

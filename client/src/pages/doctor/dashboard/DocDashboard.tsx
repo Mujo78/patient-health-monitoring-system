@@ -5,7 +5,7 @@ import { DocDashboardType } from '../../../service/appointmentSideFunctions';
 import moment from 'moment';
 
 const cx = 150;
-const cy = 140;
+const cy = 130;
 const iR = 50;
 const oR = 100;
 
@@ -47,30 +47,38 @@ const DocDashboard: React.FC<Props> = ({docDashInfo}) => {
                 </Card>
             </div>
             <Card className='w-full h-2/4'>
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart width={400} height={400}>
-                        <Pie
-                        className='cursor-pointer'
-                            dataKey="value"
-                            startAngle={-360}
-                            endAngle={0}
-                            data={docDashInfo?.patientStatistic}
-                            cx={cx}
-                            cy={cy}
-                            innerRadius={iR}
-                            outerRadius={oR}
-                            fill="#8884d8"
-                            stroke="none"
-                            label
-                        >
-                         {docDashInfo?.patientStatistic.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                         ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend layout="vertical" verticalAlign="middle" align="right" />
-                    </PieChart>
-                </ResponsiveContainer>
+                <div className='flex flex-col gap-0 h-full w-full'>
+                    <p>Year: <span className='font-semibold'>{new Date().getFullYear()}</span></p>
+                    {docDashInfo.patientStatistic[0].value !== 0 ?  
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart width={400} height={500}>
+                                <Pie
+                                className='cursor-pointer'
+                                    dataKey="value"
+                                    startAngle={-360}
+                                    endAngle={0}
+                                    data={docDashInfo?.patientStatistic}
+                                    cx={cx}
+                                    cy={cy}
+                                    innerRadius={iR}
+                                    outerRadius={oR}
+                                    fill="#8884d8"
+                                    stroke="none"
+                                    label
+                                >
+                                {docDashInfo?.patientStatistic.map((_entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend layout="vertical" verticalAlign="middle" align="right" />
+                            </PieChart>
+                        </ResponsiveContainer> :
+                        <div className='flex justify-center items-center h-full'>
+                            <p className='text-sm text-gray-400'>You still don't have any patients.</p>    
+                        </div>
+                    }
+                </div>
             </Card>
         </>
         : <div>

@@ -25,7 +25,10 @@ export const doctorValidationSchema = Yup.object({
     qualification: Yup.string().required("Qualification is required!"),
     address: Yup.string().required("Address is required!"),
     bio: Yup.string().required("Bio is required!"),
-    age: Yup.string().required("Age is required!"),
+    age: Yup.string().required("Age is required!").matches(/^[0-9]+$/, "Age must contain only numbers!").test("age-restrict", "Age (min 25, max 75)", (n) => {
+        if(Number(n) > 75 || Number(n) < 25) return false
+        return true
+    }),
     available_days: Yup.array().of(Yup.object().shape({
         value: Yup.string().required("Value is required"),
         label: Yup.string().required('Label is required!')

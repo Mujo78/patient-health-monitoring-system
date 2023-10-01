@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getPatientsForDoctor, searchForPatient } from '../../service/patientSideFunctions'
 import PatientCard from '../../components/PatientCard'
 import { Patient } from '../../features/medicine/medicineSlice'
@@ -134,8 +134,13 @@ const MyPatients: React.FC = () => {
               </div>
             </>
           :
-          <div className='flex justify-center h-[70vh] items-center'>
-            < ErrorMessage text={message} size='md' />
+          <div className='flex flex-col justify-between h-[70vh] items-start'>
+            <div className='ml-auto h-fit'>
+              <Link to="/my-patients" className='text-red-600 underline'>Clear</Link>
+            </div>
+            <div className='h-full w-full flex items-center justify-center'>
+              < ErrorMessage className='mx-auto my-auto' text={message} size='md' />
+            </div>
           </div>}
         </div>
       </>

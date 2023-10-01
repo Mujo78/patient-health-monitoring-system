@@ -134,7 +134,7 @@ const PersonalInfoDoc: React.FC = () => {
               </div>
             </div>
             <div className='flex justify-between'>
-              <div className='w-4/5'>
+              <div className='w-2/5'>
                 <Label htmlFor='phone_number' className='text-xs' value='Phone number'  />
                 <TextInput id='phone_number' className='mt-1' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
                 <ErrorMessage text={errors.phone_number?.message} className='text-xs' />

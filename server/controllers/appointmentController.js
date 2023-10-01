@@ -295,8 +295,6 @@ const getFinishedAppointmentForPatient = asyncHandler (async (req, res) => {
         finished: 0,
         notification: 0
     }).sort({appointment_date: -1}).limit(LIMIT).skip(startIndx);
-
-    if(!apps) return res.status(404).json("There are no previous appointments for this patient.")
     
     const total = await Appointment.countDocuments({
         patient_id: patient._id,
@@ -422,14 +420,16 @@ const doctorAppointmentDashboard = asyncHandler( async(req, res) =>{
     const finishedLatest = await Appointment.findOne({
         doctor_id: doctor._id,
         finished: true
-    }).sort({appointment_date: -1})
-    .select({
-        doctor_id: 0,
-        patient_id: 1,
-        therapy:0,
-        appointment_date: 1,
-        _id: 1
-    }).lean().exec()
+    })
+        .sort({appointment_date: -1})
+        .select({
+            doctor_id: 0,
+            patient_id: 1,
+            therapy:0,
+            appointment_date: 1,
+            _id: 1
+        })
+        .lean().exec()
 
     const startOfYear = new Date((new Date().getFullYear()).toString() + "-01-01")
 
@@ -499,7 +499,6 @@ const doctorDasboard = asyncHandler (async (req, res) =>{
             }
           }
     ])
-
 
     const userDate = moment.tz(new Date(), "Europe/Sarajevo");
 

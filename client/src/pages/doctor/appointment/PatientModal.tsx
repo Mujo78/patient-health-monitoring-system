@@ -17,7 +17,7 @@ type Props = {
 const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, loading}) => {
 
   return (
-    <Modal show={more} size="6xl" className='font-Poppins' position="center-right" onClose={() => setMore(false)}>
+    <Modal show={more} size="4xl" className='font-Poppins' position="center-right" onClose={() => setMore(false)}>
         <Modal.Header>Last Appointment</Modal.Header>
         <Modal.Body>
             <div className='h-full'>

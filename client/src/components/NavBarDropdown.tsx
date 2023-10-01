@@ -40,7 +40,6 @@ const NavBarDropdown: React.FC<Props> = ({setShow}) => {
     }
 
     const handleNavigateNotification = (id: string) => {
-        console.log(route)
         if(route !== ''){
             setShow(false)
             navigate(`${route}/${id}`)

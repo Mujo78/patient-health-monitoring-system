@@ -28,7 +28,7 @@ type appointments = {
     patient_id: patient_id,
     currentPage: number, 
     numOfPages: number
-    data: finishedAppointments[]
+    data: finishedAppointments[] | null
 }
 
 export type modalDataType = {
@@ -126,7 +126,7 @@ const Patient:React.FC = () => {
         {loading ? <div className='flex items-center h-full justify-center'>
             <Spinner size="lg" />
             </div> :
-        appointments && (
+        appointments ? (
             <div className='flex justify-between h-full divide-x'>
                 <div className='h-full flex-grow flex flex-col justify-between'>
                     <div className='w-full px-14'>
@@ -175,10 +175,11 @@ const Patient:React.FC = () => {
                     </div>
                 </div>
                 <div className='h-full flex justify-between flex-col px-6 pt-2 w-5/12'>
-                    {appointments.data.length === 0 || Number(page) > appointments.numOfPages ? <div className='h-full flex justify-center items-center'> <ErrorMessage text={message || "There are no appointments for this patient."} size='md' /> </div> : 
-                        appLoading ? <div className='h-full flex justify-center items-center'> <Spinner size='lg' /> </div> :
+                    {Number(page) > appointments.numOfPages ? <div className='h-full flex justify-center items-center'> <ErrorMessage text={"There are no appointments for this patient."} size='sm' /> </div> : 
+                        appLoading ? <div className='h-full flex justify-center items-center'> <Spinner size='md' /> </div> :
                     <>
                         <p className='text-lg text-center font-semibold text-gray-900'>Appointments</p>
+                        {appointments.data && appointments.data.length > 0 ?
                         <Table>
                             <Table.Body className='divide-y'>
                                 <Table.Row className='text-gray-900'>
@@ -205,16 +206,24 @@ const Patient:React.FC = () => {
                                     </Table.Row>
                                 ))}
                             </Table.Body>
-                        </Table>
+                        </Table> : 
+                        <div className='h-full justify-center flex items-center'>
+                            <p className='text-sm text-gray-400 text-center'> There are no previous finished appointments for this patient.</p>
+                        </div>
+                        }
                         </>}
                         
-                        <div className='w-full mt-auto'>
+                        {appointments.data && <div className='w-full mt-auto'>
                             <Pagination page={Number(page)} totalPages={appointments.numOfPages} handleNavigate={handleNavigatePage}  />
-                        </div>
+                        </div>}
                 </div>
                 {appointments && <PatientModal more={show} variant={2} setMore={setShow} latestAppState={modalData} loading={loading} />}
             </div>
-        )}
+        ): 
+        <div className='flex justify-center items-center h-full'>
+            <ErrorMessage text={message} size='md' />
+        </div>
+        }
     </div>
   )
 }
