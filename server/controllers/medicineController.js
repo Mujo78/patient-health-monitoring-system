@@ -46,7 +46,7 @@ const getMedicines = asyncHandler( async (req, res) => {
     const result = await query.exec();
     if(result.length === 0) return res.status(404).json("There are no results!")
     responseObj.data = result;
-
+    
     return res.status(200).json(responseObj)
 })
 

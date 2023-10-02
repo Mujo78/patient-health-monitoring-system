@@ -19,7 +19,7 @@ type appointment = {
 }
 
 type latestFinishedType = {
-  appointment: appointment,
+  appointment: appointment | null,
   patient: patient_id
 }
 
@@ -60,7 +60,7 @@ const PatientDashboard: React.FC = () => {
   }, [accessUser])
 
   const handleNavigateApp = () => {
-    if(latestFinished){
+    if(latestFinished && latestFinished.appointment){
       navigate(`/my-appointments/${latestFinished.appointment._id}`)
     }
   }
@@ -89,7 +89,7 @@ const PatientDashboard: React.FC = () => {
                   </p>
                   {latestFinished.patient.height && <p className="flex text-xs text-gray-500 justify-between">
                     <span>Height (m) :</span>
-                    <span className="ml-auto text-black">{latestFinished.patient.height} </span>
+                    <span className="ml-auto text-black">{Number(latestFinished.patient.height) /100} </span>
                   </p>}
                   {latestFinished.patient.weight && <p className="flex text-xs text-gray-500 justify-between">
                     <span>Weight (kg) :</span>
@@ -111,7 +111,8 @@ const PatientDashboard: React.FC = () => {
                   }
                 </div>
               </Card>
-              {latestFinished?.appointment !== undefined && <Card onClick={handleNavigateApp} className='cursor-pointer'>
+              <Card onClick={handleNavigateApp} className='cursor-pointer'>
+              {latestFinished && latestFinished.appointment?
                   <div className='flex items-center'>
                     <CustomImg url={latestFinished?.appointment?.doctor_id.user_id.photo} className='w-[75px]' />
                     <div className='mx-auto'>
@@ -119,8 +120,11 @@ const PatientDashboard: React.FC = () => {
                       <p className='text-sm'>{latestFinished?.appointment?.doctor_id.speciality}</p>
                       <p className='text-xs text-gray-400'>{formatDate(latestFinished?.appointment?.appointment_date)} ({formatStartEnd(latestFinished?.appointment?.appointment_date)})</p>
                     </div>
-                  </div>
-              </Card>}
+                  </div> : 
+                  <div className='p-3 text-center'>
+                     <p className='text-sm text-gray-400'>No data available.</p>
+                  </div>}
+              </Card>
             </div>
           </div>
             <AppointmentsChart />

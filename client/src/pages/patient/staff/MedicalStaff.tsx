@@ -12,7 +12,7 @@ const MedicalStaff: React.FC = () => {
 
   const navigate = useNavigate()
   const {departmentName} = useParams()
-  const [departments, setDepartments] = useState<Department[]>()
+  const [departments, setDepartments] = useState<Department[] | undefined>()
   const [loading, setLoading] = useState<boolean>(false)
   const {accessUser} = useSelector(authUser)
   
@@ -38,12 +38,12 @@ const MedicalStaff: React.FC = () => {
   }
 
   return (
-    <div className='h-full w-full'>
+    <div className='h-full w-full font-Poppins'>
       {loading ?
         <div className='flex justify-center items-center h-full'>
           <Spinner size="md" />
         </div>
-      : departments !== undefined &&
+      : departments !== undefined ?
       <div className='flex h-full w-full divide-x font-Poppins'>
         <div className=' w-1/3'>
           <p className='m-4 text-2xl font-semibold'>Select a department</p>
@@ -72,7 +72,11 @@ const MedicalStaff: React.FC = () => {
               </div>
           }
         </div>
-      </div>}
+      </div>:
+        <div className='flex justify-center items-center h-full'>
+          <p className='text-md text-gray-400'>No data available.</p>
+        </div>
+      }
     </div>
   )
 }

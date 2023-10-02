@@ -1,6 +1,6 @@
 import { Spinner, Table } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { patient_id } from '../../features/appointment/appointmentSlice'
 import { formatDate, formatStartEnd, getPatientFinishedAppointments } from '../../service/appointmentSideFunctions'
 import { Medicine } from '../../features/medicine/medicineSlice'
@@ -129,8 +129,8 @@ const Patient:React.FC = () => {
         appointments ? (
             <div className='flex justify-between h-full divide-x'>
                 <div className='h-full flex-grow flex flex-col justify-between'>
-                    <div className='w-full px-14'>
-                        <div className='flex items-center justify-center w-full'>
+                    <div className='w-full flex flex-col my-auto px-14'>
+                        <div className='flex items-center justify-center mb-12 w-full'>
                             <CustomImg url={appointments.patient_id.user_id.photo} className='w-[160px] mx-auto' />
                             <div className='mx-auto'>
                                 <p className='text-xl font-semibold'>
@@ -139,6 +139,9 @@ const Patient:React.FC = () => {
                                 <p className='flex justify-end text-sm'>
                                     {moment().diff(moment(appointments.patient_id.date_of_birth), 'years')} years old
                                 </p>
+                                <Link to={`mailto:${appointments.patient_id.user_id.email}`} className='text-sm text-blue-700 mt-1'>
+                                    {appointments.patient_id.user_id.email}
+                                </Link>
                             </div>
                         </div>
                         <div className='flex flex-col h-full justify-center gap-4 flex-grow'>
@@ -158,7 +161,7 @@ const Patient:React.FC = () => {
                             </p>
                             {appointments?.patient_id.height && <p className="flex text-sm text-gray-500 justify-between">
                                 <span>Height (m) :</span>
-                                <span className="ml-auto text-black">{appointments?.patient_id.height}</span>
+                                <span className="ml-auto text-black">{Number(appointments?.patient_id.height) / 100}</span>
                             </p>}
                             {appointments?.patient_id.weight && <p className="flex text-sm text-gray-500 justify-between">
                                 <span>Weight (kg) :</span>

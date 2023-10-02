@@ -34,6 +34,7 @@ export interface doctor_id {
     last_name: string,
     speciality: string,
     qualification: string,
+    gender: string,
     bio: string,
     age: string,
     user_id : UserInfo,

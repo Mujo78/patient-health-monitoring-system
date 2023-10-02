@@ -63,7 +63,6 @@ const AppointmentReviewCalendar: React.FC<Props> = ({variant}) => {
             })
         }
     }
-
     
 
   return (
@@ -94,7 +93,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({variant}) => {
                             </Table.Cell>
                         </Table.Row> 
                              : 
-                        selectedDayAppointments.length > 0 ?
+                        selectedDayAppointments.length > 0 && selectedDayAppointments.some((a) => !a.finished) ?
                             selectedDayAppointments.map((n) => (
                                 !n.finished &&
                                 <Table.Row key={n._id} onClick={() => handleNavigate(n._id)} className='flex cursor-pointer rounded-sm hover:!bg-gray-100 transition-colors duration-300 !p-0 justify-center border-b border-gray-300'>
@@ -134,9 +133,9 @@ const AppointmentReviewCalendar: React.FC<Props> = ({variant}) => {
                                 </Table.Cell>
                                 </Table.Row> )) : 
                                 <Table.Row>
-                                <Table.Cell className='text-center py-3 text-gray-500'>
-                                You haven't have any appointments today!
-                                </Table.Cell>
+                                    <Table.Cell className='text-center py-3 w-full text-gray-500'>
+                                        You haven't have any appointments today!
+                                    </Table.Cell>
                             </Table.Row> 
                             }
                 </Table.Body>

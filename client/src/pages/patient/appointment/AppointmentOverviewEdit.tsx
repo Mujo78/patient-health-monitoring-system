@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Tabs, ListGroup, Textarea , Badge } from 'flowbite-react';
 import { appointment, editAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -7,13 +7,14 @@ import {HiOutlinePencilSquare, HiOutlineDocumentDuplicate} from "react-icons/hi2
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { Value } from './MakeAppointment';
 import { useAppDispatch } from '../../../app/hooks';
-import { convert12HourTo24Hour, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
+import { availableTimeForApp, convert12HourTo24Hour, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import CustomButton from '../../../components/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
 import { Medicine } from '../../../features/medicine/medicineSlice';
 import MedicineModal from '../../../components/MedicineModal';
+import { authUser } from '../../../features/auth/authSlice';
 
 const workTime = [
   "9:00","9:20","9:40","10:00",
@@ -28,16 +29,34 @@ const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate()
   const {id} = useParams()
   const {selectedAppointment: sApp, selectedDayAppointments, status, message} = useSelector(appointment)
+  const {accessUser} = useSelector(authUser)
   const d = sApp?.appointment_date;
   const r = sApp?.reason === '' ? '' : sApp?.reason as string
   const t = convert12HourTo24Hour(moment.utc(sApp?.appointment_date).add(2, "hours").toString().slice(15, 21) as string)
-
+  const [time, setTime] = useState<string[] | null>()
   const [value, setValue] = useState<Value>(new Date(sApp?.appointment_date as Date))
   const [newTime, setNewTime] = useState<string>(t)
   const [reason, setReason] = useState<string>(r)
   const [medicine, setMedicine] = useState<Medicine>()
   const [show, setShow] = useState<boolean>(false)
   let active;
+
+  useEffect(() =>{
+    async function fetchData(){
+      try {
+        if(accessUser && sApp?.doctor_id._id){
+          const response = await availableTimeForApp(value as Date,sApp?.doctor_id._id, accessUser?.token)
+          setTime(response)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if(value){
+      fetchData()
+    }
+  }, [value, accessUser, sApp?.doctor_id._id])
 
   const dispatch = useAppDispatch()
 
@@ -58,7 +77,9 @@ const AppointmentOverviewEdit: React.FC = () => {
     return newTime;
   });
 
-  const availableTime = workTime.filter(m => !appTime.includes(m));
+  const mergedArrayForTime = time && appTime.concat(time);
+
+  const availableTime = mergedArrayForTime && workTime.filter(m => !mergedArrayForTime.includes(m));
   const setTimeForDate = (time: string) => {
     setNewTime(time)
   }
@@ -68,14 +89,13 @@ const AppointmentOverviewEdit: React.FC = () => {
     const index = value?.toLocaleString().indexOf(new Date().getFullYear().toString())
     const date = value?.toLocaleString().slice(0, Number(index) + 4).replace(/\s+/g, '').replace(/\./g, '-')
     const newAppDate = date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$2-$1')+ "T"+ time+ ":00";
-    const formattedDate = newAppDate.replace(/\./g, '-').trim()
 
     const editObjectData = {
       reason,
       appointment_date: new Date(newAppDate.replace(/\./g, '-').trim())
     }
 
-    if(reason !== sApp?.reason || new Date(formattedDate).getTime() !== new Date(sApp.appointment_date).getTime()){
+    if(reason !== sApp?.reason || new Date(newAppDate.replace(/\./g, '-').trim()).getTime() !== new Date(sApp.appointment_date).getTime()){
       if(id) {
         dispatch(editAppointment({id, editObjectData})).then((action) =>{
           if(typeof action.payload === 'object'){
@@ -106,6 +126,7 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   const url = medicine?.photo.startsWith(medicine.name) ? `http://localhost:3001/uploads/${medicine.photo}` : medicine?.photo
 
+  
   return (
     <>
     <Tabs.Group aria-label="Default tabs" style="default" className='font-Poppins' onActiveTabChange={(tab) => handleGet(tab)}>
@@ -147,7 +168,7 @@ const AppointmentOverviewEdit: React.FC = () => {
     </div> : 
       <div className='flex justify-center flex-col items-center h-[300px]'>
         <ErrorMessage size='md' text={`Your appointment date: ${sApp?.appointment_date.toString().slice(0,10)} `} />
-        <p className='text-xs text-gray-400 mt-2'>You will be able to see overview after appointment is finished</p>
+        <p className='text-xs text-gray-400 mt-2'>You will be able to see overview after doctor make it finished</p>
     </div> }
       </Tabs.Item>
       {Number(canEdit) > 60 && !sApp?.finished ? 
@@ -161,13 +182,13 @@ const AppointmentOverviewEdit: React.FC = () => {
               <div className='flex justify-between w-3/4'>
                 <CalendarAppointment variant={2} value={value} setValue={setValue} handleGetAppForADay={handleGetAppForADay} docAvailable={sApp?.doctor_id.available_days as string[]} />
                 <div className='w-2/5 flex flex-col my-auto mr-3 justify-around h-full'>
-                  <h1 className='font-semibold text-md'>Date: {value?.toLocaleString().slice(0, 10)} {(availableTime.length)}</h1>
+                  <h1 className='font-semibold text-md'>Date: {value?.toLocaleString().slice(0, value.toLocaleString().indexOf(new Date(value.toString()).getFullYear().toString()) + 4)} ({availableTime && availableTime.length})</h1>
                   <div className='flex flex-wrap w-full p-1 border-gray-300 border rounded-lg'>
                     {isDoctorAvailable(value as Date, sApp?.doctor_id.available_days as string[]) ?
                       <div className='my-auto mx-auto'>
                         <ErrorMessage text='You can not make appointment today' size='sm' /> 
                       </div> 
-                      : availableTime.length > 0 ? availableTime.map((n) => 
+                      : availableTime && availableTime.length > 0 ? availableTime.map((n) => 
                       <Badge  size="sm" key={n} onClick={() => setTimeForDate(n)} color="gray" className={`m-1 ${newTime === n && 'bg-blue-700 text-white hover:text-white'} cursor-pointer  focus:!ring-blue-600`}>{
                         parseInt(n.split(":")[0]) < 9 ? `${n} PM` : `${n} AM`
                       }</Badge >

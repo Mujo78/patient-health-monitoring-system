@@ -18,7 +18,8 @@ const {
     getLatestFinishedAppointment,
     numberOfAppointmentsPerMonthForDepartments,
     doctorAppointmentDashboard,
-    doctorDasboard
+    doctorDasboard,
+    getOtherAppointmentsForDay
 } = require("../controllers/appointmentController")
 
 const router = express.Router()
@@ -26,6 +27,7 @@ const router = express.Router()
 router.use(protect)
 
 router.post("/day", restrictTo('PATIENT', 'DOCTOR'), getAppointmentForDay)
+router.post("/others-today", restrictTo('PATIENT'), getOtherAppointmentsForDay)
 router.post("/", restrictTo('PATIENT'), makeAppointment)
 router.patch("/:id", restrictTo('DOCTOR'), makeAppointmentFinished)
 

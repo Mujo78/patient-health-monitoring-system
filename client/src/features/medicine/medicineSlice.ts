@@ -180,7 +180,6 @@ export const medicineSlice = createSlice({
 
         .addCase(getMedicine.rejected, (state, action) => {
             state.status = 'failed'
-            console.log(action.payload)
             state.message = action.payload as string
         })
         .addCase(getMedicine.fulfilled, (state, action) => {

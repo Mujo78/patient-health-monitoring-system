@@ -6,14 +6,14 @@ import {HiOutlineXMark} from "react-icons/hi2"
 import ErrorMessage from '../../../components/ErrorMessage'
 import { Card, Spinner } from 'flowbite-react'
 import CustomImg from '../../../components/CustomImg'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 
 const MedicalStaffDepartment: React.FC = () => {
 
     const {departmentName} = useParams()
     const [loading, setLoading] = useState<boolean>(false)
     const [selectedDepartment, setSelectedDepartment] = useState<DepartmentAllInfo | undefined>()
-  
+    const navigate = useNavigate()
     const {accessUser} = useSelector(authUser)
   
     useEffect(() => {
@@ -33,6 +33,7 @@ const MedicalStaffDepartment: React.FC = () => {
   
   
     const hideChoosenDepartment = () => {
+        navigate("/staff")
         setSelectedDepartment(undefined)
     }
     

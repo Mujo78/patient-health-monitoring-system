@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { doctorType, doctorValidationSchema } from '../../../validations/doctorValidation'
 import { getDoctorInfo, updateDoctorInfo } from '../../../service/personSideFunctions'
-import { Label, Spinner, TextInput, Textarea } from 'flowbite-react'
+import { Label, Spinner, TextInput, Textarea, Select as CustomSelect} from 'flowbite-react'
 import Footer from '../../../components/Footer'
 import CustomButton from '../../../components/CustomButton'
 import ErrorMessage from '../../../components/ErrorMessage'
@@ -131,6 +131,21 @@ const PersonalInfoDoc: React.FC = () => {
                 <Label htmlFor='speciality' className='text-xs' value='Speciality'  />
                 <TextInput id='speciality' className='mt-1' {...register("speciality")} type='text' color={errors.speciality && 'failure'} />
                 <ErrorMessage text={errors.speciality?.message} className='text-xs' />
+              </div>
+              <div className='flex-grow ml-3'>
+                <Label htmlFor='speciality' className='text-xs' value='Gender'  />
+                <CustomSelect id='gender' {...register("gender")} color={errors.gender && 'failure'}>
+                  <option value="Male">
+                    Male
+                  </option>
+                  <option value="Female">
+                    Female
+                  </option>
+                  <option value="Other">
+                    Other
+                  </option>
+                </CustomSelect>
+                <ErrorMessage text={errors.gender?.message} className='text-xs' />
               </div>
             </div>
             <div className='flex justify-between'>

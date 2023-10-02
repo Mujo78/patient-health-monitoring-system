@@ -19,7 +19,11 @@ const GeneralSettings: React.FC = () => {
 
     useEffect(() => {
         dispatch(reset())
-    }, [dispatch])
+
+        if(accessUser) {
+            setNotifications(accessUser.data.notification)
+        }
+    }, [dispatch, accessUser])
 
     const handleChange = () => {
         setNotifications((n) => !n)

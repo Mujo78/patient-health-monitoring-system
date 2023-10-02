@@ -2,6 +2,7 @@ import axios from "axios"
 import moment from "moment"
 import { Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
+import { Appointment } from "../features/appointment/appointmentSlice";
 
 const BASE_URL = "http://localhost:3001/api/v1/"
 
@@ -102,6 +103,15 @@ export async function doctorDashboard(token: string) {
     return response.data;
 }
 
+export async function getOtherAppsForDay(token: string, date: Date, doctor_id: string) {
+
+    const response = await axios.post(`${BASE_URL}appointment/others-today`, {date, doctor_id}, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return response.data;
+}
 
 
 export function isSunday(date:Date) {
@@ -114,13 +124,39 @@ export function formatDate(date:Date) {
     return newDate
 }
 
+export async function availableTimeForApp(value: Date, doctor_id: string, token: string){
+    const response = await getOtherAppsForDay(token, value, doctor_id)
+
+    const appTime = response && response.map((n: Appointment) => {
+        const date = new Date(n.appointment_date);
+        const localTime = new Date(date.getTime());
+        const formattedTime = localTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        const newTime = formattedTime.slice(0,5).trim()
+        return newTime;
+      });
+
+    return appTime
+
+}
+
 export function isDoctorAvailable(date: Date, available_days: string[]) {
     const dayOfWeek = date?.toLocaleDateString('en-US', { weekday: 'long' });
     return !available_days.includes(dayOfWeek);
 }
 
+export function isDst(date: Date) {
+    let add;
+    if(!moment(date).isDST()){
+        add = 1
+    }else{
+        add = 2
+    }
+    return add
+}
+
 export function formatStartEnd(date: Date) {
-    const appDateTime = moment.utc(date).add(2, "hours");
+    const add = isDst(date)
+    const appDateTime = moment.utc(date).add(add, "hours");
     const startTime = moment.utc(appDateTime).format('hh:mm A');
     const endTime = moment.utc(appDateTime).add(20, 'minutes').format('hh:mm A');
     const appointmentTime = `${startTime} - ${endTime}`;

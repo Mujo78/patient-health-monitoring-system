@@ -4,11 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Spinner, Textarea } from 'flowbite-react';
 import CustomImg from '../../../components/CustomImg';
 import { Doctor } from './AppointmentDepartment';
-import { convert12HourTo24Hour, getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
+import { availableTimeForApp, convert12HourTo24Hour, getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
-import { appointment, bookAppointment, getAppointmentsForADay, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
+import { appointment, bookAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import { toast } from 'react-hot-toast';
 import Footer from '../../../components/Footer';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -35,6 +35,7 @@ const MakeAppointment: React.FC = () => {
   const {doctorId} = useParams()
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false)  
+  const [time, setTime] = useState<string[] | null>()
   const [value, setValue] = useState<Value>(new Date());
   const [newTime, setNewTime] = useState<string>("")
   const [reason, setReason] = useState<string>("")  
@@ -42,13 +43,25 @@ const MakeAppointment: React.FC = () => {
 
   useSelectedPage("Book appointment")
 
+  useEffect(() =>{
+    dispatch(reset())
+    if(value && doc){
+       if(isDoctorAvailable(value as Date, doc.available_days as string[])){
+        dispatch(getAppointmentsForADay(value as Date))
+    }
+  }
+  }, [value, dispatch, doc])
+
   useEffect(() => {
-    const fetchData = async (id: string) => {
+    const fetchData = async () => {
       try {
         setLoading(true)
-        if(accessUser){
-          const response = await getDoctor(accessUser.token, id)
+        if(accessUser && doctorId){
+          const response = await getDoctor(accessUser.token, doctorId)
           setDoc(response)
+
+          const resTime = await availableTimeForApp(value as Date, doctorId, accessUser.token)
+          setTime(resTime)
         }
         setLoading(false);
       } finally {
@@ -56,10 +69,8 @@ const MakeAppointment: React.FC = () => {
       }
     }
 
-    if(doctorId){
-      fetchData(doctorId)
-    }
-  }, [doctorId, accessUser])
+      fetchData()
+  }, [doctorId, accessUser, value])
 
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value))
@@ -68,7 +79,7 @@ const MakeAppointment: React.FC = () => {
 
   const makeNewAppointment = () => {
     const time = convert12HourTo24Hour(newTime)
-    const index = value?.toLocaleString().indexOf(new Date().getFullYear().toString())
+    const index = value?.toLocaleString().indexOf(new Date(value.toString()).getFullYear().toString())
     const date = value?.toLocaleString().slice(0, Number(index) + 4).replace(/\s+/g, '').replace(/\./g, '-')
     const newAppDate = date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, '$3-$2-$1')+ "T"+ time+ ":00";
 
@@ -78,6 +89,7 @@ const MakeAppointment: React.FC = () => {
       appointment_date: new Date(newAppDate.replace(/\./g, '-').trim())
     }
     
+  
     if(doctorId && newTime){
       dispatch(bookAppointment(appointmentData)).then((action) =>{
         if(typeof action.payload === 'object'){
@@ -87,14 +99,6 @@ const MakeAppointment: React.FC = () => {
       })
     }
   }
-  
-  useEffect(() =>{
-    if(value && doc){
-       if(isDoctorAvailable(value as Date, doc.available_days as string[])){
-        dispatch(getAppointmentsForADay(value as Date))
-    }
-  }
-  }, [value, dispatch, doc])
 
   const appTime = selectedDayAppointments && selectedDayAppointments.map((n) => {
     const date = new Date(n.appointment_date);
@@ -104,7 +108,9 @@ const MakeAppointment: React.FC = () => {
     return newTime;
   });
 
-  const availableTime = workTime.filter(m => !appTime.includes(m));
+  const mergedArrayForTime = time && appTime.concat(time);
+
+  const availableTime = mergedArrayForTime && workTime.filter(m => !mergedArrayForTime.includes(m));
 
   const setTimeForDate = (time: string) => {
     setNewTime(time)
@@ -119,9 +125,9 @@ const MakeAppointment: React.FC = () => {
           <div className='my-auto h-full flex flex-col justify-evenly'>
             <Card horizontal className='flex justify-center'>
               {loading ? <div className='p-6'> <Spinner size="md" /> </div> :
-              <div className='flex justify-around items-center'>
+              <div className='flex gap-4 justify-around items-center'>
                 <CustomImg url={doc?.user_id.photo} className='w-[60px] h-[60px]' />
-                <div className='w-1/2'>
+                <div className='w-full'>
                     <h1 className='font-bold text-md mb-1 text-blue-700'>{"Dr. " + doc?.first_name + " " + doc?.last_name}</h1>
                     <p className='text-xs'>{doc?.bio.split(".")[0]}</p>
                 </div>
@@ -163,13 +169,13 @@ const MakeAppointment: React.FC = () => {
           <div className='h-3 mt-2'>  {status === 'failed' && <p className='text-xs text-red-600 font-bold'>{message}</p>} </div>
         </div>
         <div className='w-1/4 flex flex-col my-auto mr-4 justify-evenly h-full'>
-            <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, 10)} ({availableTime.length})</h1>
+            <h1 className='font-semibold text-xl'>Date: {value?.toLocaleString().slice(0, value.toLocaleString().indexOf(new Date(value.toString()).getFullYear().toString()) + 4)} ({availableTime && availableTime.length})</h1>
             <div className='flex flex-wrap h-3/4 w-full p-1.5 border-gray-300 border rounded-lg'>
               {isDoctorAvailable(value as Date, doc?.available_days as string[]) ?
                 <div className='my-auto mx-auto'>
                  <ErrorMessage text='You can not make appointment today' size='sm' /> 
                 </div> 
-                : status === 'loading' ? <div className='mx-auto my-auto'> <Spinner /> </div>: availableTime.length > 0 ? availableTime.map((n) => 
+                : status === 'loading' ? <div className='mx-auto my-auto'> <Spinner /> </div>: availableTime && availableTime.length > 0 ? availableTime.map((n) => 
                 <Button size="sm" key={n} onClick={() => setTimeForDate(n)} color="light" className={`m-1.5 ${newTime === n && 'bg-blue-500 text-white hover:text-black'}  focus:!ring-blue-600`}>{
                   parseInt(n.split(":")[0]) < 9 ? `${n} PM` : `${n} AM`
                 }</Button>

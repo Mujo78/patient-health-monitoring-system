@@ -220,7 +220,7 @@ export const deactivateAccount = createAsyncThunk<
 >("/auth/deactivate", async(data, thunkAPI) => {
     try{
         const token = thunkAPI.getState().auth.accessUser?.token as string;
-        return authServices.updateUser(token, data)
+        return authServices.deactivateMyAccount(token, data)
     }catch(error: any){
         console.log(error)
         const message = error.response.data;

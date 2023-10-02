@@ -9,7 +9,7 @@ const User = require("../models/user")
 const Email = require("../utils/email");
 
 const makeAppointment = asyncHandler( async (req, res) =>{
-
+    
     const {
         doctor_id, reason, appointment_date
     } = req.body;
@@ -17,15 +17,25 @@ const makeAppointment = asyncHandler( async (req, res) =>{
     const patient = await Patient.findOne({user_id: req.user._id})
     if(!patient) return res.status(404).json("There was an error, please try again later!")
 
-    const appointmentDateWithoutTime = moment(appointment_date).tz("Europe/Sarajevo").format("YYYY-MM-DD");
+    const appointmentDateWithoutTime = moment(appointment_date).tz("Europe/Sarajevo");
+    const startOfDay = appointmentDateWithoutTime.startOf('day').toDate();
+    const endOfDay = appointmentDateWithoutTime.endOf('day').toDate();
 
     const existingAppointment = await Appointment.findOne({
+        patient_id:{$ne: patient._id},
         doctor_id,
-        patient_id: patient._id,
-        appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')) }
+        appointment_date: new Date(appointment_date)
     });
 
-    if (existingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
+    if (existingAppointment) return res.status(400).json("It's not possible to make appointment with this doctor at that time.");
+
+    const myExistingAppointment = await Appointment.findOne({
+        doctor_id,
+        patient_id: patient._id,
+        appointment_date: { $gte: startOfDay, $lt:endOfDay }
+    });
+
+    if (myExistingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
     
     const overlappingAppointment = await Appointment.findOne({
         doctor_id: { $ne: doctor_id },
@@ -43,9 +53,6 @@ const makeAppointment = asyncHandler( async (req, res) =>{
         reason,
         appointment_date: newDate.toDate()
     })
-
-    patient.health_card.push(newAppointment._id)
-    patient.save()
 
     return res.status(200).json(newAppointment)
 })
@@ -82,16 +89,26 @@ const editAppointmentInfo = asyncHandler ( async (req, res) => {
     const appointmentDateWithoutTime = moment(req.body.appointment_date).tz("Europe/Sarajevo").format("YYYY-MM-DD");
 
     const existingAppointment = await Appointment.findOne({
+        patient_id: {$ne : patientEditing._id},
+        doctor_id: appToEdit.doctor_id,
+        appointment_date: new Date(req.body.appointment_date)
+    });
+
+    if (existingAppointment) return res.status(400).json("It's not possible to make appointment with this doctor at that time.");
+
+
+    const myExistingAppointment = await Appointment.findOne({
+        _id: { $ne : appToEdit._id },
         doctor_id: appToEdit.doctor_id,
         patient_id: appToEdit.patient_id,
-        appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: new Date(moment(appointmentDateWithoutTime).add(1, 'day')) }
+        appointment_date: { $gte: new Date(appointmentDateWithoutTime), $lt: moment(appointmentDateWithoutTime).add(1, 'day') }
     });
-    if (existingAppointment && req.body.reason === appToEdit.reason && existingAppointment.finished) return res.status(400).json("You already have an appointment with this doctor on this day.");
+    if (myExistingAppointment) return res.status(400).json("You already have an appointment with this doctor on this day.");
     
     const overlappingAppointment = await Appointment.findOne({
         doctor_id: { $ne: appToEdit.doctor_id },
         patient_id: appToEdit.patient_id,
-        appointment_date: new Date(req.body.appointment_date),
+        appointment_date: {$eq: moment(req.body.appointment_date).tz("Europe/Sarajevo").subtract(2, "hours")},
     });
     if (overlappingAppointment) return res.status(400).json("You already have an appointment with a different doctor at that time.");
     
@@ -134,16 +151,17 @@ const getLatestAppointmentForPatientWithDoctor = asyncHandler( async (req, res) 
 })
 
 cron.schedule('* * * * *', async () => {
-    const allApp = await Appointment.find()
+    const allApp = await Appointment.find({
+        appointment_date: { $gte: new Date()}
+    })
 
-    //console.log(new Date())
-    const currentTime = new Date().getTime()
-    const twentyMinutesFromNow = currentTime + 20 * 60 * 1000;
-
+    const currentTime = moment().tz('Europe/Sarajevo');
+    const oneHourFromNow = currentTime.clone().add(1, 'hour');
     const upcomingAppointments = allApp.filter((appointment) => {
-        const appT = new Date(appointment.appointment_date).getTime()
-        return appT >= currentTime && appT <= twentyMinutesFromNow && !appointment.notification;
+        const appT = moment(appointment.appointment_date).tz('Europe/Sarajevo')
+        return appT.isBetween(currentTime, oneHourFromNow) && !appointment.notification;
     });
+
 
     upcomingAppointments.forEach(async (el) => {
         try{
@@ -154,7 +172,7 @@ cron.schedule('* * * * *', async () => {
 
             const user = await User.findById(patient.user_id)
 
-            const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${el.appointment_date}`;
+            const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${moment(el.appointment_date).tz("Europe/Sarajevo")}`;
             const subject = "Appointment reminder!"
 
             if(user.notification === true){
@@ -173,7 +191,56 @@ cron.schedule('* * * * *', async () => {
 const getAppointmentForDay = asyncHandler( async (req, res) => {
 
     const { date } = req.body;
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json("There was an error, please try again later!")
 
+    let model, mod_id;
+    let query = {}
+
+    if(user.role === 'PATIENT'){
+        model = Patient
+        mod_id = "patient_id"
+    }else{
+        model = Doctor
+        mod_id = "doctor_id"
+    }
+
+    const mod = await model.findOne({user_id: user._id})
+    if(!mod) return res.status(404).json("There was an error, please try again later!")
+    
+    const userDate = moment.tz(date, "Europe/Sarajevo");
+
+    if (!userDate.isValid()) {
+        return res.status(400).json("Invalid date format");
+    }
+
+    const startOfDay = userDate.clone().startOf('day').utc().toDate();
+    const endOfDay = userDate.clone().endOf('day').utc().toDate();
+
+    query[mod_id] = mod._id
+    query.appointment_date = {
+        $gte: startOfDay,
+        $lte: endOfDay
+    }
+
+    const appointmentsDay = await Appointment.find(query);
+
+    if (appointmentsDay) return res.status(200).json(appointmentsDay);
+
+    return res.status(404).json("There was an error, please try again later!")
+
+})
+
+const getOtherAppointmentsForDay = asyncHandler(async(req, res) => {
+    
+    const { date, doctor_id } = req.body;
+
+    const user = await User.findById(req.user._id)
+    if(!user) return res.status(404).json("There was an error, please try again later!")
+
+    const patient = await Patient.findOne({user_id: user._id})
+    if(!patient) return res.status(404).json("There is no patient with such ID!")
+    
     const userDate = moment.tz(date, "Europe/Sarajevo");
 
     if (!userDate.isValid()) {
@@ -184,16 +251,17 @@ const getAppointmentForDay = asyncHandler( async (req, res) => {
     const endOfDay = userDate.clone().endOf('day').utc().toDate();
 
     const appointmentsDay = await Appointment.find({
+        doctor_id: doctor_id,
+        patient_id: {$ne: patient._id},
         appointment_date: {
             $gte: startOfDay,
             $lte: endOfDay
-        }
+        }   
     });
 
     if (appointmentsDay) return res.status(200).json(appointmentsDay);
 
     return res.status(404).json("There was an error, please try again later!")
-
 })
 
 const getPatientsForDoctor = asyncHandler( async (req, res) => {
@@ -593,5 +661,6 @@ module.exports = {
     getLatestFinishedAppointment,
     numberOfAppointmentsPerMonthForDepartments,
     doctorAppointmentDashboard,
-    doctorDasboard
+    doctorDasboard,
+    getOtherAppointmentsForDay
 }

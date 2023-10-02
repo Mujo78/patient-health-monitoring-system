@@ -63,7 +63,7 @@ const updateUser = async (token:string, data: UpdateUserInterface ) => {
     return response.data;
 }
 
-const deactivateMyAccount = async (token:string, data: {activte: boolean} ) => {
+const deactivateMyAccount = async (token:string, data: {active: boolean} ) => {
     const response = await axios.patch(`${BASE_URL}/deactivate`, data, {
         headers: {
             "Authorization" : `Bearer ${token}`

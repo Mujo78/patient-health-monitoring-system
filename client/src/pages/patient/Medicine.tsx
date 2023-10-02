@@ -33,7 +33,7 @@ const Medicine: React.FC = () => {
   const [m, setM] = useState<MedicineType>()
   const [search, setSearch] = useState<string>("")
   const [cat, setCat] = useState<string>(categoryQ || "")
-  const [pharmacy, setPharmacy] = useState<Pharmacy>()
+  const [pharmacy, setPharmacy] = useState<Pharmacy | undefined>()
   const [loading, setLoading] = useState<boolean>(true)
   const dispatch =useAppDispatch()
 
@@ -132,7 +132,8 @@ const Medicine: React.FC = () => {
   
   return (
     <>
-      {status === 'loading' && loading ? 
+    {pharmacy !== undefined ?
+      status === 'loading' && loading ? 
       <div className='w-full h-full flex justify-center items-center'>
         <Spinner size="xl" />
       </div>
@@ -195,7 +196,7 @@ const Medicine: React.FC = () => {
           </>
           :
           <div className='h-full w-full flex-col flex justify-center items-center'>
-             <ErrorMessage text={message} size='md' className='my-auto mt-20' />
+             <ErrorMessage text={message || "No data available."} size='md' className='my-auto mt-5' />
              {searchQ && <Footer variant={1}>
                 <Button onClick={clearSearch} color='failure' className='m-3 text-white font-bold hover:underline cursor-pointer'>
                   Clear
@@ -232,7 +233,11 @@ const Medicine: React.FC = () => {
             medicine={m}
             url={m.photo.startsWith(m.name) ? `http://localhost:3001/uploads/${m.photo}` : m.photo}
         />}
-      </div>}
+      </div> : 
+      <div className='h-full flex justify-center font-Poppins items-center'>
+        <p className='text-md text-gray text-gray-400'>No data available.</p>
+      </div>
+      }
     </>
   )
 }
