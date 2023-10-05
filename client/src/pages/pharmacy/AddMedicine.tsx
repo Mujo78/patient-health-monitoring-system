@@ -12,6 +12,7 @@ import { useAppDispatch } from '../../app/hooks'
 import { toast } from 'react-hot-toast'
 import {HiXCircle} from "react-icons/hi2"
 import useSelectedPage from '../../hooks/useSelectedPage'
+import { errorMessageConvert } from '../../service/authSideFunctions'
 
 const AddMedicine: React.FC = () => {
 
@@ -72,7 +73,7 @@ const AddMedicine: React.FC = () => {
               <div className='flex-grow mr-3'>
                 <Label htmlFor='name' className='text-xs' value='Name'  />
                 <TextInput id='name' className='mt-1' {...register("name")} type='text' color={errors.name && 'failure'} />
-                <ErrorMessage text={errors.name?.message} className='text-xs mt-1' />
+                <ErrorMessage text={errors.name?.message || message.includes("name") ? errorMessageConvert(message, "name"): ""} className='text-xs mt-1' />
               </div>
               <div className='w-1/4 ml-3'>
                 <Label htmlFor='strength' className='text-xs' value='Strength (mg)'  />

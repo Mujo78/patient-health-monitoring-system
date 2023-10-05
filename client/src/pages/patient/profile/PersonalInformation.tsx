@@ -12,10 +12,13 @@ import { useSelector } from 'react-redux'
 import { authUser, setInfoAccessUser } from '../../../features/auth/authSlice'
 import { toast } from 'react-hot-toast'
 import { useAppDispatch } from '../../../app/hooks'
+import { errorMessageConvert } from '../../../service/authSideFunctions'
+import moment from 'moment'
 
 const PersonalInformation: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false)
+  const [message, setMessage] = useState<string> ("")
   const {accessUser} = useSelector(authUser)
   const dispatch = useAppDispatch()
   const { register, handleSubmit, formState, reset} = useForm<patient>({resolver: yupResolver(personValidationSchema)})
@@ -37,27 +40,30 @@ const PersonalInformation: React.FC = () => {
   }, [accessUser, reset])
 
   const onSubmit = async (data: patient) => {
-    const formatted = data.date_of_birth.setHours(data.date_of_birth.getHours() + 2)
+    const value = moment().isDST() ? 2 : 1
+    const formatted = moment(data.date_of_birth).add(value, "hours")
     const realData: unknown = {
       ...data,
-      date_of_birth: new Date(formatted).toISOString().split('T')[0]
+      date_of_birth: formatted.toISOString().split('T')[0]
     }
 
     if(realData && accessUser){
       try{
         setLoading(true)
-        const response =await updateMe(accessUser.token, realData)
-        const responseData: patient = {
-          ...response,
-          date_of_birth: new Date(response?.date_of_birth).toISOString().split('T')[0]
+        const response = await updateMe(accessUser.token, realData)
+
+        if(!response.message){
+          reset(response)
+          const userInfo = {
+            first_name: response.first_name,
+            last_name: response.last_name
+          }
+          setMessage("")
+          dispatch(setInfoAccessUser(userInfo))
+          toast.success('Successfully updated profile.')
+        }else{
+          setMessage(response.message)
         }
-        reset(responseData)
-        const userInfo = {
-          first_name: response.first_name,
-          last_name: response.last_name
-        }
-        dispatch(setInfoAccessUser(userInfo))
-        toast.success('Successfully updated profile.')
       }catch(err: any){
         console.log(err)
         setLoading(false)
@@ -114,7 +120,7 @@ const PersonalInformation: React.FC = () => {
               <div className='w-4/5'>
                 <Label htmlFor='phone_number' className='text-xs' value='Phone number'  />
                 <TextInput id='phone_number' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
-                <ErrorMessage text={errors.phone_number?.message} />
+                <ErrorMessage text={errors.phone_number?.message || message ? errorMessageConvert(message, "phone_number") : ""} />
               </div>
               <div>
                 <Label htmlFor='blood_type' className='text-xs' value='Blood Type'  />

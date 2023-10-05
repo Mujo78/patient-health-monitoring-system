@@ -2,6 +2,7 @@ const crypto = require("crypto")
 const mongoose = require("mongoose");
 const validator = require("validator")
 const bcrypt = require("bcrypt")
+const uniqueValidator = require("mongoose-unique-validator")
 
 const userSchema = mongoose.Schema({
     email:{
@@ -70,6 +71,8 @@ const userSchema = mongoose.Schema({
 }, {
     timestamps: true
 })
+
+userSchema.plugin(uniqueValidator, {message: "Email already used!"})
 
 userSchema.pre('save', async function(next){
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator")
+const uniqueValidator = require("mongoose-unique-validator")
 
 const patientSchema = mongoose.Schema({
     user_id:{
@@ -56,6 +57,8 @@ const patientSchema = mongoose.Schema({
 }, {
     timestamps: true
 })
+
+patientSchema.plugin(uniqueValidator, {message: "Phone number already used!"})
 
 patientSchema.pre(/^find/, function(next) {
     this.populate({

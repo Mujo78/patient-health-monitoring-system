@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const uniqueValidator = require("mongoose-unique-validator")
 
 const doctorSchema = mongoose.Schema({
     user_id:{
@@ -70,6 +71,8 @@ const doctorSchema = mongoose.Schema({
     }
     
 })
+
+doctorSchema.plugin(uniqueValidator, {message: "Phone number taken!"})
 
 
 doctorSchema.pre(/^find/, function(next) {

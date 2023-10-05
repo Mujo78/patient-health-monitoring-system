@@ -54,13 +54,14 @@ const verifyEmail = async (verificationToken:string) => {
 }
 
 const updateUser = async (token:string, data: UpdateUserInterface ) => {
-    const response = await axios.patch(`${BASE_URL}/update-me`, data, {
+     const response = await axios.patch(`${BASE_URL}/update-me`, data, {
         headers: {
             "Authorization" : `Bearer ${token}`
         }
     })
 
     return response.data;
+
 }
 
 const deactivateMyAccount = async (token:string, data: {active: boolean} ) => {

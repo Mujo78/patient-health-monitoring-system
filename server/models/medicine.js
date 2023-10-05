@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator")
+const uniqueValidator = require("mongoose-unique-validator")
 
 const medicineSchema = mongoose.Schema({
     name:{
@@ -44,5 +45,7 @@ const medicineSchema = mongoose.Schema({
 }, {
     timestamps: true
 })
+
+medicineSchema.plugin(uniqueValidator, {message: "Medicine with that name already exists!"})
 
 module.exports = mongoose.model('Medicine', medicineSchema);

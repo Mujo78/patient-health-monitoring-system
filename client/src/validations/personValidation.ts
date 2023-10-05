@@ -23,3 +23,18 @@ export const personValidationSchema = Yup.object({
     weight: Yup.string().default(""),
     height: Yup.string().default(""),
 })
+
+export type patientGeneralSettings = {
+    email: string,
+    notification: boolean | true
+}
+
+export const generalPatientSettings = Yup.object({
+    email: Yup.string().required("Email is required!").email("Please provide a valid eamil address!").test('email-valid', 'Email is not valid, use valid email to create an account.', (value) => {
+        if(value.includes("@hs.com")){
+            return false
+        }
+        return true
+    }),
+    notification: Yup.boolean().required("Notification field is required!")
+})

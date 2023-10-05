@@ -10,6 +10,7 @@ import { signupValidationSchema } from '../../validations/auth/signupValidation'
 import ErrorMessage from '../../components/ErrorMessage'
 import CustomButton from '../../components/CustomButton'
 import { useSelector } from 'react-redux'
+import { errorMessageConvert } from '../../service/authSideFunctions'
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("")
@@ -18,7 +19,7 @@ const SignUpForm: React.FC = () => {
   const photo = watch('photo')
   const selectedOne = photo?.length > 0 ? photo[0] : null;
   const dispatch = useAppDispatch()
-  const {status} = useSelector(authUser)
+  const {status, message} = useSelector(authUser)
 
   useEffect(() => {
     let objectURL: string;
@@ -97,7 +98,7 @@ const SignUpForm: React.FC = () => {
             <div className='w-4/5'>
               <Label htmlFor='phone_number' value='Phone number'  />
               <TextInput id='phone_number' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
-              <ErrorMessage text={errors.phone_number?.message} />
+              <ErrorMessage text={errors.phone_number?.message || message.includes("phone_number") ? errorMessageConvert(message, "phone_number") : ""} />
             </div>
             <div>
               <Label htmlFor='blood_type' value='Blood Type'  />
@@ -118,7 +119,7 @@ const SignUpForm: React.FC = () => {
             <div className='w-4/6 pr-3'>
               <Label htmlFor='email' value='Email'  />
               <TextInput id='email' {...register("email")} type='text' color={errors.email && 'failure'} />
-              <ErrorMessage text={errors.email?.message} />
+              <ErrorMessage text={errors.email?.message ? errors.email.message : message.includes("email") ? errorMessageConvert(message, "email"): ""} />
             </div>
             <div>
               <Label htmlFor='date_of_birth' value='Birth Date'  />

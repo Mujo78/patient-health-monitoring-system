@@ -13,6 +13,7 @@ import ErrorMessage from '../../../components/ErrorMessage'
 import Select from "react-select"
 import { toast } from 'react-hot-toast'
 import { useAppDispatch } from '../../../app/hooks'
+import { errorMessageConvert } from '../../../service/authSideFunctions'
 
 const availableDaysOptions = [
   { value: 'Monday', label: 'Monday' },
@@ -37,6 +38,7 @@ const PersonalInfoDoc: React.FC = () => {
   const { register, handleSubmit, control, formState,getValues, reset} = useForm<doctorType>({resolver: yupResolver(doctorValidationSchema)})
   const {errors, isDirty} = formState
   const [loading, setLoading] = useState<boolean>(false)
+  const [message, setMessage] = useState<string>("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +62,7 @@ const PersonalInfoDoc: React.FC = () => {
   }, [accessUser, reset])
   
   const onSubmit = async (data: doctorType) => {
+    console.log(data)
     const days = data?.available_days?.map((n) => n.value)
     
     const dataToSend = {
@@ -71,22 +74,26 @@ const PersonalInfoDoc: React.FC = () => {
       try{
         setLoading(true)
         const response =await updateDoctorInfo(accessUser.token, dataToSend)
-        const data = {
-          ...response,
-          available_days: response.available_days.map((n: string) => ({
-            value:n,
-            label:n
-          }))
+        if(!response.message){
+          const data = {
+              ...response,
+              available_days: response.available_days.map((n: string) => ({
+                value:n,
+                label:n
+              }))
+            }
+            reset(data)
+            const userInfo = {
+              first_name: data.first_name,
+              last_name: data.last_name
+            }
+            dispatch(setInfoAccessUser(userInfo))
+            toast.success('Successfully updated profile.')
         }
-        reset(data)
-        const userInfo = {
-          first_name: data.first_name,
-          last_name: data.last_name
-        }
-        dispatch(setInfoAccessUser(userInfo))
-        toast.success('Successfully updated profile.')
+        setMessage(response.message)
       }catch(err: any){
         console.log(err)
+        setMessage(err)
         setLoading(false)
       }finally{
         setLoading(false)
@@ -152,7 +159,7 @@ const PersonalInfoDoc: React.FC = () => {
               <div className='w-2/5'>
                 <Label htmlFor='phone_number' className='text-xs' value='Phone number'  />
                 <TextInput id='phone_number' className='mt-1' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
-                <ErrorMessage text={errors.phone_number?.message} className='text-xs' />
+                <ErrorMessage text={errors.phone_number?.message || message?.includes("phone_number") ? errorMessageConvert(message, "phone_number") : ""} className='text-xs' />
               </div>
               <div className='w-3/5 pl-3 pr-3'>
                 <Label htmlFor='address' className='text-xs' value='Address'  />

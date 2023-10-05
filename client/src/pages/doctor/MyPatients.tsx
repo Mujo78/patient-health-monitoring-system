@@ -10,15 +10,12 @@ import Pagination from '../../components/Pagination'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
 import useSelectedPage from '../../hooks/useSelectedPage'
+import { useQuery } from '../../hooks/useQery'
 
 type patients = {
   currentPage: number | null,
   data: Patient[],
   numOfPages: number
-}
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search)
 }
 
 const MyPatients: React.FC = () => {
@@ -122,7 +119,7 @@ const MyPatients: React.FC = () => {
                 <div className='flex justify-center mt-24'>
                   <Spinner size="lg" />   
                   </div> : 
-                  <div className='flex w-full flex-center flex-wrap'>
+                  <div className='flex justify-center w-full flex-wrap'>
                     {patients?.data.map((n) => (
                       <PatientCard key={n._id} className='m-1' data={n} variant={2} />
                   ))}

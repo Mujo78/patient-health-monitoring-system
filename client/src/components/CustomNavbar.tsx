@@ -68,7 +68,7 @@ const CustomNavbar: React.FC = () => {
       <div className='flex flex-row-reverse items-center relative'>
         <Link to={route}>
           <div className='flex items-center'>
-            {accessUser !== null && <CustomImg url={accessUser.data.photo} className='w-[30px] mr-1' />}
+            {accessUser !== undefined && <CustomImg url={accessUser?.data.photo} className='w-[30px] mr-1' />}
             <p className='text-xs font-semibold mr-6'>{accessUser?.info.name ? accessUser?.info.name : accessUser?.info.first_name + " " + accessUser?.info.last_name}</p>
           </div>
         </Link>

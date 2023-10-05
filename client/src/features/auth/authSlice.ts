@@ -204,7 +204,8 @@ export const updateUser = createAsyncThunk<
 >("/auth/update", async(data, thunkAPI) => {
     try{
         const token = thunkAPI.getState().auth.accessUser?.token as string;
-        return authServices.updateUser(token, data)
+        const response = await authServices.updateUser(token, data)
+        return response
     }catch(error: any){
         console.log(error)
         const message = error.response.data;
@@ -326,8 +327,8 @@ export const authSlice = createSlice({
                 state.status = 'idle'
                 if(state.accessUser){
                     state.accessUser.data = action.payload
+                    localStorage.setItem('user', JSON.stringify(state.accessUser));
                 }
-                localStorage.setItem('user', JSON.stringify(state.accessUser));
             })
             .addCase(updateUser.pending, (state) =>{
                 state.status = 'loading'

@@ -7,3 +7,8 @@ export default async (email: string) => {
 
     return response.data;
 }
+
+export function errorMessageConvert(message: string, key: string) {
+    const index = message.indexOf(key)
+    return message.slice(index + key.length + 1, message.length)
+}

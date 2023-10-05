@@ -61,22 +61,23 @@ const updateUserProfile = asyncHandler ( async(req, res) =>{
 })
 
 const updateMe = asyncHandler( async(req, res) =>{
-    console.log(req.body)
-    const updatedDoc = await User.findByIdAndUpdate(req.user._id, req.body, {
-        new: true,
-        runValidators: true
-    });
 
-    if(!updatedDoc)  return res.status(404).json("User doesn't exists!")
+    try {
+       
+        const updated = await User.findOneAndUpdate({_id: req.user._id}, req.body,{new: true, runValidators: true, context: 'query'})
+        
+        return res.status(200).json(updated)
+    } catch (error) {
+        return res.status(400).json(error.message)
+    }
 
-    return res.status(200).json(updatedDoc)
 })
 
 const updatePhoto = asyncHandler(async (req, res) =>{
     
     if(req.file) req.body.photo = req.file.filename
 
-    const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true, runValidators: true})
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true, runValidators: true, context: 'query'})
     if(!user) return res.status(404).json('User doesn\'t\ exists')
     return res.status(200).json(user.photo)
 })

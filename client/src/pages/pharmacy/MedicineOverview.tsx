@@ -6,15 +6,11 @@ import { Button, Card, Select, Spinner, TextInput } from 'flowbite-react'
 import CustomMedicineImg from '../../components/CustomMedicineImg'
 import Pagination from '../../components/Pagination'
 import ErrorMessage from '../../components/ErrorMessage'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
 import Footer from '../../components/Footer'
 import useSelectedPage from '../../hooks/useSelectedPage'
-
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search)
-}
+import { useQuery } from '../../hooks/useQery'
 
 const MedicineOverview: React.FC = () => {
 
@@ -137,7 +133,7 @@ const MedicineOverview: React.FC = () => {
                 </Select>
               </div>
             }
-          {med?.data !== undefined && med?.data?.length > 0 && status === 'idle' ?
+          {med?.data !== undefined && med?.data?.length > 0 ?
           <>
             <div className='w-full h-full flex-wrap items-start flex'>
               {med?.data?.map((m) => (
