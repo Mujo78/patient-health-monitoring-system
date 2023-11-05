@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { getPatientsForDoctor, searchForPatient } from '../../service/patientSideFunctions'
 import PatientCard from '../../components/PatientCard'
 import { Patient } from '../../features/medicine/medicineSlice'
@@ -102,14 +102,13 @@ const MyPatients: React.FC = () => {
         <div className='w-full flex flex-col min-h-full'>
           <div className='flex h-2/6 p-2 w-3/4 mx-auto items-center'>
             <TextInput
-              sizing="sm"
               className='w-full mr-3'
               name='search'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder='Search by name'
               />
-            <CustomButton onClick={handleSearch} disabled={search === ''} size='sm'>Search</CustomButton>
+            <CustomButton onClick={handleSearch} disabled={search === ''} size='md'>Search</CustomButton>
           </div>
           {loading ? <div className='flex justify-center mt-24'> <Spinner size="lg" /> </div> : 
             patients && patients.data?.length > 0 ?

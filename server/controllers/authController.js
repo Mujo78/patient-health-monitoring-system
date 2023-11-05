@@ -76,10 +76,9 @@ const signup = asyncHandler( async (req, res) =>{
         await newUser[0].save({validateBeforeSave: false});
 
         const verifyURL = `${process.env.URL_LINK}api/v1/user/verify/${verificationToken}`
-        const message = `Dear ${newPatient[0].first_name}, To verify your account please click on the link: ${verifyURL} (if this doesnt work, please copy/paste it in your browser)`
         const subject = 'Email verification (valid for 2 hours)'
 
-        if(verificationToken) await new Email(newUser[0], newPatient[0].first_name).send(subject, message)
+        if(verificationToken) await new Email(newUser[0], newPatient[0].first_name).send(subject, "verify-email", verifyURL)
 
         await session.commitTransaction()
         session.endSession()
@@ -190,10 +189,9 @@ const forgotPassword = asyncHandler ( async (req, res) => {
     try{
 
         const resetURL = `${process.env.URL_LINK}api/v1/user/reset-password/${resetToken}`
-        const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL} \n If this is not you, please ignore this email!`
         const subject = 'Your password reset token (valid for 10 minutes)';
 
-        if(resetToken) await new Email(user).send(subject, message)
+        if(resetToken) await new Email(user).send(subject,"reset-password", resetURL)
 
         return res.status(200).json("Token successfully sent!")
     }catch(err){

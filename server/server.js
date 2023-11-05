@@ -65,4 +65,6 @@ if(process.env.NODE_ENV.match('production')){
 }
 
 
-server.listen(port, () => {console.log(`Server working on port: ${port}`)})
+server.listen(port, () => {
+    console.log(`Server working on port: ${port}`)
+})

@@ -40,7 +40,7 @@ const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, classNam
     return (
         <div className={`flex items-center ${className} w-full mt-auto border-t border-gray-200 bg-white px-4 py-3 sm:px-6`}>
       <div className="flex-1">
-        <nav className="relative w-full justify-between z-0 inline-flex shadow-sm -space-x-px" aria-label="Pagination">
+        <nav className="relative w-full justify-between z-0 inline-flex -space-x-px" aria-label="Pagination">
           <div className='w-2/12'>
             {pageNum > 1 && (
                 <Link

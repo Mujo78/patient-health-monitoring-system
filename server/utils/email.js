@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer")
+const pug = require("pug")
 
 module.exports = class Email {
     constructor(user, firstName) {
@@ -31,20 +32,28 @@ module.exports = class Email {
         }
     }
 
-    async send(subject, message){
+    async send(subject, template, url){
+
+        const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
+            firstName: this.firstName,
+            subject,
+            url
+        })
+
 
         const mailOptions = {
             from: this.from,
             to: this.to,
             subject,
-            text: message
+            html,
+            text: html.toString()
         }
 
         await this.newTransport().sendMail(mailOptions)
     }
 
     async sendWelcomeMessage(){
-        await this.send("Welcome!", `Dear ${this.firstName}, Welcome to the Patient Health Monitoring System` )
+        await this.send("Welcome!",'welcome', " ")
     }
 
 }

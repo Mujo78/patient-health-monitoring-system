@@ -18,7 +18,7 @@ const PatientModal: React.FC<Props> = ({more,variant, setMore, latestAppState, l
 
   return (
     <Modal show={more} size="4xl" className='font-Poppins' position="center-right" onClose={() => setMore(false)}>
-        <Modal.Header>Last Appointment</Modal.Header>
+        <Modal.Header>{ latestAppState && latestAppState.patient_id.first_name + " " + latestAppState.patient_id.last_name + " (" + formatDate(latestAppState.appointment_date) + ")"}</Modal.Header>
         <Modal.Body>
             <div className='h-full'>
                 {loading ? 

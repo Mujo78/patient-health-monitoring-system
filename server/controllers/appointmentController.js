@@ -161,8 +161,6 @@ cron.schedule('* * * * *', async () => {
         const appT = moment(appointment.appointment_date).tz('Europe/Sarajevo')
         return appT.isBetween(currentTime, oneHourFromNow) && !appointment.notification;
     });
-
-
     upcomingAppointments.forEach(async (el) => {
         try{
 
@@ -172,11 +170,11 @@ cron.schedule('* * * * *', async () => {
 
             const user = await User.findById(patient.user_id)
 
-            const message = `Dear ${patient.first_name}, \n We would like to remind you, about your appointment. Your appointment is in: ${moment(el.appointment_date).tz("Europe/Sarajevo")}`;
+            const message = `We would like to remind you, about your appointment with Dr. ${el.doctor_id.last_name}. \n Your appointment is soon, time: ${moment(el.appointment_date).tz("Europe/Sarajevo")}`;
             const subject = "Appointment reminder!"
 
             if(user.notification === true){
-                await new Email(user).send(subject, message)
+                await new Email(user, patient.first_name).send(subject,"appointment-reminder", message)
     
                 el.notification = true
                 await el.save()

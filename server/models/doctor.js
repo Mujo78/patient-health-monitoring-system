@@ -6,7 +6,8 @@ const doctorSchema = mongoose.Schema({
     user_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        unique: true
     },
     department_id: {
         type: mongoose.Schema.Types.ObjectId,

@@ -98,7 +98,7 @@ const SignUpForm: React.FC = () => {
             <div className='w-4/5'>
               <Label htmlFor='phone_number' value='Phone number'  />
               <TextInput id='phone_number' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
-              <ErrorMessage text={errors.phone_number?.message || message.includes("phone_number") ? errorMessageConvert(message, "phone_number") : ""} />
+              <ErrorMessage text={errors.phone_number?.message || message.includes("phone_number:") ? errorMessageConvert(message, "phone_number") : ""} />
             </div>
             <div>
               <Label htmlFor='blood_type' value='Blood Type'  />
@@ -119,7 +119,7 @@ const SignUpForm: React.FC = () => {
             <div className='w-4/6 pr-3'>
               <Label htmlFor='email' value='Email'  />
               <TextInput id='email' {...register("email")} type='text' color={errors.email && 'failure'} />
-              <ErrorMessage text={errors.email?.message ? errors.email.message : message.includes("email") ? errorMessageConvert(message, "email"): ""} />
+              <ErrorMessage text={errors.email?.message ? errors.email.message : message.includes("email:") ? errorMessageConvert(message, "email"): ""} />
             </div>
             <div>
               <Label htmlFor='date_of_birth' value='Birth Date'  />

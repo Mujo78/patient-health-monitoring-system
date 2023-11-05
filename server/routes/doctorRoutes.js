@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.use(protect)
 
-router.get("/get-me",restrictTo('DOCTOR'), getMe)
+router.get("/get-me", getMe)
 router.get("/:id", getDoctor)
 
 router.use(restrictTo('HOSPITAL', 'DOCTOR'))
