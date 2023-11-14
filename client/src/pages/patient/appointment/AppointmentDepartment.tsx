@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import {getDepartments, getDoctorsForDepartment, Department}  from "../../../service/departmentSideFunctions"
 import { Spinner, Table } from 'flowbite-react'
-import CustomButton from '../../../components/CustomButton'
+import CustomButton from '../../../components/UI/CustomButton'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import {HiChevronRight} from "react-icons/hi2"
-import CustomImg from '../../../components/CustomImg'
+import CustomImg from '../../../components/UI/CustomImg'
 import { UserInfo } from '../../../features/appointment/appointmentSlice'
 import Footer from '../../../components/Footer'
 import { useSelector } from 'react-redux'
 import { authUser } from '../../../features/auth/authSlice'
-import ErrorMessage from '../../../components/ErrorMessage'
+import ErrorMessage from '../../../components/UI/ErrorMessage'
 
 export type Doctor = {
     _id: string,

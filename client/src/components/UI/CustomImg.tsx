@@ -1,5 +1,5 @@
 import React from 'react'
-import defaultImg from "../assets/default.jpg"
+import defaultImg from "../../assets/default.jpg"
 
 type Props = {
     url: string | undefined,

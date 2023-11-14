@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, Modal} from "flowbite-react"
-import CustomMedicineImg from './CustomMedicineImg'
+import CustomMedicineImg from './UI/CustomMedicineImg'
 import { Medicine } from '../features/medicine/medicineSlice'
 
 type Props={

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Logo from '../../components/Logo'
+import Logo from '../../components/UI/Logo'
 import { Alert, Label, Select, Spinner, TextInput } from 'flowbite-react'
 import img from "../../assets/default.jpg"
 import { useForm } from 'react-hook-form'
@@ -7,15 +7,17 @@ import { useAppDispatch } from '../../app/hooks'
 import { PatientUser, authUser, signup } from '../../features/auth/authSlice'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { signupValidationSchema } from '../../validations/auth/signupValidation'
-import ErrorMessage from '../../components/ErrorMessage'
-import CustomButton from '../../components/CustomButton'
+import ErrorMessage from '../../components/UI/ErrorMessage'
+import CustomButton from '../../components/UI/CustomButton'
 import { useSelector } from 'react-redux'
 import { errorMessageConvert } from '../../service/authSideFunctions'
+import {HiOutlineEyeSlash, HiOutlineEye} from 'react-icons/hi2'
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("")
   const { register, getValues, handleSubmit, watch, formState, reset} = useForm<PatientUser>({resolver: yupResolver(signupValidationSchema)})
   const {errors} = formState
+  const [showNewPassword, setShowNewPassword] = useState<boolean>(false)
   const photo = watch('photo')
   const selectedOne = photo?.length > 0 ? photo[0] : null;
   const dispatch = useAppDispatch()
@@ -34,6 +36,10 @@ const SignUpForm: React.FC = () => {
 
   const onSubmit = async (data: PatientUser) => {
     dispatch(signup(data))
+  }
+
+  const togglePassword = () =>{
+    setShowNewPassword((n) => !n)
   }
 
   useEffect(() => {
@@ -98,7 +104,7 @@ const SignUpForm: React.FC = () => {
             <div className='w-4/5'>
               <Label htmlFor='phone_number' value='Phone number'  />
               <TextInput id='phone_number' {...register("phone_number")} type='text' color={errors.phone_number && 'failure'} />
-              <ErrorMessage text={errors.phone_number?.message || message.includes("phone_number:") ? errorMessageConvert(message, "phone_number") : ""} />
+              <ErrorMessage text={errors.phone_number?.message || message?.includes("phone_number:") ? errorMessageConvert(message, "phone_number") : ""} />
             </div>
             <div>
               <Label htmlFor='blood_type' value='Blood Type'  />
@@ -129,7 +135,19 @@ const SignUpForm: React.FC = () => {
           </div>
             <div>
               <Label htmlFor='password' value='Password'  />
-              <TextInput {...register("password")} id='password' type='password' color={errors.password && 'failure'} />
+              <div className='relative'>
+                <TextInput {...register("password")} id='password' type={showNewPassword ? 'text' : 'password'} color={errors.password && 'failure'} />
+                <div 
+                 className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                 onClick={togglePassword}
+                >
+                   {showNewPassword ? (
+                                    <HiOutlineEyeSlash />
+                                    ) : (
+                                    <HiOutlineEye />
+                                    )}
+                </div>
+              </div>
               <ErrorMessage text={errors.password?.message} />
             </div>
             <div>

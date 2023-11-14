@@ -15,7 +15,7 @@ type Props = {
 const CalendarAppointment: React.FC<Props> = ({value, setValue, handleGetAppForADay,docAvailable, variant}) => {
 
   return (
-    <Calendar className={`font-Poppins shadow-xl border-gray-300 ${variant === 1 ? 'text-md mt-3 w-full rounded-xl p-4' : 'text-sm mt-0  h-fit p-2'}`} 
+    <Calendar className={`font-Poppins shadow-xl border-gray-300 rounded-xl ${variant === 1 ? 'text-md mt-3 w-full p-4' : 'text-sm mt-0  h-fit p-2'}`} 
             onChange={setValue}
             onClickDay={handleGetAppForADay}
             locale='eng'

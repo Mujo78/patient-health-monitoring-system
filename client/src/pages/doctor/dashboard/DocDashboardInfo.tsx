@@ -1,7 +1,7 @@
 import React from 'react'
 import { DocDashboardInfoType, formatDate, formatStartEnd } from '../../../service/appointmentSideFunctions'
 import { Card } from 'flowbite-react'
-import CustomImg from '../../../components/CustomImg'
+import CustomImg from '../../../components/UI/CustomImg'
 import { PieChart, Pie, ResponsiveContainer, Tooltip, Legend, Cell } from 'recharts';
 import moment from 'moment'
 

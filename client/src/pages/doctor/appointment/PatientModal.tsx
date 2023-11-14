@@ -1,5 +1,5 @@
 import React from 'react'
-import ErrorMessage from '../../../components/ErrorMessage'
+import ErrorMessage from '../../../components/UI/ErrorMessage'
 import { Button, Modal, Spinner } from 'flowbite-react'
 import { formatDate, formatStartEnd } from '../../../service/appointmentSideFunctions'
 import moment from 'moment'

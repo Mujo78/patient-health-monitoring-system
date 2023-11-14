@@ -1,7 +1,7 @@
 import { Card } from 'flowbite-react'
 import React from 'react'
 import { Patient } from '../features/medicine/medicineSlice'
-import CustomImg from './CustomImg'
+import CustomImg from './UI/CustomImg'
 import moment from 'moment'
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -25,7 +25,7 @@ const PatientCard: React.FC<Props> = ({data, variant, className}) => {
     return (
     <Card onClick={handleNavigate} className={` ${className} max-w-[290px] w-full font-Poppins h-fit ${variant === 2 && 'cursor-pointer'}`}>
     {variant === 1 && <p className='text-blue-700 font-semibold'>Patient</p>}
-    {variant === 2 && <CustomImg url={data.user_id.photo} className='w-[70px] mx-auto' />}
+    {variant === 2 && <CustomImg url={data?.user_id?.photo} className='w-[70px] mx-auto' />}
     <h1 className='text-xl font-bold text-center'>{data.first_name + " " + data.last_name}</h1>
       {variant === 1 && <p className='text-gray-500'>Details</p>}
       <hr/>

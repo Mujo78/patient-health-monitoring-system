@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import { Tabs, ListGroup, Textarea , Badge } from 'flowbite-react';
 import { appointment, editAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
-import ErrorMessage from '../../../components/ErrorMessage';
+import ErrorMessage from '../../../components/UI/ErrorMessage';
 import { useSelector } from 'react-redux';
 import {HiOutlinePencilSquare, HiOutlineDocumentDuplicate} from "react-icons/hi2"
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { Value } from './MakeAppointment';
 import { useAppDispatch } from '../../../app/hooks';
-import { availableTimeForApp, convert12HourTo24Hour, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
-import CustomButton from '../../../components/CustomButton';
+import { availableTimeForApp, convert12HourTo24Hour, isDSTFunc, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
+import CustomButton from '../../../components/UI/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import moment from 'moment';
@@ -32,7 +32,7 @@ const AppointmentOverviewEdit: React.FC = () => {
   const {accessUser} = useSelector(authUser)
   const d = sApp?.appointment_date;
   const r = sApp?.reason === '' ? '' : sApp?.reason as string
-  const t = convert12HourTo24Hour(moment.utc(sApp?.appointment_date).add(2, "hours").toString().slice(15, 21) as string)
+  const t = convert12HourTo24Hour(moment.utc(sApp?.appointment_date).add(isDSTFunc(), "hours").toString().slice(15, 21) as string)
   const [time, setTime] = useState<string[] | null>()
   const [value, setValue] = useState<Value>(new Date(sApp?.appointment_date as Date))
   const [newTime, setNewTime] = useState<string>(t)
@@ -40,6 +40,8 @@ const AppointmentOverviewEdit: React.FC = () => {
   const [medicine, setMedicine] = useState<Medicine>()
   const [show, setShow] = useState<boolean>(false)
   let active;
+
+  console.log(newTime)
 
   useEffect(() =>{
     async function fetchData(){
@@ -125,7 +127,7 @@ const AppointmentOverviewEdit: React.FC = () => {
   }
 
   const url = medicine?.photo.startsWith(medicine.name) ? `http://localhost:3001/uploads/${medicine.photo}` : medicine?.photo
-
+  console.log(newTime)
   
   return (
     <>
@@ -189,7 +191,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                         <ErrorMessage text='You can not make appointment today' size='sm' /> 
                       </div> 
                       : availableTime && availableTime.length > 0 ? availableTime.map((n) => 
-                      <Badge  size="sm" key={n} onClick={() => setTimeForDate(n)} color="gray" className={`m-1 ${newTime === n && 'bg-blue-700 text-white hover:text-white'} cursor-pointer  focus:!ring-blue-600`}>{
+                      <Badge  size="sm" key={n} onClick={() => setTimeForDate(n)} color="gray" className={`m-1 ${newTime === convert12HourTo24Hour(n) && 'bg-blue-700 text-white hover:text-white'} cursor-pointer  focus:!ring-blue-600`}>{
                         parseInt(n.split(":")[0]) < 9 ? `${n} PM` : `${n} AM`
                       }</Badge >
                       ) : <p className='text-sm mx-auto my-auto'>There are no more available appointments for this day</p>}

@@ -19,8 +19,12 @@ const notificationSchema = mongoose.Schema({
     },
     type:{
         type: String,
-        enum: ["MESSAGE", "ALERT"],
+        enum: ["MESSAGE", "ALERT", "INFO"],
         required: [true, "Type is required!"]
+    },
+    link: {
+        type: String,
+        required: false
     },
     read: {
         type: Boolean,

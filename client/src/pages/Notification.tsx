@@ -62,12 +62,15 @@ const Notification: React.FC = () => {
                     </div>
                 </div> : 
                 <div className='flex flex-col h-full gap-6 justify-center items-center'>
-                    <h2 className={`${oneNotification?.type === 'ALERT' && 'text-red-600'} font-bold text-lg`}>{oneNotification?.name}</h2>
+                    <h2 className={`${oneNotification?.type === 'ALERT' ? 'text-red-600' : 'text-green-600'} font-bold text-lg`}>{oneNotification?.name}</h2>
                     <div className='w-2/3 gap-3'>
                         <p className='text-sm text-justify text-gray-600'>{oneNotification?.content}</p>
-                        <p className='text-xs text-end'>
-                            Support email: <Link className='text-blue-700 hover:!underline' to={mailtoLink} > {import.meta.env.VITE_EMAIL_SUPPORT}</Link>
-                        </p>
+                        <div className='flex justify-between w-full mt-2'>
+                            {oneNotification?.link && <Link to={oneNotification?.link} className='text-md underline text-green-600'>See Appointment Results</Link>}
+                            <p className='text-xs ml-auto text-end'>
+                                Support email: <Link className='text-blue-700 hover:!underline' to={mailtoLink} > {import.meta.env.VITE_EMAIL_SUPPORT}</Link>
+                            </p>
+                        </div>
                     </div>
 
                 </div>

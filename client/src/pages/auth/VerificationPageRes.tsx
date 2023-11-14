@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { authUser, reset } from '../../features/auth/authSlice'
-import CustomButton from '../../components/CustomButton'
+import CustomButton from '../../components/UI/CustomButton'
 import img from "../../assets/check.png"
 import { useAppDispatch } from '../../app/hooks'
 

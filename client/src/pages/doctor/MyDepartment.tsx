@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import { authUser } from '../../features/auth/authSlice'
 import { getMyDepartment, getMyDepartmentAppointments, myDepartmentAppointments, myDepartmentResult } from '../../service/departmentSideFunctions'
 import { Card, Spinner, Table, Tabs } from 'flowbite-react'
-import CustomImg from '../../components/CustomImg'
-import ErrorMessage from '../../components/ErrorMessage'
+import CustomImg from '../../components/UI/CustomImg'
+import ErrorMessage from '../../components/UI/ErrorMessage'
 import {HiOutlineUser,HiOutlineUserGroup, HiOutlineCalendarDays, HiOutlineCheckCircle, HiOutlineClock} from "react-icons/hi2"
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, Cell, BarChart, CartesianGrid, Bar, YAxis, XAxis } from 'recharts';
-import CustomCardTooltip from '../../components/CustomCardTooltip'
+import CustomCardTooltip from '../../components/UI/CustomCardTooltip'
 import useSelectedPage from '../../hooks/useSelectedPage'
 
 const COLORS = ['#2986cc','#c90076', '#cccccc']

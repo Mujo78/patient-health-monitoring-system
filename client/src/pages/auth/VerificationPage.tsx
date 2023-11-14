@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import CustomButton from '../../components/CustomButton'
+import CustomButton from '../../components/UI/CustomButton'
 import { useNavigate, useParams } from 'react-router-dom'
 import hospitalImg from "../../assets/hospital-logo.jpg"
 import { useAppDispatch } from '../../app/hooks'

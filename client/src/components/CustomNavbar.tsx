@@ -5,7 +5,7 @@ import { authUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
 import {HiOutlineBell} from "react-icons/hi2"
 import { useAppDispatch } from '../app/hooks';
-import CustomImg from './CustomImg';
+import CustomImg from './UI/CustomImg';
 import socket from '../socket';
 import { addNotification, getPersonNotifications, notification, restartPersonNotifications } from '../features/notification/notificationSlice';
 import NavBarDropdown from './NavBarDropdown';
@@ -33,9 +33,14 @@ const CustomNavbar: React.FC = () => {
             dispatch(addNotification(data))
         })
 
+        socket.on("appointment_finished", (data) => {
+          dispatch(addNotification(data))
+        })
+
         return () =>{
             socket.off('first_message')
             socket.off('appointment_canceled')
+            socket.off("appointment_finished")
         }
 
     }, [dispatch, accessUser])

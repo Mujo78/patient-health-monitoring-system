@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {Button, Label, Modal, Tabs, TextInput } from 'flowbite-react';
-import CustomButton from './CustomButton';
+import CustomButton from './UI/CustomButton';
 import { HiEnvelope } from 'react-icons/hi2';
 import { useAppDispatch } from '../app/hooks';
 import forgotPasswordMethod from "../service/authSideFunctions"

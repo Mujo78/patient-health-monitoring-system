@@ -1,7 +1,7 @@
 import React from 'react'
 import { PharmacyDashboardType } from '../../../service/pharmacySideFunctions'
 import { Card } from 'flowbite-react'
-import CustomMedicineImg from '../../../components/CustomMedicineImg'
+import CustomMedicineImg from '../../../components/UI/CustomMedicineImg'
 import { formatDate } from '../../../service/appointmentSideFunctions'
 import { Link } from 'react-router-dom'
 

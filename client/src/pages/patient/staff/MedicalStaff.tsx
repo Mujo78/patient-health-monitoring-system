@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { authUser } from '../../../features/auth/authSlice'
 import { Spinner, Table } from 'flowbite-react'
 import {HiChevronRight} from "react-icons/hi2"
-import ErrorMessage from '../../../components/ErrorMessage'
+import ErrorMessage from '../../../components/UI/ErrorMessage'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import useSelectedPage from '../../../hooks/useSelectedPage'
 

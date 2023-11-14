@@ -2,7 +2,7 @@ import React from 'react'
 import img from "../../assets/check.png"
 import { useSelector } from 'react-redux'
 import { authUser } from '../../features/auth/authSlice'
-import CustomButton from '../../components/CustomButton'
+import CustomButton from '../../components/UI/CustomButton'
 import { useNavigate } from 'react-router-dom'
 
 

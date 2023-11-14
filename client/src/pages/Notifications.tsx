@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { deleteAllNotifications, getPersonNotifications, markAllAsRead, notification } from '../features/notification/notificationSlice'
 import { Table } from 'flowbite-react'
-import ErrorMessage from '../components/ErrorMessage'
+import ErrorMessage from '../components/UI/ErrorMessage'
 import moment from 'moment'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../app/hooks'
 import useSelectedPage from '../hooks/useSelectedPage'
+import { colorPick } from '../service/authSideFunctions'
 
 const Notifications: React.FC = () => {
 
@@ -50,7 +51,7 @@ const deleteAll = () => {
               <Table.Row key={n._id} onClick={() => handleNavigate(n._id)} className={`cursor-pointer hover:!bg-gray-200 ${selected === n._id && '!bg-gray-200'}  ${n.read ? 'bg-gray-100' : 'bg-white'}` }>
                   <Table.Cell className='flex gap-2 items-center p-2'>
                     <div className='flex flex-col w-full text-xs'>
-                      <h3 className={`font-bold text-[10px] ${n.type === 'MESSAGE' ? 'text-blue-700' : 'text-red-600'}`}>{n.name}</h3>
+                      <h3 className={`font-bold text-[10px] ${colorPick(n.type)}`}>{n.name}</h3>
                       <div className='text-[9px] flex justify-between w-full'>
                         <p className='w-3/4'>{n.content.slice(0, 50)}</p>
                         <p className='mt-auto'>{moment(n.createdAt).format('hh:mm A')}</p>

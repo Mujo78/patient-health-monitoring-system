@@ -26,6 +26,7 @@ const createToken = async (user, statusCode, res) =>{
     user.password = undefined
 
     const info = await ModelToUse.findOne({user_id: user._id})
+
     let inf = {}
 
     if(info.name){

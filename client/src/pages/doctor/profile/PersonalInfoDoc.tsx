@@ -8,8 +8,8 @@ import { doctorType, doctorValidationSchema } from '../../../validations/doctorV
 import { getDoctorInfo, updateDoctorInfo } from '../../../service/personSideFunctions'
 import { Label, Spinner, TextInput, Textarea, Select as CustomSelect} from 'flowbite-react'
 import Footer from '../../../components/Footer'
-import CustomButton from '../../../components/CustomButton'
-import ErrorMessage from '../../../components/ErrorMessage'
+import CustomButton from '../../../components/UI/CustomButton'
+import ErrorMessage from '../../../components/UI/ErrorMessage'
 import Select from "react-select"
 import { toast } from 'react-hot-toast'
 import { useAppDispatch } from '../../../app/hooks'

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Calendar from 'react-calendar'
 import { Value } from '../pages/patient/appointment/MakeAppointment'
 import { formatDate, formatStartEnd, isCurrentAppointment } from '../service/appointmentSideFunctions'
-import CustomImg from './CustomImg'
+import CustomImg from './UI/CustomImg'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../app/hooks'
 import { useSelector } from 'react-redux'
@@ -134,7 +134,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({variant}) => {
                                 </Table.Row> )) : 
                                 <Table.Row>
                                     <Table.Cell className='text-center py-3 w-full text-gray-500'>
-                                        You haven't have any appointments today!
+                                        You don't have any appointments today!
                                     </Table.Cell>
                             </Table.Row> 
                             }

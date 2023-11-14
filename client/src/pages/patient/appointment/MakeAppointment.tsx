@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import CustomButton from '../../../components/CustomButton';
+import CustomButton from '../../../components/UI/CustomButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, Spinner, Textarea } from 'flowbite-react';
-import CustomImg from '../../../components/CustomImg';
+import CustomImg from '../../../components/UI/CustomImg';
 import { Doctor } from './AppointmentDepartment';
 import { availableTimeForApp, convert12HourTo24Hour, getDoctor, isDoctorAvailable } from '../../../service/appointmentSideFunctions';
 import {HiOutlineClock} from "react-icons/hi2"
@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { appointment, bookAppointment, getAppointmentsForADay, reset, resetAppointmentDay } from '../../../features/appointment/appointmentSlice';
 import { toast } from 'react-hot-toast';
 import Footer from '../../../components/Footer';
-import ErrorMessage from '../../../components/ErrorMessage';
+import ErrorMessage from '../../../components/UI/ErrorMessage';
 import CalendarAppointment from '../../../components/CalendarAppointment';
 import { authUser } from '../../../features/auth/authSlice';
 import useSelectedPage from '../../../hooks/useSelectedPage';

@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import { authUser } from '../../../features/auth/authSlice'
 import { DepartmentAllInfo, getDepartmentAllInfo } from '../../../service/departmentSideFunctions'
 import {HiOutlineXMark} from "react-icons/hi2"
-import ErrorMessage from '../../../components/ErrorMessage'
+import ErrorMessage from '../../../components/UI/ErrorMessage'
 import { Card, Spinner } from 'flowbite-react'
-import CustomImg from '../../../components/CustomImg'
+import CustomImg from '../../../components/UI/CustomImg'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 
 const MedicalStaffDepartment: React.FC = () => {

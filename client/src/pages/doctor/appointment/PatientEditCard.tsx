@@ -2,8 +2,9 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { appointment } from '../../../features/appointment/appointmentSlice'
 import { Button, Card } from 'flowbite-react'
-import CustomImg from '../../../components/CustomImg'
+import CustomImg from '../../../components/UI/CustomImg'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 type Props = {
     setShowMore : React.Dispatch<React.SetStateAction<boolean>>
@@ -22,7 +23,7 @@ const PatientEditCard: React.FC<Props> = ({setShowMore}) => {
     {selected && <Card className='max-w-xs font-Poppins h-fit ml-auto'>
         <p className='text-blue-700 font-semibold'>Patient</p>
         <CustomImg url={selected?.patient_id.user_id.photo} className='w-[150px] mx-auto rounded-xl' />
-        <h1 className='text-xl font-bold text-center'>{selected?.patient_id.first_name + " " + selected?.patient_id.last_name}</h1>
+        <Link to={`/my-patients/${selected?.patient_id?._id}`} className='text-xl font-bold text-center'>{selected?.patient_id.first_name + " " + selected?.patient_id.last_name}</Link>
         <p className='text-gray-500'>Details</p>
         <hr/>
         <p className="flex text-sm text-gray-500 justify-between">

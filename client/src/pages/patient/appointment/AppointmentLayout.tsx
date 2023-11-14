@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CustomButton from '../../../components/CustomButton'
+import CustomButton from '../../../components/UI/CustomButton'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 const AppointmentLayout: React.FC = () => {

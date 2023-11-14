@@ -10,11 +10,11 @@ import Select from 'react-select'
 import Footer from '../../../components/Footer';
 import {HiXCircle} from "react-icons/hi2"
 import { toast } from 'react-hot-toast';
-import CustomButton from '../../../components/CustomButton';
+import CustomButton from '../../../components/UI/CustomButton';
 import { formatDate, formatStartEnd, getLatestAppointment } from '../../../service/appointmentSideFunctions';
 import PatientEditCard from './PatientEditCard';
 import PatientModal from './PatientModal';
-import ErrorMessage from '../../../components/ErrorMessage';
+import ErrorMessage from '../../../components/UI/ErrorMessage';
 import { authUser } from '../../../features/auth/authSlice';
 import socket from '../../../socket';
 
@@ -110,7 +110,7 @@ const DocAppointment: React.FC = () => {
                         doctor_name: `${selected.doctor_id.first_name + ' ' + selected.doctor_id.last_name}`,
                         doctor_spec: selected.doctor_id.speciality
                     }
-                    socket.emit('appointment_cancel', selectedInfo, selected.patient_id.user_id._id, accessUser.data.role)
+                    socket.emit('appointment_cancel', selectedInfo, selected.patient_id.user_id._id, accessUser?.data.role)
                     navigate("../", {replace: true})
                     toast.error("Appointment cancelled")
                 }
@@ -140,8 +140,15 @@ const DocAppointment: React.FC = () => {
             const id: string = selected._id
             dispatch(makeAppointmentFinished({id, finishAppointment})).then((action) => {
                 if(typeof action.payload === 'object'){
+                    const selectedInfo = {
+                        _id: selected._id,
+                        app_date: `${formatDate(selected.appointment_date)}, ${formatStartEnd(selected.appointment_date)}`,
+                        doctor_name: `${selected.doctor_id.first_name + ' ' + selected.doctor_id.last_name}`,
+                        doctor_spec: selected.doctor_id.speciality
+                    }
+                    socket.emit("appointment_finished", selectedInfo, selected.patient_id.user_id._id, accessUser?.data.role)
                     navigate("../", {replace:true})
-                    toast.success("Successfully edited appointment.")
+                    toast.success("Successfully finished appointment.")
                 }
             })
         }

@@ -9,6 +9,7 @@ export interface Notification {
     user_id: string,
     content: string,
     type: string,
+    link?: string,
     read: boolean,
     createdAt: Date
 }

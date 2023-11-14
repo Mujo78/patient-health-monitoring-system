@@ -4,7 +4,7 @@ import { formatDate, formatStartEnd, getLatestFinished } from '../../service/app
 import { useSelector } from 'react-redux'
 import { appointment, doctor_id, patient_id } from '../../features/appointment/appointmentSlice'
 import { useAppDispatch } from '../../app/hooks'
-import CustomImg from '../../components/CustomImg'
+import CustomImg from '../../components/UI/CustomImg'
 import { useNavigate } from 'react-router-dom'
 import { authUser, firstTime } from '../../features/auth/authSlice'
 import moment from 'moment'

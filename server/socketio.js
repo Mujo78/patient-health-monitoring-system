@@ -45,6 +45,25 @@ module.exports = function (io) {
         }
       })
 
+    socket.on("appointment_finished", async (app, userId, doc) => {
+      const user = await User.findById(userId)
+      if(user && doc === 'DOCTOR'){
+        const message = `Dear, \nWe are pleased to inform you that the results for your appointment scheduled for ${app.app_date} with Dr. ${app.doctor_name} (${app.doctor_spec}) are now available.\nIf you have any questions about the results or need further clarification, please don't hesitate to contact us.\nThank you for choosing our services.\nSincerely`
+        
+        const appointmentFinishedEvent = await Notification.create({
+          user_id: user._id,
+          name: "Appointment's Results Available!",
+          content: message,
+          type: 'INFO',
+          link: `/my-appointments/${app._id}`,
+          read: false
+        })
+
+        usersIo[user._id]?.emit("appointment_finished", appointmentFinishedEvent)
+      
+      }
+    })
+
     socket.on('disconnect', (userId) => {
       console.log(`User with id ${userId} disconnected from socket`);
       usersIo[userId] = null;
