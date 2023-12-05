@@ -1,117 +1,109 @@
 import axios from "axios";
 
 export type PharmacyUpdateType = {
-    name: string,
-    address: string,   
-    description: string,
-    phone_number: string,       
-    working_hours: string
+  name: string;
+  address: string;
+  description: string;
+  phone_number: string;
+  working_hours: string;
+};
+
+const BASE_URL = "http://localhost:3001/api/v1/pharmacy/";
+
+export async function getData(token: string) {
+  const response = await axios.get(`${BASE_URL}/get-me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 }
 
-
-const BASE_URL = 'http://localhost:3001/api/v1/pharmacy/'
-
-export async function getData(token: string){
-
-    const response = await axios.get(`${BASE_URL}/get-me`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-    return response.data;
+export async function getPharmacy(token: string) {
+  const response = await axios.get(`${BASE_URL}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 }
 
-export async function getPharmacy(token: string){
-
-    const response = await axios.get(`${BASE_URL}`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-    return response.data;
-}
-
-
-export async function updateData(data: PharmacyUpdateType, token: string){
-
-    const response = await axios.patch(`${BASE_URL}/`,data, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-    return response.data;
+export async function updateData(data: PharmacyUpdateType, token: string) {
+  const response = await axios.patch(`${BASE_URL}/`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 }
 
 type PharmacyMainInfo = {
-    _id: string,
-    name: string,
-    address: string,
-    phone_number: string,
-    working_hours: string
-}
+  _id: string;
+  name: string;
+  address: string;
+  phone_number: string;
+  working_hours: string;
+};
 
 type Total = {
-    total_price: number,
-    total_number: number,
-    total_available: number,
-    total_not_available: number
-}
+  total_price: number;
+  total_number: number;
+  total_available: number;
+  total_not_available: number;
+};
 
 type recentMedicine = {
-    _id: string,
-    name: string,
-    photo: string,
-    strength: string,
-    createdAt: Date
-}
+  _id: string;
+  name: string;
+  photo: string;
+  strength: string;
+  createdAt: Date;
+};
 
 export type PharmacyDashboardType = {
-    pharmacy: PharmacyMainInfo,
-    total: Total,
-    recentMedicine: recentMedicine[]
-}
+  pharmacy: PharmacyMainInfo;
+  total: Total;
+  recentMedicine: recentMedicine[];
+};
 
-export async function pharmacyDashboard(token: string){
+export async function pharmacyDashboard(token: string) {
+  const response = await axios.get(`${BASE_URL}/dashboard`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    const response = await axios.get(`${BASE_URL}/dashboard`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return response.data;
+  return response.data;
 }
 
 type PieCategories = {
-    name: string,
-    value: number
-}
+  name: string;
+  value: number;
+};
 
 type topExpensive = {
-    name: string,
-    value: number
-}
+  name: string;
+  value: number;
+};
 
 type usedMedicine = {
-    _id: string,
-    name: string,
-    value: number
-}
+  _id: string;
+  name: string;
+  value: number;
+};
 
 export type PharmacyDashboardInfoType = {
-    data: PieCategories[],
-    topExpensive: topExpensive[],
-    usedMedicine: usedMedicine[]
+  data: PieCategories[];
+  topExpensive: topExpensive[];
+  usedMedicine: usedMedicine[];
+};
+
+export async function pharmacyDashboardInfo(token: string) {
+  const response = await axios.get(`${BASE_URL}/dashboard-info`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 }
-
-export async function pharmacyDashboardInfo(token: string){
-
-    const response = await axios.get(`${BASE_URL}/dashboard-info`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    return response.data;
-}
-

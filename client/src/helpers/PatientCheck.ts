@@ -1,14 +1,14 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from "react-router-dom";
 
 const PatientCheck = () => {
-    const user = localStorage.getItem("user")
-    const userObj = user && JSON.parse(user)
+  const user = localStorage.getItem("user");
+  const userObj = user && JSON.parse(user);
 
-    if (userObj?.data.role !== 'PATIENT') {
-        return redirect('/error-page');
-    }
+  if (userObj?.data.role !== "PATIENT") {
+    return redirect("/error-page");
+  }
 
-    return null
-}
+  return null;
+};
 
-export default PatientCheck
+export default PatientCheck;

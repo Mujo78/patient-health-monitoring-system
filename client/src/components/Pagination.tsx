@@ -1,88 +1,108 @@
-import React, { useState } from 'react'
-import {HiArrowLongLeft, HiArrowLongRight} from "react-icons/hi2"
-import { Link, useLocation } from 'react-router-dom'
+import React, { useState } from "react";
+import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
+import { Link, useLocation } from "react-router-dom";
 
 type Props = {
-    page: number,
-    totalPages: number,
-    handleNavigate: (page: number) => void,
-    className?: string
-}
+  page: number;
+  totalPages: number;
+  handleNavigate: (page: number) => void;
+  className?: string;
+};
 
-const Pagination: React.FC<Props> = ({page, totalPages, handleNavigate, className}) => {
+const Pagination: React.FC<Props> = ({
+  page,
+  totalPages,
+  handleNavigate,
+  className,
+}) => {
+  const [pageNum, setPageNum] = useState<number>(page || 1);
+  const location = useLocation();
+  let searchParam: string = "";
+  let searchParamCategory: string = "";
 
-    const [pageNum, setPageNum] = useState<number>(page || 1)
-    const location = useLocation()
-    let searchParam: string = '';
-    let searchParamCategory: string = '';
-    
-    if(location.search.includes('searchQuery')){
-        searchParam = location.search.slice(1, location.search.indexOf('&') + 1)
-    }
-    if(location.search.includes('category')){
-      searchParamCategory = location.search.slice(location.search.indexOf('category') ,location.search.length)
+  if (location.search.includes("searchQuery")) {
+    searchParam = location.search.slice(1, location.search.indexOf("&") + 1);
+  }
+  if (location.search.includes("category")) {
+    searchParamCategory = location.search.slice(
+      location.search.indexOf("category"),
+      location.search.length
+    );
   }
 
-    const handlePageChange = (newPage: number) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            setPageNum(newPage);
-            handleNavigate(newPage)
-        }
-      };
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPageNum(newPage);
+      handleNavigate(newPage);
+    }
+  };
 
+  const pageRange = 5;
+  const startPage = Math.max(1, pageNum - pageRange);
+  const endPage = Math.min(totalPages, pageNum + pageRange);
 
-    const pageRange = 5;
-    const startPage = Math.max(1, pageNum - pageRange);
-    const endPage = Math.min(totalPages, pageNum + pageRange);
+  const pagesToDisplay = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
 
-    const pagesToDisplay = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-
-    return (
-        <div className={`flex items-center ${className} w-full mt-auto border-t border-gray-200 bg-white px-4 py-3 sm:px-6`}>
+  return (
+    <div
+      className={`flex items-center ${className} w-full mt-auto border-t border-gray-200 bg-white px-4 py-3 sm:px-6`}
+    >
       <div className="flex-1">
-        <nav className="relative w-full justify-between z-0 inline-flex -space-x-px" aria-label="Pagination">
-          <div className='w-2/12'>
+        <nav
+          className="relative w-full justify-between z-0 inline-flex -space-x-px"
+          aria-label="Pagination"
+        >
+          <div className="w-2/12">
             {pageNum > 1 && (
-                <Link
-                to={`?${searchParam && searchParam}page=${pageNum - 1}${searchParamCategory && `&${searchParamCategory}`}`}
+              <Link
+                to={`?${searchParam && searchParam}page=${pageNum - 1}${
+                  searchParamCategory && `&${searchParamCategory}`
+                }`}
                 onClick={() => handlePageChange(pageNum - 1)}
                 className="relative inline-flex justify-start items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
-                >
+              >
                 <HiArrowLongLeft />
-                </Link>
+              </Link>
             )}
           </div>
-          <div className='flex justify-center items-center'>
+          <div className="flex justify-center items-center">
             {pagesToDisplay.map((pageNumber) => (
-                <Link
+              <Link
                 key={pageNumber}
-                to={`?${searchParam && searchParam}page=${pageNumber}${searchParamCategory && `&${searchParamCategory}`}`}
+                to={`?${searchParam && searchParam}page=${pageNumber}${
+                  searchParamCategory && `&${searchParamCategory}`
+                }`}
                 onClick={() => handlePageChange(pageNumber)}
                 className={`relative inline-flex items-center mx-auto justify-center rounded-lg px-4 py-2 text-sm font-medium ${
-                    pageNumber === pageNum
-                    ? 'text-blue-600 bg-indigo-100'
-                    : 'text-gray-700 bg-white hover:bg-gray-50'
+                  pageNumber === pageNum
+                    ? "text-blue-600 bg-indigo-100"
+                    : "text-gray-700 bg-white hover:bg-gray-50"
                 }`}
-                >
+              >
                 {pageNumber}
-                </Link>
+              </Link>
             ))}
           </div>
-          <div className='flex justify-end w-2/12'>
+          <div className="flex justify-end w-2/12">
             {pageNum < totalPages && (
-                <Link
-                to={`?${searchParam && searchParam}page=${ pageNum + 1}${searchParamCategory && `&${searchParamCategory}`}`}
+              <Link
+                to={`?${searchParam && searchParam}page=${pageNum + 1}${
+                  searchParamCategory && `&${searchParamCategory}`
+                }`}
                 onClick={() => handlePageChange(pageNum + 1)}
                 className="relative inline-flex items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
-                >
+              >
                 <HiArrowLongRight />
-                </Link>
+              </Link>
             )}
           </div>
         </nav>
       </div>
     </div>
   );
-}
+};
 
-export default Pagination
+export default Pagination;

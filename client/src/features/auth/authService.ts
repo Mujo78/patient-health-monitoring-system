@@ -1,125 +1,144 @@
+import axios from "axios";
+import {
+  LoginUser,
+  PatientUser,
+  ResetPassword,
+  UpdateUserInterface,
+  changePasswordInterface,
+} from "./authSlice";
 
-import axios from "axios"
-import { LoginUser, PatientUser, ResetPassword, UpdateUserInterface, changePasswordInterface } from "./authSlice"
+const BASE_URL = "http://localhost:3001/api/v1/user";
 
-const BASE_URL = "http://localhost:3001/api/v1/user"
+const login = async (loginData: LoginUser) => {
+  const response = await axios.post(`${BASE_URL}/login`, loginData);
 
-const login = async(loginData: LoginUser) => {
-    const response = await axios.post(`${BASE_URL}/login`, loginData)
+  if (response.data) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
 
-    if(response.data){
-        localStorage.setItem('user', JSON.stringify(response.data))
-    }
+  return response.data;
+};
 
-    return response.data
-}
+const signup = async (signupData: PatientUser) => {
+  const form = new FormData();
+  form.append("first_name", signupData.first_name);
+  form.append("last_name", signupData.last_name);
+  form.append("phone_number", signupData.phone_number);
+  form.append("address", signupData.address);
+  form.append("gender", signupData.gender);
+  form.append("photo", signupData.photo ? signupData.photo[0] : "");
+  form.append("blood_type", signupData.blood_type);
+  form.append("date_of_birth", signupData.date_of_birth.toString());
+  form.append("email", signupData.email);
+  form.append("password", signupData.password);
+  form.append("passwordConfirm", signupData.passwordConfirm);
 
-const signup = async(signupData: PatientUser) => {
-    const form = new FormData()
-    form.append("first_name", signupData.first_name)
-    form.append("last_name", signupData.last_name)
-    form.append("phone_number", signupData.phone_number)
-    form.append("address", signupData.address)
-    form.append("gender", signupData.gender)
-    form.append("photo", signupData.photo ? signupData.photo[0] : "")
-    form.append("blood_type", signupData.blood_type)
-    form.append("date_of_birth", signupData.date_of_birth.toString())
-    form.append("email", signupData.email)
-    form.append("password", signupData.password)
-    form.append("passwordConfirm", signupData.passwordConfirm)
-    
-    const response = await axios.post(`${BASE_URL}/signup`, form, {
-        headers: {
-            "Content-Type" : "multipart/form-data"
-        }
-    })
+  const response = await axios.post(`${BASE_URL}/signup`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
-    return response.data;
-}
+  return response.data;
+};
 
 const logout = () => {
-    localStorage.removeItem("user")
-}
+  localStorage.removeItem("user");
+};
 
-const resetPassword = async (ResetPasswordData: ResetPassword) =>{
-    const response = await axios.patch(`${BASE_URL}/reset-password/${ResetPasswordData.token}`, ResetPasswordData)
+const resetPassword = async (ResetPasswordData: ResetPassword) => {
+  const response = await axios.patch(
+    `${BASE_URL}/reset-password/${ResetPasswordData.token}`,
+    ResetPasswordData
+  );
 
-    return response.data;
-}
+  return response.data;
+};
 
-const verifyEmail = async (verificationToken:string) => {
-    const response = await axios.get(`${BASE_URL}/verify/${verificationToken}`)
+const verifyEmail = async (verificationToken: string) => {
+  const response = await axios.get(`${BASE_URL}/verify/${verificationToken}`);
 
-    return response.data;
-}
+  return response.data;
+};
 
-const updateUser = async (token:string, data: UpdateUserInterface ) => {
-     const response = await axios.patch(`${BASE_URL}/update-me`, data, {
-        headers: {
-            "Authorization" : `Bearer ${token}`
-        }
-    })
+const updateUser = async (token: string, data: UpdateUserInterface) => {
+  const response = await axios.patch(`${BASE_URL}/update-me`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    return response.data;
+  return response.data;
+};
 
-}
+const deactivateMyAccount = async (
+  token: string,
+  data: { active: boolean }
+) => {
+  const response = await axios.patch(`${BASE_URL}/deactivate`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-const deactivateMyAccount = async (token:string, data: {active: boolean} ) => {
-    const response = await axios.patch(`${BASE_URL}/deactivate`, data, {
-        headers: {
-            "Authorization" : `Bearer ${token}`
-        }
-    })
-
-    return response.data;
-}
-
+  return response.data;
+};
 
 export async function updatePhoto(token: string, photo: File) {
+  const form = new FormData();
+  form.append("photo", photo);
 
-    const form = new FormData()
-    form.append("photo", photo)
-    
-    const response = await axios.patch(`${BASE_URL}/update-photo`, form, {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    return response.data;
+  const response = await axios.patch(`${BASE_URL}/update-photo`, form, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
 }
 
 const firstTimeUsing = async (token: string) => {
-    const response = await axios.patch(`${BASE_URL}/`,{}, {
-        headers: {
-            "Authorization" : `Bearer ${token}`
-        }
-    })
+  const response = await axios.patch(
+    `${BASE_URL}/`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-}
+  return response.data;
+};
 
-const changeMyPassword = async (token: string, changePasswordData: changePasswordInterface) => {
-    const response = await axios.patch(`${BASE_URL}/change-password`,changePasswordData, {
-        headers: {
-            "Authorization" : `Bearer ${token}`
-        }
-    })
+const changeMyPassword = async (
+  token: string,
+  changePasswordData: changePasswordInterface
+) => {
+  const response = await axios.patch(
+    `${BASE_URL}/change-password`,
+    changePasswordData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-}
+  return response.data;
+};
 
 const authServices = {
-    login,
-    logout,
-    resetPassword,
-    signup,
-    verifyEmail,
-    firstTimeUsing,
-    updatePhoto,
-    updateUser,
-    deactivateMyAccount,
-    changeMyPassword
-}
+  login,
+  logout,
+  resetPassword,
+  signup,
+  verifyEmail,
+  firstTimeUsing,
+  updatePhoto,
+  updateUser,
+  deactivateMyAccount,
+  changeMyPassword,
+};
 
-export default authServices
+export default authServices;

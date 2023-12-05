@@ -1,16 +1,16 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from "react-router-dom";
 
 const Authorized = () => {
-    const user = localStorage.getItem("user")
-    const userObj = user && JSON.parse(user)
+  const user = localStorage.getItem("user");
+  const userObj = user && JSON.parse(user);
 
-    const route = userObj?.data.role.toLowerCase();
+  const route = userObj?.data.role.toLowerCase();
 
-    if (userObj) {
-        return redirect(`/${route}/${userObj.data._id}`);
-    }
+  if (userObj) {
+    return redirect(`/${route}/${userObj.data._id}`);
+  }
 
-    return null
-}
+  return null;
+};
 
-export default Authorized
+export default Authorized;

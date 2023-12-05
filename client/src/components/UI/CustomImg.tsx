@@ -1,27 +1,28 @@
-import React from 'react'
-import defaultImg from "../../assets/default.jpg"
+import React from "react";
+import defaultImg from "../../assets/default.jpg";
 
 type Props = {
-    url: string | undefined,
-    className?: string
-}
+  url: string | undefined;
+  className?: string;
+};
 
-const CustomImg: React.FC<Props> = ({url, className}) => {
-  
-    const imgUpload = `http://localhost:3001/uploads/${url}`
-  
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.src = defaultImg
-    }
+const CustomImg: React.FC<Props> = ({ url, className }) => {
+  const imgUpload = `http://localhost:3001/uploads/${url}`;
 
-    return (
-        <img
-        className={className}
-        src={imgUpload}
-        alt="Uploaded"
-        onError={handleImageError}
-      />
-  )
-}
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    e.currentTarget.src = defaultImg;
+  };
 
-export default CustomImg
+  return (
+    <img
+      className={className}
+      src={imgUpload}
+      alt="Uploaded"
+      onError={handleImageError}
+    />
+  );
+};
+
+export default CustomImg;
