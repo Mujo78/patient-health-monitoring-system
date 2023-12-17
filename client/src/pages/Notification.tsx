@@ -9,9 +9,9 @@ import {
   restartNotification,
 } from "../features/notification/notificationSlice";
 import { useAppDispatch } from "../app/hooks";
-import imgLogo from "../assets/hospital-logo.jpg";
 import Footer from "../components/Footer";
 import { Button } from "flowbite-react";
+import Logo from "../components/UI/Logo";
 
 const Notification: React.FC = () => {
   const { id } = useParams();
@@ -52,7 +52,7 @@ const Notification: React.FC = () => {
       <div className="flex justify-center flex-col items-center h-full gap-3">
         {oneNotification?.name.startsWith("Welcome to the") ? (
           <div className="flex flex-col justify-center items-center gap-4">
-            <img src={imgLogo} alt="logo" className="w-[140px] h-[140px]" />
+            <Logo />
             <h2 className="text-lg font-bold text-blue-700">
               {oneNotification.name}
             </h2>

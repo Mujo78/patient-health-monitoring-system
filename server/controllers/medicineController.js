@@ -1,132 +1,137 @@
-const { getAllData, getDoc, updateDoc, deleteDoc } = require("./handleController")
-const Medicine = require("../models/medicine")
-const asyncHandler = require("express-async-handler")
-const Pharmacy = require("../models/pharmacy")
-const sharp = require('sharp')
+const {
+  getAllData,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} = require("./handleController");
+const Medicine = require("../models/medicine");
+const asyncHandler = require("express-async-handler");
+const Pharmacy = require("../models/pharmacy");
+const sharp = require("sharp");
 
-const resizeMedicinePhoto = (req, res, next) =>{
-    if(!req.file) return next();
-    
-    req.file.filename = `${req.body.name}-${req.body.strength}.jpeg`
+const resizeMedicinePhoto = (req, res, next) => {
+  if (!req.file) return next();
 
-    sharp(req.file.buffer)
-        .resize(500, 500)
-        .toFormat('jpeg')
-        .jpeg({quality: 90})
-        .toFile(`uploads/${req.file.filename}`)
-    
-    next()
-}
+  req.file.filename = `${req.body.name}-${req.body.strength}.jpeg`;
 
-const getMedicines = asyncHandler( async (req, res) => {
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`uploads/${req.file.filename}`);
 
-    const {page, searchQuery, category} = req.query;
+  next();
+};
 
-    let responseObj = {};
-    let query = Medicine.find();
+const getMedicines = asyncHandler(async (req, res) => {
+  const { page, searchQuery, category } = req.query;
 
-    if(page) {
-        const limit = 8
-        const startIndx = (Number(page) - 1) * limit
-        
-        const total = await Medicine.countDocuments();
-        query = query.sort({category: -1}).limit(limit).skip(startIndx)
+  let responseObj = {};
+  let query = Medicine.find();
 
-        responseObj.currentPage = Number(page);
-        responseObj.numOfPages = Math.ceil(total / limit)
+  if (page) {
+    const limit = 8;
+    const startIndx = (Number(page) - 1) * limit;
+
+    const total = await Medicine.countDocuments();
+    query = query.sort({ category: -1 }).limit(limit).skip(startIndx);
+
+    responseObj.currentPage = Number(page);
+    responseObj.numOfPages = Math.ceil(total / limit);
+  }
+
+  if (searchQuery) {
+    if (category) {
+      query = query.where({
+        name: new RegExp(searchQuery, "i"),
+        category: category,
+      });
     }
+    query = query.where({ name: new RegExp(searchQuery, "i") });
+  }
 
-    if(searchQuery){
-        if(category){
-            query = query.where({name: new RegExp(searchQuery, 'i'), category: category})
-        }
-        query = query.where({name: new RegExp(searchQuery, 'i')})
-    }
+  const result = await query.exec();
+  if (result.length === 0) return res.status(404).json("There are no results!");
+  responseObj.data = result;
 
-    const result = await query.exec();
-    if(result.length === 0) return res.status(404).json("There are no results!")
-    responseObj.data = result;
-    
-    return res.status(200).json(responseObj)
-})
+  return res.status(200).json(responseObj);
+});
 
+const getMedicine = getDoc(Medicine);
 
-const getMedicine = getDoc(Medicine)
+const createMedicine = asyncHandler(async (req, res) => {
+  if (req.file) req.body.photo = req.file.filename;
 
-const createMedicine = asyncHandler( async (req, res) => {
+  const {
+    name,
+    description,
+    strength,
+    category,
+    price,
+    photo,
+    manufacturer,
+    available,
+  } = req.body;
 
-    if(req.file) req.body.photo = req.file.filename
+  const conditionals = [{ name: name }, { name, strength, category }];
 
-    const {
-        name, description, strength, category, price,photo, manufacturer, available
-    } = req.body;
+  const oldOne = await Medicine.findOne({
+    $and: [{ _id: { $ne: req.params.id } }, { $or: conditionals }],
+  });
+  if (oldOne) return res.status(400).json("Medicine already in database!");
 
-    const conditionals = [
-        {name: name},
-        {name, strength, category}
-    ]
+  const ph = await Pharmacy.findOne();
+  if (!ph) return res.status(400).json("There is no pharmacy for medicine!");
 
-    const oldOne = await Medicine.findOne({$and : [
-        { _id: { $ne: req.params.id }},
-        {$or : conditionals}
-    ]})
-    if(oldOne) return res.status(400).json("Medicine already in database!")
+  const newMedicine = await Medicine.create({
+    name,
+    description,
+    pharmacy_id: ph._id,
+    strength,
+    category,
+    available,
+    photo,
+    price,
+    manufacturer,
+  });
 
-    const ph = await Pharmacy.findOne()
-    if(!ph) return res.status(400).json("There is no pharmacy for medicine!")
+  return res.status(200).json(newMedicine);
+});
 
-    const newMedicine = await Medicine.create({
-        name,
-        description,
-        pharmacy_id: ph._id,
-        strength,
-        category,
-        available,
-        photo,
-        price,
-        manufacturer
-    })
+const updateMedicine = asyncHandler(async (req, res) => {
+  if (req.file) req.body.photo = req.file.filename;
+  if (req.body.available)
+    req.body.available = JSON.parse(req.body.available.toLowerCase());
 
-    return res.status(200).json(newMedicine)
-})
+  const { name, strength, category } = req.body;
 
-const updateMedicine = asyncHandler( async (req, res) => {
+  const conditionals = [{ name: name }, { name, strength, category }];
 
-    if(req.file) req.body.photo = req.file.filename
-    if(req.body.available) req.body.available = JSON.parse(req.body.available.toLowerCase())
+  const oldOne = await Medicine.findOne({
+    $and: [{ _id: { $ne: req.params.id } }, { $or: conditionals }],
+  });
+  if (oldOne) return res.status(400).json("Medicine already in database!");
 
-    const {
-        name, strength, category
-    } = req.body;
+  const ph = await Pharmacy.findOne();
+  if (!ph) return res.status(400).json("There is no pharmacy for medicine!");
 
-    const conditionals = [
-        {name: name},
-        {name, strength, category}
-    ]
+  const updated = await Medicine.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
 
-    const oldOne = await Medicine.findOne({$and : [
-        { _id: { $ne: req.params.id }},
-        {$or : conditionals}
-    ]})
-    if(oldOne) return res.status(400).json("Medicine already in database!")
+  if (!updated)
+    return res.status(404).json("There was an error, please try again later!");
 
-    const ph = await Pharmacy.findOne()
-    if(!ph) return res.status(400).json("There is no pharmacy for medicine!")
+  return res.status(200).json(updated);
+});
 
-    const updated = await Medicine.findByIdAndUpdate(req.params.id, req.body, {new: true})
-    
-    if(!updated) return res.status(404).json("There was an error, please try again later!")
-    
-    return res.status(200).json(updated)
-})
-
-const deleteMedicine = deleteDoc(Medicine)
+const deleteMedicine = deleteDoc(Medicine);
 
 module.exports = {
-    getMedicines,
-    getMedicine,
-    createMedicine,
-    updateMedicine,
-    deleteMedicine,
-    resizeMedicinePhoto
-}
+  getMedicines,
+  getMedicine,
+  createMedicine,
+  updateMedicine,
+  deleteMedicine,
+  resizeMedicinePhoto,
+};

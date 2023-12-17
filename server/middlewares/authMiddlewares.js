@@ -1,43 +1,40 @@
-
-const asyncHandler = require("express-async-handler")
+const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
+const protect = asyncHandler(async (req, res, next) => {
+  let token;
 
-const protect = asyncHandler (async (req, res, next) => {
-    let token;
+  if (req.headers.authorization?.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
-    if(req.headers.authorization?.startsWith('Bearer')){
-        token = req.headers.authorization.split(' ')[1]
-    }
+  if (!token)
+    return res.status(401).json("You are not logged in! PLease log in!");
 
-    if(!token) return res.status(401).json("You are not logged in! PLease log in!")
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+  const user = await User.findById(decoded.id);
 
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(decoded.id)
+  if (!user) return res.status(401).json("There was a problem with token!");
+  if (user.changedPasswordAfter(decoded.iat)) {
+    return res.status(400).json("User recently changed password!");
+  }
 
-    if(!user) return res.status(401).json("There was a problem with token!")
-    if(user.changedPasswordAfter(decoded.iat)){
-        return res.status(400).json('User recently changed password!')
-    }
+  req.user = user;
 
-    req.user = user;
-
-    next()
-})
-
+  next();
+});
 
 const restrictTo = (...roles) => {
-    return (req, res, next) => {
-        if(!roles.includes(req.user.role)){
-            return res.status(403).json("You are not authorized for this action!")
-        }
-        next()
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json("You are not authorized for this action!");
     }
-
-}
+    next();
+  };
+};
 
 module.exports = {
-    protect, 
-    restrictTo
-}
+  protect,
+  restrictTo,
+};

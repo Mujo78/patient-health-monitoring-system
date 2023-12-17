@@ -172,7 +172,7 @@ const PatientDashboard: React.FC = () => {
                         <p className="text-sm">
                           {latestFinished?.appointment?.doctor_id.speciality}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-700 mt-1">
                           {formatDate(
                             latestFinished?.appointment?.appointment_date
                           )}{" "}

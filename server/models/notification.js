@@ -1,37 +1,40 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
 
-const notificationSchema = mongoose.Schema({
-    user_id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+const notificationSchema = mongoose.Schema(
+  {
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     name: {
-        type: String,
-        required: [true, 'Name is required!'],
-        minlength: 5,
-        maxlength: 120
+      type: String,
+      required: [true, "Name is required!"],
+      minlength: 5,
+      maxlength: 120,
     },
     content: {
-        type: String,
-        required: [true, 'Content is required!']
+      type: String,
+      required: [true, "Content is required!"],
     },
-    type:{
-        type: String,
-        enum: ["MESSAGE", "ALERT", "INFO"],
-        required: [true, "Type is required!"]
+    type: {
+      type: String,
+      enum: ["MESSAGE", "ALERT", "INFO"],
+      required: [true, "Type is required!"],
     },
     link: {
-        type: String,
-        required: false
+      type: String,
+      required: false,
     },
     read: {
-        type: Boolean,
-        default: false
-    }
-}, {
-    timestamps: true
-})
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('Notification', notificationSchema);
+module.exports = mongoose.model("Notification", notificationSchema);

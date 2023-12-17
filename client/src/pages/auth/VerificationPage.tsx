@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import CustomButton from "../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
-import hospitalImg from "../../assets/hospital-logo.jpg";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import {
@@ -10,6 +9,7 @@ import {
   verifyEmailAddress,
 } from "../../features/auth/authSlice";
 import { Spinner } from "flowbite-react";
+import Logo from "../../components/UI/Logo";
 
 const VerificationPage: React.FC = () => {
   const { verificationToken } = useParams();
@@ -34,7 +34,7 @@ const VerificationPage: React.FC = () => {
   return (
     <div>
       <div className="flex h-screen font-Poppins gap-4 flex-col justify-center items-center">
-        <img src={hospitalImg} className="w-[160px]" />
+        <Logo />
         <h1 className="text-3xl font-bold">Email verification</h1>
         <p>Please click the button below to verify your email address!</p>
         <CustomButton onClick={verifyMyEmail}>Verify Email</CustomButton>

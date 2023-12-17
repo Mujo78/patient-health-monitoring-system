@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Select, Card } from "flowbite-react";
+import { Select, Card, Label } from "flowbite-react";
 import {
   BarChart,
   Bar,
@@ -58,31 +58,34 @@ const AppointmentsChart: React.FC = () => {
 
   return (
     <Card className="w-full h-2/4 flex flex-col ">
-      <div className="flex">
+      <div className="flex items-center">
         <p className="text-sm font-semibold">
           Year: {new Date().getFullYear()}
         </p>
-        <Select
-          className="ml-auto"
-          sizing="sm"
-          name="month"
-          onSelect={handleSelect}
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-        >
-          <option value="January"> January </option>
-          <option value="February"> February </option>
-          <option value="March"> March </option>
-          <option value="April"> April </option>
-          <option value="May"> May </option>
-          <option value="June"> June </option>
-          <option value="July"> July </option>
-          <option value="August"> August </option>
-          <option value="September"> September </option>
-          <option value="October"> October </option>
-          <option value="November"> November </option>
-          <option value="December"> December </option>
-        </Select>
+        <div className="flex gap-5 items-center ml-auto">
+          <Label htmlFor="month">Choose a month:</Label>
+          <Select
+            id="month"
+            sizing="sm"
+            name="month"
+            onSelect={handleSelect}
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+          >
+            <option value="January"> January </option>
+            <option value="February"> February </option>
+            <option value="March"> March </option>
+            <option value="April"> April </option>
+            <option value="May"> May </option>
+            <option value="June"> June </option>
+            <option value="July"> July </option>
+            <option value="August"> August </option>
+            <option value="September"> September </option>
+            <option value="October"> October </option>
+            <option value="November"> November </option>
+            <option value="December"> December </option>
+          </Select>
+        </div>
       </div>
       <ResponsiveContainer width="90%" height="80%" className="mx-auto">
         <BarChart width={200} height={200} data={dataApps} layout="vertical">

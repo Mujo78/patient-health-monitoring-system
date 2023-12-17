@@ -17,41 +17,58 @@ const makeAppointment = asyncHandler(async (req, res) => {
   const { doctor_id, reason, appointment_date } = req.body;
 
   const patient = await Patient.findOne({ user_id: req.user._id });
-  if (!patient) return res.status(404).json("There was an error, please try again later!");
+  if (!patient)
+    return res.status(404).json("There was an error, please try again later!");
 
-  const appointmentDateWithoutTime = moment(appointment_date).tz("Europe/Sarajevo");
+  const appointmentDateWithoutTime =
+    moment(appointment_date).tz("Europe/Sarajevo");
   const startOfDay = appointmentDateWithoutTime.startOf("day").toDate();
   const endOfDay = appointmentDateWithoutTime.endOf("day").toDate();
 
   const existingAppointment = await Appointment.findOne({
-    patient_id: { $ne: patient._id }, doctor_id,
+    patient_id: { $ne: patient._id },
+    doctor_id,
     appointment_date: new Date(appointment_date),
   });
 
-  if (existingAppointment) return res.status(400)
-              .json("It's not possible to make appointment with this doctor at that time.");
+  if (existingAppointment)
+    return res
+      .status(400)
+      .json(
+        "It's not possible to make appointment with this doctor at that time."
+      );
 
   const myExistingAppointment = await Appointment.findOne({
-    doctor_id, patient_id: patient._id,
+    doctor_id,
+    patient_id: patient._id,
     appointment_date: { $gte: startOfDay, $lt: endOfDay },
   });
 
-  if (myExistingAppointment) return res.status(400)
-            .json("You already have an appointment with this doctor on this day.");
+  if (myExistingAppointment)
+    return res
+      .status(400)
+      .json("You already have an appointment with this doctor on this day.");
 
   const overlappingAppointment = await Appointment.findOne({
-    doctor_id: { $ne: doctor_id }, patient_id: patient._id,
+    doctor_id: { $ne: doctor_id },
+    patient_id: patient._id,
     appointment_date: new Date(appointment_date),
   });
 
-  if (overlappingAppointment) return res.status(400)
-        .json("You already have an appointment with a different doctor at that time.");
+  if (overlappingAppointment)
+    return res
+      .status(400)
+      .json(
+        "You already have an appointment with a different doctor at that time."
+      );
 
   const newDate = moment.utc(appointment_date).tz("Europe/Sarajevo");
 
   const newAppointment = await Appointment.create({
-    doctor_id, patient_id: patient._id,
-    reason, appointment_date: newDate.toDate(),
+    doctor_id,
+    patient_id: patient._id,
+    reason,
+    appointment_date: newDate.toDate(),
   });
 
   return res.status(200).json(newAppointment);
@@ -252,8 +269,8 @@ cron.schedule("* * * * *", async () => {
 const getAppointmentForDay = asyncHandler(async (req, res) => {
   const { date } = req.body;
   const user = await User.findById(req.user._id);
-  if (!user)return res.status(404)
-                .json("There was an error, please try again later!");
+  if (!user)
+    return res.status(404).json("There was an error, please try again later!");
 
   let model, mod_id;
   let query = {};
@@ -267,13 +284,12 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
   }
 
   const mod = await model.findOne({ user_id: user._id });
-  if (!mod) return res.status(404)
-                .json("There was an error, please try again later!");
+  if (!mod)
+    return res.status(404).json("There was an error, please try again later!");
 
   const userDate = moment.tz(date, "Europe/Sarajevo");
 
-  if (!userDate.isValid()) return res.status(400)
-                                    .json("Invalid date format");
+  if (!userDate.isValid()) return res.status(400).json("Invalid date format");
 
   const startOfDay = userDate.clone().startOf("day").utc().toDate();
   const endOfDay = userDate.clone().endOf("day").utc().toDate();
@@ -287,8 +303,7 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
   const appointmentsDay = await Appointment.find(query);
   if (appointmentsDay) return res.status(200).json(appointmentsDay);
 
-  return res.status(404)
-            .json("There was an error, please try again later!");
+  return res.status(404).json("There was an error, please try again later!");
 });
 
 const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
