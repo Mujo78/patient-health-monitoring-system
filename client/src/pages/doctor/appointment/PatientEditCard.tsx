@@ -20,11 +20,12 @@ const PatientEditCard: React.FC<Props> = ({ setShowMore }) => {
   return (
     <>
       {selected && (
-        <Card className="max-w-xs font-Poppins h-fit ml-auto">
+        <Card className="max-w-xs h-fit ml-auto">
           <p className="text-blue-700 font-semibold">Patient</p>
           <CustomImg
             url={selected?.patient_id.user_id.photo}
-            className="w-[150px] mx-auto rounded-xl"
+            className="mx-auto rounded-xl"
+            width="150"
           />
           <Link
             to={`/my-patients/${selected?.patient_id?._id}`}

@@ -45,7 +45,7 @@ const Notifications: React.FC = () => {
   };
 
   return (
-    <div className="font-Poppins">
+    <div className="mr-3">
       {personNotifications.length > 0 ? (
         <div className="h-[90vh] flex divide-x">
           <div className="h-full w-1/4 overflow-y-auto">

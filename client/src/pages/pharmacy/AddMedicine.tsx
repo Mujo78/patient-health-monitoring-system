@@ -174,7 +174,7 @@ const AddMedicine: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <div className="w-3/4">
+                <div className="w-full">
                   <Label
                     htmlFor="manufacturer"
                     className="text-xs"
@@ -192,7 +192,7 @@ const AddMedicine: React.FC = () => {
                     className="text-xs mt-1"
                   />
                 </div>
-                <div className="w-1/3 ml-6">
+                <div className="w-2/4 ml-6">
                   <Controller
                     control={control}
                     name="available"
@@ -250,7 +250,7 @@ const AddMedicine: React.FC = () => {
                     }
                     className="w-1/7"
                   >
-                    <div className="w-full font-Poppins">
+                    <div className="w-full">
                       <label
                         className={`block w-full bg-white p-2.5 cursor-pointer ${
                           errors.photo

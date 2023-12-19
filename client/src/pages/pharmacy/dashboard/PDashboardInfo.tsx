@@ -77,9 +77,9 @@ const PDashboardInfo: React.FC<Props> = ({ data }) => {
                   dataKey="value"
                   data={data.data}
                   cx="50%"
-                  cy="55%"
+                  cy="50%"
                   innerRadius={60}
-                  outerRadius={90}
+                  outerRadius={87}
                   paddingAngle={6}
                   fill="#8884d8"
                   label

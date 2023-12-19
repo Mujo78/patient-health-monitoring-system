@@ -107,7 +107,7 @@ const OneMedicine: React.FC = () => {
             />
           </div>
           {img ? (
-            <img src={img} className="w-[200px] h-[200px] mx-auto mb-4" />
+            <img src={img} className="mx-auto mb-4" width={200} height={200} />
           ) : (
             <CustomMedicineImg
               url={
@@ -116,6 +116,8 @@ const OneMedicine: React.FC = () => {
                   : specificMedicine.photo
               }
               className="mx-auto w-[200px] h-[200px]"
+              width="200"
+              height="200"
             />
           )}
           <form
@@ -234,7 +236,7 @@ const OneMedicine: React.FC = () => {
                   color={errors.photo && "failure"}
                 />
                 <p className="text-center">OR</p>
-                <div className="w-full font-Poppins">
+                <div className="w-full">
                   <label
                     className={`block w-full bg-white p-2.5 cursor-pointer ${
                       errors.photo

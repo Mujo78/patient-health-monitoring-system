@@ -61,8 +61,8 @@ const Appointment: React.FC = () => {
       ) : (
         <>
           {selected !== null ? (
-            <div className="h-full flex flex-col font-Poppins mr-3">
-              <div className="flex justify-between mt-4">
+            <div className="h-full flex flex-col p-3">
+              <div className="flex justify-between">
                 <Card horizontal className="flex w-2/5">
                   <div className="flex items-center p-0">
                     <CustomImg

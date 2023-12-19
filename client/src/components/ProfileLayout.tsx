@@ -10,7 +10,7 @@ const ProfileLayout: React.FC<Props> = ({ children }) => {
   const { accessUser } = useSelector(authUser);
 
   return (
-    <div className="h-full overflow-x-hidden font-Poppins relative mr-3">
+    <div className="h-full overflow-x-hidden font-Poppins relative mx-3">
       <div
         className={`${
           accessUser?.data.role === "PHARMACY"

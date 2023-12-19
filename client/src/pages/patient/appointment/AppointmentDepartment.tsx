@@ -83,11 +83,11 @@ const AppointmentDepartment: React.FC = () => {
       {doctorId ? (
         <Outlet />
       ) : res !== null ? (
-        <div className="font-Poppins flex flex-col h-full">
+        <div className=" flex flex-col h-full px-3">
           <div className="flex justify-between flex-wrap flex-grow">
             <div className=" overflow-y-auto">
-              <h1 className="text-3xl font-semibold p-4">Departments</h1>
-              <p className="text-sm text-gray-400">
+              <h1 className="text-3xl font-semibold py-4">Departments</h1>
+              <p className="text-sm text-gray-600">
                 Please choose department for appointment. Make sure to choose
                 only one department!
               </p>

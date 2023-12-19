@@ -47,7 +47,7 @@ const SignUpForm: React.FC = () => {
   }, [status, reset]);
 
   return (
-    <div className="flex h-screen font-Poppins justify-between flex-row-reverse ">
+    <div className="flex h-screen justify-between flex-row-reverse ">
       <div className="ml-auto">
         <Logo />
       </div>
@@ -61,7 +61,7 @@ const SignUpForm: React.FC = () => {
             encType="multipart/form-data"
             className="flex w-full justify-center flex-col items-center"
           >
-            <h1 className="text-4xl font-Poppins flex justify-center mb-6 font-bold">
+            <h1 className="text-4xl flex justify-center mb-6 font-bold">
               Create a new account
             </h1>
             <div className="w-3/5">
@@ -69,7 +69,9 @@ const SignUpForm: React.FC = () => {
                 <div className="border relative rounded-lg">
                   <img
                     src={photo?.length > 0 ? Image : img}
-                    className="w-[170px] rounded-lg"
+                    className="rounded-lg"
+                    width={170}
+                    alt="Profile picture"
                   />
                   <div className="absolute bottom-4 right-2  w-[20px] h-[10px] text-xl font-bold text-white ">
                     <label

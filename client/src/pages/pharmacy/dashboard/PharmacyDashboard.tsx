@@ -68,7 +68,7 @@ const PharmacyDashboard: React.FC = () => {
   }, [accessUser]);
 
   return (
-    <div className="h-full p-6 font-Poppins">
+    <div className="h-full p-6">
       {loading ? (
         <div className="flex h-full justify-center items-center">
           <Spinner size="md" />

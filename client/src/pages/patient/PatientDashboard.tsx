@@ -79,7 +79,7 @@ const PatientDashboard: React.FC = () => {
           <Spinner size="xl" />
         </div>
       ) : (
-        <div className="flex duration-300 transition-all  justify-between font-Poppins h-full w-full p-6">
+        <div className="flex duration-300 transition-all justify-between h-full w-full p-3">
           <div className="flex flex-col flex-grow w-full justify-between">
             <div className="w-full flex flex-grow justify-between">
               {latestFinished && (
@@ -128,8 +128,8 @@ const PatientDashboard: React.FC = () => {
                   )}
                 </Card>
               )}
-              <div className=" flex flex-col w-1/2 mx-auto my-auto justify-around h-full">
-                <Card className="bg-gradient-to-r from-blue-500 to-blue-400">
+              <div className=" flex flex-col w-1/2 mx-auto pb-5 justify-around h-full">
+                <Card className="bg-gradient-to-r from-blue-500 to-blue-400 ">
                   <div>
                     {accessUser?.data.first ? (
                       <div>
@@ -161,7 +161,7 @@ const PatientDashboard: React.FC = () => {
                         url={
                           latestFinished?.appointment?.doctor_id.user_id.photo
                         }
-                        className="w-[75px]"
+                        width="75px"
                       />
                       <div className="mx-auto">
                         <h1 className="text-xl font-semibold">

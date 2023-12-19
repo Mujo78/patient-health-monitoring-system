@@ -201,7 +201,7 @@ const DocAppointment: React.FC = () => {
           <Spinner size="xl" />
         </div>
       ) : selected ? (
-        <div className="px-6 pt-6 pb-2 flex w-full h-full font-Poppins">
+        <div className="px-6 pt-6 pb-2 flex w-full h-full">
           <div className="w-full h-full flex flex-col justify-between">
             <div className="h-1/4 text-sm w-full">
               <p>

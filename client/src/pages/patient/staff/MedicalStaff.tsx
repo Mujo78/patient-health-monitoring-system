@@ -40,37 +40,39 @@ const MedicalStaff: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full font-Poppins">
+    <div className="h-full w-full">
       {loading ? (
         <div className="flex justify-center items-center h-full">
           <Spinner size="md" />
         </div>
       ) : departments !== undefined ? (
-        <div className="flex h-full w-full divide-x font-Poppins">
+        <div className="flex h-full w-full divide-x">
           <div className=" w-1/3">
             <p className="m-4 text-2xl font-semibold">Select a department</p>
             <hr />
-            <Table className="mt-2">
-              <Table.Body className="divide-y">
-                {departments &&
-                  departments.map((n) => (
-                    <Table.Row
-                      onClick={() => chooseDepartment(n.name)}
-                      key={n._id}
-                      className={`bg-white cursor-pointer dark:border-gray-700 ${
-                        departmentName === n.name && "bg-blue-200"
-                      } dark:bg-gray-800`}
-                    >
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {n.name}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <HiChevronRight className="ml-auto" />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-              </Table.Body>
-            </Table>
+            <div className="px-3 mt-2">
+              <Table>
+                <Table.Body className="divide-y">
+                  {departments &&
+                    departments.map((n) => (
+                      <Table.Row
+                        onClick={() => chooseDepartment(n.name)}
+                        key={n._id}
+                        className={`bg-white cursor-pointer dark:border-gray-700 ${
+                          departmentName === n.name && "bg-blue-200"
+                        } dark:bg-gray-800`}
+                      >
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {n.name}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <HiChevronRight className="ml-auto" />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </Table.Body>
+              </Table>
+            </div>
           </div>
           <div className="h-full  w-full p-4">
             {departmentName ? (

@@ -14,7 +14,7 @@ import moment from "moment";
 const cx = 150;
 const cy = 130;
 const iR = 50;
-const oR = 100;
+const oR = 85;
 
 const COLORS = ["#1d4ed8", "#F5B843", "#D4DCFF"];
 

@@ -48,7 +48,7 @@ const Notification: React.FC = () => {
   const mailtoLink = `mailto:${import.meta.env.VITE_EMAIL_SUPPORT}`;
 
   return (
-    <div className="w-full flex flex-col font-Poppins justify-between h-full">
+    <div className="w-full flex flex-col justify-between h-full">
       <div className="flex justify-center flex-col items-center h-full gap-3">
         {oneNotification?.name.startsWith("Welcome to the") ? (
           <div className="flex flex-col justify-center items-center gap-4">
@@ -120,12 +120,7 @@ const Notification: React.FC = () => {
         )}
       </div>
       <Footer variant={1}>
-        <Button
-          onClick={deleteOne}
-          color="failure"
-          size="xs"
-          className="mr-3 mt-2"
-        >
+        <Button onClick={deleteOne} color="failure" size="xs" className="mt-3">
           Delete Notification
         </Button>
       </Footer>

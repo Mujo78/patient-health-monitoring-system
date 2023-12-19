@@ -5,7 +5,7 @@ const ErrorPage: React.FC = () => {
   const mailsupport = `mailto:${import.meta.env.VITE_EMAIL_SUPPORT}`;
 
   return (
-    <main className="h-screen w-full font-Poppins flex justify-center items-center">
+    <main className="h-screen w-full flex justify-center items-center">
       <div className="text-center my-auto">
         <p className="text-8xl font-semibold text-blue-600">404</p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">

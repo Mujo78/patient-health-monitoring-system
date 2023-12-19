@@ -145,7 +145,7 @@ const AppointmentOverviewEdit: React.FC = () => {
       .replace(/\s+/g, "")
       .replace(/\./g, "-");
     const newAppDate =
-      date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, "$3-$2-$1") +
+      date?.replace(/^(\d{2})\/(\d{2})\/(\d{4})$/, "$3-$1-$2") +
       "T" +
       time +
       ":00";
@@ -191,14 +191,12 @@ const AppointmentOverviewEdit: React.FC = () => {
   const url = medicine?.photo.startsWith(medicine.name)
     ? `http://localhost:3001/uploads/${medicine.photo}`
     : medicine?.photo;
-  console.log(newTime);
 
   return (
     <>
       <Tabs.Group
         aria-label="Default tabs"
         style="default"
-        className="font-Poppins"
         onActiveTabChange={(tab) => handleGet(tab)}
       >
         <Tabs.Item active title="Overview" icon={HiOutlineDocumentDuplicate}>

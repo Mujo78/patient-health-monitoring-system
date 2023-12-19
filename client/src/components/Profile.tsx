@@ -48,7 +48,7 @@ const Profile: React.FC<Props> = ({ children }) => {
             {selectedImg ? (
               <img src={img} className="w-[170px]" />
             ) : (
-              <CustomImg url={accessUser?.data.photo} className="w-[170px]" />
+              <CustomImg url={accessUser?.data.photo} width="170" />
             )}
             <div className="absolute bottom-5 right-5 w-[35px] h-[30px]">
               <label

@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomFlowbiteTheme, Sidebar } from "flowbite-react";
-import hospitalImage from "../assets/hospital-logos.png";
+import hospitalImage from "../assets/hospital-logos.webp";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -52,7 +52,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
   return (
     <div className="w-fit h-screen">
       <Sidebar
-        className="h-screen border-r mr-3 border-r-gray-200 flex flex-col justify-between"
+        className="h-screen border-r border-r-gray-200 flex flex-col justify-between"
         theme={theme}
       >
         <Sidebar.Items className="h-5/6 font-Poppins flex flex-col justify">

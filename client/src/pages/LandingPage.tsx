@@ -47,7 +47,11 @@ const LandingPage: React.FC = () => {
           signup ? "animate-slide-left" : " animate-slide-back-left"
         }`}
       >
-        <img src="./background-vert.svg" className="absolute h-full" />
+        <img
+          src="./background-vert.svg"
+          className="absolute h-full"
+          alt="Background"
+        />
         <div className="w-full px-10 mx-5 flex flex-col z-10 justify-center">
           {signup ? (
             <SignUpInfo setSignUp={setSignUp} />

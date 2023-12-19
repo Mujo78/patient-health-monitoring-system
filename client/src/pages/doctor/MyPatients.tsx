@@ -121,7 +121,7 @@ const MyPatients: React.FC = () => {
   };
 
   return (
-    <div className="h-fit mr-3 font-Poppins">
+    <div className="h-fit mx-3">
       {id ? (
         <Outlet />
       ) : (

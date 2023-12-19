@@ -153,7 +153,7 @@ const Medicine: React.FC = () => {
             <Spinner size="xl" />
           </div>
         ) : (
-          <div className="h-full transition-all font-Poppins duration-300 divide-x flex justify-between w-full">
+          <div className="h-full transition-all pl-3 duration-300 divide-x flex justify-between w-full">
             {status === "loading" ? (
               <div className="mx-auto my-auto">
                 <Spinner size="xl" />
@@ -328,7 +328,7 @@ const Medicine: React.FC = () => {
           </div>
         )
       ) : (
-        <div className="h-full flex justify-center font-Poppins items-center">
+        <div className="h-full flex justify-center items-center">
           <p className="text-md text-gray text-gray-400">No data available.</p>
         </div>
       )}

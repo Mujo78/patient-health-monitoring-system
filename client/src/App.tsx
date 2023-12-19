@@ -21,7 +21,6 @@ import MakeAppointment from "./pages/patient/appointment/MakeAppointment";
 import MyAppointments from "./pages/patient/appointment/MyAppointments";
 import MedicalStaff from "./pages/patient/staff/MedicalStaff";
 import Medicine from "./pages/patient/Medicine";
-import Settings from "./pages/patient/Settings";
 import PatientDashboard from "./pages/patient/PatientDashboard";
 import DoctorCheck from "./helpers/DoctorCheck";
 import PharmacyCheck from "./helpers/PharmacyCheck";
@@ -77,7 +76,6 @@ const router = createBrowserRouter(
             />
           </Route>
           <Route path="/medicine-overview" element={<Medicine />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/notifications" element={<Notifications />}>
             <Route path=":id" element={<Notification />} />
           </Route>

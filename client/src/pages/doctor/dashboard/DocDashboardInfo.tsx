@@ -41,7 +41,9 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
               <div className="flex items-center gap-4">
                 <CustomImg
                   url={docDash.latest.patient_id?.user_id?.photo}
-                  className="w-[80px] h-[80px] rounded-full"
+                  className="rounded-full"
+                  width="80"
+                  height="80"
                 />
                 <div className="flex flex-col gap-1">
                   <h1 className="text-xl font-bold">
@@ -91,7 +93,7 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
                     innerRadius={50}
                     cx="50%"
                     cy="80%"
-                    outerRadius={80}
+                    outerRadius={75}
                     label
                   >
                     {docDash.gender?.map((_entry, index) => (

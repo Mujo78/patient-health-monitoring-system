@@ -7,7 +7,7 @@ const SignUpInfo: React.FC<Props> = ({ setSignUp }) => {
     setSignUp((n) => !n);
   };
   return (
-    <div className="font-Poppins  flex flex-col gap-10">
+    <div className="flex flex-col gap-10">
       <h1 className=" text-white text-3xl font-bold text-center ">
         Already have an account?
       </h1>

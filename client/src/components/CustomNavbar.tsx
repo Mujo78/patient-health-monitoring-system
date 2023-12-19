@@ -69,7 +69,7 @@ const CustomNavbar: React.FC = () => {
 
   return (
     <nav
-      className={`border-t-0 p-2 justify-between items-center font-Poppins w-full flex border-x-0 border-b border-b-gray-200`}
+      className={`border-t-0 p-2 justify-between items-center w-full flex border-x-0 border-b border-b-gray-200`}
     >
       <div className="w-1/3">
         <p className="text-xl font-semibold">
@@ -85,7 +85,8 @@ const CustomNavbar: React.FC = () => {
             {accessUser !== undefined && (
               <CustomImg
                 url={accessUser?.data.photo}
-                className="w-[30px] mr-1"
+                className="mr-1"
+                width="30"
               />
             )}
             <p className="text-xs font-semibold mr-6">

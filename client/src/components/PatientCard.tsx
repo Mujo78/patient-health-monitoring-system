@@ -30,7 +30,7 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
     >
       {variant === 1 && <p className="text-blue-700 font-semibold">Patient</p>}
       {variant === 2 && (
-        <CustomImg url={data?.user_id?.photo} className="w-[70px] mx-auto" />
+        <CustomImg url={data?.user_id?.photo} className="mx-auto" width="70" />
       )}
       <h1 className="text-xl font-bold text-center">
         {data.first_name + " " + data.last_name}

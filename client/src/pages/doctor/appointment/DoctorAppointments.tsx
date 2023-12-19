@@ -54,13 +54,13 @@ const DoctorAppointments: React.FC = () => {
       {id ? (
         <Outlet />
       ) : (
-        <div className="py-2 pr-4 h-full w-full flex-col font-Poppins text-sm flex justify-center items-center">
+        <div className="px-4 h-full w-full flex-col text-sm flex justify-center items-center">
           {status === "loading" ? (
             <Spinner size="xl" />
           ) : (
             <>
               <Calendar
-                className="w-full h-full flex flex-col rounded-xl p-4"
+                className="w-full h-full flex flex-col rounded-xl p-3"
                 localizer={localizer}
                 events={myEventsList}
                 onSelectEvent={handleNavigate}

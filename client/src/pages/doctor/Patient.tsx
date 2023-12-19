@@ -143,8 +143,9 @@ const Patient: React.FC = () => {
             <div className="w-full flex flex-col my-auto px-14">
               <div className="flex items-center justify-center mb-12 w-full">
                 <CustomImg
-                  url={appointments.patient_id.user_id.photo}
-                  className="w-[160px] mx-auto"
+                  url={appointments.patient_id.user_id?.photo}
+                  className="mx-auto"
+                  width="160"
                 />
                 <div className="mx-auto">
                   <p className="text-xl font-semibold">
@@ -160,10 +161,10 @@ const Patient: React.FC = () => {
                     years old
                   </p>
                   <Link
-                    to={`mailto:${appointments.patient_id.user_id.email}`}
+                    to={`mailto:${appointments.patient_id.user_id?.email}`}
                     className="text-sm text-blue-700 mt-1"
                   >
-                    {appointments.patient_id.user_id.email}
+                    {appointments.patient_id.user_id?.email}
                   </Link>
                 </div>
               </div>

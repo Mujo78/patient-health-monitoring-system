@@ -81,7 +81,7 @@ const MyDepartment: React.FC = () => {
   useSelectedPage("My department");
 
   return (
-    <div className="font-Poppins h-full transition-all duration-900 pr-3">
+    <div className="h-full transition-all duration-900 pr-3">
       {loading ? (
         <div className="h-full w-full flex justify-center items-center">
           <Spinner size="xl" />
@@ -105,9 +105,13 @@ const MyDepartment: React.FC = () => {
             </Link>
           </div>
           <hr />
-          <div className="w-full h-[83vh] divide-x flex px-2">
+          <div className="w-full h-[83vh] divide-x flex">
             <div className="mt-5 w-2/5">
-              <Tabs.Group aria-label="Default tabs" style="default">
+              <Tabs.Group
+                aria-label="Default tabs"
+                style="default"
+                className=""
+              >
                 <Tabs.Item active title="Active">
                   {response && response?.todayActiveDoctors.length > 0 ? (
                     <Table>
@@ -117,7 +121,9 @@ const MyDepartment: React.FC = () => {
                             <Table.Cell>
                               <CustomImg
                                 url={d.user_id.photo}
-                                className="w-[40px] h-[40px]"
+                                className="rounded-full"
+                                width="40"
+                                height="40"
                               />
                             </Table.Cell>
                             <Table.Cell className="font-semibold text-sm text-gray-700">
@@ -146,7 +152,9 @@ const MyDepartment: React.FC = () => {
                             <Table.Cell>
                               <CustomImg
                                 url={d.user_id.photo}
-                                className="w-[40px] h-[40px] rounded-full"
+                                className="rounded-full"
+                                width="40"
+                                height="40"
                               />
                             </Table.Cell>
                             <Table.Cell className="font-semibold text-md text-gray-700">

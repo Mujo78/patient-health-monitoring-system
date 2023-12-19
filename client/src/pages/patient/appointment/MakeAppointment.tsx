@@ -116,7 +116,7 @@ const MakeAppointment: React.FC = () => {
       .replace(/\s+/g, "")
       .replace(/\./g, "-");
     const newAppDate =
-      date?.replace(/^(\d{2})-(\d{2})-(\d{4})$/, "$3-$2-$1") +
+      date?.replace(/^(\d{2})\/(\d{2})\/(\d{4})$/, "$3-$1-$2") +
       "T" +
       time +
       ":00";
@@ -124,7 +124,7 @@ const MakeAppointment: React.FC = () => {
     const appointmentData = {
       doctor_id: doctorId ? doctorId : "",
       reason: reason,
-      appointment_date: new Date(newAppDate.replace(/\./g, "-").trim()),
+      appointment_date: new Date(newAppDate.replace(/\//g, "-").trim()),
     };
 
     if (doctorId && newTime) {
@@ -168,7 +168,7 @@ const MakeAppointment: React.FC = () => {
           <Spinner size="xl" />{" "}
         </div>
       ) : (
-        <div className="flex font-Poppins flex-col h-full">
+        <div className="flex flex-col h-full mx-3">
           <div className="flex w-full h-full justify-between">
             <div className="w-1/4 my-auto h-full">
               <div className="my-auto h-full flex flex-col justify-evenly">
@@ -202,7 +202,7 @@ const MakeAppointment: React.FC = () => {
                     </div>
                   </div>
                   <div className="divide-y text-gray-500 text-xs">
-                    <p>
+                    <p className="leading-4.5">
                       With years of expertise and advanced training, our doctors
                       are equipped to address a wide spectrum of health
                       concerns. From routine check-ups to intricate medical
@@ -215,17 +215,17 @@ const MakeAppointment: React.FC = () => {
                         Before scheduling an appointment, please be aware of the
                         following:
                       </p>
-                      <ul className="list-disc p-2">
+                      <ul className="list-disc p-2 ml-3 leading-4">
                         <li>
-                          - Your appointment is a one-to-one meeting with the
+                          Your appointment is a one-to-one meeting with the
                           doctor you have selected.
                         </li>
                         <li>
-                          - Ensure that you have all required documentation
-                          ready to participate in the appointment.
+                          Ensure that you have all required documentation ready
+                          to participate in the appointment.
                         </li>
                         <li>
-                          - Prior to your appointment, you will receive an email
+                          Prior to your appointment, you will receive an email
                           notification.
                         </li>
                       </ul>
@@ -273,7 +273,7 @@ const MakeAppointment: React.FC = () => {
                 )}{" "}
               </div>
             </div>
-            <div className="w-1/4 flex flex-col my-auto mr-4 justify-evenly h-full">
+            <div className="w-1/4 flex flex-col my-auto justify-evenly h-full">
               <h1 className="font-semibold text-xl">
                 Date:{" "}
                 {value

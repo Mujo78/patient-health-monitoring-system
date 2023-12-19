@@ -105,7 +105,7 @@ const MedicineOverview: React.FC = () => {
   return (
     <>
       {
-        <div className="h-full transition-all font-Poppins duration-300 divide-x flex justify-between w-full">
+        <div className="h-full transition-all pl-3 duration-300 divide-x flex justify-between w-full">
           {!med && status === "loading" ? (
             <div className="mx-auto my-auto">
               <Spinner size="xl" />

@@ -66,7 +66,7 @@ const DoctorDashboard: React.FC = () => {
   useSelectedPage("Dashboard");
 
   return (
-    <div className="h-full w-full p-6 gap-5 font-Poppins flex transition-all duration-600">
+    <div className="h-full w-full p-6 gap-5 flex transition-all duration-600">
       {loading ? (
         <div className="flex justify-center w-full h-full items-center">
           <Spinner size="xl" />
