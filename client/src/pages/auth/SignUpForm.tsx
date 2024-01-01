@@ -20,7 +20,9 @@ const SignUpForm: React.FC = () => {
   const { errors } = formState;
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const photo = watch("photo");
-  const selectedOne = photo?.length > 0 ? photo[0] : null;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const selectedOne = photo?.length ? photo[0] : null;
   const dispatch = useAppDispatch();
   const { status, message } = useSelector(authUser);
 
@@ -85,6 +87,7 @@ const SignUpForm: React.FC = () => {
                       id="inputFile"
                       {...register("photo")}
                       className="hidden"
+                      accept="image/*"
                     />
                   </div>
                 </div>

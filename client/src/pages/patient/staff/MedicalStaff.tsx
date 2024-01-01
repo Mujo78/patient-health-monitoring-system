@@ -43,7 +43,7 @@ const MedicalStaff: React.FC = () => {
     <div className="h-full w-full">
       {loading ? (
         <div className="flex justify-center items-center h-full">
-          <Spinner size="md" />
+          <Spinner size="xl" />
         </div>
       ) : departments !== undefined ? (
         <div className="flex h-full w-full divide-x">

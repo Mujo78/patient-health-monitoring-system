@@ -54,7 +54,7 @@ const MyAppointments: React.FC = () => {
       {id ? (
         <Outlet />
       ) : (
-        <div className="px-4 h-full w-full flex-col text-sm flex justify-center items-center">
+        <div className="px-4 py-3 h-full w-full flex-col text-sm flex justify-center items-center">
           {status === "loading" ? (
             <Spinner size="xl" />
           ) : (

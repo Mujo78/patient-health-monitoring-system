@@ -26,6 +26,8 @@ const signup = async (signupData: PatientUser) => {
   form.append("phone_number", signupData.phone_number);
   form.append("address", signupData.address);
   form.append("gender", signupData.gender);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   form.append("photo", signupData.photo ? signupData.photo[0] : "");
   form.append("blood_type", signupData.blood_type);
   form.append("date_of_birth", signupData.date_of_birth.toString());

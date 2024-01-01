@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const appointmentSchema = mongoose.Schema(
+const appointmentSchema = new mongoose.Schema(
   {
     doctor_id: {
       type: mongoose.Schema.Types.ObjectId,

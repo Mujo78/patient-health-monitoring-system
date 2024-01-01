@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const medicineSchema = mongoose.Schema(
+const medicineSchema = new mongoose.Schema(
   {
     name: {
       type: String,
