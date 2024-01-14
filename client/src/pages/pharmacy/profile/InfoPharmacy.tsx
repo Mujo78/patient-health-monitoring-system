@@ -16,6 +16,7 @@ import Footer from "../../../components/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useAppDispatch } from "../../../app/hooks";
 import { toast } from "react-hot-toast";
+import Input from "../../../components/UI/Input";
 
 const InfoPharmacy: React.FC = () => {
   const { accessUser } = useSelector(authUser);
@@ -99,37 +100,37 @@ const InfoPharmacy: React.FC = () => {
           </div>
         ) : (
           <div className="w-full flex flex-col h-full justify-center">
-            <div className="w-full flex">
-              <div className="flex-grow mr-5 text-xs">
-                <Label htmlFor="name" className="text-xs" value="Name" />
-                <TextInput
+            <div className="w-full flex gap-4 items-center">
+              <div className="flex-grow">
+                <Input
+                  value="Name"
                   id="name"
                   {...register("name")}
                   type="text"
-                  className="text-xs mt-1"
+                  className="mt-1"
                   color={errors.name && "failure"}
+                  error={errors.name}
                 />
-                <ErrorMessage text={errors.name?.message} className="text-xs" />
               </div>
               <div className="flex-grow w-2/6 ml-auto text-xs ">
                 <Label
                   htmlFor="from"
-                  className="text-xs"
+                  className="text-sm"
                   value="Working Hours (from - to)"
                 />
-                <div className="flex mt-1 items-center">
+                <div className="flex gap-4 mt-2 items-center">
                   <TextInput
                     id="from"
                     {...register("from")}
                     min={1}
                     max={12}
                     type="number"
-                    className="text-xs mr-4 w-1/4"
+                    className="w-1/4"
                     color={errors.from && "failure"}
                   />
                   <TextInput
                     {...register("to")}
-                    className="text-xs w-1/4 mr-3"
+                    className="w-1/4"
                     min={1}
                     max={12}
                     type="number"
@@ -142,35 +143,31 @@ const InfoPharmacy: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between">
-              <div className="w-3/4 mr-2">
-                <Label htmlFor="address" className="text-xs" value="Address" />
-                <TextInput
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex-grow">
+                <Input
+                  value="Address"
                   id="address"
                   {...register("address")}
                   type="text"
-                  className="text-xs mt-1"
+                  className="mt-1"
                   color={errors.address && "failure"}
+                  error={errors.address}
                 />
-                <ErrorMessage text={errors.address?.message} />
               </div>
-              <div className="w-4/5 ml-2">
-                <Label
-                  htmlFor="phone_number"
-                  className="text-xs"
+              <div className="flex-grow">
+                <Input
                   value="Phone number"
-                />
-                <TextInput
                   id="phone_number"
                   {...register("phone_number")}
                   type="text"
                   color={errors.phone_number && "failure"}
-                  className="mt-1 text-xs"
+                  className="mt-1"
+                  error={errors.phone_number}
                 />
-                <ErrorMessage text={errors.phone_number?.message} />
               </div>
             </div>
-            <div className="w-full">
+            <div className="flex-grow">
               <Label
                 htmlFor="description"
                 className="text-xs"

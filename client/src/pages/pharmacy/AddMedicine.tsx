@@ -28,6 +28,7 @@ import { toast } from "react-hot-toast";
 import { HiXCircle } from "react-icons/hi2";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { errorMessageConvert } from "../../service/authSideFunctions";
+import Input from "../../components/UI/Input";
 
 const AddMedicine: React.FC = () => {
   const { status, message } = useSelector(medicine);
@@ -88,32 +89,26 @@ const AddMedicine: React.FC = () => {
             </div>
           ) : (
             <div className=" flex text-xs gap-3 flex-col w-1/2 h-full justify-center">
-              <div className="w-full flex mt-1">
-                <div className="flex-grow mr-3">
-                  <Label htmlFor="name" className="text-xs" value="Name" />
-                  <TextInput
+              <div className="w-full flex gap-4 mt-1">
+                <div className="flex-grow">
+                  <Input
+                    value="Name"
                     id="name"
                     className="mt-1"
                     {...register("name")}
                     type="text"
                     color={errors.name && "failure"}
-                  />
-                  <ErrorMessage
-                    text={
-                      errors.name?.message || message.includes("name")
-                        ? errorMessageConvert(message, "name")
-                        : ""
-                    }
-                    className="text-xs mt-1"
-                  />
+                  >
+                    {errors.name?.message
+                      ? errors.name.message
+                      : message.includes("name")
+                      ? errorMessageConvert(message, "name")
+                      : ""}
+                  </Input>
                 </div>
-                <div className="w-1/4 ml-3">
-                  <Label
-                    htmlFor="strength"
-                    className="text-xs"
+                <div className="w-1/4">
+                  <Input
                     value="Strength (mg)"
-                  />
-                  <TextInput
                     id="strength"
                     className="mt-1"
                     {...register("strength")}
@@ -121,23 +116,20 @@ const AddMedicine: React.FC = () => {
                     max={3000}
                     min={1}
                     color={errors.strength && "failure"}
-                  />
-                  <ErrorMessage
-                    text={errors.strength?.message}
-                    className="text-xs mt-1"
+                    error={errors.strength}
                   />
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="flex-grow mr-3">
+              <div className="flex justify-between gap-4">
+                <div className="flex-grow">
                   <Label
                     htmlFor="category"
-                    className="text-xs"
+                    className="text-sm"
                     value="Category"
                   />
                   <Select
                     id="category"
-                    className="mt-1"
+                    className="mt-2"
                     {...register("category")}
                     color={errors.category && "failure"}
                   >
@@ -158,46 +150,37 @@ const AddMedicine: React.FC = () => {
                     className="text-xs mt-1"
                   />
                 </div>
-                <div className="2/5 ml-3">
-                  <Label htmlFor="price" className="text-xs" value="Price" />
-                  <TextInput
+                <div className="w-1/4">
+                  <Input
+                    value="Price"
                     id="price"
                     className="mt-1"
                     {...register("price")}
                     type="number"
                     color={errors.price && "failure"}
-                  />
-                  <ErrorMessage
-                    text={errors.price?.message}
-                    className="text-xs mt-1"
+                    error={errors.price}
                   />
                 </div>
               </div>
-              <div className="flex justify-between items-center">
-                <div className="w-full">
-                  <Label
-                    htmlFor="manufacturer"
-                    className="text-xs"
+              <div className="flex justify-between items-center gap-5">
+                <div className="flex-grow">
+                  <Input
                     value="Manufacturer"
-                  />
-                  <TextInput
                     id="manufacturer"
                     className="mt-1"
                     {...register("manufacturer")}
                     type="text"
                     color={errors.manufacturer && "failure"}
-                  />
-                  <ErrorMessage
-                    text={errors.manufacturer?.message}
-                    className="text-xs mt-1"
+                    error={errors.manufacturer}
                   />
                 </div>
-                <div className="w-2/4 ml-6">
+                <div className="w-1/3">
                   <Controller
                     control={control}
                     name="available"
                     render={({ field: { value, onChange } }) => (
                       <ToggleSwitch
+                        className="mt-3"
                         label="Available now?"
                         color="success"
                         checked={value}

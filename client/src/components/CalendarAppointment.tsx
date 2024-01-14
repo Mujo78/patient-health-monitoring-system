@@ -28,7 +28,7 @@ const CalendarAppointment: React.FC<Props> = ({
       onClickDay={handleGetAppForADay}
       locale="eng"
       minDate={new Date()}
-      maxDate={new Date("01/01/2024")}
+      maxDate={new Date("01/01/2025")}
       value={value}
       prev2Label={<span className="text-gray-500">&lt;&lt;</span>}
       next2Label={<span className="text-gray-500">&gt;&gt;</span>}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Label, Spinner, TextInput } from "flowbite-react";
+import { Spinner } from "flowbite-react";
 import CustomButton from "../components/UI/CustomButton";
 import { useForm } from "react-hook-form";
 import {
@@ -15,6 +15,7 @@ import ErrorMessage from "../components/UI/ErrorMessage";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../app/hooks";
 import { toast } from "react-hot-toast";
+import Input from "../components/UI/Input";
 
 const Security: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -72,21 +73,14 @@ const Security: React.FC = () => {
             className="flex w-2/5 my-auto flex-col"
           >
             <div className="relative">
-              <div className="mb-1 block">
-                <Label
-                  className="text-xs"
-                  htmlFor="currentPassword"
-                  value="Current Password"
-                />
-              </div>
-              <TextInput
+              <Input
+                value="Current Password"
                 id="currentPassword"
                 required
                 color={errors.currentPassword && "failure"}
                 {...register("currentPassword")}
                 type="password"
-              />
-              <div className="h-4">
+              >
                 {errors.currentPassword ? (
                   <ErrorMessage
                     text={errors.currentPassword?.message}
@@ -98,55 +92,38 @@ const Security: React.FC = () => {
                     <ErrorMessage text={message} className="mt-1" size="xs" />
                   )
                 )}
-              </div>
+              </Input>
             </div>
-            <div>
-              <div className="mb-1 block">
-                <Label
-                  className="text-xs"
-                  htmlFor="newPassword"
-                  value="New password"
-                />
-              </div>
-              <div className="relative">
-                <TextInput
-                  id="newPassword"
-                  required
-                  color={errors.newPassword && "failure"}
-                  {...register("newPassword")}
-                  type={showNewPassword ? "text" : "password"}
-                />
+            <div className="relative">
+              <Input
+                value="New password"
+                id="newPassword"
+                required
+                color={errors.newPassword && "failure"}
+                {...register("newPassword")}
+                type={showNewPassword ? "text" : "password"}
+                error={errors.newPassword}
+              >
                 <div
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 transform -translate-y-1/2 cursor-pointer"
                   onClick={toggleNewPassword}
                 >
                   {showNewPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
                 </div>
-              </div>
-              <ErrorMessage
-                text={errors.newPassword?.message}
-                className="mt-1"
-                size="xs"
-              />
+              </Input>
             </div>
             <div className="relative">
-              <div className="mb-1 block">
-                <Label
-                  className="text-xs"
-                  htmlFor="confirmNewPassword"
-                  value="Confirm New Password"
-                />
-              </div>
-              <div className="relative">
-                <TextInput
-                  id="confirmNewPassword"
-                  required
-                  color={errors.confirmNewPassword && "failure"}
-                  {...register("confirmNewPassword")}
-                  type={showConfirmNewPassword ? "text" : "password"}
-                />
+              <Input
+                value="Confirm New Password"
+                id="confirmNewPassword"
+                required
+                color={errors.confirmNewPassword && "failure"}
+                {...register("confirmNewPassword")}
+                type={showConfirmNewPassword ? "text" : "password"}
+                error={errors.confirmNewPassword}
+              >
                 <div
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 transform -translate-y-1/2 cursor-pointer"
                   onClick={toggleConfirmNewPassword}
                 >
                   {showConfirmNewPassword ? (
@@ -155,12 +132,7 @@ const Security: React.FC = () => {
                     <HiOutlineEye />
                   )}
                 </div>
-              </div>
-              <ErrorMessage
-                text={errors.confirmNewPassword?.message}
-                className="mt-1"
-                size="xs"
-              />
+              </Input>
             </div>
             <CustomButton type="submit" className="mt-3">
               Save changes

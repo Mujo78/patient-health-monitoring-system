@@ -15,7 +15,6 @@ import {
 import {
   Label,
   Spinner,
-  TextInput,
   Textarea,
   Select as CustomSelect,
 } from "flowbite-react";
@@ -26,6 +25,7 @@ import Select from "react-select";
 import { toast } from "react-hot-toast";
 import { useAppDispatch } from "../../../app/hooks";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
+import Input from "../../../components/UI/Input";
 
 const availableDaysOptions = [
   { value: "Monday", label: "Monday" },
@@ -134,91 +134,64 @@ const PersonalInfoDoc: React.FC = () => {
           </div>
         ) : (
           <div className="w-full flex text-xs gap-1 flex-col h-full justify-center">
-            <div className="w-full flex mt-1">
-              <div className="flex-grow mr-3">
-                <Label
-                  htmlFor="first_name"
-                  className="text-xs"
+            <div className="w-full flex mt-1 gap-4">
+              <div className="flex-grow">
+                <Input
                   value="First Name"
-                />
-                <TextInput
                   id="first_name"
                   className="mt-1"
                   {...register("first_name")}
                   type="text"
                   color={errors.first_name && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.first_name?.message}
-                  className="text-xs"
+                  error={errors.first_name}
                 />
               </div>
-              <div className="flex-grow ml-3">
-                <Label
-                  htmlFor="last_name"
-                  className="text-xs"
+              <div className="flex-grow">
+                <Input
                   value="Last Name"
-                />
-                <TextInput
                   id="last_name"
                   className="mt-1"
                   {...register("last_name")}
                   type="text"
                   color={errors.last_name && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.last_name?.message}
-                  className="text-xs"
+                  error={errors.last_name}
                 />
               </div>
             </div>
-            <div className="flex justify-between">
-              <div className="flex-grow mr-3">
-                <Label
-                  htmlFor="qualification"
-                  className="text-xs"
+            <div className="flex justify-between gap-4">
+              <div className="flex-grow">
+                <Input
                   value="Qualification"
-                />
-                <TextInput
                   id="qualification"
                   className="mt-1"
                   {...register("qualification")}
                   type="text"
                   color={errors.qualification && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.qualification?.message}
-                  className="text-xs"
+                  error={errors.qualification}
                 />
               </div>
-              <div className="flex-grow ml-3">
-                <Label
-                  htmlFor="speciality"
-                  className="text-xs"
+              <div className="flex-grow">
+                <Input
                   value="Speciality"
-                />
-                <TextInput
                   id="speciality"
                   className="mt-1"
                   {...register("speciality")}
                   type="text"
                   color={errors.speciality && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.speciality?.message}
-                  className="text-xs"
+                  error={errors.speciality}
                 />
               </div>
-              <div className="flex-grow ml-3">
+              <div className="flex-grow">
                 <Label
                   htmlFor="speciality"
-                  className="text-xs"
+                  className="text-sm"
                   value="Gender"
                 />
                 <CustomSelect
                   id="gender"
                   {...register("gender")}
                   color={errors.gender && "failure"}
+                  className="mt-2"
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -230,54 +203,44 @@ const PersonalInfoDoc: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-4">
               <div className="w-2/5">
-                <Label
-                  htmlFor="phone_number"
-                  className="text-xs"
+                <Input
                   value="Phone number"
-                />
-                <TextInput
                   id="phone_number"
                   className="mt-1"
                   {...register("phone_number")}
                   type="text"
                   color={errors.phone_number && "failure"}
-                />
-                <ErrorMessage
-                  text={
-                    errors.phone_number?.message ||
-                    message?.includes("phone_number")
-                      ? errorMessageConvert(message, "phone_number")
-                      : ""
-                  }
-                  className="text-xs"
-                />
+                >
+                  {errors.phone_number?.message
+                    ? errors.phone_number?.message
+                    : message?.includes("phone_number")
+                    ? errorMessageConvert(message, "phone_number")
+                    : ""}
+                </Input>
               </div>
-              <div className="w-3/5 pl-3 pr-3">
-                <Label htmlFor="address" className="text-xs" value="Address" />
-                <TextInput
+              <div className="w-3/5">
+                <Input
+                  value="Address"
                   id="address"
                   className="mt-1"
                   {...register("address")}
                   type="text"
                   color={errors.address && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.address?.message}
-                  className="text-xs"
+                  error={errors.address}
                 />
               </div>
               <div className="w-2/6">
-                <Label htmlFor="age" className="text-xs" value="Age" />
-                <TextInput
+                <Input
+                  value="Age"
                   id="age"
                   className="mt-1"
                   {...register("age")}
                   type="text"
                   color={errors.age && "failure"}
+                  error={errors.age}
                 />
-                <ErrorMessage text={errors.age?.message} className="text-xs" />
               </div>
             </div>
             <div className="flex gap-4 justify-center items-center">

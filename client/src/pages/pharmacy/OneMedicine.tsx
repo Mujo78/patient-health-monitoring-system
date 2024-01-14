@@ -17,16 +17,11 @@ import {
   MedicineType,
   medicineValidationSchema,
 } from "../../validations/medicineValidation";
-import {
-  Label,
-  Select,
-  TextInput,
-  Textarea,
-  ToggleSwitch,
-} from "flowbite-react";
+import { Label, Select, Textarea, ToggleSwitch } from "flowbite-react";
 import Footer from "../../components/Footer";
 import CustomButton from "../../components/UI/CustomButton";
 import toast from "react-hot-toast";
+import Input from "../../components/UI/Input";
 
 const OneMedicine: React.FC = () => {
   const { id } = useParams();
@@ -126,27 +121,20 @@ const OneMedicine: React.FC = () => {
             className="flex w-full h-[430px] overflow-y-auto flex-col items-center"
           >
             <div className=" flex text-xs gap-3 flex-col w-3/4 justify-center">
-              <div className="flex-grow w-full mr-3">
-                <Label htmlFor="name" className="text-xs" value="Name" />
-                <TextInput
+              <div className="flex-grow">
+                <Input
+                  value="Name"
                   id="name"
                   className="mt-1"
                   {...register("name")}
                   type="text"
                   color={errors.name && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.name?.message}
-                  className="text-xs mt-1"
+                  error={errors.name}
                 />
               </div>
               <div className="w-full">
-                <Label
-                  htmlFor="strength"
-                  className="text-xs"
+                <Input
                   value="Strength (mg)"
-                />
-                <TextInput
                   id="strength"
                   className="mt-1"
                   {...register("strength")}
@@ -154,16 +142,13 @@ const OneMedicine: React.FC = () => {
                   max={3000}
                   min={1}
                   color={errors.strength && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.strength?.message}
-                  className="text-xs mt-1"
+                  error={errors.strength}
                 />
               </div>
               <div className="w-full">
                 <Label
                   htmlFor="category"
-                  className="text-xs"
+                  className="text-sm"
                   value="Category"
                 />
                 <Select
@@ -189,54 +174,43 @@ const OneMedicine: React.FC = () => {
                   className="text-xs mt-1"
                 />
               </div>
-              <div className="w-full">
-                <Label htmlFor="price" className="text-xs" value="Price" />
-                <TextInput
+              <div className="flex-grow">
+                <Input
+                  value="Price"
                   id="price"
                   className="mt-1"
                   {...register("price")}
                   type="number"
                   color={errors.price && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.price?.message}
-                  className="text-xs mt-1"
+                  error={errors.price}
                 />
               </div>
-              <div className="w-full">
-                <Label
-                  htmlFor="manufacturer"
-                  className="text-xs"
+              <div className="flex-grow">
+                <Input
                   value="Manufacturer"
-                />
-                <TextInput
                   id="manufacturer"
                   className="mt-1"
                   {...register("manufacturer")}
                   type="text"
                   color={errors.manufacturer && "failure"}
-                />
-                <ErrorMessage
-                  text={errors.manufacturer?.message}
-                  className="text-xs mt-1"
+                  error={errors.manufacturer}
                 />
               </div>
-              <div className="relative w-full flex flex-col gap-4">
-                <Label
-                  htmlFor="photo"
-                  className="text-xs"
-                  value="Photo URL (optional)"
-                />
-                <TextInput
-                  id="photo"
-                  className="mt-1 w-full"
-                  {...register("photo")}
-                  type="text"
-                  placeholder="Enter image URL"
-                  color={errors.photo && "failure"}
-                />
+              <div className="relative w-full flex flex-col gap-1">
+                <div>
+                  <Input
+                    value="Photo URL (optional)"
+                    id="photo"
+                    className="mt-1"
+                    {...register("photo")}
+                    type="text"
+                    placeholder="Enter image URL"
+                    color={errors.photo && "failure"}
+                  />
+                </div>
+
                 <p className="text-center">OR</p>
-                <div className="w-full">
+                <div className="flex-grow">
                   <label
                     className={`block w-full bg-white p-2.5 cursor-pointer ${
                       errors.photo
@@ -267,7 +241,7 @@ const OneMedicine: React.FC = () => {
               <div className="w-full">
                 <Label
                   htmlFor="description"
-                  className="text-xs"
+                  className="text-sm"
                   value="Description"
                 />
                 <Textarea

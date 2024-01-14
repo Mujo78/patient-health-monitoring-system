@@ -8,7 +8,7 @@ import {
   personValidationSchema,
 } from "../../../validations/personValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Label, TextInput, Select, Spinner } from "flowbite-react";
+import { Label, Select, Spinner } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { getMe, updateMe } from "../../../service/personSideFunctions";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast";
 import { useAppDispatch } from "../../../app/hooks";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
 import moment from "moment";
+import Input from "../../../components/UI/Input";
 
 const PersonalInformation: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,6 +57,10 @@ const PersonalInformation: React.FC = () => {
         setLoading(true);
         const response = await updateMe(accessUser.token, realData);
 
+        console.log(response);
+
+        setMessage("");
+
         if (!response.message) {
           reset(response);
           const userInfo = {
@@ -77,6 +82,8 @@ const PersonalInformation: React.FC = () => {
     }
   };
 
+  console.log(message);
+
   return (
     <div className="h-full flex flex-col">
       <Header text="Personal information" />
@@ -91,57 +98,46 @@ const PersonalInformation: React.FC = () => {
             </div>
           ) : (
             <div className="w-full flex flex-col h-full justify-center">
-              <div className="w-full flex">
-                <div className="flex-grow mr-5">
-                  <Label
-                    htmlFor="first_name"
-                    className="text-xs"
+              <div className="w-full flex gap-3">
+                <div className="flex-grow">
+                  <Input
                     value="First Name"
-                  />
-                  <TextInput
                     id="first_name"
                     {...register("first_name")}
                     type="text"
                     color={errors.first_name && "failure"}
+                    error={errors.first_name}
                   />
-                  <ErrorMessage text={errors.first_name?.message} />
                 </div>
-                <div className="flex-grow ml-5">
-                  <Label
-                    htmlFor="last_name"
-                    className="text-xs"
+                <div className="flex-grow">
+                  <Input
                     value="Last Name"
-                  />
-                  <TextInput
                     id="last_name"
                     {...register("last_name")}
                     type="text"
                     color={errors.last_name && "failure"}
+                    error={errors.last_name}
                   />
-                  <ErrorMessage text={errors.last_name?.message} />
                 </div>
               </div>
               <div className="flex justify-between">
                 <div className="w-3/4">
-                  <Label
-                    htmlFor="address"
-                    className="text-xs"
+                  <Input
                     value="Address"
-                  />
-                  <TextInput
                     id="address"
                     {...register("address")}
                     type="text"
                     color={errors.address && "failure"}
+                    error={errors.address}
                   />
-                  <ErrorMessage text={errors.address?.message} />
                 </div>
                 <div>
-                  <Label htmlFor="gender" className="text-xs" value="Gender" />
+                  <Label htmlFor="gender" className="text-sm" value="Gender" />
                   <Select
                     id="gender"
                     {...register("gender")}
                     color={errors.gender && "failure"}
+                    className="mt-1.5"
                   >
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -152,24 +148,23 @@ const PersonalInformation: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <div className="w-4/5">
-                  <Label
-                    htmlFor="phone_number"
-                    className="text-xs"
+                  <Input
                     value="Phone number"
-                  />
-                  <TextInput
                     id="phone_number"
                     {...register("phone_number")}
                     type="text"
                     color={errors.phone_number && "failure"}
-                  />
-                  <ErrorMessage
-                    text={
-                      errors.phone_number?.message || message
-                        ? errorMessageConvert(message, "phone_number")
-                        : ""
-                    }
-                  />
+                  >
+                    <ErrorMessage
+                      text={
+                        errors.phone_number?.message
+                          ? errors.phone_number.message
+                          : message
+                          ? errorMessageConvert(message, "phone_number")
+                          : ""
+                      }
+                    />
+                  </Input>
                 </div>
                 <div>
                   <Label
@@ -196,46 +191,34 @@ const PersonalInformation: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <div>
-                  <Label
-                    htmlFor="date_of_birth"
-                    className="text-xs"
+                  <Input
                     value="Birth Date"
-                  />
-                  <TextInput
                     type="date"
                     id="date_of_birth"
                     {...register("date_of_birth")}
                     color={errors.date_of_birth && "failure"}
+                    error={errors.date_of_birth}
                   />
-                  <ErrorMessage text={errors.date_of_birth?.message} />
                 </div>
                 <div>
-                  <Label
-                    htmlFor="weight"
-                    className="text-xs"
+                  <Input
                     value="Weight (kg)"
-                  />
-                  <TextInput
                     type="number"
                     id="weight"
                     {...register("weight")}
                     color={errors.weight && "failure"}
+                    error={errors.weight}
                   />
-                  <ErrorMessage text={errors.weight?.message} />
                 </div>
                 <div>
-                  <Label
-                    htmlFor="height"
-                    className="text-xs"
+                  <Input
                     value="Height (cm)"
-                  />
-                  <TextInput
                     type="number"
                     id="height"
                     {...register("height")}
                     color={errors.height && "failure"}
+                    error={errors.height}
                   />
-                  <ErrorMessage text={errors.height?.message} />
                 </div>
               </div>
             </div>

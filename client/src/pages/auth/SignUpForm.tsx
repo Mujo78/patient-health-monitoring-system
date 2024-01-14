@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../components/UI/Logo";
-import { Alert, Label, Select, Spinner, TextInput } from "flowbite-react";
+import { Alert, Label, Select, Spinner } from "flowbite-react";
 import img from "../../assets/default.jpg";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/hooks";
@@ -12,6 +12,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import { useSelector } from "react-redux";
 import { errorMessageConvert } from "../../service/authSideFunctions";
 import { HiOutlineEyeSlash, HiOutlineEye } from "react-icons/hi2";
+import Input from "../../components/UI/Input";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -92,39 +93,40 @@ const SignUpForm: React.FC = () => {
                   </div>
                 </div>
                 <div className="w-3/5">
-                  <Label htmlFor="first_name" value="First Name" />
-                  <TextInput
+                  <Input
+                    value="First name"
+                    error={errors.first_name}
                     id="first_name"
                     {...register("first_name")}
                     type="text"
                     color={errors.first_name && "failure"}
                   />
-                  <ErrorMessage text={errors.first_name?.message} />
 
-                  <Label htmlFor="last_name" value="Last Name" />
-                  <TextInput
+                  <Input
+                    value="Last Name"
+                    error={errors.last_name}
                     id="last_name"
                     {...register("last_name")}
                     type="text"
                     color={errors.last_name && "failure"}
                   />
-                  <ErrorMessage text={errors.last_name?.message} />
                 </div>
               </div>
               <div className="flex justify-between">
                 <div className="w-3/4">
-                  <Label htmlFor="address" value="Address" />
-                  <TextInput
+                  <Input
+                    value="Address"
+                    error={errors.address}
                     id="address"
                     {...register("address")}
                     type="text"
                     color={errors.address && "failure"}
                   />
-                  <ErrorMessage text={errors.address?.message} />
                 </div>
                 <div>
                   <Label htmlFor="gender" value="Gender" />
                   <Select
+                    className="mt-1.5"
                     id="gender"
                     {...register("gender")}
                     color={errors.gender && "failure"}
@@ -138,25 +140,28 @@ const SignUpForm: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <div className="w-4/5">
-                  <Label htmlFor="phone_number" value="Phone number" />
-                  <TextInput
+                  <Input
+                    value={"Phone number"}
                     id="phone_number"
                     {...register("phone_number")}
                     type="text"
                     color={errors.phone_number && "failure"}
-                  />
-                  <ErrorMessage
-                    text={
-                      errors.phone_number?.message ||
-                      message?.includes("phone_number:")
-                        ? errorMessageConvert(message, "phone_number")
-                        : ""
-                    }
-                  />
+                  >
+                    <ErrorMessage
+                      text={
+                        errors.phone_number?.message
+                          ? errors.phone_number.message
+                          : message?.includes("phone_number:")
+                          ? errorMessageConvert(message, "phone_number")
+                          : ""
+                      }
+                    />
+                  </Input>
                 </div>
                 <div>
                   <Label htmlFor="blood_type" value="Blood Type" />
                   <Select
+                    className="mt-1.5"
                     id="blood_type"
                     {...register("blood_type")}
                     color={errors.blood_type && "failure"}
@@ -175,62 +180,62 @@ const SignUpForm: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <div className="w-4/6 pr-3">
-                  <Label htmlFor="email" value="Email" />
-                  <TextInput
+                  <Input
+                    value="Email"
                     id="email"
                     {...register("email")}
                     type="text"
                     color={errors.email && "failure"}
-                  />
-                  <ErrorMessage
-                    text={
-                      errors.email?.message
-                        ? errors.email.message
-                        : message.includes("email:")
-                        ? errorMessageConvert(message, "email")
-                        : ""
-                    }
-                  />
+                  >
+                    <ErrorMessage
+                      text={
+                        errors.email?.message
+                          ? errors.email.message
+                          : message.includes("email:")
+                          ? errorMessageConvert(message, "email")
+                          : ""
+                      }
+                    />
+                  </Input>
                 </div>
                 <div>
-                  <Label htmlFor="date_of_birth" value="Birth Date" />
-                  <TextInput
+                  <Input
+                    value="Birth Date"
                     type="date"
                     id="date_of_birth"
                     {...register("date_of_birth")}
                     color={errors.date_of_birth && "failure"}
+                    error={errors.date_of_birth}
                   />
-                  <ErrorMessage text={errors.date_of_birth?.message} />
                 </div>
               </div>
-              <div>
-                <Label htmlFor="password" value="Password" />
-                <div className="relative">
-                  <TextInput
-                    {...register("password")}
-                    id="password"
-                    type={showNewPassword ? "text" : "password"}
-                    color={errors.password && "failure"}
-                  />
+              <div className="relative">
+                <Input
+                  value="Password"
+                  {...register("password")}
+                  id="password"
+                  type={showNewPassword ? "text" : "password"}
+                  color={errors.password && "failure"}
+                  error={errors.password}
+                >
                   <div
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    className="absolute right-2 top-11 transform -translate-y-1/2 cursor-pointer"
                     onClick={togglePassword}
                   >
                     {showNewPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
                   </div>
-                </div>
-                <ErrorMessage text={errors.password?.message} />
+                </Input>
               </div>
-              <div>
-                <Label htmlFor="passwordConfirm" value="Confirm password" />
-                <TextInput
-                  id="passwordConfirm"
-                  type="password"
-                  {...register("passwordConfirm")}
-                  color={errors.passwordConfirm && "failure"}
-                />
-                <ErrorMessage text={errors.passwordConfirm?.message} />
-              </div>
+
+              <Input
+                value="Confirm password"
+                id="passwordConfirm"
+                type="password"
+                {...register("passwordConfirm")}
+                color={errors.passwordConfirm && "failure"}
+                error={errors.passwordConfirm}
+              />
+
               <div className="flex justify-between">
                 {status === "idle" && (
                   <Alert className="flex items-center justify-center h-10 text-center">

@@ -9,8 +9,10 @@ export default async (email: string) => {
 };
 
 export function errorMessageConvert(message: string, key: string) {
-  const index = message.indexOf(key);
-  return message.slice(index + key.length + 1, message.length);
+  if (message.includes(key)) {
+    const index = message.indexOf(key);
+    return message.slice(index + key.length + 1, message.length);
+  }
 }
 
 export function colorPick(type: string) {

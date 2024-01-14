@@ -107,16 +107,23 @@ const MakeAppointment: React.FC = () => {
 
   const makeNewAppointment = () => {
     const time = convert12HourTo24Hour(newTime);
+
     const index = value
       ?.toLocaleString()
       .indexOf(new Date(value.toString()).getFullYear().toString());
+
     const date = value
       ?.toLocaleString()
       .slice(0, Number(index) + 4)
-      .replace(/\s+/g, "")
-      .replace(/\./g, "-");
+      .replace(/\./g, "-")
+      .replace(/\s+/g, "");
+
     const newAppDate =
-      date?.replace(/^(\d{2})\/(\d{2})\/(\d{4})$/, "$3-$1-$2") +
+      date?.replace(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, (_, p1, p2, p3) => {
+        const month = p1.padStart(2, "0");
+        const day = p2.padStart(2, "0");
+        return `${p3}-${month}-${day}`;
+      }) +
       "T" +
       time +
       ":00";

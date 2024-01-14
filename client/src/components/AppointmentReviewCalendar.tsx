@@ -99,7 +99,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({ variant }) => {
           locale="eng"
           onViewChange={({ view }) => view === "month"}
           minDate={new Date()}
-          maxDate={new Date("01/01/2024")}
+          maxDate={new Date("01/01/2025")}
           value={value}
           showNavigation={false}
           tileClassName={({ date }) =>

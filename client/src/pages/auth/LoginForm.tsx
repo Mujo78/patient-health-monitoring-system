@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Label, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +20,7 @@ import {
 import ForgotPasswordModal from "../../components/ForgotPasswordModal";
 import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
+import Input from "../../components/UI/Input";
 
 type User = {
   email: string;
@@ -92,69 +92,60 @@ const LoginForm: React.FC = () => {
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex mx-auto max-w-sm flex-col gap-4"
+            className="flex mx-auto max-w-sm flex-col gap-1"
           >
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="email" value="Email" />
-              </div>
-              <TextInput
-                {...register("email")}
-                id="email"
-                disabled={status === "loading"}
-                icon={HiEnvelope}
-                color={errors.email && "failure"}
-                placeholder="name@example.com"
-                type="email"
-              />
-              <div className="h-3 mt-1">
-                {errors.email && (
-                  <p className="text-red-600 text-xs">{errors.email.message}</p>
-                )}
-              </div>
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="password" value="Password" />
-              </div>
-              <div className="relative">
-                <TextInput
+            <Input
+              value="Email"
+              {...register("email")}
+              id="email"
+              disabled={status === "loading"}
+              icon={HiEnvelope}
+              color={errors.email && "failure"}
+              placeholder="name@example.com"
+              type="email"
+              error={errors.email}
+            />
+            <>
+              <div className="relative mb-5">
+                <Input
+                  value="Password"
                   {...register("password")}
                   color={errors.password && "failure"}
                   id="password"
                   disabled={status === "loading"}
                   icon={HiLockClosed}
                   type={showPassword ? "text" : "password"}
-                />
+                >
+                  <div className="flex justify-between">
+                    {errors.password ? (
+                      <p className="text-red-600 text-xs">
+                        {" "}
+                        {errors.password.message}{" "}
+                      </p>
+                    ) : message ? (
+                      <p className="text-red-600 text-xs"> {message} </p>
+                    ) : (
+                      ""
+                    )}
+                    <button
+                      className="text-xs ml-auto underline p-0 mt-1 mb-4 !bg-white text-black cursor-pointer"
+                      disabled={status === "loading"}
+                      onClick={(
+                        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                      ) => forgotPasswordShow(event)}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                </Input>
                 <div
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 bottom-50 top-12 transform -translate-y-1/2 cursor-pointer"
                   onClick={togglePassword}
                 >
                   {showPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
                 </div>
               </div>
-              <div className="h-4 flex justify-between mt-1">
-                {errors.password ? (
-                  <p className="text-red-600 text-xs">
-                    {" "}
-                    {errors.password.message}{" "}
-                  </p>
-                ) : message ? (
-                  <p className="text-red-600 text-xs"> {message} </p>
-                ) : (
-                  ""
-                )}
-                <button
-                  className="text-xs ml-auto underline p-0 mt-1 mb-4 !bg-white text-black cursor-pointer"
-                  disabled={status === "loading"}
-                  onClick={(
-                    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => forgotPasswordShow(event)}
-                >
-                  Forgot password?
-                </button>
-              </div>
-            </div>
+            </>
             <CustomButton
               disabled={status === "loading"}
               className="bg-blue-700 hover:!bg-blue-600  transition-colors duration-300"
