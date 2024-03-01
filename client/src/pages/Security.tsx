@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
+import Header from "../components/UI/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Spinner } from "flowbite-react";
 import CustomButton from "../components/UI/CustomButton";

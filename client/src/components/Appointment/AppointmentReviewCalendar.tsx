@@ -1,15 +1,15 @@
 import { Card, Spinner, Table } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
-import { Value } from "../pages/patient/appointment/MakeAppointment";
+import { Value } from "../../pages/patient/appointment/MakeAppointment";
 import {
   formatDate,
   formatStartEnd,
   isCurrentAppointment,
-} from "../service/appointmentSideFunctions";
-import CustomImg from "./UI/CustomImg";
+} from "../../service/appointmentSideFunctions";
+import CustomImg from "../UI/CustomImg";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
 import {
   Appointment,
@@ -17,11 +17,11 @@ import {
   cancelAppointment,
   getAppointmentsForADay,
   resetAppointmentDay,
-} from "../features/appointment/appointmentSlice";
+} from "../../features/appointment/appointmentSlice";
 import { HiXCircle } from "react-icons/hi2";
 import toast from "react-hot-toast";
-import socket from "../socket";
-import { authUser } from "../features/auth/authSlice";
+import socket from "../../socket";
+import { authUser } from "../../features/auth/authSlice";
 
 type Props = {
   variant: 1 | 2;

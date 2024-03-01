@@ -10,7 +10,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { HiChevronRight } from "react-icons/hi2";
 import CustomImg from "../../../components/UI/CustomImg";
 import { UserInfo } from "../../../features/appointment/appointmentSlice";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import { useSelector } from "react-redux";
 import { authUser } from "../../../features/auth/authSlice";
 import ErrorMessage from "../../../components/UI/ErrorMessage";

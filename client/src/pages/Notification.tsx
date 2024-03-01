@@ -9,7 +9,7 @@ import {
   restartNotification,
 } from "../features/notification/notificationSlice";
 import { useAppDispatch } from "../app/hooks";
-import Footer from "../components/Footer";
+import Footer from "../components/UI/Footer";
 import { Button } from "flowbite-react";
 import Logo from "../components/UI/Logo";
 

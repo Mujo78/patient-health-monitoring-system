@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../../components/Header";
+import Header from "../../../components/UI/Header";
 import { useSelector } from "react-redux";
 import { authUser, setInfoAccessUser } from "../../../features/auth/authSlice";
 import { getData, updateData } from "../../../service/pharmacySideFunctions";
@@ -12,7 +12,7 @@ import {
 } from "../../../validations/pharmacyValidation";
 import { Spinner, TextInput, Label, Textarea } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useAppDispatch } from "../../../app/hooks";
 import { toast } from "react-hot-toast";

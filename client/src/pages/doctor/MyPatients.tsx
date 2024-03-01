@@ -9,7 +9,7 @@ import { Patient } from "../../features/medicine/medicineSlice";
 import { Spinner, TextInput } from "flowbite-react";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import CustomButton from "../../components/UI/CustomButton";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import useSelectedPage from "../../hooks/useSelectedPage";

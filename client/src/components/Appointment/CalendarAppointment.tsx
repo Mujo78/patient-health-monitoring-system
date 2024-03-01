@@ -1,8 +1,8 @@
 import React from "react";
 import Calendar, { OnClickFunc } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Value } from "../pages/patient/appointment/MakeAppointment";
-import { isDoctorAvailable } from "../service/appointmentSideFunctions";
+import { Value } from "../../pages/patient/appointment/MakeAppointment";
+import { isDoctorAvailable } from "../../service/appointmentSideFunctions";
 
 type Props = {
   value: Value;

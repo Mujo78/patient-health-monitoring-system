@@ -1,17 +1,11 @@
 import React from "react";
 import { CustomFlowbiteTheme, Sidebar } from "flowbite-react";
-import hospitalImage from "../assets/hospital-logos.webp";
-import { NavLink, useNavigate } from "react-router-dom";
+import hospitalImage from "../../assets/hospital-logos.webp";
+import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {
-  authUser,
-  logout,
-  reset,
-  setSelected,
-} from "../features/auth/authSlice";
-import { HiOutlineArrowRightOnRectangle } from "react-icons/hi2";
-import { useAppDispatch } from "../app/hooks";
-import { restartNotifications } from "../features/notification/notificationSlice";
+import { authUser, setSelected } from "../../features/auth/authSlice";
+import { useAppDispatch } from "../../app/hooks";
+import LogoutButton from "./LogoutButton";
 
 const theme: CustomFlowbiteTheme["sidebar"] = {
   root: {
@@ -35,24 +29,15 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
   const route = accessUser?.data.role.toLowerCase();
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
-  const logOut = () => {
-    dispatch(restartNotifications());
-    dispatch(logout());
-    navigate("/", { replace: true });
-    dispatch(setSelected(""));
-    dispatch(reset());
-  };
 
   const onClickSelect = (name: string) => {
     dispatch(setSelected(name));
   };
 
   return (
-    <div className="w-fit h-screen">
+    <div className="w-fit h-screen hidden sm:!flex">
       <Sidebar
-        className="h-screen border-r border-r-gray-200 flex flex-col justify-between"
+        className="h-screen border-r border-r-gray-200 flex flex-col justify-between w-fit"
         theme={theme}
       >
         <Sidebar.Items className="h-5/6 font-Poppins flex flex-col justify">
@@ -66,9 +51,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
               >
                 <img
                   src={hospitalImage}
-                  className="rounded mx-auto bg-white"
-                  width="120"
-                  height="80px"
+                  className="rounded mx-auto bg-white h-auto w-32"
                   alt="Hospital logo"
                 />
               </Sidebar.Item>
@@ -76,16 +59,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
             </Sidebar.ItemGroup>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
-        <Sidebar.CTA
-          color="light"
-          onClick={logOut}
-          className="h-fit mb-2 flex justify-center hover:bg-gray-50 cursor-pointer"
-        >
-          <div className="flex gap-2 items-center justify-center">
-            <HiOutlineArrowRightOnRectangle className="w-[19px] h-[19px]" />
-            <p> Logout</p>
-          </div>
-        </Sidebar.CTA>
+        <LogoutButton />
       </Sidebar>
     </div>
   );

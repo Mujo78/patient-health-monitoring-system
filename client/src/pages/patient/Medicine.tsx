@@ -9,7 +9,7 @@ import {
 import { useAppDispatch } from "../../app/hooks";
 import { Button, Card, Select, Spinner, TextInput } from "flowbite-react";
 import CustomMedicineImg from "../../components/UI/CustomMedicineImg";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/UI/Pagination";
 import MedicineModal from "../../components/MedicineModal";
 import { getPharmacy } from "../../service/pharmacySideFunctions";
 import { authUser } from "../../features/auth/authSlice";
@@ -17,7 +17,7 @@ import ErrorMessage from "../../components/UI/ErrorMessage";
 import CustomImg from "../../components/UI/CustomImg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CustomButton from "../../components/UI/CustomButton";
-import Footer from "../../components/Footer";
+import Footer from "../../components/UI/Footer";
 import useSelectedPage from "../../hooks/useSelectedPage";
 
 function useQuery() {

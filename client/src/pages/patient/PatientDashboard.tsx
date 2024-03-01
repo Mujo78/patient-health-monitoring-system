@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { authUser, firstTime } from "../../features/auth/authSlice";
 import moment from "moment";
 import AppointmentsChart from "./AppointmentsChart";
-import AppointmentReviewCalendar from "../../components/AppointmentReviewCalendar";
+import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
 import useSelectedPage from "../../hooks/useSelectedPage";
 
 type appointment = {

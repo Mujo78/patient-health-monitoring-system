@@ -13,7 +13,7 @@ import {
   HiOutlinePencilSquare,
   HiOutlineDocumentDuplicate,
 } from "react-icons/hi2";
-import CalendarAppointment from "../../../components/CalendarAppointment";
+import CalendarAppointment from "../../../components/Appointment/CalendarAppointment";
 import { Value } from "./MakeAppointment";
 import { useAppDispatch } from "../../../app/hooks";
 import {

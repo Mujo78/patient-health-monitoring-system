@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { authUser, firstTime } from "../../../features/auth/authSlice";
-import AppointmentReviewCalendar from "../../../components/AppointmentReviewCalendar";
+import AppointmentReviewCalendar from "../../../components/Appointment/AppointmentReviewCalendar";
 import DocDashboardInfo from "./DocDashboardInfo";
 import DocDashboard from "./DocDashboard";
 import {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../../components/Header";
+import Header from "../../../components/UI/Header";
 import { useSelector } from "react-redux";
 import { authUser, setInfoAccessUser } from "../../../features/auth/authSlice";
 import { Controller, useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import {
   Textarea,
   Select as CustomSelect,
 } from "flowbite-react";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import Select from "react-select";

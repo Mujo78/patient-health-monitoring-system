@@ -11,7 +11,7 @@ import {
 import { Button, Card, Spinner } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomImg from "../../../components/UI/CustomImg";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import AppointmentOverviewEdit from "./AppointmentOverviewEdit";
 import { formatStartEnd } from "../../../service/appointmentSideFunctions";
 

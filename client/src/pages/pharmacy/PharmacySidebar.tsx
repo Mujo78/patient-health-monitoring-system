@@ -1,5 +1,5 @@
 import React from "react";
-import RootSidebar from "../../components/RootSidebar";
+import RootSidebar from "../../components/UI/RootSidebar";
 import { Sidebar } from "flowbite-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import {
 } from "react-icons/hi2";
 import { useAppDispatch } from "../../app/hooks";
 import { reset } from "../../features/medicine/medicineSlice";
+import SidebarItemText from "../../components/UI/SidebarItemText";
 
 const PharmacySidebar: React.FC = () => {
   const location = useLocation();
@@ -31,7 +32,7 @@ const PharmacySidebar: React.FC = () => {
         active={location.pathname.startsWith("/pharmacy/")}
         icon={HiOutlineChartBarSquare}
       >
-        Dashboard
+        <SidebarItemText>Dashboard</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -40,7 +41,7 @@ const PharmacySidebar: React.FC = () => {
         active={location.pathname.startsWith("/medicine")}
         icon={HiOutlineDocumentText}
       >
-        Overview
+        <SidebarItemText>Overview</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -49,7 +50,7 @@ const PharmacySidebar: React.FC = () => {
         active={location.pathname === "/add-medicine"}
         icon={HiOutlineDocumentPlus}
       >
-        Add medicine
+        <SidebarItemText>Add medicine</SidebarItemText>
       </Sidebar.Item>
     </RootSidebar>
   );

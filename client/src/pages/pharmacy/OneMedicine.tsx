@@ -18,7 +18,7 @@ import {
   medicineValidationSchema,
 } from "../../validations/medicineValidation";
 import { Label, Select, Textarea, ToggleSwitch } from "flowbite-react";
-import Footer from "../../components/Footer";
+import Footer from "../../components/UI/Footer";
 import CustomButton from "../../components/UI/CustomButton";
 import toast from "react-hot-toast";
 import Input from "../../components/UI/Input";

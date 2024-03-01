@@ -1,5 +1,5 @@
 import React from "react";
-import CustomButton from "./UI/CustomButton";
+import CustomButton from "./CustomButton";
 import { Spinner, Table } from "flowbite-react";
 import {
   HiOutlineXCircle,
@@ -10,13 +10,13 @@ import { useSelector } from "react-redux";
 import {
   markAllAsRead,
   notification,
-} from "../features/notification/notificationSlice";
+} from "../../features/notification/notificationSlice";
 import { useNavigate } from "react-router-dom";
-import ErrorMessage from "./UI/ErrorMessage";
+import ErrorMessage from "./ErrorMessage";
 import moment from "moment";
-import { useAppDispatch } from "../app/hooks";
-import { authUser } from "../features/auth/authSlice";
-import { colorPick } from "../service/authSideFunctions";
+import { useAppDispatch } from "../../app/hooks";
+import { authUser } from "../../features/auth/authSlice";
+import { colorPick } from "../../service/authSideFunctions";
 
 type Props = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -90,11 +90,11 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                       >
                         <Table.Cell className="flex gap-2 items-center p-2">
                           {n.type === "MESSAGE" ? (
-                            <HiOutlineUserGroup className="h-[32px] w-[32px]" />
+                            <HiOutlineUserGroup className="h-8 w-8" />
                           ) : n.type === "INFO" ? (
-                            <HiOutlineInformationCircle className="h-[32px] w-[32px] text-green-600" />
+                            <HiOutlineInformationCircle className="h-8 w-8 text-green-600" />
                           ) : (
-                            <HiOutlineXCircle className="h-[32px] w-[32px] text-red-600" />
+                            <HiOutlineXCircle className="h-8 w-8 text-red-600" />
                           )}
                           <div className="flex flex-col w-full text-xs">
                             <h3
@@ -126,11 +126,11 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                   >
                     <Table.Cell className="flex gap-2 items-center p-2">
                       {n.type === "MESSAGE" ? (
-                        <HiOutlineUserGroup className="h-[32px] w-[32px]" />
+                        <HiOutlineUserGroup className="h-8 w-8" />
                       ) : n.type === "INFO" ? (
-                        <HiOutlineInformationCircle className="h-[32px] w-[32px] text-green-600" />
+                        <HiOutlineInformationCircle className="h-8 w-8 text-green-600" />
                       ) : (
-                        <HiOutlineXCircle className="h-[32px] w-[32px] text-red-600" />
+                        <HiOutlineXCircle className="h-8 w-8 text-red-600" />
                       )}
                       <div className="flex flex-col w-full text-xs">
                         <h3

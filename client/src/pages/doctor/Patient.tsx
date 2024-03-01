@@ -8,12 +8,12 @@ import {
   getPatientFinishedAppointments,
 } from "../../service/appointmentSideFunctions";
 import { Medicine } from "../../features/medicine/medicineSlice";
-import Footer from "../../components/Footer";
+import Footer from "../../components/UI/Footer";
 import CustomImg from "../../components/UI/CustomImg";
 import moment from "moment";
 import PatientModal from "./appointment/PatientModal";
 import ErrorMessage from "../../components/UI/ErrorMessage";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 

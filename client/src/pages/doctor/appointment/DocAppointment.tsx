@@ -17,7 +17,7 @@ import {
 } from "../../../features/medicine/medicineSlice";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import { HiXCircle } from "react-icons/hi2";
 import { toast } from "react-hot-toast";
 import CustomButton from "../../../components/UI/CustomButton";

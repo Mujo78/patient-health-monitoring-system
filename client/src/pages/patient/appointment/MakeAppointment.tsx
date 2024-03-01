@@ -21,9 +21,9 @@ import {
   resetAppointmentDay,
 } from "../../../features/appointment/appointmentSlice";
 import { toast } from "react-hot-toast";
-import Footer from "../../../components/Footer";
+import Footer from "../../../components/UI/Footer";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
-import CalendarAppointment from "../../../components/CalendarAppointment";
+import CalendarAppointment from "../../../components/Appointment/CalendarAppointment";
 import { authUser } from "../../../features/auth/authSlice";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 

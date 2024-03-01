@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "../../components/UI/ErrorMessage";
-import Footer from "../../components/Footer";
+import Footer from "../../components/UI/Footer";
 import CustomButton from "../../components/UI/CustomButton";
 import { useSelector } from "react-redux";
 import {

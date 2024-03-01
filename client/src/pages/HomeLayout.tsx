@@ -5,7 +5,7 @@ import { authUser, logout } from "../features/auth/authSlice";
 import PatientSidebar from "./patient/PatientSidebar";
 import DoctorSidebar from "./doctor/DoctorSidebar";
 import PharmacySidebar from "./pharmacy/PharmacySidebar";
-import CustomNavbar from "../components/CustomNavbar";
+import CustomNavbar from "../components/UI/CustomNavbar";
 import { useAppDispatch } from "../app/hooks";
 
 const HomeLayout: React.FC = () => {

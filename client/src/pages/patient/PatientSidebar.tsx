@@ -1,5 +1,5 @@
 import React from "react";
-import RootSidebar from "../../components/RootSidebar";
+import RootSidebar from "../../components/UI/RootSidebar";
 import { Sidebar } from "flowbite-react";
 import {
   HiOutlineChartBar,
@@ -12,6 +12,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { authUser, setSelected } from "../../features/auth/authSlice";
 import { useAppDispatch } from "../../app/hooks";
+import SidebarItemText from "../../components/UI/SidebarItemText";
 
 const PatientSidebar: React.FC = () => {
   const location = useLocation();
@@ -31,7 +32,7 @@ const PatientSidebar: React.FC = () => {
         active={location.pathname.startsWith("/patient/")}
         to={`/patient/${accessUser?.data._id}`}
       >
-        Dashboard
+        <SidebarItemText>Dashboard</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -40,7 +41,7 @@ const PatientSidebar: React.FC = () => {
         active={location.pathname.startsWith("/my-appointments")}
         to={"/my-appointments"}
       >
-        My Appointments
+        <SidebarItemText>My Appointments</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -49,7 +50,7 @@ const PatientSidebar: React.FC = () => {
         active={location.pathname.startsWith("/appointment")}
         to={"/appointment"}
       >
-        Book Appointment
+        <SidebarItemText>Book Appointment</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -58,7 +59,7 @@ const PatientSidebar: React.FC = () => {
         active={location.pathname.startsWith("/staff")}
         to={"/staff"}
       >
-        Medical staff
+        <SidebarItemText>Medical staff</SidebarItemText>
       </Sidebar.Item>
       <Sidebar.Item
         as={NavLink}
@@ -67,7 +68,7 @@ const PatientSidebar: React.FC = () => {
         active={location.pathname === "/medicine-overview"}
         to={"/medicine-overview"}
       >
-        Medicine
+        <SidebarItemText>Medicine</SidebarItemText>
       </Sidebar.Item>
     </RootSidebar>
   );

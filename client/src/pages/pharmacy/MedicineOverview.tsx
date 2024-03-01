@@ -4,11 +4,11 @@ import { getMedicine, medicine } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { Button, Card, Select, Spinner, TextInput } from "flowbite-react";
 import CustomMedicineImg from "../../components/UI/CustomMedicineImg";
-import Pagination from "../../components/Pagination";
+import Pagination from "../../components/UI/Pagination";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import CustomButton from "../../components/UI/CustomButton";
-import Footer from "../../components/Footer";
+import Footer from "../../components/UI/Footer";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { useQuery } from "../../hooks/useQery";
 

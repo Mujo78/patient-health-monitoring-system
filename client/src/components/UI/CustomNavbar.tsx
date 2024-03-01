@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "flowbite-react";
 import { useSelector } from "react-redux";
-import { authUser } from "../features/auth/authSlice";
+import { authUser } from "../../features/auth/authSlice";
 import { Link } from "react-router-dom";
 import { HiOutlineBell } from "react-icons/hi2";
-import { useAppDispatch } from "../app/hooks";
-import CustomImg from "./UI/CustomImg";
-import socket from "../socket";
+import { useAppDispatch } from "../../app/hooks";
+import CustomImg from "./CustomImg";
+import socket from "../../socket";
 import {
   addNotification,
   getPersonNotifications,
   notification,
   restartPersonNotifications,
-} from "../features/notification/notificationSlice";
+} from "../../features/notification/notificationSlice";
 import NavBarDropdown from "./NavBarDropdown";
+import LogoutButton from "./LogoutButton";
 
 const CustomNavbar: React.FC = () => {
   let route;
@@ -72,32 +73,38 @@ const CustomNavbar: React.FC = () => {
       className={`border-t-0 p-2 justify-between items-center w-full flex border-x-0 border-b border-b-gray-200`}
     >
       <div className="w-1/3">
-        <p className="text-xl font-semibold">
+        <p className="text-sm md:text-xl font-semibold">
           {selected ? selected : "Dashboard"}
         </p>
       </div>
-      <div className="w-1/3">
+      <div className="w-1/3 hidden sm:block">
         <p className="text-sm font-semibold">{date.toString().slice(0, 16)}</p>
       </div>
       <div className="flex flex-row-reverse items-center relative">
-        <Link to={route}>
-          <div className="flex items-center">
-            {accessUser !== undefined && (
-              <CustomImg
-                url={accessUser?.data.photo}
-                className="mr-1"
-                width="30"
-              />
-            )}
-            <p className="text-xs font-semibold mr-6">
-              {accessUser?.info.name
-                ? accessUser?.info.name
-                : accessUser?.info.first_name +
-                  " " +
-                  accessUser?.info.last_name}
-            </p>
+        <div className="flex items-center gap-2">
+          <Link to={route}>
+            <div className="flex items-center">
+              {accessUser !== undefined && (
+                <div className="flex justify-center items-center flex-wrap">
+                  <CustomImg
+                    url={accessUser?.data.photo}
+                    className="mr-1 w-8"
+                  />
+                  <p className="text-xs font-semibold mr-0 sm:mr-3">
+                    {accessUser?.info.name
+                      ? accessUser?.info.name
+                      : accessUser?.info.first_name +
+                        " " +
+                        accessUser?.info.last_name}
+                  </p>
+                </div>
+              )}
+            </div>
+          </Link>
+          <div className="flex sm:!hidden">
+            <LogoutButton />
           </div>
-        </Link>
+        </div>
         <div className="relative">
           <div className="relative cursor-pointer">
             <Avatar
@@ -113,7 +120,7 @@ const CustomNavbar: React.FC = () => {
             />
           </div>
           {show && (
-            <div className="h-80 absolute top-9 right-0 z-30 bg-gray-100 w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 ">
+            <div className="h-80 absolute top-9 -right-24 sm:right-0 z-30 bg-gray-100 w-fit sm:w-64 shadow-lg rounded-b-lg border-t-0 border border-gray-200 ">
               <NavBarDropdown setShow={setShow} />
             </div>
           )}
