@@ -9,7 +9,7 @@ import {
 } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
 import ErrorMessage from "../../components/UI/ErrorMessage";
-import CustomMedicineImg from "../../components/UI/CustomMedicineImg";
+import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import { HiXMark } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

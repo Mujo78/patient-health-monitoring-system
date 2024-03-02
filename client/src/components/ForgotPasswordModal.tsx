@@ -50,7 +50,10 @@ const ForgotPassword: React.FC<Props> = ({
       <Modal.Body>
         <Tabs.Group>
           <Tabs.Item active title="Email verification">
-            <form onSubmit={handleClick} className="flex flex-col px-20 gap-6">
+            <form
+              onSubmit={handleClick}
+              className="flex flex-col sm:px-20 gap-6"
+            >
               <p className="text-sm">
                 Enter the email address associated with your account and we'll
                 send you a link to reset your password.

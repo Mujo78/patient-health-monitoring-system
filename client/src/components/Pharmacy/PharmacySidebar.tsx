@@ -1,5 +1,5 @@
 import React from "react";
-import RootSidebar from "../../components/UI/RootSidebar";
+import RootSidebar from "../UI/RootSidebar";
 import { Sidebar } from "flowbite-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import {
 } from "react-icons/hi2";
 import { useAppDispatch } from "../../app/hooks";
 import { reset } from "../../features/medicine/medicineSlice";
-import SidebarItemText from "../../components/UI/SidebarItemText";
+import SidebarItemText from "../UI/SidebarItemText";
 
 const PharmacySidebar: React.FC = () => {
   const location = useLocation();

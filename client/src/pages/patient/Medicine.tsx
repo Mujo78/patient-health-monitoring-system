@@ -8,9 +8,9 @@ import {
 } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { Button, Card, Select, Spinner, TextInput } from "flowbite-react";
-import CustomMedicineImg from "../../components/UI/CustomMedicineImg";
+import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import Pagination from "../../components/UI/Pagination";
-import MedicineModal from "../../components/MedicineModal";
+import MedicineModal from "../../components/Pharmacy/MedicineModal";
 import { getPharmacy } from "../../service/pharmacySideFunctions";
 import { authUser } from "../../features/auth/authSlice";
 import ErrorMessage from "../../components/UI/ErrorMessage";

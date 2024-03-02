@@ -4,7 +4,7 @@ import {
   getPatientsForDoctor,
   searchForPatient,
 } from "../../service/patientSideFunctions";
-import PatientCard from "../../components/PatientCard";
+import PatientCard from "../../components/Patient/PatientCard";
 import { Patient } from "../../features/medicine/medicineSlice";
 import { Spinner, TextInput } from "flowbite-react";
 import ErrorMessage from "../../components/UI/ErrorMessage";

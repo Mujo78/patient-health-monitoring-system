@@ -1,14 +1,12 @@
-import React from "react";
-
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
 } from "react-router-dom";
-import AppLayout from "./pages/AppLayout";
+import AppLayout from "./components/Layout/AppLayout";
 import LandingPage from "./pages/LandingPage";
-import HomeLayout from "./pages/HomeLayout";
+import HomeLayout from "./components/Layout/HomeLayout";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerificationPage from "./pages/auth/VerificationPage";
 import ForgotPasswordRes from "./pages/auth/ForgotPasswordRes";
@@ -134,7 +132,7 @@ const router = createBrowserRouter(
   )
 );
 
-const App: React.FC = () => {
+const App = () => {
   return <RouterProvider router={router} />;
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "flowbite-react";
-import CustomMedicineImg from "./UI/CustomMedicineImg";
-import { Medicine } from "../features/medicine/medicineSlice";
+import CustomMedicineImg from "./CustomMedicineImg";
+import { Medicine } from "../../features/medicine/medicineSlice";
 
 type Props = {
   show: boolean;

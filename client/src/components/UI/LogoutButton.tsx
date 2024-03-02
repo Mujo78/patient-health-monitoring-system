@@ -22,11 +22,11 @@ const LogoutButton = () => {
     <Button
       color="light"
       onClick={logOut}
-      className="h-fit w-full mb-0 sm:mb-2 hover:bg-gray-50 cursor-pointer"
+      className="h-fit !w-fit mx-auto md:!w-full mb-0 sm:mb-2 hover:bg-gray-50 cursor-pointer"
     >
       <div className="flex justify-center items-center gap-2">
         <HiOutlineArrowRightOnRectangle className="w-5 h-5" />
-        <span className="sm:hidden md:block">Logout</span>
+        <span className="hidden md:block">Logout</span>
       </div>
     </Button>
   );

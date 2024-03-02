@@ -27,7 +27,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import moment from "moment";
 import { Medicine } from "../../../features/medicine/medicineSlice";
-import MedicineModal from "../../../components/MedicineModal";
+import MedicineModal from "../../../components/Pharmacy/MedicineModal";
 import { authUser } from "../../../features/auth/authSlice";
 
 const workTime = [

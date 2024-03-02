@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { authUser } from "../features/auth/authSlice";
+import { authUser } from "../../features/auth/authSlice";
 
 type Props = {
   children: React.ReactNode;

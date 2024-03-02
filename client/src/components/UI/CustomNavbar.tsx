@@ -69,9 +69,7 @@ const CustomNavbar: React.FC = () => {
   const date = new Date();
 
   return (
-    <nav
-      className={`border-t-0 p-2 justify-between items-center w-full flex border-x-0 border-b border-b-gray-200`}
-    >
+    <nav className=" sticky md:relative border-t-0 p-2 justify-between items-center w-full flex border-x-0 border-b border-b-gray-200">
       <div className="w-1/3">
         <p className="text-sm md:text-xl font-semibold">
           {selected ? selected : "Dashboard"}
@@ -81,7 +79,7 @@ const CustomNavbar: React.FC = () => {
         <p className="text-sm font-semibold">{date.toString().slice(0, 16)}</p>
       </div>
       <div className="flex flex-row-reverse items-center relative">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Link to={route}>
             <div className="flex items-center">
               {accessUser !== undefined && (
@@ -114,7 +112,7 @@ const CustomNavbar: React.FC = () => {
               statusPosition="top-right"
               size="xs"
               rounded
-              className={`p-2 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${
+              className={`p-1 sm:p-2 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${
                 show && "bg-gray-100"
               } `}
             />

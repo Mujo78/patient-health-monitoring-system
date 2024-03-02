@@ -48,6 +48,8 @@ const PatientDashboard: React.FC = () => {
     }
   }, [dispatch, accessUser]);
 
+  //console.log(object);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,7 +59,7 @@ const PatientDashboard: React.FC = () => {
           setLatestFinished(response);
         }
       } catch (err: any) {
-        console.log(err);
+        throw new Error(err?.message);
       } finally {
         setLoading(false);
       }

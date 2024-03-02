@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { getMedicine, medicine } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { Button, Card, Select, Spinner, TextInput } from "flowbite-react";
-import CustomMedicineImg from "../../components/UI/CustomMedicineImg";
+import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import Pagination from "../../components/UI/Pagination";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import { Outlet, useNavigate, useParams } from "react-router-dom";

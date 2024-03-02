@@ -5,7 +5,7 @@ import {
   HiOutlineLockClosed,
 } from "react-icons/hi2";
 import { Link } from "react-router-dom";
-import Profile from "../../../components/Profile";
+import Profile from "../../../components/Layout/Profile";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 
 const PatientProfile: React.FC = () => {

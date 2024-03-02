@@ -1,7 +1,7 @@
 import { Card } from "flowbite-react";
 import React from "react";
-import { Patient } from "../features/medicine/medicineSlice";
-import CustomImg from "./UI/CustomImg";
+import { Patient } from "../../features/medicine/medicineSlice";
+import CustomImg from "../UI/CustomImg";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
 

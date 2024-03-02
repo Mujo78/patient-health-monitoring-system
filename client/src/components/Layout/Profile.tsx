@@ -1,13 +1,13 @@
 import { Card } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { authUser, updatePicture } from "../features/auth/authSlice";
-import CustomImg from "./UI/CustomImg";
+import { authUser, updatePicture } from "../../features/auth/authSlice";
+import CustomImg from "../UI/CustomImg";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { Outlet } from "react-router-dom";
-import CustomButton from "./UI/CustomButton";
-import { useAppDispatch } from "../app/hooks";
-import { formatDate } from "../service/appointmentSideFunctions";
+import CustomButton from "../UI/CustomButton";
+import { useAppDispatch } from "../../app/hooks";
+import { formatDate } from "../../service/appointmentSideFunctions";
 import ProfileLayout from "./ProfileLayout";
 
 type Props = {

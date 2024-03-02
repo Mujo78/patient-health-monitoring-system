@@ -1,5 +1,5 @@
 import React from "react";
-import RootSidebar from "../../components/UI/RootSidebar";
+import RootSidebar from "../UI/RootSidebar";
 import { Sidebar } from "flowbite-react";
 import {
   HiOutlineChartBar,
@@ -12,7 +12,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { authUser, setSelected } from "../../features/auth/authSlice";
 import { useAppDispatch } from "../../app/hooks";
-import SidebarItemText from "../../components/UI/SidebarItemText";
+import SidebarItemText from "../UI/SidebarItemText";
 
 const PatientSidebar: React.FC = () => {
   const location = useLocation();

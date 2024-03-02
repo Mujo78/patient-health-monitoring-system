@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RootSidebar from "../../components/UI/RootSidebar";
+import RootSidebar from "../UI/RootSidebar";
 import { Alert, Button, Sidebar } from "flowbite-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import {
   HiOutlineCalendarDays,
 } from "react-icons/hi2";
 import { useAppDispatch } from "../../app/hooks";
-import SidebarItemText from "../../components/UI/SidebarItemText";
+import SidebarItemText from "../UI/SidebarItemText";
 
 const welcomeMessages = [
   "Welcome! We're excited to have you on board.",
@@ -76,7 +76,7 @@ const DoctorSidebar: React.FC = () => {
         <SidebarItemText>Department</SidebarItemText>
       </Sidebar.Item>
       {location.pathname.startsWith("/doctor/") && (
-        <div className="flex h-2/3 flex-col justify-center mr-6 flex-grow w-full items-center">
+        <div className="h-2/3 flex-col justify-center hidden md:flex mr-6 flex-grow w-full items-center">
           {show && (
             <Alert
               className="bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit"
