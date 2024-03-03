@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CustomButton from "../../../components/UI/CustomButton";
+import CustomButton from "../UI/CustomButton";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const AppointmentLayout: React.FC = () => {
@@ -27,7 +27,7 @@ const AppointmentLayout: React.FC = () => {
       ) : (
         <div className="flex justify-center items-center h-full">
           <CustomButton onClick={makeNewAppointment}>
-            Make appointment
+            <p className="text-md xxl:!text-xl">Make appointment</p>
           </CustomButton>
         </div>
       )}

@@ -47,7 +47,7 @@ const HomeLayout: React.FC = () => {
         )}
         <div className="flex flex-col w-full h-screen">
           <CustomNavbar />
-          <div className="overflow-y-auto flex-grow">
+          <div className="overflow-y-auto flex-grow" id="content">
             <Outlet />
           </div>
         </div>

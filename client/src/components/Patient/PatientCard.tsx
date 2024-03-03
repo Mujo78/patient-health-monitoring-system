@@ -2,8 +2,8 @@ import { Card } from "flowbite-react";
 import React from "react";
 import { Patient } from "../../features/medicine/medicineSlice";
 import CustomImg from "../UI/CustomImg";
-import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
+import { yearCalc } from "../../service/personSideFunctions";
 
 type Props = {
   data: Patient;
@@ -40,7 +40,7 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
       <p className="flex text-sm text-gray-500 justify-between">
         <span>Age :</span>
         <span className="ml-auto text-black">
-          {moment().diff(moment(data.date_of_birth), "years")}
+          {yearCalc(data?.date_of_birth)}
         </span>
       </p>
       {variant === 1 && (

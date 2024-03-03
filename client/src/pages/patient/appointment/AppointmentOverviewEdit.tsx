@@ -206,55 +206,56 @@ const AppointmentOverviewEdit: React.FC = () => {
       >
         <Tabs.Item active title="Overview" icon={HiOutlineDocumentDuplicate}>
           {sApp?.finished ? (
-            <div className="flex divide-x divide-gray-300 h-[280px] w-full justify-between">
-              <div className="h-full w-1/4 flex flex-col flex-grow">
+            <div className="flex flex-col flex-wrap xl:!flex-nowrap gap-3 xxl:!text-xl lg:gap-0 pb-6 lg:pb-0 lg:flex-row xl:divide-x divide-gray-300 h-full w-full justify-between">
+              <div className="h-full w-full lg:w-1/4 flex flex-col flex-grow">
                 <h1 className="text-center">Diagnose</h1>
                 <hr className="border-b border-gray-300" />
-                <p className="text-xs text-gray-500 p-4 text-justify">
+                <p className="text-xs xxl:!text-xl text-gray-500 p-4 text-justify">
                   {sApp?.diagnose}
                 </p>
               </div>
-              <div className="h-full w-1/4 flex flex-grow flex-col">
+              <div className="h-full w-full lg:w-1/4 flex flex-grow flex-col">
                 <h1 className="text-center">Therapy</h1>
                 <hr className="border-b border-gray-300" />
-                <ListGroup>
+                <ListGroup className=" xxl:!text-xl rounded-none">
                   {sApp?.therapy?.length > 0 &&
                     sApp.therapy.map((n) => (
                       <ListGroup.Item
+                        className="hover:text-blue-600 rounded-none"
                         key={n._id}
                         onClick={() => handleShowMedicine(n)}
                       >
                         <p>
-                          {n.name} - {n.strength}
+                          {n.name} - {n.strength}mg
                         </p>
                       </ListGroup.Item>
                     ))}
                 </ListGroup>
               </div>
-              <div className="h-full w-1/4 flex flex-grow flex-col">
+              <div className="h-full w-full lg:w-1/4 flex flex-grow flex-col">
                 <h1 className="text-center">Other medicine</h1>
                 <hr className="border-b border-gray-300" />
-                <p className="text-xs p-4 text-gray-500 text-justify">
+                <p className="text-xs  xxl:!text-xl p-4 text-gray-500 text-justify">
                   {sApp?.other_medicine}
                 </p>
               </div>
-              <div className="h-full w-1/4 flex flex-grow flex-col">
+              <div className="h-full w-full lg:w-1/4 flex flex-grow pb-6 lg:pb-0 flex-col">
                 <h1 className="text-center">Description</h1>
                 <hr className="border-b border-gray-300" />
-                <p className="text-xs p-4 text-gray-500 text-justify">
+                <p className="text-xs  xxl:!text-xl p-4 text-gray-500 text-justify">
                   {sApp?.description}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="flex justify-center flex-col items-center h-[300px]">
+            <div className="flex justify-center flex-col gap-6 md:!gap-0 items-center h-80 text-center md:text-balance">
               <ErrorMessage
-                size="md"
+                className="text-sm xxl:!text-lg"
                 text={`Your appointment date: ${sApp?.appointment_date
                   .toString()
                   .slice(0, 10)} `}
               />
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs xxl:!text-lg text-gray-400 mt-2">
                 You will be able to see overview after doctor make it finished
               </p>
             </div>
@@ -263,24 +264,24 @@ const AppointmentOverviewEdit: React.FC = () => {
         {Number(canEdit) > 60 && !sApp?.finished ? (
           <Tabs.Item
             title="Edit"
-            className="flex"
             active={active === 1}
             icon={HiOutlinePencilSquare}
           >
-            <div className="flex w-full flex-col">
-              <div className="flex w-full justify-between">
-                <div className="w-1/5 ml-1 flex flex-col">
-                  <h1 className="mb-2 font-semibold text-sm">Reason</h1>
+            <div className="flex w-full h-full xxl:!h-[60vh] flex-col gap-2">
+              <div className="flex flex-col h-full lg:flex-row gap-4 xxl:items-center w-full">
+                <div className="w-full lg:!w-2/5 flex flex-col text-sm xxl:!text-xl">
+                  <p className="mb-2 font-semibold">Reason</p>
                   <Textarea
                     placeholder="Reason"
                     name="reason"
-                    className="text-sm"
+                    id="content"
+                    className="text-sm xxl:!text-xl"
                     onChange={(e) => setReason(e.currentTarget.value)}
                     value={reason}
                     rows={10}
                   />
                 </div>
-                <div className="flex justify-between w-3/4">
+                <div className="flex flex-col lg:flex-row gap-4 justify-between w-full lg:w-3/4">
                   <CalendarAppointment
                     variant={2}
                     value={value}
@@ -288,7 +289,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                     handleGetAppForADay={handleGetAppForADay}
                     docAvailable={sApp?.doctor_id.available_days as string[]}
                   />
-                  <div className="w-2/5 flex flex-col my-auto mr-3 justify-around h-full">
+                  <div className="w-full lg:w-2/5 flex flex-col my-auto justify-around h-full xxl:!text-xl">
                     <h1 className="font-semibold text-md">
                       Date:{" "}
                       {value
@@ -312,6 +313,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                       ) ? (
                         <div className="my-auto mx-auto">
                           <ErrorMessage
+                            className="xxl:!text-xl"
                             text="You can not make appointment today"
                             size="sm"
                           />
@@ -323,7 +325,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                             key={n}
                             onClick={() => setTimeForDate(n)}
                             color="gray"
-                            className={`m-1 ${
+                            className={`xxl:!text-xl m-1 ${
                               (newTime === convert12HourTo24Hour(n) ||
                                 newTime === n) &&
                               "bg-blue-700 text-white hover:text-white"
@@ -335,21 +337,31 @@ const AppointmentOverviewEdit: React.FC = () => {
                           </Badge>
                         ))
                       ) : (
-                        <p className="text-sm mx-auto my-auto">
+                        <p className="text-sm lg:!text-lg xxl:!text-xl mx-auto my-auto">
                           There are no more available appointments for this day
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="mt-auto w-1/6">
-                    <CustomButton onClick={handleEdit}>
-                      Save changes
-                    </CustomButton>
-                  </div>
                 </div>
               </div>
-              <div className="mt-2 h-3 w-full">
-                {status === "failed" && <ErrorMessage text={message} />}
+              <div
+                className={`${status === "failed" && "pb-8"} w-full lg:pb-0`}
+              >
+                {status === "failed" && (
+                  <ErrorMessage
+                    className="xl:!text-lg xxl:!text-xl"
+                    text={message}
+                  />
+                )}
+              </div>
+              <div className="mt-auto w-full pb-12 md:pb-0">
+                <CustomButton
+                  onClick={handleEdit}
+                  className="mx-auto w-full lg:!w-fit lg:!mx-0 lg:!ml-auto md:w-fit"
+                >
+                  <p className="xl:text-xl">Save changes</p>
+                </CustomButton>
               </div>
             </div>
           </Tabs.Item>

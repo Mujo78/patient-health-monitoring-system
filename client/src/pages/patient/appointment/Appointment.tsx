@@ -62,21 +62,21 @@ const Appointment: React.FC = () => {
         <>
           {selected !== null ? (
             <div className="h-full flex flex-col p-3">
-              <div className="flex justify-between">
-                <Card horizontal className="flex w-2/5">
-                  <div className="flex items-center p-0">
+              <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
+                <Card className="xl:w-full xxl:!w-fit h-auto xxl:p-12">
+                  <div className="flex flex-col xl:!flex-row xl:justify-center gap-2 items-center p-0">
                     <CustomImg
                       url={selected.doctor_id.user_id.photo}
-                      className="mr-3 w-[130px] h-[130px]"
+                      className="w-md h-auto"
                     />
-                    <div className="">
+                    <div>
                       <h1 className="font-bold text-xl text-blue-700">
                         {"Dr. " +
                           selected.doctor_id.first_name +
                           " " +
                           selected.doctor_id.last_name}
                       </h1>
-                      <div className="text-xs text-gray-600">
+                      <div className="text-xs xl:!text-md xxl:!text-xl text-gray-600">
                         <p>
                           {" "}
                           Age: {selected.doctor_id.age} |{" "}
@@ -86,7 +86,7 @@ const Appointment: React.FC = () => {
                           <span className="text-gray-600"> Qualification:</span>{" "}
                           {selected.doctor_id.qualification}
                         </p>
-                        <p>
+                        <p className="">
                           <span className="text-gray-600"> Email: </span>
                           <Link
                             to={mailtoLink}
@@ -96,29 +96,33 @@ const Appointment: React.FC = () => {
                           </Link>
                         </p>
                       </div>
-                      <p className="text-xs text-gray-500 mt-2 text-justify">
-                        {" "}
+                      <p className="text-xs xl:!text-md xxl:!text-xl text-gray-500 mt-2 text-justify">
                         {selected.doctor_id.bio.split(".")[0]}
                       </p>
                     </div>
                   </div>
                 </Card>
-                <div className="flex flex-col divide-y h-full">
-                  <p>
-                    <span className="text-md font-semibold">Date&Time:</span>{" "}
-                    {appDate} ({formatStartEnd(selected.appointment_date)})
-                  </p>
-                  {selected.reason.length > 0 && (
-                    <p>
-                      <span className="text-md font-semibold">Reason:</span>{" "}
-                      {selected.reason}
+                <div className="h-full w-full flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 xxl:!text-2xl xl:!text-sm">
+                    <p className="flex flex-col">
+                      <span className="text-md font-semibold">Date&Time</span>
+                      {appDate} ({formatStartEnd(selected.appointment_date)})
                     </p>
-                  )}
-                </div>
-                <div className="mt-auto">
+                    {selected.reason.length > 0 && (
+                      <p className="flex flex-col">
+                        <span className="text-md font-semibold">Reason</span>
+                        {selected.reason}
+                      </p>
+                    )}
+                  </div>
+
                   {Number(canCancel) > 60 && !selected.finished && (
-                    <Button onClick={cancelAppointmentNow} color="failure">
-                      Cancel Appointment
+                    <Button
+                      onClick={cancelAppointmentNow}
+                      className="md:mt-auto md:ml-auto w-full lg:!w-fit"
+                      color="failure"
+                    >
+                      <p className="xxl:text-xl">Cancel Appointment</p>
                     </Button>
                   )}
                 </div>

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+#content::-webkit-scrollbar {
+  display: none;
+}
+
+#content {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .react-calendar__tile--active {
   background: white;
   color: blue;

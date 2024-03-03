@@ -10,12 +10,12 @@ import {
 import { Medicine } from "../../features/medicine/medicineSlice";
 import Footer from "../../components/UI/Footer";
 import CustomImg from "../../components/UI/CustomImg";
-import moment from "moment";
 import PatientModal from "./appointment/PatientModal";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
+import { yearCalc } from "../../service/personSideFunctions";
 
 export type finishedAppointments = {
   _id: string;
@@ -154,11 +154,8 @@ const Patient: React.FC = () => {
                       appointments.patient_id.last_name}
                   </p>
                   <p className="flex justify-end text-sm">
-                    {moment().diff(
-                      moment(appointments.patient_id.date_of_birth),
-                      "years"
-                    )}{" "}
-                    years old
+                    {yearCalc(appointments?.patient_id?.date_of_birth)} years
+                    old
                   </p>
                   <Link
                     to={`mailto:${appointments.patient_id.user_id?.email}`}

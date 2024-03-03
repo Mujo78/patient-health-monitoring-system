@@ -60,7 +60,7 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto">
-      <p className="px-3 pt-3 mb-2 flex text-[10px] justify-between items-center">
+      <p className="px-3 pt-3 mb-2 flex text-[10px] xxl:!text-xl justify-between items-center">
         <span className="font-semibold">Notifications</span>
         <button onClick={markAll} className="text-blue-700 underline">
           Mark All as read
@@ -90,21 +90,21 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                       >
                         <Table.Cell className="flex gap-2 items-center p-2">
                           {n.type === "MESSAGE" ? (
-                            <HiOutlineUserGroup className="h-8 w-8" />
+                            <HiOutlineUserGroup className="h-8 w-8 xxl:!w-12 xxl:!h-12" />
                           ) : n.type === "INFO" ? (
-                            <HiOutlineInformationCircle className="h-8 w-8 text-green-600" />
+                            <HiOutlineInformationCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-green-600" />
                           ) : (
-                            <HiOutlineXCircle className="h-8 w-8 text-red-600" />
+                            <HiOutlineXCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-red-600" />
                           )}
                           <div className="flex flex-col w-full text-xs">
                             <h3
-                              className={`font-bold text-[10px] ${colorPick(
+                              className={`font-bold text-[10px] xxl:!text-lg ${colorPick(
                                 n.type
                               )}`}
                             >
                               {n.name}
                             </h3>
-                            <div className="text-[9px] flex justify-between w-full">
+                            <div className="text-[9px] flex justify-between w-full xxl:!text-lg">
                               <p className="w-3/4">{n.content.slice(0, 120)}</p>
                               <p className="mt-auto">
                                 {moment(n.createdAt).format("hh:mm A")}
@@ -126,21 +126,21 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                   >
                     <Table.Cell className="flex gap-2 items-center p-2">
                       {n.type === "MESSAGE" ? (
-                        <HiOutlineUserGroup className="h-8 w-8" />
+                        <HiOutlineUserGroup className="h-8 w-8 xxl:!w-12 xxl:!h-12" />
                       ) : n.type === "INFO" ? (
-                        <HiOutlineInformationCircle className="h-8 w-8 text-green-600" />
+                        <HiOutlineInformationCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-green-600" />
                       ) : (
-                        <HiOutlineXCircle className="h-8 w-8 text-red-600" />
+                        <HiOutlineXCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-red-600" />
                       )}
                       <div className="flex flex-col w-full text-xs">
                         <h3
-                          className={`font-bold text-[10px] ${colorPick(
+                          className={`font-bold text-[10px] xxl:!text-lg ${colorPick(
                             n.type
                           )}`}
                         >
                           {n.name}
                         </h3>
-                        <div className="text-[9px] flex justify-between w-full">
+                        <div className="text-[9px] flex justify-between w-full xxl:!text-lg">
                           <p className="w-3/4">{n.content.slice(0, 120)}</p>
                           <p className="mt-auto">
                             {moment(n.createdAt).format("hh:mm A")}
@@ -158,7 +158,7 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
             className="mt-auto w-full"
             size="xs"
           >
-            See all
+            <p className="xxl:!text-lg">See all</p>
           </CustomButton>
         </>
       ) : (

@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 
 const BASE_URL = "http://localhost:3001/api/v1/";
 
@@ -44,4 +45,8 @@ export async function updateDoctorInfo(token: string, data: unknown) {
   });
 
   return response.data;
+}
+
+export function yearCalc(date: Date) {
+  return moment().diff(moment(date), "years");
 }

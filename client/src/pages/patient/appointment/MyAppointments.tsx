@@ -60,13 +60,12 @@ const MyAppointments: React.FC = () => {
           ) : (
             <>
               <Calendar
-                className="w-full h-full flex flex-col rounded-xl "
+                className="w-full h-full flex flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"
                 localizer={localizer}
                 events={myEventsList}
                 onSelectEvent={handleNavigate}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 700 }}
                 titleAccessor="title"
                 min={new Date(0, 0, 0, 9, 0, 0)}
                 max={new Date(0, 0, 0, 17, 0, 0, 0)}

@@ -15,10 +15,10 @@ import { useAppDispatch } from "../../app/hooks";
 import CustomImg from "../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
 import { authUser, firstTime } from "../../features/auth/authSlice";
-import moment from "moment";
 import AppointmentsChart from "./AppointmentsChart";
 import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
 import useSelectedPage from "../../hooks/useSelectedPage";
+import { yearCalc } from "../../service/personSideFunctions";
 
 type appointment = {
   _id: string;
@@ -86,7 +86,7 @@ const PatientDashboard: React.FC = () => {
             <div className="w-full flex flex-grow justify-between">
               {latestFinished && (
                 <Card
-                  className="w-1/3 h-fit"
+                  className="w-96 h-auto"
                   href={`/profile/p/${latestFinished.patient._id}`}
                 >
                   <p className="text-blue-700 font-semibold">Patient</p>
@@ -100,10 +100,7 @@ const PatientDashboard: React.FC = () => {
                   <p className="flex text-xs text-gray-500 justify-between">
                     <span>Age :</span>
                     <span className="ml-auto text-black">
-                      {moment().diff(
-                        new Date(latestFinished?.patient.date_of_birth),
-                        "years"
-                      )}
+                      {yearCalc(latestFinished?.patient?.date_of_birth)}
                     </span>
                   </p>
                   <p className="flex text-xs text-gray-500 justify-between">

@@ -16,13 +16,9 @@ const MedicineModal: React.FC<Props> = ({ show, onClose, medicine, url }) => {
       <Modal.Header>
         {medicine?.name} - {medicine?.strength}
       </Modal.Header>
-      <Modal.Body className="flex justify-around">
-        <div>
-          <CustomMedicineImg
-            url={url ? url : ""}
-            className="w-[200px] h-[200px]"
-          />
-        </div>
+      <Modal.Body className="flex flex-col md:flex-row items-center justify-around">
+        <CustomMedicineImg url={url ? url : ""} className=" w-52 h-auto" />
+
         <div className="space-y-6 text-black">
           <p>
             {" "}

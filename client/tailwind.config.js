@@ -11,6 +11,7 @@ export default {
       md: "768px",
       lg: "1020px",
       xl: "1440px",
+      xxl: "2560px",
     },
     extend: {
       backgroundImage: {

@@ -25,7 +25,7 @@ import PharmacyCheck from "./helpers/PharmacyCheck";
 import DoctorDashboard from "./pages/doctor/dashboard/DoctorDashboard";
 import PharmacyDashboard from "./pages/pharmacy/dashboard/PharmacyDashboard";
 import AppointmentDepartment from "./pages/patient/appointment/AppointmentDepartment";
-import AppointmentLayout from "./pages/patient/appointment/AppointmentLayout";
+import AppointmentLayout from "./components/Layout/AppointmentLayout";
 import Appointment from "./pages/patient/appointment/Appointment";
 import DoctorAppointments from "./pages/doctor/appointment/DoctorAppointments";
 import DocAppointment from "./pages/doctor/appointment/DocAppointment";

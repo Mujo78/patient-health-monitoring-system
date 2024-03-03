@@ -19,7 +19,7 @@ const Footer: React.FC<Props> = ({ variant, route, children }) => {
   };
 
   return (
-    <div className="w-full mt-auto font-Poppins">
+    <div className="w-full mt-auto font-Poppins hidden sm:flex">
       <hr />
       <div
         className={`flex justify-${
@@ -28,7 +28,7 @@ const Footer: React.FC<Props> = ({ variant, route, children }) => {
       >
         {variant === 2 && (
           <Button color="light" onClick={goBack}>
-            Back
+            <p className="xxl:text-xl">Back</p>
           </Button>
         )}
         {children}
