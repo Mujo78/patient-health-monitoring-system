@@ -5,7 +5,7 @@ type Props = {
 };
 
 const SidebarItemText: React.FC<Props> = ({ children }) => {
-  return <span className="sm:hidden md:block">{children}</span>;
+  return <span className="sm:hidden md:block xxl:!text-2xl">{children}</span>;
 };
 
 export default SidebarItemText;

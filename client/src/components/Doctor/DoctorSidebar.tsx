@@ -82,20 +82,22 @@ const DoctorSidebar: React.FC = () => {
               className="bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit"
               additionalContent={
                 <div className="flex flex-col gap-3">
-                  <p className="text-xs">{welcomeMessages[randomNumber]}</p>
+                  <p className="text-xs xxl:!text-lg">
+                    {welcomeMessages[randomNumber]}
+                  </p>
                   <Button
                     className="bg-white ml-auto text-blue-700 mt-3 hover:!bg-gray-200"
                     onClick={handleDissmis}
                     size="xs"
                   >
-                    Dismiss
+                    <p className="xxl:!text-lg">Dismiss</p>
                   </Button>
                 </div>
               }
               rounded
             >
               <div className="w-full">
-                <p className="text-sm mt-3 font-semibold">
+                <p className="text-sm xxl:!text-xl mt-3 font-semibold">
                   {`Welcome, Dr. ${accessUser?.info.last_name}`}!
                 </p>
               </div>

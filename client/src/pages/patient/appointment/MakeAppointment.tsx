@@ -168,47 +168,49 @@ const MakeAppointment: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="mt-6 xl:!mt-0 xl:!h-full">
       {!doc ? (
         <div className="h-full flex justify-center items-center">
-          {" "}
-          <Spinner size="xl" />{" "}
+          <Spinner size="xl" />
         </div>
       ) : (
-        <div className="flex flex-col h-full mx-3">
-          <div className="flex w-full h-full justify-between">
-            <div className="w-1/4 my-auto h-full">
-              <div className="my-auto h-full flex flex-col justify-evenly">
-                <Card horizontal className="flex justify-center">
+        <div className="flex flex-col h-full mx-1.5 lg:!mx-3">
+          <div className="flex flex-col xl:!flex-row gap-4 xl:!gap-12 w-full h-full items-center justify-center">
+            <div className="w-full xl:!flex-grow xl:!my-auto h-full">
+              <div className="my-auto h-full flex flex-col justify-center gap-3 xl:!gap-12">
+                <Card horizontal className="flex justify-center lg:mx-auto">
                   {loading ? (
                     <div className="p-6">
-                      {" "}
-                      <Spinner size="md" />{" "}
+                      <Spinner size="md" />
                     </div>
                   ) : (
                     <div className="flex gap-4 justify-around items-center">
                       <CustomImg
                         url={doc?.user_id.photo}
-                        className="w-[60px] h-[60px]"
+                        className=" w-16 lg:w-24 xxl:w-40 h-auto"
                       />
                       <div className="w-full">
-                        <h1 className="font-bold text-md mb-1 text-blue-700">
+                        <h1 className="font-bold text-md xxl:text-3xl mb-1 text-blue-700">
                           {"Dr. " + doc?.first_name + " " + doc?.last_name}
                         </h1>
-                        <p className="text-xs">{doc?.bio.split(".")[0]}</p>
+                        <p className="text-xs xxl:!text-lg">
+                          {doc?.bio.split(".")[0]}
+                        </p>
                       </div>
                     </div>
                   )}
                 </Card>
                 <div className="flex flex-col justify-around">
                   <div className="mb-3">
-                    <h1 className="text-xl font-semibold">{doc?.speciality}</h1>
+                    <h1 className="text-xl xxl:!text-2xl font-semibold">
+                      {doc?.speciality}
+                    </h1>
                     <div className="flex items-center mt-1 text-gray-600">
-                      <HiOutlineClock />
-                      <p className="ml-1 text-xs">20min</p>
+                      <HiOutlineClock className="xxl:w-8 xxl:h-8" />
+                      <p className="ml-1 text-xs xxl:!text-xl">20min</p>
                     </div>
                   </div>
-                  <div className="divide-y text-gray-500 text-xs">
+                  <div className="divide-y text-gray-500 text-xs xxl:!text-xl">
                     <p className="leading-4.5">
                       With years of expertise and advanced training, our doctors
                       are equipped to address a wide spectrum of health
@@ -222,7 +224,7 @@ const MakeAppointment: React.FC = () => {
                         Before scheduling an appointment, please be aware of the
                         following:
                       </p>
-                      <ul className="list-disc p-2 ml-3 leading-4">
+                      <ul className="list-disc flex flex-col gap-3 p-2 ml-3 leading-4 xxl:leading-8">
                         <li>
                           Your appointment is a one-to-one meeting with the
                           doctor you have selected.
@@ -241,47 +243,50 @@ const MakeAppointment: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col my-auto w-1/3">
-              <h1 className="text-xl font-semibold">Set Date</h1>
-              <div className="text-sm flex justify-between">
-                <p>
-                  {" "}
-                  <span className="text-yellow-300 text-xl">•</span> today{" "}
-                </p>
-                <p>
-                  {" "}
-                  <span className="text-gray-400 text-xl">•</span> out of bounds{" "}
-                </p>
-                <p>
-                  {" "}
-                  <span className="text-blue-500 text-xl">•</span> choosen{" "}
-                </p>
+            <div className="flex flex-col my-auto w-full xl:!flex-grow">
+              <h1 className="text-xl xxl:!text-2xl font-semibold">Set Date</h1>
+              <div className="flex flex-col lg:flex-row gap-8 xl:!gap-3 flex-nowrap xl:!flex-wrap">
+                <div>
+                  <div className="text-sm xxl:!text-lg flex justify-between">
+                    <p>
+                      <span className="text-yellow-300 text-xl">•</span> today{" "}
+                    </p>
+                    <p>
+                      <span className="text-gray-400 text-xl">•</span> out of
+                      bounds{" "}
+                    </p>
+                    <p>
+                      <span className="text-blue-500 text-xl">•</span> choosen{" "}
+                    </p>
+                  </div>
+                  <CalendarAppointment
+                    variant={1}
+                    value={value}
+                    setValue={setValue}
+                    handleGetAppForADay={handleGetAppForADay}
+                    docAvailable={doc?.available_days as string[]}
+                  />
+                </div>
+                <Textarea
+                  placeholder="Note for the doctor"
+                  title="Note"
+                  rows={4}
+                  className="lg:!mt-10 mt-2 text-sm xxl:!text-lg"
+                  value={reason}
+                  name="reason"
+                  onChange={(e) => setReason(e.target.value)}
+                />
               </div>
-              <CalendarAppointment
-                variant={1}
-                value={value}
-                setValue={setValue}
-                handleGetAppForADay={handleGetAppForADay}
-                docAvailable={doc?.available_days as string[]}
-              />
-              <Textarea
-                placeholder="Note for the doctor"
-                title="Note"
-                rows={4}
-                className="mt-6 text-sm"
-                value={reason}
-                name="reason"
-                onChange={(e) => setReason(e.target.value)}
-              />
-              <div className="h-3 mt-2">
-                {" "}
+              <div className="hidden xl:!flex h-3 mt-2">
                 {status === "failed" && (
-                  <p className="text-xs text-red-600 font-bold">{message}</p>
-                )}{" "}
+                  <p className="text-xs  xxl:!text-xl text-red-600 font-bold">
+                    {message}
+                  </p>
+                )}
               </div>
             </div>
-            <div className="w-1/4 flex flex-col my-auto justify-evenly h-full">
-              <h1 className="font-semibold text-xl">
+            <div className="w-full xl:!flex-grow flex flex-col gap-3 justify-center h-1/4">
+              <h1 className="font-semibold text-xl xxl:!text-2xl my-1">
                 Date:{" "}
                 {value
                   ?.toLocaleString()
@@ -295,7 +300,7 @@ const MakeAppointment: React.FC = () => {
                   )}{" "}
                 ({availableTime && availableTime.length})
               </h1>
-              <div className="flex flex-wrap h-3/4 w-full p-1.5 border-gray-300 border rounded-lg">
+              <div className="flex flex-wrap h-fit w-full p-1.5 border-gray-300 border rounded-lg">
                 {isDoctorAvailable(
                   value as Date,
                   doc?.available_days as string[]
@@ -308,8 +313,7 @@ const MakeAppointment: React.FC = () => {
                   </div>
                 ) : status === "loading" ? (
                   <div className="mx-auto my-auto">
-                    {" "}
-                    <Spinner />{" "}
+                    <Spinner />
                   </div>
                 ) : availableTime && availableTime.length > 0 ? (
                   availableTime.map((n) => (
@@ -323,7 +327,9 @@ const MakeAppointment: React.FC = () => {
                         "bg-blue-500 text-white hover:text-black"
                       }  focus:!ring-blue-600`}
                     >
-                      {parseInt(n.split(":")[0]) < 9 ? `${n} PM` : `${n} AM`}
+                      <p className="xxl:text-xl">
+                        {parseInt(n.split(":")[0]) < 9 ? `${n} PM` : `${n} AM`}
+                      </p>
                     </Button>
                   ))
                 ) : (
@@ -332,6 +338,12 @@ const MakeAppointment: React.FC = () => {
                   </p>
                 )}
               </div>
+            </div>
+
+            <div className="xl:hidden h-4 mb-5">
+              {status === "failed" && (
+                <p className="text-xs text-red-600 font-bold">{message}</p>
+              )}
             </div>
           </div>
           <Footer variant={2}>
@@ -345,15 +357,15 @@ const MakeAppointment: React.FC = () => {
                 )
               }
               size="md"
-              className="mr-3 w-1/12"
+              className="w-full mb-12 lg:!w-fit md:!mb-0"
               onClick={makeNewAppointment}
             >
-              Finish
+              <p className="xxl:text-xl">Finish</p>
             </CustomButton>
           </Footer>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

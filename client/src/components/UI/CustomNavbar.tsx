@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar } from "flowbite-react";
+import { Avatar, CustomFlowbiteTheme } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import { Link } from "react-router-dom";
@@ -15,6 +15,18 @@ import {
 } from "../../features/notification/notificationSlice";
 import NavBarDropdown from "./NavBarDropdown";
 import LogoutButton from "./LogoutButton";
+
+const customTheme: CustomFlowbiteTheme["avatar"] = {
+  root: {
+    size: {
+      xs: "w-6 h-6 xxl:!w-12 xxl:!h-10",
+      sm: "w-8 h-8",
+      md: "w-10 h-10",
+      lg: "w-20 h-20",
+      xl: "w-36 h-36",
+    },
+  },
+};
 
 const CustomNavbar: React.FC = () => {
   let route;
@@ -71,7 +83,7 @@ const CustomNavbar: React.FC = () => {
   return (
     <nav className="sticky md:relative border-t-0 p-2 justify-between items-center w-full flex border-x-0 border-b border-b-gray-200">
       <div className="w-1/3">
-        <p className="text-sm md:text-xl xxl:!text-3xl font-semibold">
+        <p className="text-sm lg:text-xl xxl:!text-3xl font-semibold">
           {selected ? selected : "Dashboard"}
         </p>
       </div>
@@ -108,13 +120,14 @@ const CustomNavbar: React.FC = () => {
         <div className="relative">
           <div className="relative cursor-pointer">
             <Avatar
+              theme={customTheme}
               onClick={showNotifications}
               img={HiOutlineBell}
               status={readed ? "busy" : undefined}
               statusPosition="top-right"
-              size="xs"
               rounded
-              className={`p-1 sm:p-2 xxl:!h-14 xxl:!w-14 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${
+              size="xs"
+              className={`p-1 text-gray-800 rounded-lg cursor-pointer hover:!bg-gray-100 ${
                 show && "bg-gray-100"
               } `}
             />
