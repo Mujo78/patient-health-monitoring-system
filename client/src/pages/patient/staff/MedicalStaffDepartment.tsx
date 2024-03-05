@@ -5,11 +5,10 @@ import {
   DepartmentAllInfo,
   getDepartmentAllInfo,
 } from "../../../service/departmentSideFunctions";
-import { HiOutlineXMark } from "react-icons/hi2";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { Card, Spinner } from "flowbite-react";
 import CustomImg from "../../../components/UI/CustomImg";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const MedicalStaffDepartment: React.FC = () => {
   const { departmentName } = useParams();
@@ -17,7 +16,7 @@ const MedicalStaffDepartment: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<
     DepartmentAllInfo | undefined
   >();
-  const navigate = useNavigate();
+
   const { accessUser } = useSelector(authUser);
 
   useEffect(() => {
@@ -38,11 +37,6 @@ const MedicalStaffDepartment: React.FC = () => {
     fetchData();
   }, [accessUser, departmentName]);
 
-  const hideChoosenDepartment = () => {
-    navigate("/staff");
-    setSelectedDepartment(undefined);
-  };
-
   return (
     <>
       {loading ? (
@@ -51,48 +45,44 @@ const MedicalStaffDepartment: React.FC = () => {
         </div>
       ) : selectedDepartment ? (
         <div className="divide-y flex flex-col gap-3">
-          <div className="flex  flex-col">
-            <div className="flex justify-between">
-              <p className="text-3xl font-bold">
-                {selectedDepartment.department.name}
-              </p>
-              <HiOutlineXMark
-                onClick={hideChoosenDepartment}
-                className="cursor-pointer w-[30px] h-[30px]"
-              />
-            </div>
-            <p className="mt-3 text-justify">
-              {" "}
+          <div className="flex gap-3  flex-col">
+            <p className="text-3xl font-bold">
+              {selectedDepartment.department.name}
+            </p>
+            <p className="text-justify xl:!text-md xxl:!text-2xl">
               {selectedDepartment.department.description}
             </p>
-            <p className="ml-auto">
+            <p className="ml-0 lg:!ml-auto xl:!text-md xxl:!text-2xl">
               Phone number:{" "}
               <Link
                 to={`tel:${selectedDepartment.department.phone_number}`}
                 className="text-blue-700"
               >
-                {" "}
                 +{selectedDepartment.department.phone_number}
               </Link>
             </p>
           </div>
-          <div className="flex">
+          <div className="flex flex-wrap pb-14 md:!pb-0">
             {selectedDepartment.doctors?.length > 0 &&
             typeof selectedDepartment.doctors !== "string" ? (
               selectedDepartment.doctors.map((d) => (
                 <Card
                   key={d._id}
-                  className="m-3"
+                  className="m-3 w-full xl:!w-fit"
                   href={`/appointment/new/${d._id}`}
                 >
                   <div className="flex items-center gap-3">
                     <CustomImg
                       url={d.user_id.photo}
-                      className="w-[40px] h-[40px] rounded-full"
+                      className=" w-10 md:!w-14 xxl:!w-24 h-auto rounded-full"
                     />
                     <div className="w-full">
-                      <p>Dr. {d.first_name + " " + d.last_name}</p>
-                      <p className="text-xs text-gray-500">{d.qualification}</p>
+                      <p className="xxl:text-2xl">
+                        Dr. {d.first_name + " " + d.last_name}
+                      </p>
+                      <p className="text-xs xxl:!text-lg text-gray-500">
+                        {d.qualification}
+                      </p>
                     </div>
                   </div>
                 </Card>

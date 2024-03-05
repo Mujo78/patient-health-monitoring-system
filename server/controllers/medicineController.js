@@ -24,21 +24,16 @@ const resizeMedicinePhoto = (req, res, next) => {
 };
 
 const getMedicines = asyncHandler(async (req, res) => {
-  const { page, searchQuery, category } = req.query;
+  const { searchQuery, category } = req.query;
+  const page = parseInt(req.query.page) || 1;
 
   let responseObj = {};
   let query = Medicine.find();
 
-  if (page) {
-    const limit = 8;
-    const startIndx = (Number(page) - 1) * limit;
+  const limit = 8;
+  const startIndx = (Number(page) - 1) * limit;
 
-    const total = await Medicine.countDocuments();
-    query = query.sort({ category: -1 }).limit(limit).skip(startIndx);
-
-    responseObj.currentPage = Number(page);
-    responseObj.numOfPages = Math.ceil(total / limit);
-  }
+  query = query.sort({ category: -1 }).limit(limit).skip(startIndx);
 
   if (searchQuery) {
     if (category) {
@@ -51,7 +46,11 @@ const getMedicines = asyncHandler(async (req, res) => {
   }
 
   const result = await query.exec();
-  if (result.length === 0) return res.status(404).json("There are no results!");
+  if (result.length === 0) return res.status(404).json("No data available.");
+
+  const total = await Medicine.countDocuments(query.getFilter());
+  responseObj.currentPage = Number(page);
+  responseObj.numOfPages = Math.ceil(total / limit);
   responseObj.data = result;
 
   return res.status(200).json(responseObj);

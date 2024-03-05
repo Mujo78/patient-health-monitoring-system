@@ -45,11 +45,13 @@ const MedicalStaff: React.FC = () => {
         <div className="flex justify-center items-center h-full">
           <Spinner size="xl" />
         </div>
-      ) : departments !== undefined ? (
-        <div className="flex h-full w-full divide-x">
-          <div className=" w-1/3">
-            <p className="m-4 text-2xl font-semibold">Select a department</p>
-            <hr />
+      ) : departments !== undefined && departments?.length > 0 ? (
+        <div className="flex flex-wrap lg:!flex-nowrap gap-3 lg:!gap-0 h-full w-full lg:!divide-x">
+          <div className="w-full lg:!w-1/3">
+            <p className="m-4 text-2xl xxl:!text-3xl font-semibold">
+              Select a department
+            </p>
+            <hr className="hidden lg:!block" />
             <div className="px-3 mt-2">
               <Table>
                 <Table.Body className="divide-y">
@@ -62,10 +64,10 @@ const MedicalStaff: React.FC = () => {
                           departmentName === n.name && "bg-blue-200"
                         } dark:bg-gray-800`}
                       >
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <Table.Cell className="whitespace-nowrap text-center lg:!text-start xxl:!text-2xl font-medium text-gray-900 dark:text-white">
                           {n.name}
                         </Table.Cell>
-                        <Table.Cell>
+                        <Table.Cell className="hidden lg:!table-cell">
                           <HiChevronRight className="ml-auto" />
                         </Table.Cell>
                       </Table.Row>
@@ -74,14 +76,19 @@ const MedicalStaff: React.FC = () => {
               </Table>
             </div>
           </div>
-          <div className="h-full  w-full p-4">
+          <div
+            className={`${
+              departmentName ? "h-full" : "h-fit lg:!h-full"
+            } w-full p-4`}
+          >
             {departmentName ? (
               <Outlet />
             ) : (
-              <div className="w-full h-full flex justify-center items-center">
+              <div className="w-full h-full flex justify-center lg:!items-center items-start">
                 <ErrorMessage
                   text="You haven't selected any department"
-                  size="md"
+                  size="sm"
+                  className="lg:!text-md xxl:!text-3xl"
                 />
               </div>
             )}
@@ -89,7 +96,9 @@ const MedicalStaff: React.FC = () => {
         </div>
       ) : (
         <div className="flex justify-center items-center h-full">
-          <p className="text-md text-gray-400">No data available.</p>
+          <p className="text-md xxl:!text-3xl text-gray-400">
+            No data available.
+          </p>
         </div>
       )}
     </div>

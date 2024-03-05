@@ -10,7 +10,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import CustomButton from "../../components/UI/CustomButton";
 import Footer from "../../components/UI/Footer";
 import useSelectedPage from "../../hooks/useSelectedPage";
-import { useQuery } from "../../hooks/useQery";
+import { useQuery } from "../../hooks/useQuery";
 
 const MedicineOverview: React.FC = () => {
   const navigate = useNavigate();

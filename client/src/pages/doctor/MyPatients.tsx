@@ -13,7 +13,7 @@ import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import useSelectedPage from "../../hooks/useSelectedPage";
-import { useQuery } from "../../hooks/useQery";
+import { useQuery } from "../../hooks/useQuery";
 
 type patients = {
   currentPage: number | null;

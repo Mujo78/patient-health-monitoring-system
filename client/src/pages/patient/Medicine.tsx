@@ -1,106 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Medicine as MedicineType,
-  Pharmacy,
   getMedicine,
   medicine,
 } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
-import { Button, Card, Select, Spinner, TextInput } from "flowbite-react";
+import { Card, Spinner } from "flowbite-react";
 import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import Pagination from "../../components/UI/Pagination";
 import MedicineModal from "../../components/Pharmacy/MedicineModal";
-import { getPharmacy } from "../../service/pharmacySideFunctions";
-import { authUser } from "../../features/auth/authSlice";
 import ErrorMessage from "../../components/UI/ErrorMessage";
-import CustomImg from "../../components/UI/CustomImg";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import CustomButton from "../../components/UI/CustomButton";
-import Footer from "../../components/UI/Footer";
+import { useNavigate } from "react-router-dom";
 import useSelectedPage from "../../hooks/useSelectedPage";
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
+import PharmacyInfo from "../../components/Pharmacy/PharmacyInfo";
+import { useQuery } from "../../hooks/useQuery";
+import MedicineSearchHeader from "../../components/Pharmacy/MedicineSearchHeader";
 
 const Medicine: React.FC = () => {
   const navigate = useNavigate();
   const { medicine: med, status, message } = useSelector(medicine);
-  const { accessUser } = useSelector(authUser);
   const query = useQuery();
   const page = Number(query.get("page")) || 1;
-  const searchQ = query.get("searchQuery") || "";
-  const categoryQ = query.get("category") || "";
+  const searchQuery = query.get("searchQuery") || "";
+  const category = query.get("category") || "";
+
   const [show, setShow] = useState<boolean>(false);
   const [m, setM] = useState<MedicineType>();
-  const [search, setSearch] = useState<string>("");
-  const [cat, setCat] = useState<string>(categoryQ || "");
-  const [pharmacy, setPharmacy] = useState<Pharmacy | undefined>();
-  const [loading, setLoading] = useState<boolean>(true);
+
   const dispatch = useAppDispatch();
+  const lastQuery = useRef<string>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (searchQ) {
-          const searchQuery = searchQ;
-          if (categoryQ !== "") {
-            const category = categoryQ;
-            dispatch(getMedicine({ page, searchQuery, category }));
-            navigate(
-              `/medicine-overview?searchQuery=${searchQuery}&page=${page}&category=${category}`
-            );
-          } else {
-            dispatch(getMedicine({ page, searchQuery }));
-            navigate(
-              `/medicine-overview?searchQuery=${searchQuery}&page=${page}`
-            );
-          }
-        } else {
-          dispatch(getMedicine({ page }));
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [page, dispatch, navigate, categoryQ, searchQ]);
+    if (query.toString() !== lastQuery.current) {
+      lastQuery.current = query.toString();
+      dispatch(getMedicine({ page, searchQuery, category }));
+      navigate(`/medicine-overview?${query.toString()}`);
+    }
+  }, [page, dispatch, navigate, category, searchQuery, query]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (accessUser) {
-        try {
-          setLoading(true);
-          const response = await getPharmacy(accessUser.token);
-          setPharmacy(response);
-        } catch (err: any) {
-          setLoading(false);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    fetchData();
-  }, [accessUser]);
-
-  const handleNavigate = (page: number) => {
-    console.log(searchQ);
-    if (searchQ !== "") {
-      const searchQuery = searchQ;
-      if (categoryQ !== "" || cat) {
-        const category = categoryQ === "" ? cat : categoryQ;
-        dispatch(getMedicine({ page, searchQuery, category }));
-        navigate(
-          `/medicine-overview?searchQuery=${searchQuery}&page=${page}&category=${category}`
-        );
-      } else {
-        dispatch(getMedicine({ page, searchQuery }));
-        navigate(`/medicine-overview?searchQuery=${searchQuery}&page=${page}`);
-      }
-    } else {
-      dispatch(getMedicine({ page }));
-      navigate(`/medicine-overview?page=${page}`);
+  const handleNavigate = (pageNum: number) => {
+    if (page !== pageNum) {
+      const page = pageNum;
+      query.set("page", page.toString());
+      dispatch(getMedicine({ page, searchQuery, category }));
+      navigate(`/medicine-overview?${query.toString()}`);
     }
   };
 
@@ -113,224 +57,84 @@ const Medicine: React.FC = () => {
     setShow(true);
   };
 
-  const handleClickSearch = () => {
-    if (search !== "") {
-      if (search !== searchQ) {
-        const searchQuery = search;
-        dispatch(getMedicine({ page, searchQuery }));
-        navigate(
-          `/medicine-overview?searchQuery=${searchQuery}&page=${page} ${
-            categoryQ ? `&category=${categoryQ}` : ""
-          }`
-        );
-      }
-    }
-  };
-
-  const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCat(e.target.value);
-    const searchQuery = searchQ;
-    const category = e.target.value;
-    dispatch(getMedicine({ page, searchQuery, category }));
-    navigate(
-      `/medicine-overview?searchQuery=${searchQuery}&page=${page}&category=${category}`
-    );
-  };
-
-  const clearSearch = () => {
-    navigate("/medicine-overview?page=1");
-  };
-
   useSelectedPage("Medicine overview");
-
-  const mailTo = `mailto:${pharmacy?.user_id.email}`;
 
   return (
     <>
-      {status === "loading" && loading ? (
-        <div className="w-full h-full flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
-      ) : (
-        <div className="h-full transition-all pl-3 duration-300 divide-x flex justify-between w-full">
-          {status === "loading" ? (
-            <div className="mx-auto my-auto">
-              <Spinner size="xl" />
-            </div>
-          ) : (
-            <div className="w-full mr-3">
-              <div className="flex-grow w-full flex flex-col h-full justify-between">
-                <div className="flex justify-center my-4 items-center">
-                  <TextInput
-                    className="w-3/4 mr-3"
-                    placeholder="Amoxicilline"
-                    name="search"
-                    onChange={(e) => setSearch(e.target.value)}
-                    value={search}
-                  />
-                  <CustomButton
-                    onClick={handleClickSearch}
-                    disabled={search === ""}
-                    size="md"
-                  >
-                    Search
-                  </CustomButton>
+      <div className="h-full transition-all lg:pl-3 duration-300 lg:divide-x flex flex-col gap-3 lg:!gap-3 lg:!flex-row justify-between w-full">
+        {status === "loading" ? (
+          <div className="mx-auto my-auto">
+            <Spinner size="xl" />
+          </div>
+        ) : (
+          <div className=" w-full flex flex-col h-full lg:!w-2/3 justify-between px-2 lg:!px-0">
+            <MedicineSearchHeader />
+            {med && med?.data?.length > 0 && status !== "failed" ? (
+              <>
+                <div className="w-full h-full flex-col md:!flex-row flex-wrap items-start flex xxl:mt-2">
+                  {med?.data?.map((m: MedicineType) => (
+                    <Card
+                      className="h-auto w-full md:!w-1/4  xxl:!w-1/3 my-2 md:!m-2 cursor-pointer hover:bg-gray-50"
+                      key={m._id}
+                      onClick={() => handleShow(m)}
+                    >
+                      <div className="flex flex-col gap-2 w-full justify-around">
+                        <CustomMedicineImg
+                          url={
+                            m.photo.startsWith(m.name)
+                              ? `http://localhost:3001/uploads/${m.photo}`
+                              : m.photo
+                          }
+                          className="mx-auto w-24  xxl:!w-44 h-auto"
+                        />
+                        <p className="text-xl  xxl:!text-3xl font-semibold">
+                          {m.name}
+                        </p>
+                        <p className="text-xs  xxl:!text-xl">{m.category}</p>
+                        <p className="text-md font-bold mt-auto xxl:!text-xl ml-auto">
+                          {m.available ? (
+                            <span className="text-green-800">
+                              {m.price} BAM
+                            </span>
+                          ) : (
+                            <span className="text-red-600">Not available</span>
+                          )}
+                        </p>
+                      </div>
+                    </Card>
+                  ))}
                 </div>
-                {searchQ !== "" && (
-                  <div className="flex items-center justify-between">
-                    <Select
-                      sizing="sm"
-                      value={cat}
-                      name="category"
-                      onChange={(e) => handleChangeCategory(e)}
-                    >
-                      <option value="">Category</option>
-                      <option value="Pain Relief">Pain Relief</option>
-                      <option value="Antibiotics">Antibiotics</option>
-                      <option value="Antipyretics">Antipyretics</option>
-                      <option value="Antacids">Antacids</option>
-                      <option value="Antihistamines">Antihistamines</option>
-                      <option value="Antidepressants">Antidepressants</option>
-                      <option value="Anticoagulants">Anticoagulants</option>
-                      <option value="Antidiabetics">Antidiabetics</option>
-                      <option value="Antipsychotics">Antipsychotics</option>
-                      <option value="Vaccines">Vaccines</option>
-                      <option value="Other">Other</option>
-                    </Select>
-                    <span
-                      onClick={clearSearch}
-                      className="text-sm cursor-pointer text-red-500 hover:underline"
-                    >
-                      Clear
-                    </span>
-                  </div>
-                )}
-                {med?.data && status !== "failed" ? (
-                  <>
-                    <div className="w-full h-full flex-wrap items-start flex">
-                      {med?.data?.map((m: MedicineType) => (
-                        <Card
-                          className="h-auto w-1/5 cursor-pointer hover:bg-gray-50 w-md m-3"
-                          key={m._id}
-                          onClick={() => handleShow(m)}
-                        >
-                          <div className="flex flex-col gap-2 w-full justify-around">
-                            <CustomMedicineImg
-                              url={
-                                m.photo.startsWith(m.name)
-                                  ? `http://localhost:3001/uploads/${m.photo}`
-                                  : m.photo
-                              }
-                              className="mx-auto w-[90px] h-[90px]"
-                            />
-                            <p className="text-xl font-semibold">{m.name}</p>
-                            <p className="text-xs">{m.category}</p>
-                            <p className="text-md font-bold mt-auto ml-auto">
-                              {m.available ? (
-                                <span className="text-green-800">
-                                  {" "}
-                                  {m.price} BAM
-                                </span>
-                              ) : (
-                                <span className="text-red-600">
-                                  Not available
-                                </span>
-                              )}
-                            </p>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                    <Pagination
-                      page={Number(med?.currentPage)}
-                      totalPages={Number(med?.numOfPages)}
-                      handleNavigate={handleNavigate}
-                    />
-                  </>
-                ) : (
-                  <div className="h-full w-full flex-col flex justify-center items-center">
-                    <ErrorMessage
-                      text={message || "No data available."}
-                      size="md"
-                      className="my-auto mt-5"
-                    />
-                    {searchQ && (
-                      <Footer variant={1}>
-                        <Button
-                          onClick={clearSearch}
-                          color="failure"
-                          className="m-3 text-white font-bold hover:underline cursor-pointer"
-                        >
-                          Clear
-                        </Button>
-                      </Footer>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-          <div className="w-1/3 h-full">
-            {loading ? (
-              <div className="w-full h-full flex justify-center items-center">
-                <Spinner size="xl" />
-              </div>
-            ) : pharmacy ? (
-              <div className="flex flex-col items-center h-full gap-3 justify-center bg-green-50">
-                <CustomImg
-                  url={pharmacy.user_id.photo}
-                  className="rounded-full"
-                  width="200"
+                <Pagination
+                  page={Number(med?.currentPage)}
+                  totalPages={Number(med?.numOfPages)}
+                  handleNavigate={handleNavigate}
                 />
-                <div className="flex flex-col gap-2">
-                  <p>
-                    Name:{" "}
-                    <span className="text-blue-700"> {pharmacy.name}</span>
-                  </p>
-                  <p>
-                    Address:{" "}
-                    <span className="text-blue-700">{pharmacy.address}</span>
-                  </p>
-                  <p>
-                    Phone number:{" "}
-                    <span className="text-blue-700">
-                      +{pharmacy.phone_number}
-                    </span>
-                  </p>
-                  <Link to={mailTo}>
-                    Email:{" "}
-                    <span className="underline text-sm text-blue-700">
-                      {pharmacy.user_id.email}
-                    </span>
-                  </Link>
-                  <p>Working hours</p>
-                  <p className="text-center text-blue-700 font-semibold">
-                    {pharmacy.working_hours}
-                  </p>
-                </div>
-              </div>
+              </>
             ) : (
-              <p>err</p>
+              <div className="h-full w-full flex-col flex justify-center items-center">
+                <ErrorMessage
+                  text={message || "No data available."}
+                  size="md"
+                  className="my-auto mt-5  xxl:!text-2xl"
+                />
+              </div>
             )}
           </div>
-          {m && (
-            <MedicineModal
-              show={show}
-              onClose={onClose}
-              medicine={m}
-              url={
-                m.photo.startsWith(m.name)
-                  ? `http://localhost:3001/uploads/${m.photo}`
-                  : m.photo
-              }
-            />
-          )}
-        </div>
-      )}
-      {pharmacy === undefined && !med && (
-        <div className="h-full flex justify-center items-center">
-          <p className="text-md text-gray text-gray-400">No data available.</p>
-        </div>
+        )}
+        <PharmacyInfo />
+      </div>
+
+      {m && (
+        <MedicineModal
+          show={show}
+          onClose={onClose}
+          medicine={m}
+          url={
+            m.photo.startsWith(m.name)
+              ? `http://localhost:3001/uploads/${m.photo}`
+              : m.photo
+          }
+        />
       )}
     </>
   );

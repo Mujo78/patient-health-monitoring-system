@@ -1,6 +1,6 @@
+import { Button } from "flowbite-react";
 import React, { useState } from "react";
 import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
-import { Link, useLocation } from "react-router-dom";
 
 type Props = {
   page: number;
@@ -16,25 +16,10 @@ const Pagination: React.FC<Props> = ({
   className,
 }) => {
   const [pageNum, setPageNum] = useState<number>(page || 1);
-  const location = useLocation();
-  let searchParam: string = "";
-  let searchParamCategory: string = "";
-
-  if (location.search.includes("searchQuery")) {
-    searchParam = location.search.slice(1, location.search.indexOf("&") + 1);
-  }
-  if (location.search.includes("category")) {
-    searchParamCategory = location.search.slice(
-      location.search.indexOf("category"),
-      location.search.length
-    );
-  }
 
   const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setPageNum(newPage);
-      handleNavigate(newPage);
-    }
+    setPageNum(newPage);
+    handleNavigate(newPage);
   };
 
   const pageRange = 5;
@@ -57,46 +42,37 @@ const Pagination: React.FC<Props> = ({
         >
           <div className="w-2/12">
             {pageNum > 1 && (
-              <Link
-                to={`?${searchParam && searchParam}page=${pageNum - 1}${
-                  searchParamCategory && `&${searchParamCategory}`
-                }`}
+              <Button
                 onClick={() => handlePageChange(pageNum - 1)}
-                className="relative inline-flex justify-start items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
+                className="relative inline-flex items-center  active:!bg-transparent active:ring-1 active:ring-indigo-100 text-gray-700 bg-white hover:!bg-gray-50"
               >
-                <HiArrowLongLeft />
-              </Link>
+                <HiArrowLongLeft className="xxl:!text-2xl" />
+              </Button>
             )}
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center gap-2 items-center">
             {pagesToDisplay.map((pageNumber) => (
-              <Link
+              <Button
                 key={pageNumber}
-                to={`?${searchParam && searchParam}page=${pageNumber}${
-                  searchParamCategory && `&${searchParamCategory}`
-                }`}
                 onClick={() => handlePageChange(pageNumber)}
-                className={`relative inline-flex items-center mx-auto justify-center rounded-lg px-4 py-2 text-sm font-medium ${
+                className={`relative inline-flex items-center mx-auto justify-center rounded-lg text-sm hover:!bg-indigo-100 active:!bg-indigo-100 active:ring-1 active:ring-indigo-100 font-medium ${
                   pageNumber === pageNum
                     ? "text-blue-600 bg-indigo-100"
                     : "text-gray-700 bg-white hover:bg-gray-50"
                 }`}
               >
-                {pageNumber}
-              </Link>
+                <p className=" xxl:!text-2xl">{pageNumber}</p>
+              </Button>
             ))}
           </div>
           <div className="flex justify-end w-2/12">
             {pageNum < totalPages && (
-              <Link
-                to={`?${searchParam && searchParam}page=${pageNum + 1}${
-                  searchParamCategory && `&${searchParamCategory}`
-                }`}
+              <Button
                 onClick={() => handlePageChange(pageNum + 1)}
-                className="relative inline-flex items-center px-2 py-2 text-gray-700 bg-white hover:bg-gray-50"
+                className="relative inline-flex items-center  active:!bg-transparent active:ring-1 active:ring-indigo-100 text-gray-700 bg-white hover:!bg-gray-50"
               >
-                <HiArrowLongRight />
-              </Link>
+                <HiArrowLongRight className="xxl:!text-2xl" />
+              </Button>
             )}
           </div>
         </nav>
