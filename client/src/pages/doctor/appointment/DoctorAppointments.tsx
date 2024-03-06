@@ -8,10 +8,10 @@ import {
   getAppointmentsForPerson,
   resetPersonAppointment,
 } from "../../../features/appointment/appointmentSlice";
-import { Spinner } from "flowbite-react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 type MyEvent = {
   id: string;
@@ -56,17 +56,16 @@ const DoctorAppointments: React.FC = () => {
       ) : (
         <div className="px-4 h-full w-full flex-col text-sm flex justify-center items-center">
           {status === "loading" ? (
-            <Spinner size="xl" />
+            <CustomSpinner size="xl" />
           ) : (
             <>
               <Calendar
-                className="w-full h-full flex flex-col rounded-xl p-3"
+                className="w-full h-full flex flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"
                 localizer={localizer}
                 events={myEventsList}
                 onSelectEvent={handleNavigate}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 700 }}
                 titleAccessor="title"
                 min={new Date(0, 0, 0, 9, 0, 0)}
                 max={new Date(0, 0, 0, 17, 0, 0, 0)}

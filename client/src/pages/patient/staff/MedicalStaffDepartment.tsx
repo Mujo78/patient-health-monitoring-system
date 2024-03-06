@@ -6,9 +6,10 @@ import {
   getDepartmentAllInfo,
 } from "../../../service/departmentSideFunctions";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
-import { Card, Spinner } from "flowbite-react";
+import { Card } from "flowbite-react";
 import CustomImg from "../../../components/UI/CustomImg";
 import { useParams, Link } from "react-router-dom";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const MedicalStaffDepartment: React.FC = () => {
   const { departmentName } = useParams();
@@ -40,9 +41,7 @@ const MedicalStaffDepartment: React.FC = () => {
   return (
     <>
       {loading ? (
-        <div className="w-full h-full flex justify-center items-center">
-          <Spinner size="md" />
-        </div>
+        <CustomSpinner size="md" />
       ) : selectedDepartment ? (
         <div className="divide-y flex flex-col gap-3">
           <div className="flex gap-3  flex-col">

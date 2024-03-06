@@ -5,11 +5,12 @@ import {
 } from "../../../service/departmentSideFunctions";
 import { useSelector } from "react-redux";
 import { authUser } from "../../../features/auth/authSlice";
-import { Spinner, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import { HiChevronRight } from "react-icons/hi2";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const MedicalStaff: React.FC = () => {
   const navigate = useNavigate();
@@ -42,9 +43,7 @@ const MedicalStaff: React.FC = () => {
   return (
     <div className="h-full w-full">
       {loading ? (
-        <div className="flex justify-center items-center h-full">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : departments !== undefined && departments?.length > 0 ? (
         <div className="flex flex-wrap lg:!flex-nowrap gap-3 lg:!gap-0 h-full w-full lg:!divide-x">
           <div className="w-full lg:!w-1/3">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Card, Spinner, Textarea } from "flowbite-react";
+import { Button, Card, Textarea } from "flowbite-react";
 import CustomImg from "../../../components/UI/CustomImg";
 import { Doctor } from "./AppointmentDepartment";
 import {
@@ -26,6 +26,7 @@ import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CalendarAppointment from "../../../components/Appointment/CalendarAppointment";
 import { authUser } from "../../../features/auth/authSlice";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const workTime = [
   "9:00",
@@ -170,9 +171,7 @@ const MakeAppointment: React.FC = () => {
   return (
     <div className="mt-6 xl:!mt-0 xl:!h-full">
       {!doc ? (
-        <div className="h-full flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : (
         <div className="flex flex-col h-full mx-1.5 lg:!mx-3">
           <div className="flex flex-col xl:!flex-row gap-4 xl:!gap-12 w-full h-full items-center justify-center">
@@ -180,9 +179,7 @@ const MakeAppointment: React.FC = () => {
               <div className="my-auto h-full flex flex-col justify-center gap-3 xl:!gap-12">
                 <Card horizontal className="flex justify-center lg:mx-auto">
                   {loading ? (
-                    <div className="p-6">
-                      <Spinner size="md" />
-                    </div>
+                    <CustomSpinner size="md" />
                   ) : (
                     <div className="flex gap-4 justify-around items-center">
                       <CustomImg
@@ -312,9 +309,7 @@ const MakeAppointment: React.FC = () => {
                     />
                   </div>
                 ) : status === "loading" ? (
-                  <div className="mx-auto my-auto">
-                    <Spinner />
-                  </div>
+                  <CustomSpinner />
                 ) : availableTime && availableTime.length > 0 ? (
                   availableTime.map((n) => (
                     <Button

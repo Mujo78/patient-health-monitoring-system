@@ -6,7 +6,7 @@ import {
   medicine,
 } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
-import { Card, Spinner } from "flowbite-react";
+import { Card } from "flowbite-react";
 import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import Pagination from "../../components/UI/Pagination";
 import MedicineModal from "../../components/Pharmacy/MedicineModal";
@@ -16,6 +16,7 @@ import useSelectedPage from "../../hooks/useSelectedPage";
 import PharmacyInfo from "../../components/Pharmacy/PharmacyInfo";
 import { useQuery } from "../../hooks/useQuery";
 import MedicineSearchHeader from "../../components/Pharmacy/MedicineSearchHeader";
+import CustomSpinner from "../../components/UI/CustomSpinner";
 
 const Medicine: React.FC = () => {
   const navigate = useNavigate();
@@ -63,9 +64,7 @@ const Medicine: React.FC = () => {
     <>
       <div className="h-full transition-all lg:pl-3 duration-300 lg:divide-x flex flex-col gap-3 lg:!gap-3 lg:!flex-row justify-between w-full">
         {status === "loading" ? (
-          <div className="mx-auto my-auto">
-            <Spinner size="xl" />
-          </div>
+          <CustomSpinner size="xl" />
         ) : (
           <div className=" w-full flex flex-col h-full lg:!w-2/3 justify-between px-2 lg:!px-0">
             <MedicineSearchHeader />

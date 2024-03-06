@@ -142,7 +142,6 @@ export const makeAppointmentFinished = createAsyncThunk<
       safeToken
     );
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);

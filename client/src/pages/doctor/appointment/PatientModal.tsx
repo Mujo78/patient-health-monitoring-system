@@ -1,13 +1,14 @@
 import React from "react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
-import { Button, Modal, Spinner } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import {
   formatDate,
   formatStartEnd,
 } from "../../../service/appointmentSideFunctions";
-import moment from "moment";
 import { Link } from "react-router-dom";
 import { modalDataType } from "../Patient";
+import { yearCalc } from "../../../service/personSideFunctions";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 type Props = {
   more: boolean;
@@ -20,97 +21,105 @@ type Props = {
 const PatientModal: React.FC<Props> = ({
   more,
   variant,
-  setMore,
   latestAppState,
+  setMore,
   loading,
 }) => {
   return (
     <Modal
       show={more}
-      size="4xl"
+      size="7xl"
       className="font-Poppins"
       position="center-right"
       onClose={() => setMore(false)}
     >
       <Modal.Header>
-        {latestAppState &&
-          latestAppState.patient_id.first_name +
-            " " +
-            latestAppState.patient_id.last_name +
-            " (" +
-            formatDate(latestAppState.appointment_date) +
-            ")"}
+        {latestAppState && (
+          <p className="text-sm md:!text-lg lg:!text-xl xxl:!text-3xl">
+            {latestAppState.patient_id.first_name +
+              " " +
+              latestAppState.patient_id.last_name +
+              " (" +
+              formatDate(latestAppState.appointment_date) +
+              ")"}
+          </p>
+        )}
       </Modal.Header>
-      <Modal.Body>
-        <div className="h-full">
+      <Modal.Body id="content">
+        <div className="h-full pb-4">
           {loading ? (
-            <div className="h-screen flex justify-center items-center">
-              <div className="h-1/6">
-                <Spinner />
-              </div>
+            <div className="h-80">
+              <CustomSpinner />
             </div>
           ) : latestAppState ? (
             <div className="h-full flex justify-evenly flex-col">
-              <div className="flex p-1 border rounded-lg my-auto divide-x justify-between">
-                <div className="divide-y w-2/4">
+              <div className="flex p-1 border rounded-lg my-auto divide-y xxl:text-2xl md:!divide-x md:!divide-y-0 justify-between flex-wrap text-center md:!text-start">
+                <div className="divide-y w-full md:!w-2/4">
                   <p>
-                    <span className="font-semibold">Name: </span>{" "}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Name:
+                    </span>{" "}
                     {latestAppState.patient_id.first_name +
                       " " +
                       latestAppState.patient_id.last_name}
                   </p>
                   <p>
-                    <span className="font-semibold">Date of birth: </span>{" "}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Date of birth:
+                    </span>{" "}
                     {latestAppState.patient_id.date_of_birth.toString()}
                   </p>
                   <p>
-                    <span className="font-semibold">Blood type: </span>{" "}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Blood type:
+                    </span>{" "}
                     {latestAppState.patient_id.blood_type}
                   </p>
                 </div>
-                <div className="w-2/4 divide-y">
+                <div className="md:!w-2/4 w-full divide-y md:pl-1">
                   <p>
-                    <span className="font-semibold">Gender: </span>{" "}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Gender:
+                    </span>{" "}
                     {latestAppState.patient_id.gender}
                   </p>
                   <p>
-                    <span className="font-semibold">Age: </span>{" "}
-                    {moment().diff(
-                      moment(latestAppState?.patient_id.date_of_birth),
-                      "years"
-                    )}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Age:
+                    </span>{" "}
+                    {yearCalc(latestAppState?.patient_id.date_of_birth)}
                   </p>
                   <p>
-                    <span className="font-semibold">Address: </span>{" "}
+                    <span className="font-semibold hidden md:!inline-block">
+                      Address:
+                    </span>{" "}
                     {latestAppState.patient_id.address}
                   </p>
                 </div>
               </div>
               <div className="mt-6">
-                <h1 className="font-bold text-md mb-1">Medical report</h1>
-                <div className="border rounded-lg divide-y p-2">
+                <h1 className="font-bold text-md mb-1 xxl:text-2xl">
+                  Medical report
+                </h1>
+                <div className="border flex flex-col gap-4 rounded-lg divide-y p-2">
                   {latestAppState.reason.length !== 0 && (
-                    <div>
-                      <h1 className="font-semibold text-sm">Reason</h1>
-                      <div>
-                        <p className="text-sm">{latestAppState.reason}</p>
-                      </div>
+                    <div className="text-sm xxl:!text-xl">
+                      <h1 className="font-semibold">Reason</h1>
+                      <p>{latestAppState.reason}</p>
                     </div>
                   )}
                   {latestAppState.diagnose.length !== 0 && (
-                    <div className="pt-2">
-                      <h1 className="font-semibold text-sm">Diagnose</h1>
-                      <div>
-                        <p className="text-sm">{latestAppState.diagnose}</p>
-                      </div>
+                    <div className="text-sm xxl:!text-xl">
+                      <h1 className="font-semibold">Diagnose</h1>
+                      <p>{latestAppState.diagnose}</p>
                     </div>
                   )}
                   {latestAppState.therapy.length !== 0 && (
-                    <div className="pt-2">
-                      <h1 className="font-semibold text-sm">Therapy</h1>
+                    <div className="text-sm xxl:!text-xl">
+                      <h1 className="font-semibold">Therapy</h1>
                       <div className="flex">
                         {latestAppState.therapy.map((n) => (
-                          <p key={n._id} className="text-sm mr-2">
+                          <p key={n._id} className="mr-2">
                             {n.name} - ({n.strength}),
                           </p>
                         ))}
@@ -118,26 +127,20 @@ const PatientModal: React.FC<Props> = ({
                     </div>
                   )}
                   {latestAppState.other_medicine.length !== 0 && (
-                    <div className="pt-2">
-                      <h1 className="font-semibold text-sm">Other medicine</h1>
-                      <div>
-                        <p className="text-sm">
-                          {latestAppState.other_medicine}
-                        </p>
-                      </div>
+                    <div className="pt-2 text-sm xxl:!text-xl">
+                      <h1 className="font-semibold">Other medicine</h1>
+                      <p>{latestAppState.other_medicine}</p>
                     </div>
                   )}
                   {latestAppState.description.length !== 0 && (
-                    <div className="pt-2">
-                      <h1 className="font-semibold text-sm">Description</h1>
-                      <div>
-                        <p className="text-sm">{latestAppState.description}</p>
-                      </div>
+                    <div className="pt-2 xxl:!text-xl text-sm">
+                      <h1 className="font-semibold">Description</h1>
+                      <p>{latestAppState.description}</p>
                     </div>
                   )}
                 </div>
-                <div className="text-sm flex mt-8 justify-between items-center">
-                  <div>
+                <div className="flex flex-col md:!flex-row md:!items-center mt-8 justify-between items-start gap-3">
+                  <div className="text-sm xxl:!text-xl">
                     <p>
                       <span className="font-semibold">Date: </span>{" "}
                       {formatDate(latestAppState.appointment_date)}
@@ -148,21 +151,20 @@ const PatientModal: React.FC<Props> = ({
                     </p>
                   </div>
                   {variant === 1 && (
-                    <div>
-                      <Link
-                        className="text-blue-700 text-sm hover:underline "
-                        to={`/my-patients/${latestAppState.patient_id._id}`}
-                      >
-                        See patient history {"->"}
-                      </Link>
-                    </div>
+                    <Link
+                      className="text-blue-700 text-sm xxl:!text-xl hover:underline "
+                      to={`/my-patients/${latestAppState.patient_id._id}`}
+                    >
+                      See patient history {"->"}
+                    </Link>
                   )}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center pb-2 md:!pb-0">
               <ErrorMessage
+                className="xxl:text-2xl"
                 size="md"
                 text="There are no record for this patient!"
               />
@@ -170,9 +172,9 @@ const PatientModal: React.FC<Props> = ({
           )}
         </div>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="hidden md:!flex">
         <Button className="ml-auto" color="gray" onClick={() => setMore(false)}>
-          Close
+          <p className="xxl:!text-xl">Close</p>
         </Button>
       </Modal.Footer>
     </Modal>

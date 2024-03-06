@@ -4,7 +4,7 @@ import {
   getDoctorsForDepartment,
   Department,
 } from "../../../service/departmentSideFunctions";
-import { Spinner, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import CustomButton from "../../../components/UI/CustomButton";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { HiChevronRight } from "react-icons/hi2";
@@ -14,6 +14,7 @@ import Footer from "../../../components/UI/Footer";
 import { useSelector } from "react-redux";
 import { authUser } from "../../../features/auth/authSlice";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 export type Doctor = {
   _id: string;
@@ -93,7 +94,7 @@ const AppointmentDepartment: React.FC = () => {
               </p>
               <div className="flex w-full justify-center">
                 {loading ? (
-                  <Spinner />
+                  <CustomSpinner />
                 ) : (
                   <Table hoverable>
                     <Table.Head className="xxl:!text-xl">
@@ -133,9 +134,7 @@ const AppointmentDepartment: React.FC = () => {
             </div>
             <div className=" w-full xl:!flex-grow">
               {loadingDoc ? (
-                <div className="mx-auto flex justify-center mt-4">
-                  <Spinner />
-                </div>
+                <CustomSpinner fromTop={4} />
               ) : (
                 selectedDep && (
                   <>

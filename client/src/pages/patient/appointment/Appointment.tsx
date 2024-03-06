@@ -8,12 +8,13 @@ import {
   getSelectedAppointment,
   resetSelectedAppointment,
 } from "../../../features/appointment/appointmentSlice";
-import { Button, Card, Spinner } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomImg from "../../../components/UI/CustomImg";
 import Footer from "../../../components/UI/Footer";
 import AppointmentOverviewEdit from "./AppointmentOverviewEdit";
 import { formatStartEnd } from "../../../service/appointmentSideFunctions";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const Appointment: React.FC = () => {
   const { id } = useParams();
@@ -55,9 +56,7 @@ const Appointment: React.FC = () => {
   return (
     <>
       {status === "loading" ? (
-        <div className="flex justify-center items-center h-full">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : (
         <>
           {selected !== null ? (

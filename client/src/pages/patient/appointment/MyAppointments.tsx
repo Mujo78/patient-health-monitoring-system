@@ -9,9 +9,9 @@ import {
   getAppointmentsForPerson,
   resetPersonAppointment,
 } from "../../../features/appointment/appointmentSlice";
-import { Spinner } from "flowbite-react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 type MyEvent = {
   id: string;
@@ -56,7 +56,7 @@ const MyAppointments: React.FC = () => {
       ) : (
         <div className="px-4 py-3 h-full w-full flex-col text-sm flex justify-center items-center">
           {status === "loading" ? (
-            <Spinner size="xl" />
+            <CustomSpinner size="xl" />
           ) : (
             <>
               <Calendar
