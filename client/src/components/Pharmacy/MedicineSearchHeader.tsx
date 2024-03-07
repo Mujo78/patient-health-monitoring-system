@@ -38,7 +38,8 @@ const MedicineSearchHeader = () => {
 
   const [cat, setCat] = useState<string>(category || "");
 
-  const handleClickSearch = () => {
+  const handleClickSearch = (e: React.FormEvent) => {
+    e.preventDefault();
     if (search !== "" && search !== searchQuery) {
       query.set("page", "1");
       query.set("searchQuery", search);
@@ -55,28 +56,29 @@ const MedicineSearchHeader = () => {
     dispatch(getMedicine({ searchQuery, category: e.target.value }));
   };
 
-  const clearSearch = () => navigate("/medicine-overview?page=1");
+  const clearSearch = () => {
+    setSearch("");
+    navigate("/medicine-overview?page=1");
+  };
 
   return (
     <>
-      <div className="flex justify-center lg:w-3/4 lg:!mx-auto gap-3 my-4 items-center">
-        <TextInput
-          theme={customTextInputTheme}
-          sizing="md"
-          className="w-full lg:w-3/4 xxl:!text-2xl"
-          placeholder="Amoxicilline"
-          name="search"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-        />
-        <CustomButton
-          onClick={handleClickSearch}
-          disabled={search === ""}
-          size="md"
-        >
-          <p className="xxl:text-xl">Search</p>
-        </CustomButton>
-      </div>
+      <form onSubmit={handleClickSearch}>
+        <div className="flex justify-center lg:w-3/4 lg:!mx-auto gap-3 my-4 items-center">
+          <TextInput
+            theme={customTextInputTheme}
+            sizing="md"
+            className="w-full lg:w-3/4 xxl:!text-2xl"
+            placeholder="Amoxicilline"
+            name="search"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
+          <CustomButton type="submit" disabled={search === ""} size="md">
+            <p className="xxl:text-xl">Search</p>
+          </CustomButton>
+        </div>
+      </form>
       {searchQuery !== "" && (
         <div className="flex items-center justify-between">
           <Select

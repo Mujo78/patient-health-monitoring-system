@@ -33,7 +33,7 @@ const Pagination: React.FC<Props> = ({
 
   return (
     <div
-      className={`flex items-center ${className} w-full mt-auto border-t border-gray-200 bg-white px-4 py-3 sm:px-6`}
+      className={`flex items-center ${className} w-full mt-auto bg-white px-4 py-3 sm:px-6`}
     >
       <div className="flex-1">
         <nav

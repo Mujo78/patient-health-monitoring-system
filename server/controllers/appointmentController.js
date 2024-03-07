@@ -341,9 +341,12 @@ const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
 });
 
 const getPatientsForDoctor = asyncHandler(async (req, res) => {
-  const { page } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const { searchQuery } = req.query;
+  const limit = 3;
+  const startIndx = (page - 1) * limit;
 
-  const doc = await Doctor.findOne({ user_id: req.params.id });
+  const doc = await Doctor.findOne({ user_id: req.user.id });
 
   if (!doc) return res.status(404).json("That doctor doesn't exists!");
 
@@ -354,67 +357,39 @@ const getPatientsForDoctor = asyncHandler(async (req, res) => {
   if (!app) return res.status(404).json("There are no patients right now!");
 
   const patientIds = app.map((item) => item._id);
-
-  const LIMIT = 8;
-  const startIndx = (Number(page) - 1) * LIMIT;
-
-  const total = patientIds.length;
-  const patients = await Patient.find({ _id: { $in: patientIds } })
+  let query = Patient.find({ _id: { $in: patientIds } })
     .sort({ _id: -1 })
-    .limit(LIMIT)
+    .limit(limit)
     .skip(startIndx);
 
-  return res.status(200).json({
-    data: patients,
-    currentPage: Number(page),
-    numOfPages: Math.ceil(total / LIMIT),
-  });
-});
+  if (searchQuery) {
+    const [first, last] = searchQuery.split(" ");
 
-const getPatientsForDoctorBySearch = asyncHandler(async (req, res) => {
-  const { searchQuery, page } = req.query;
+    const conditionals = {};
 
-  const doc = await Doctor.findOne({ user_id: req.params.id });
-  if (!doc) return res.status(404).json("That doctor doesn't exists!");
+    if (first) {
+      conditionals.first_name = new RegExp(first, "i");
+    }
 
-  const app = await Appointment.aggregate([
-    { $match: { doctor_id: doc._id } },
-    { $group: { _id: "$patient_id" } },
-  ]);
-  if (!app) return res.status(403).json("There are no patients right now!");
+    if (last) {
+      conditionals.last_name = new RegExp(last, "i");
+    }
 
-  const patientIds = app.map((item) => item._id);
-
-  const LIMIT = 8;
-  const startIndx = (Number(page) - 1) * LIMIT;
-
-  const [first, last] = searchQuery.split(" ");
-  const name = new RegExp(searchQuery.trim(), "i");
-
-  const conditionals = [{ first_name: name }, { last_name: name }];
-
-  if (first && last) {
-    conditionals.push({
-      first_name: first,
-      last_name: last,
+    query = query.where({
+      $and: [conditionals],
     });
   }
 
-  const patients = await Patient.find({
-    $and: [{ _id: { $in: patientIds } }, { $or: conditionals }],
-  })
-    .sort({ _id: -1 })
-    .limit(LIMIT)
-    .skip(startIndx);
+  const patients = await query.exec();
 
-  if (patients.length === 0)
-    return res.status(403).json("There are no patients with such name!");
+  if (!patients) return res.status(404).json("There are no data available.");
 
-  const total = patients.length;
+  const total = await Patient.countDocuments(query.getFilter());
+
   return res.status(200).json({
     data: patients,
     currentPage: Number(page),
-    numOfPages: Math.ceil(total / LIMIT),
+    numOfPages: Math.ceil(total / limit),
   });
 });
 
@@ -758,7 +733,6 @@ module.exports = {
   getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
-  getPatientsForDoctorBySearch,
   getFinishedAppointmentForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,

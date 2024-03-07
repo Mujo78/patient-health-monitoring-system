@@ -24,21 +24,24 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
   return (
     <Card
       onClick={handleNavigate}
-      className={` ${className} max-w-[290px] w-full font-Poppins h-fit ${
+      className={` ${className} w-full md:!w-2/5 xxl:!w-1/4 md:!flex-grow-0 h-auto ${
         variant === 2 && "cursor-pointer"
       }`}
     >
       {variant === 1 && <p className="text-blue-700 font-semibold">Patient</p>}
       {variant === 2 && (
-        <CustomImg url={data?.user_id?.photo} className="mx-auto" width="70" />
+        <CustomImg
+          url={data?.user_id?.photo}
+          className="mx-auto w-20 xxl:!w-40 h-auto"
+        />
       )}
-      <h1 className="text-xl font-bold text-center">
+      <h1 className="text-xl xxl:!text-2xl font-bold text-center">
         {data.first_name + " " + data.last_name}
       </h1>
       {variant === 1 && <p className="text-gray-500">Details</p>}
       <hr />
-      <p className="flex text-sm text-gray-500 justify-between">
-        <span>Age :</span>
+      <p className="flex text-sm xxl:!text-xl text-gray-500 justify-between">
+        Age:
         <span className="ml-auto text-black">
           {yearCalc(data?.date_of_birth)}
         </span>

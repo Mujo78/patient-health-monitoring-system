@@ -3,9 +3,9 @@ import { Pharmacy } from "../../features/medicine/medicineSlice";
 import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import { getPharmacy } from "../../service/pharmacySideFunctions";
-import { Spinner } from "flowbite-react";
 import CustomImg from "../UI/CustomImg";
 import { Link } from "react-router-dom";
+import CustomSpinner from "../UI/CustomSpinner";
 
 const PharmacyInfo = () => {
   const [pharmacy, setPharmacy] = useState<Pharmacy | undefined>();
@@ -32,11 +32,9 @@ const PharmacyInfo = () => {
 
   const mailTo = `mailto:${pharmacy?.user_id.email}`;
   return (
-    <div className="w-full lg:!w-1/3 h-fit lg:!h-full">
+    <div className="w-full lg:!w-1/3 h-fit pb-14 md:!pb-0 lg:!h-full">
       {loading ? (
-        <div className="w-full h-full flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : (
         pharmacy && (
           <div className="flex flex-col items-center h-fit lg:!h-full p-3 lg:!py-0 lg:!px-3 xl:!p-0 gap-3 justify-center bg-green-50">

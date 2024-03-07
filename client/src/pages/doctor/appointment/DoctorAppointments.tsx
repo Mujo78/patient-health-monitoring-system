@@ -12,13 +12,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
-
-type MyEvent = {
-  id: string;
-  start: Date;
-  end: Date;
-  title: string;
-};
+import { MyEvent } from "../../../service/appointmentSideFunctions";
 
 const localizer = momentLocalizer(moment);
 

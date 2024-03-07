@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import {
+  PatientsType,
   getPatientsForDoctor,
-  searchForPatient,
 } from "../../service/patientSideFunctions";
 import PatientCard from "../../components/Patient/PatientCard";
-import { Patient } from "../../features/medicine/medicineSlice";
-import { Spinner, TextInput } from "flowbite-react";
+import { CustomFlowbiteTheme, TextInput } from "flowbite-react";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import CustomButton from "../../components/UI/CustomButton";
 import Pagination from "../../components/UI/Pagination";
@@ -14,50 +13,51 @@ import { useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { useQuery } from "../../hooks/useQuery";
+import CustomSpinner from "../../components/UI/CustomSpinner";
+import Footer from "../../components/UI/Footer";
 
-type patients = {
-  currentPage: number | null;
-  data: Patient[];
-  numOfPages: number;
+const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
+  field: {
+    input: {
+      sizes: {
+        sm: "p-2 sm:text-xs",
+        md: "p-2.5 text-sm xxl:!text-xl xxl:!p-3",
+        lg: "sm:text-md p-4",
+      },
+    },
+  },
 };
 
 const MyPatients: React.FC = () => {
+  const [search, setSearch] = useState<string>("");
+  const [patients, setPatients] = useState<PatientsType | undefined>();
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { accessUser } = useSelector(authUser);
   const navigate = useNavigate();
   const { id } = useParams();
   const query = useQuery();
-  const [loading, setLoading] = useState<boolean>(false);
-  const page = query.get("page") || 1;
-  const searchQuery = query.get("searchQuery");
-  const { accessUser } = useSelector(authUser);
-  const [search, setSearch] = useState("");
-  const [patients, setPatients] = useState<patients | undefined>();
-  const [message, setMessage] = useState<string>("");
+  const page = Number(query.get("page")) || 1;
+  const searchQuery = query.get("searchQuery") || "";
+  const lastQuery = useRef<string>();
 
   useSelectedPage("My patients");
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!id && accessUser) {
+      if (!id && accessUser && query.toString() !== lastQuery.current) {
+        lastQuery.current = query.toString();
         try {
           setLoading(true);
-          if (searchQuery) {
-            const response = await searchForPatient(
-              accessUser.token,
-              accessUser.data._id,
-              searchQuery,
-              Number(page)
-            );
-            setPatients(response);
-          } else {
-            const response = await getPatientsForDoctor(
-              accessUser.token,
-              accessUser.data._id,
-              Number(page)
-            );
-            setPatients(response);
-          }
+          const response = await getPatientsForDoctor(
+            accessUser.token,
+            page,
+            searchQuery
+          );
+          setPatients(response);
+          navigate(`/my-patients?${query.toString()}`);
         } catch (err: any) {
-          setMessage(err.response?.data || "An error occurred");
+          setMessage(err.response?.data);
         } finally {
           setLoading(false);
         }
@@ -65,136 +65,126 @@ const MyPatients: React.FC = () => {
     };
 
     fetchData();
-  }, [page, searchQuery, id, accessUser]);
+  }, [page, searchQuery, id, accessUser, navigate, query]);
 
   const handleNavigatePage = async (newPage: number) => {
-    if (accessUser) {
-      try {
-        setLoading(true);
-        if (searchQuery !== null) {
-          const response = await searchForPatient(
-            accessUser.token,
-            accessUser.data._id,
-            searchQuery,
-            newPage
-          );
-          setPatients(response);
-          navigate(
-            `/my-patients/search?searchQuery=${searchQuery}&page=${newPage}`
-          );
-        } else {
-          const response = await getPatientsForDoctor(
-            accessUser.token,
-            accessUser.data._id,
-            newPage
-          );
-          setPatients(response);
-          navigate(`/my-patients?page=${newPage}`);
-        }
-      } catch (err: any) {
-        setMessage(err.response?.data || "An error occurred");
-      } finally {
-        setLoading(false);
-      }
+    if (page !== newPage && accessUser) {
+      query.set("page", newPage.toString());
+      const response = await getPatientsForDoctor(
+        accessUser.token,
+        page,
+        searchQuery
+      );
+      setPatients(response);
+      navigate(`/my-patients?${query.toString()}`);
     }
   };
 
-  const handleSearch = async () => {
-    setPatients(undefined);
-    if (accessUser) {
-      try {
-        setLoading(true);
-        navigate(`/my-patients/search?searchQuery=${search}&page=1`);
-        const response = await searchForPatient(
-          accessUser.token,
-          accessUser.data._id,
-          search,
-          1
-        );
-        setPatients(response);
-      } catch (err: any) {
-        setMessage(err.response?.data || "An error occurred");
-      } finally {
-        setLoading(false);
-      }
+  const handleSearch = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (search !== "" && search !== searchQuery && accessUser) {
+      query.set("page", "1");
+      query.set("searchQuery", search);
+
+      const response = await getPatientsForDoctor(
+        accessUser.token,
+        page,
+        searchQuery
+      );
+      setPatients(response);
+      navigate(`/my-patients?${query.toString()}`);
     }
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearch("");
+    navigate("/my-patients?page=1");
   };
 
   return (
-    <div className="h-fit mx-3">
+    <div className="h-fit md:!h-full mx-2">
       {id ? (
         <Outlet />
       ) : (
-        <div className="h-[90vh]">
-          <>
-            <div className="w-full flex flex-col min-h-full">
-              <div className="flex h-2/6 p-2 w-3/4 mx-auto items-center">
+        <div className="w-full flex flex-col h-full">
+          <div className="flex w-full p-2 mx-auto items-center">
+            <form onSubmit={handleSearch} className="w-full py-3">
+              <div className="flex gap-2 mx-auto w-full xl:!w-3/4">
                 <TextInput
-                  className="w-full mr-3"
+                  theme={customTextInputTheme}
+                  className="flex-grow"
                   name="search"
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by name"
+                  onChange={onChange}
+                  placeholder="Joe Doe"
                 />
                 <CustomButton
-                  onClick={handleSearch}
+                  type="submit"
+                  className="w-fit xxl:!w-36"
                   disabled={search === ""}
                   size="md"
                 >
-                  Search
+                  <p className="xxl:text-xl">Search</p>
                 </CustomButton>
               </div>
-              {loading ? (
-                <div className="flex justify-center mt-24">
-                  {" "}
-                  <Spinner size="lg" />{" "}
+              {searchQuery && (
+                <div className="my-2 ml-2 text-end">
+                  <span
+                    onClick={clearSearch}
+                    className="text-sm xxl:!text-2xl md:mr-1.5 cursor-pointer text-red-500 hover:underline"
+                  >
+                    Clear
+                  </span>
                 </div>
-              ) : patients && patients.data?.length > 0 ? (
-                <>
-                  <div className="w-full h-5/6">
-                    {loading ? (
-                      <div className="flex justify-center mt-24">
-                        <Spinner size="lg" />
-                      </div>
-                    ) : (
-                      <div className="flex justify-center w-full flex-wrap">
-                        {patients?.data.map((n) => (
-                          <PatientCard
-                            key={n._id}
-                            className="m-1"
-                            data={n}
-                            variant={2}
-                          />
-                        ))}
-                      </div>
-                    )}
+              )}
+            </form>
+          </div>
+          {loading ? (
+            <CustomSpinner size="lg" fromTop={24} />
+          ) : (
+            <div className="flex flex-col gap-4 h-full">
+              {patients && patients.data?.length > 0 ? (
+                <div className="flex flex-col justify-between h-full gap-4">
+                  <div className="w-full h-fit">
+                    <div className="flex justify-start w-full mx-1 gap-1 flex-wrap">
+                      {patients?.data.map((n) => (
+                        <PatientCard
+                          key={n._id}
+                          className="m-1"
+                          data={n}
+                          variant={2}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  <div className="w-full h-2/6 flex mt-auto">
-                    <Pagination
-                      page={Number(page)}
-                      totalPages={patients.numOfPages}
-                      handleNavigate={handleNavigatePage}
-                    />
-                  </div>
-                </>
+
+                  <Footer variant={1}>
+                    <div className="pb-12 w-full md:!pb-0">
+                      <Pagination
+                        page={Number(page)}
+                        totalPages={patients.numOfPages}
+                        handleNavigate={handleNavigatePage}
+                      />
+                    </div>
+                  </Footer>
+                </div>
               ) : (
                 <div className="flex flex-col justify-between h-[70vh] items-start">
-                  <div className="ml-auto h-fit">
-                    <Link to="/my-patients" className="text-red-600 underline">
-                      Clear
-                    </Link>
-                  </div>
                   <div className="h-full w-full flex items-center justify-center">
                     <ErrorMessage
-                      className="mx-auto my-auto"
-                      text={message}
+                      className="mx-auto my-auto xxl:text-2xl"
+                      text={message || "No data available."}
                       size="md"
                     />
                   </div>
                 </div>
               )}
             </div>
-          </>
+          )}
         </div>
       )}
     </div>

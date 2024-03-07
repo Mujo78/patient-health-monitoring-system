@@ -3,31 +3,19 @@ import {
   getDepartments,
   getDoctorsForDepartment,
   Department,
+  DoctorType,
 } from "../../../service/departmentSideFunctions";
 import { Table } from "flowbite-react";
 import CustomButton from "../../../components/UI/CustomButton";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { HiChevronRight } from "react-icons/hi2";
 import CustomImg from "../../../components/UI/CustomImg";
-import { UserInfo } from "../../../features/appointment/appointmentSlice";
 import Footer from "../../../components/UI/Footer";
 import { useSelector } from "react-redux";
 import { authUser } from "../../../features/auth/authSlice";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 
-export type Doctor = {
-  _id: string;
-  address: string;
-  bio: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  qualification: string;
-  speciality: string;
-  user_id: UserInfo;
-  available_days: string[];
-};
 const AppointmentDepartment: React.FC = () => {
   const { doctorId } = useParams();
   const navigate = useNavigate();
@@ -38,7 +26,7 @@ const AppointmentDepartment: React.FC = () => {
 
   const { accessUser } = useSelector(authUser);
   const [res, setRes] = useState<Department[] | null>();
-  const [doc, setDoc] = useState<Doctor[]>([]);
+  const [doc, setDoc] = useState<DoctorType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

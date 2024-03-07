@@ -13,8 +13,8 @@ import {
   formatStartEnd,
   getLatestAppointment,
 } from "../../../service/appointmentSideFunctions";
-import PatientEditCard from "./PatientEditCard";
-import PatientModal from "./PatientModal";
+import PatientEditCard from "../../../components/Patient/PatientEditCard";
+import PatientModal from "../../../components/Patient/PatientModal";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { authUser } from "../../../features/auth/authSlice";
 import AppointmentResultForm from "./AppointmentResultForm";

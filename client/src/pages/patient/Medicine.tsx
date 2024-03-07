@@ -17,6 +17,7 @@ import PharmacyInfo from "../../components/Pharmacy/PharmacyInfo";
 import { useQuery } from "../../hooks/useQuery";
 import MedicineSearchHeader from "../../components/Pharmacy/MedicineSearchHeader";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import Footer from "../../components/UI/Footer";
 
 const Medicine: React.FC = () => {
   const navigate = useNavigate();
@@ -61,66 +62,73 @@ const Medicine: React.FC = () => {
   useSelectedPage("Medicine overview");
 
   return (
-    <>
-      <div className="h-full transition-all lg:pl-3 duration-300 lg:divide-x flex flex-col gap-3 lg:!gap-3 lg:!flex-row justify-between w-full">
-        {status === "loading" ? (
-          <CustomSpinner size="xl" />
-        ) : (
-          <div className=" w-full flex flex-col h-full lg:!w-2/3 justify-between px-2 lg:!px-0">
-            <MedicineSearchHeader />
-            {med && med?.data?.length > 0 && status !== "failed" ? (
-              <>
-                <div className="w-full h-full flex-col md:!flex-row flex-wrap items-start flex xxl:mt-2">
-                  {med?.data?.map((m: MedicineType) => (
-                    <Card
-                      className="h-auto w-full md:!w-1/4  xxl:!w-1/3 my-2 md:!m-2 cursor-pointer hover:bg-gray-50"
-                      key={m._id}
-                      onClick={() => handleShow(m)}
-                    >
-                      <div className="flex flex-col gap-2 w-full justify-around">
-                        <CustomMedicineImg
-                          url={
-                            m.photo.startsWith(m.name)
-                              ? `http://localhost:3001/uploads/${m.photo}`
-                              : m.photo
-                          }
-                          className="mx-auto w-24  xxl:!w-44 h-auto"
-                        />
-                        <p className="text-xl  xxl:!text-3xl font-semibold">
-                          {m.name}
-                        </p>
-                        <p className="text-xs  xxl:!text-xl">{m.category}</p>
-                        <p className="text-md font-bold mt-auto xxl:!text-xl ml-auto">
-                          {m.available ? (
-                            <span className="text-green-800">
-                              {m.price} BAM
-                            </span>
-                          ) : (
-                            <span className="text-red-600">Not available</span>
-                          )}
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
+    <div className="h-fit md:!h-full">
+      <div className="h-full transition-all duration-300">
+        <div className="h-full lg:pl-3 lg:divide-x flex flex-col gap-4 md:!gap-0 lg:!gap-3 lg:!flex-row w-full">
+          {status === "loading" ? (
+            <CustomSpinner size="xl" />
+          ) : (
+            <div className=" w-full flex flex-col h-full lg:!w-2/3 justify-start px-2 lg:!px-0">
+              <MedicineSearchHeader />
+              {med && med?.data?.length > 0 && status !== "failed" ? (
+                <div className="flex flex-col justify-between h-full">
+                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2">
+                    {med?.data?.map((m: MedicineType) => (
+                      <Card
+                        className="h-auto w-full md:!w-1/3 my-2 md:!m-2 cursor-pointer hover:bg-gray-50"
+                        key={m._id}
+                        onClick={() => handleShow(m)}
+                      >
+                        <div className="flex flex-col gap-2 w-full justify-around">
+                          <CustomMedicineImg
+                            url={
+                              m.photo.startsWith(m.name)
+                                ? `http://localhost:3001/uploads/${m.photo}`
+                                : m.photo
+                            }
+                            className="mx-auto w-24  xxl:!w-44 h-auto"
+                          />
+                          <p className="text-xl  xxl:!text-3xl font-semibold">
+                            {m.name}
+                          </p>
+                          <p className="text-xs  xxl:!text-xl">{m.category}</p>
+                          <p className="text-md font-bold mt-auto xxl:!text-xl ml-auto">
+                            {m.available ? (
+                              <span className="text-green-800">
+                                {m.price} BAM
+                              </span>
+                            ) : (
+                              <span className="text-red-600">
+                                Not available
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <Footer variant={1}>
+                    <Pagination
+                      page={Number(med?.currentPage)}
+                      totalPages={Number(med?.numOfPages)}
+                      handleNavigate={handleNavigate}
+                    />
+                  </Footer>
                 </div>
-                <Pagination
-                  page={Number(med?.currentPage)}
-                  totalPages={Number(med?.numOfPages)}
-                  handleNavigate={handleNavigate}
-                />
-              </>
-            ) : (
-              <div className="h-full w-full flex-col flex justify-center items-center">
-                <ErrorMessage
-                  text={message || "No data available."}
-                  size="md"
-                  className="my-auto mt-5  xxl:!text-2xl"
-                />
-              </div>
-            )}
-          </div>
-        )}
-        <PharmacyInfo />
+              ) : (
+                <div className="h-full w-full flex-col flex justify-center items-center">
+                  <ErrorMessage
+                    text={message || "No data available."}
+                    size="md"
+                    className="my-auto mt-5  xxl:!text-2xl"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          <PharmacyInfo />
+        </div>
       </div>
 
       {m && (
@@ -135,7 +143,7 @@ const Medicine: React.FC = () => {
           }
         />
       )}
-    </>
+    </div>
   );
 };
 

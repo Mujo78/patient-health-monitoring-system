@@ -6,6 +6,13 @@ import { Appointment } from "../features/appointment/appointmentSlice";
 
 const BASE_URL = "http://localhost:3001/api/v1/";
 
+export type MyEvent = {
+  id: string;
+  start: Date;
+  end: Date;
+  title: string;
+};
+
 export async function getDoctor(token: string, id: string) {
   const response = await axios.get(`${BASE_URL}doctor/${id}`, {
     headers: {
@@ -36,6 +43,12 @@ export async function getLatestAppointment(
   );
   return response.data;
 }
+
+export type AppointmentFinished = {
+  diagnose: string;
+  other_medicine: string;
+  description: string;
+};
 
 export async function getPatientFinishedAppointments(
   token: string,

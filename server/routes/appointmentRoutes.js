@@ -13,7 +13,6 @@ const {
   getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
-  getPatientsForDoctorBySearch,
   getFinishedAppointmentForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,
@@ -31,8 +30,7 @@ router.post("/others-today", restrictTo("PATIENT"), getOtherAppointmentsForDay);
 router.post("/", restrictTo("PATIENT"), makeAppointment);
 router.patch("/:id", restrictTo("DOCTOR"), makeAppointmentFinished);
 
-router.get("/doctor-patients/:id", restrictTo("DOCTOR"), getPatientsForDoctor);
-router.get("/search/:id", restrictTo("DOCTOR"), getPatientsForDoctorBySearch);
+router.get("/doctor-patients", restrictTo("DOCTOR"), getPatientsForDoctor);
 
 router.get(
   "/doctor-dashboard-info",

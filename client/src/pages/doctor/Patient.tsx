@@ -10,7 +10,7 @@ import {
 import { Medicine } from "../../features/medicine/medicineSlice";
 import Footer from "../../components/UI/Footer";
 import CustomImg from "../../components/UI/CustomImg";
-import PatientModal from "./appointment/PatientModal";
+import PatientModal from "../../components/Patient/PatientModal";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import Pagination from "../../components/UI/Pagination";
 import { useSelector } from "react-redux";

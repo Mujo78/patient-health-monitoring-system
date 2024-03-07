@@ -40,6 +40,12 @@ const MedicalStaff: React.FC = () => {
     navigate(name);
   };
 
+  useEffect(() => {
+    if (departments && departments?.length > 0) {
+      navigate(departments[0]?.name);
+    }
+  }, [departments, navigate]);
+
   return (
     <div className="h-full w-full">
       {loading ? (

@@ -1,14 +1,14 @@
 import React from "react";
-import ErrorMessage from "../../../components/UI/ErrorMessage";
+import ErrorMessage from "../UI/ErrorMessage";
 import { Button, Modal } from "flowbite-react";
 import {
   formatDate,
   formatStartEnd,
-} from "../../../service/appointmentSideFunctions";
+} from "../../service/appointmentSideFunctions";
 import { Link } from "react-router-dom";
-import { modalDataType } from "../Patient";
-import { yearCalc } from "../../../service/personSideFunctions";
-import CustomSpinner from "../../../components/UI/CustomSpinner";
+import { modalDataType } from "../../pages/doctor/Patient";
+import { yearCalc } from "../../service/personSideFunctions";
+import CustomSpinner from "../UI/CustomSpinner";
 
 type Props = {
   more: boolean;

@@ -24,7 +24,7 @@ const CustomButton: React.FC<Props> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${className} !bg-blue-700 xxl:!w-96 xxl:!h-14 hover:!bg-blue-600 transition-colors duration-300`}
+      className={`${className} !bg-blue-700 xxl:!h-14 hover:!bg-blue-600 transition-colors duration-300`}
     >
       {children}
     </Button>

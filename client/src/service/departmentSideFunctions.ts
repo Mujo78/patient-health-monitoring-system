@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Doctor } from "../pages/patient/appointment/AppointmentDepartment";
 import { UserInfo } from "../features/appointment/appointmentSlice";
 
 const BASE_URL = "http://localhost:3001/api/v1/department";
@@ -45,6 +44,19 @@ export async function getDepartmentAllInfo(token: string, name: string) {
   return response.data;
 }
 
+export type DoctorType = {
+  _id: string;
+  address: string;
+  bio: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  qualification: string;
+  speciality: string;
+  user_id: UserInfo;
+  available_days: string[];
+};
+
 export async function getDoctorsForDepartment(token: string, name: string) {
   const response = await axios.get(`${BASE_URL}/${name}/doctors`, {
     headers: {
@@ -68,8 +80,8 @@ export type myDepartmentResult = {
   };
   numberOfDoctors: number;
   numberOfActiveDoctors: number;
-  todayActiveDoctors: Doctor[];
-  otherDoctors: Doctor[];
+  todayActiveDoctors: DoctorType[];
+  otherDoctors: DoctorType[];
   gender: GenderArray[];
 };
 

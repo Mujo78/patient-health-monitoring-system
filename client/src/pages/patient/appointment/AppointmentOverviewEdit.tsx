@@ -360,7 +360,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                   onClick={handleEdit}
                   className="mx-auto w-full lg:!w-fit lg:!mx-0 lg:!ml-auto md:w-fit"
                 >
-                  <p className="xl:text-xl">Save changes</p>
+                  <p className="xxl:text-xl">Save changes</p>
                 </CustomButton>
               </div>
             </div>

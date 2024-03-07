@@ -8,6 +8,7 @@ import {
 } from "../../../features/appointment/appointmentSlice";
 import { useAppDispatch } from "../../../app/hooks";
 import {
+  AppointmentFinished,
   formatDate,
   formatStartEnd,
 } from "../../../service/appointmentSideFunctions";
@@ -21,12 +22,6 @@ import { Label, Textarea } from "flowbite-react";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import Select from "react-select";
-
-type AppointmentFinished = {
-  diagnose: string;
-  other_medicine: string;
-  description: string;
-};
 
 const AppointmentResultForm = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);

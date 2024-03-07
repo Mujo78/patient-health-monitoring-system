@@ -10,8 +10,8 @@ const CustomSpinner: React.FC<Props> = ({ size, fromTop }) => {
   return (
     <div
       className={`${
-        fromTop ? `mt-${fromTop}` : "justify-center"
-      } flex items-center w-full h-full`}
+        fromTop ? `mt-${fromTop}` : "items-center"
+      } flex w-full h-full justify-center`}
     >
       <Spinner size={size ?? "md"} />
     </div>

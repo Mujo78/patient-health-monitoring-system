@@ -3,7 +3,6 @@ import CustomButton from "../../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Textarea } from "flowbite-react";
 import CustomImg from "../../../components/UI/CustomImg";
-import { Doctor } from "./AppointmentDepartment";
 import {
   availableTimeForApp,
   convert12HourTo24Hour,
@@ -27,6 +26,7 @@ import CalendarAppointment from "../../../components/Appointment/CalendarAppoint
 import { authUser } from "../../../features/auth/authSlice";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import { DoctorType } from "../../../service/departmentSideFunctions";
 
 const workTime = [
   "9:00",
@@ -65,7 +65,7 @@ const MakeAppointment: React.FC = () => {
   const [value, setValue] = useState<Value>(new Date());
   const [newTime, setNewTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
-  const [doc, setDoc] = useState<Doctor>();
+  const [doc, setDoc] = useState<DoctorType>();
 
   useSelectedPage("Book appointment");
 
@@ -302,8 +302,9 @@ const MakeAppointment: React.FC = () => {
                   value as Date,
                   doc?.available_days as string[]
                 ) ? (
-                  <div className="my-auto mx-auto">
+                  <div className="text-center w-full h-20">
                     <ErrorMessage
+                      className="mt-5"
                       text="You can not make appointment today"
                       size="sm"
                     />

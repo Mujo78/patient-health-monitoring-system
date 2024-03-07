@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { appointment } from "../../../features/appointment/appointmentSlice";
+import { appointment } from "../../features/appointment/appointmentSlice";
 import { Button, Card } from "flowbite-react";
-import CustomImg from "../../../components/UI/CustomImg";
+import CustomImg from "../UI/CustomImg";
 import { Link } from "react-router-dom";
-import { yearCalc } from "../../../service/personSideFunctions";
+import { yearCalc } from "../../service/personSideFunctions";
 
 type Props = {
   setShowMore: React.Dispatch<React.SetStateAction<boolean>>;
