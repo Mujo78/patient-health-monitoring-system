@@ -1,8 +1,11 @@
 import axios from "axios";
 import moment from "moment";
-import { Patient } from "../features/medicine/medicineSlice";
+import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
-import { Appointment } from "../features/appointment/appointmentSlice";
+import {
+  Appointment,
+  patient_id,
+} from "../features/appointment/appointmentSlice";
 
 const BASE_URL = "http://localhost:3001/api/v1/";
 
@@ -50,19 +53,44 @@ export type AppointmentFinished = {
   description: string;
 };
 
+export type finishedAppointments = {
+  _id: string;
+  diagnose: string;
+  therapy: Medicine[];
+  other_medicine: string;
+  description: string;
+  reason: string;
+  appointment_date: Date;
+};
+
+export type appointments = {
+  currentPage: number;
+  numOfPages: number;
+  data: finishedAppointments[] | null;
+};
+
+export type modalDataType = {
+  patient_id: patient_id;
+  _id: string;
+  diagnose: string;
+  therapy: Medicine[];
+  other_medicine: string;
+  description: string;
+  reason: string;
+  appointment_date: Date;
+};
+
 export async function getPatientFinishedAppointments(
   token: string,
   id: string,
   page: number
 ) {
-  const response = await axios.get(
-    `${BASE_URL}appointment/patient/${id}?page=${page}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await axios.get(`${BASE_URL}appointment/patient/${id}`, {
+    params: { page },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
 

@@ -19,7 +19,6 @@ const welcomeMessages = [
   "Glad you're here! Best wishes for an impactful day.",
   "Hello and welcome! We're here to make healthcare better.",
   "Thanks for joining us! Your work in healthcare matters.",
-  "We're thrilled to have you here! Best wishes for another impactful day in healthcare.",
 ];
 
 const DoctorSidebar: React.FC = () => {

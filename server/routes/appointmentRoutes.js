@@ -13,7 +13,7 @@ const {
   getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
-  getFinishedAppointmentForPatient,
+  getFinishedAppointmentsForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,
   doctorAppointmentDashboard,
@@ -59,7 +59,7 @@ router.get(
 router.get(
   "/patient/:id",
   restrictTo("DOCTOR"),
-  getFinishedAppointmentForPatient
+  getFinishedAppointmentsForPatient
 );
 
 router.get(

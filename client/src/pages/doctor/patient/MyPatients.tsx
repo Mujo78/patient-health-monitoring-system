@@ -3,18 +3,18 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import {
   PatientsType,
   getPatientsForDoctor,
-} from "../../service/patientSideFunctions";
-import PatientCard from "../../components/Patient/PatientCard";
+} from "../../../service/patientSideFunctions";
+import PatientCard from "../../../components/Patient/PatientCard";
 import { CustomFlowbiteTheme, TextInput } from "flowbite-react";
-import ErrorMessage from "../../components/UI/ErrorMessage";
-import CustomButton from "../../components/UI/CustomButton";
-import Pagination from "../../components/UI/Pagination";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
+import CustomButton from "../../../components/UI/CustomButton";
+import Pagination from "../../../components/UI/Pagination";
 import { useSelector } from "react-redux";
-import { authUser } from "../../features/auth/authSlice";
-import useSelectedPage from "../../hooks/useSelectedPage";
-import { useQuery } from "../../hooks/useQuery";
-import CustomSpinner from "../../components/UI/CustomSpinner";
-import Footer from "../../components/UI/Footer";
+import { authUser } from "../../../features/auth/authSlice";
+import useSelectedPage from "../../../hooks/useSelectedPage";
+import { useQuery } from "../../../hooks/useQuery";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Footer from "../../../components/UI/Footer";
 
 const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
   field: {
@@ -55,6 +55,7 @@ const MyPatients: React.FC = () => {
             searchQuery
           );
           setPatients(response);
+          setPatients(undefined);
           navigate(`/my-patients?${query.toString()}`);
         } catch (err: any) {
           setMessage(err.response?.data);
@@ -173,14 +174,12 @@ const MyPatients: React.FC = () => {
                   </Footer>
                 </div>
               ) : (
-                <div className="flex flex-col justify-between h-[70vh] items-start">
-                  <div className="h-full w-full flex items-center justify-center">
-                    <ErrorMessage
-                      className="mx-auto my-auto xxl:text-2xl"
-                      text={message || "No data available."}
-                      size="md"
-                    />
-                  </div>
+                <div className="text-center mt-16">
+                  <ErrorMessage
+                    className="mx-auto my-auto xxl:text-2xl"
+                    text={message || "No data available."}
+                    size="md"
+                  />
                 </div>
               )}
             </div>

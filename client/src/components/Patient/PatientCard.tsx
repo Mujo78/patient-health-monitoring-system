@@ -2,7 +2,7 @@ import { Card } from "flowbite-react";
 import React from "react";
 import { Patient } from "../../features/medicine/medicineSlice";
 import CustomImg from "../UI/CustomImg";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { yearCalc } from "../../service/personSideFunctions";
 
 type Props = {
@@ -12,19 +12,17 @@ type Props = {
 };
 
 const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const handleNavigate = () => {
     if (variant === 2) {
-      localStorage.setItem("route", location.pathname + "" + location.search);
       navigate(`/my-patients/${data._id}`);
     }
   };
   return (
     <Card
       onClick={handleNavigate}
-      className={` ${className} w-full md:!w-2/5 xxl:!w-1/4 md:!flex-grow-0 h-auto ${
+      className={` ${className} w-full md:!w-2/5 xl:!w-1/5 xxl:!w-1/4 md:!flex-grow-0 h-auto ${
         variant === 2 && "cursor-pointer"
       }`}
     >

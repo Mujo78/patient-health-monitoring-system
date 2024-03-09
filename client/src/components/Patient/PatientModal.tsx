@@ -4,9 +4,9 @@ import { Button, Modal } from "flowbite-react";
 import {
   formatDate,
   formatStartEnd,
+  modalDataType,
 } from "../../service/appointmentSideFunctions";
 import { Link } from "react-router-dom";
-import { modalDataType } from "../../pages/doctor/Patient";
 import { yearCalc } from "../../service/personSideFunctions";
 import CustomSpinner from "../UI/CustomSpinner";
 

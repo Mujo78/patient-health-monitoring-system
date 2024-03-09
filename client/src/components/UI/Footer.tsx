@@ -5,21 +5,17 @@ import { useNavigate } from "react-router-dom";
 type Props = {
   variant: number;
   children?: React.ReactNode;
-  route?: string;
+  className?: string;
 };
 
-const Footer: React.FC<Props> = ({ variant, route, children }) => {
+const Footer: React.FC<Props> = ({ variant, children, className }) => {
   const navigate = useNavigate();
   const goBack = () => {
-    if (route) {
-      navigate(route);
-    } else {
-      navigate("../", { replace: true });
-    }
+    navigate("..", { replace: true });
   };
 
   return (
-    <div className="w-full mt-auto font-Poppins">
+    <div className={`w-full mt-auto ${className}`}>
       <hr />
       <div
         className={`flex justify-${

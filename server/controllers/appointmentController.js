@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const {
   getAllData,
   deleteDoc,
-  getDoc,
   getAllDocForUser,
 } = require("./handleController");
 const cron = require("node-cron");
@@ -207,6 +206,7 @@ const getLatestAppointmentForPatientWithDoctor = asyncHandler(
       doctor_id: doctor._id,
       finished: true,
     })
+      .populate("therapy", "_id name strength")
       .sort({ appointment_date: -1 })
       .limit(1);
 
@@ -261,7 +261,7 @@ cron.schedule("* * * * *", async () => {
         await el.save();
       }
     } catch (err) {
-      console.log(err.message);
+      throw new Error(err);
     }
   });
 });
@@ -393,8 +393,8 @@ const getPatientsForDoctor = asyncHandler(async (req, res) => {
   });
 });
 
-const getFinishedAppointmentForPatient = asyncHandler(async (req, res) => {
-  const { page } = req.query;
+const getFinishedAppointmentsForPatient = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
 
   const patient = await Patient.findById(req.params.id);
   if (!patient) return res.status(404).json("This patient doesn't exists!");
@@ -410,18 +410,21 @@ const getFinishedAppointmentForPatient = asyncHandler(async (req, res) => {
     doctor_id: doctor._id,
     finished: true,
   })
+    .populate("therapy", "_id name strength")
     .select({
-      __v: 0,
-      createdAt: 0,
-      updatedAt: 0,
       patient_id: 0,
       doctor_id: 0,
-      finished: 0,
-      notification: 0,
+      _id: 1,
+      diagnose: 1,
+      other_medicine: 1,
+      reason: 1,
+      description: 1,
+      appointment_date: 1,
     })
     .sort({ appointment_date: -1 })
     .limit(LIMIT)
-    .skip(startIndx);
+    .skip(startIndx)
+    .exec();
 
   const total = await Appointment.countDocuments({
     patient_id: patient._id,
@@ -431,7 +434,6 @@ const getFinishedAppointmentForPatient = asyncHandler(async (req, res) => {
   return res.status(200).json({
     currentPage: Number(page),
     numOfPages: Math.ceil(total / LIMIT),
-    patient_id: patient,
     data: apps,
   });
 });
@@ -563,7 +565,6 @@ const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
     .select({
       doctor_id: 0,
       patient_id: 1,
-      therapy: 0,
       appointment_date: 1,
       _id: 1,
     })
@@ -717,7 +718,17 @@ const doctorDasboard = asyncHandler(async (req, res) => {
   });
 });
 
-const getOneAppointment = getDoc(Appointment);
+const getOneAppointment = asyncHandler(async (req, res) => {
+  const appId = req.params.id;
+
+  const appointment = await Appointment.findById(appId).populate("therapy");
+
+  if (appointment) {
+    return res.status(200).json(appointment);
+  }
+
+  return res.status(404).json("Appointment doesn't exists.");
+});
 const getAllAppointments = getAllData(Appointment);
 const cancelAppointment = deleteDoc(Appointment);
 
@@ -733,7 +744,7 @@ module.exports = {
   getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
-  getFinishedAppointmentForPatient,
+  getFinishedAppointmentsForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,
   doctorAppointmentDashboard,
