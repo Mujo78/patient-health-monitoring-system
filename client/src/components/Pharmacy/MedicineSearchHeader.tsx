@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import CustomButton from "../UI/CustomButton";
 import { useQuery } from "../../hooks/useQuery";
 import { useAppDispatch } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getMedicine } from "../../features/medicine/medicineSlice";
 
 const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
@@ -30,6 +30,7 @@ const customSelectTheme: CustomFlowbiteTheme["select"] = {
 
 const MedicineSearchHeader = () => {
   const [search, setSearch] = useState<string>("");
+  const location = useLocation().pathname;
   const query = useQuery();
   const searchQuery = query.get("searchQuery") || "";
   const category = query.get("category") || "";
@@ -45,20 +46,20 @@ const MedicineSearchHeader = () => {
       query.set("searchQuery", search);
 
       dispatch(getMedicine({ searchQuery }));
-      navigate(`/medicine-overview?${query.toString()}`);
+      navigate(`${location}?${query.toString()}`);
     }
   };
 
   const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCat(e.target.value);
     query.set("category", e.target.value);
-    navigate(`/medicine-overview?${query.toString()}`);
+    navigate(`${location}?${query.toString()}`);
     dispatch(getMedicine({ searchQuery, category: e.target.value }));
   };
 
   const clearSearch = () => {
     setSearch("");
-    navigate("/medicine-overview?page=1");
+    navigate(`${location}?page=1`);
   };
 
   return (

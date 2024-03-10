@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { authUser } from "../../features/auth/authSlice";
 import {
   getMyDepartment,
@@ -8,33 +7,13 @@ import {
   myDepartmentAppointments,
   myDepartmentResult,
 } from "../../service/departmentSideFunctions";
-import { Card, Spinner, Table, Tabs } from "flowbite-react";
+import { Table, Tabs } from "flowbite-react";
 import CustomImg from "../../components/UI/CustomImg";
 import ErrorMessage from "../../components/UI/ErrorMessage";
-import {
-  HiOutlineUser,
-  HiOutlineUserGroup,
-  HiOutlineCalendarDays,
-  HiOutlineCheckCircle,
-  HiOutlineClock,
-} from "react-icons/hi2";
-import {
-  PieChart,
-  Pie,
-  Legend,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  BarChart,
-  CartesianGrid,
-  Bar,
-  YAxis,
-  XAxis,
-} from "recharts";
-import CustomCardTooltip from "../../components/UI/CustomCardTooltip";
 import useSelectedPage from "../../hooks/useSelectedPage";
-
-const COLORS = ["#2986cc", "#c90076", "#cccccc"];
+import DepartmentStatistics from "../../components/Department/DepartmentStatistics";
+import DepartmentAppointmentStatistics from "../../components/Department/DepartmentAppointmentStatistics";
+import CustomSpinner from "../../components/UI/CustomSpinner";
 
 const MyDepartment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,8 +31,8 @@ const MyDepartment: React.FC = () => {
           const response = await getMyDepartment(accessUser.token);
           setResponse(response);
         }
-      } catch (err) {
-        setBadResponse(err);
+      } catch (err: any) {
+        setBadResponse(err?.response?.data);
       } finally {
         setLoading(false);
       }
@@ -69,8 +48,8 @@ const MyDepartment: React.FC = () => {
           const response = await getMyDepartmentAppointments(accessUser.token);
           setDepartmentAppointments(response);
         }
-      } catch (err) {
-        setBadResponse(err);
+      } catch (err: any) {
+        setBadResponse(err?.response?.data);
       } finally {
         setLoading(false);
       }
@@ -81,37 +60,21 @@ const MyDepartment: React.FC = () => {
   useSelectedPage("My department");
 
   return (
-    <div className="h-full transition-all duration-900 pr-3">
+    <div className="h-full w-full transition-all duration-900">
       {loading ? (
-        <div className="h-full w-full flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
-      ) : badResponse !== "" ? (
-        <div>
+        <CustomSpinner size="lg" />
+      ) : badResponse ? (
+        <div className="flex justify-center items-center text-center mt-14 xxl:text-2xl">
           <ErrorMessage text={badResponse as string} size="md" />
         </div>
       ) : (
-        <div className="h-full">
-          <div className="flex justify-between p-3 align-items">
-            <h1 className="font-semibold text-2xl">
-              {response?.department.name}
-            </h1>
-            <Link
-              to={`tel:${response?.department.phone_number}`}
-              className="cursor-pointer text-sm my-auto text-blue-700"
-            >
-              <span className="text-black"> Phone number: </span> +
-              {response?.department.phone_number}
-            </Link>
-          </div>
-          <hr />
-          <div className="w-full h-[83vh] divide-x flex">
-            <div className="mt-5 w-2/5">
-              <Tabs.Group
-                aria-label="Default tabs"
-                style="default"
-                className=""
-              >
+        <div className="h-full w-full">
+          <div className="w-full h-full mt-5 lg:!mt-0 lg:pt-2 flex-grow px-2 lg:!divide-x flex flex-col lg:flex-row gap-3 lg:!gap-2">
+            <div className="w-full flex flex-col gap-3 lg:!w-2/5">
+              <h1 className="font-semibold text-2xl text-center">
+                {response?.department.name}
+              </h1>
+              <Tabs.Group aria-label="Default tabs" style="default">
                 <Tabs.Item active title="Active">
                   {response && response?.todayActiveDoctors.length > 0 ? (
                     <Table>
@@ -121,12 +84,10 @@ const MyDepartment: React.FC = () => {
                             <Table.Cell>
                               <CustomImg
                                 url={d.user_id.photo}
-                                className="rounded-full"
-                                width="40"
-                                height="40"
+                                className="rounded-full w-11 xxl:!w-20 h-auto"
                               />
                             </Table.Cell>
-                            <Table.Cell className="font-semibold text-sm text-gray-700">
+                            <Table.Cell className="font-semibold text-sm xxl:!text-xl text-gray-700">
                               {d.user_id._id === accessUser?.data._id ? (
                                 <p>You</p>
                               ) : (
@@ -152,12 +113,10 @@ const MyDepartment: React.FC = () => {
                             <Table.Cell>
                               <CustomImg
                                 url={d.user_id.photo}
-                                className="rounded-full"
-                                width="40"
-                                height="40"
+                                className="rounded-full w-11 xxl:!w-20 h-auto"
                               />
                             </Table.Cell>
-                            <Table.Cell className="font-semibold text-md text-gray-700">
+                            <Table.Cell className="font-semibold text-md xxl:!text-xl text-gray-700">
                               {d.user_id._id === accessUser?.data._id ? (
                                 <p>You</p>
                               ) : (
@@ -176,119 +135,32 @@ const MyDepartment: React.FC = () => {
                 </Tabs.Item>
               </Tabs.Group>
             </div>
-            <div className="w-full pl-4 py-4 flex flex-col justify-between">
-              <div>
-                <p className="text-sm text-justify mt-2">
-                  We are delighted to welcome you to the{" "}
-                  {response?.department.name} Department, where excellence in
-                  healthcare is our commitment. As you embark on your journey
-                  with us, we want to ensure you have all the essential
-                  information at your fingertips to navigate your department
-                  effectively.Thank you for your dedication to our mission of
-                  providing exceptional healthcare to our community. Together,
-                  we will continue to make a positive impact on the lives of our
-                  patients.
-                </p>
-              </div>
-              <div className="flex mt-2  justify-around">
-                <CustomCardTooltip
-                  tooltip_content="Number of doctors"
-                  text={response?.numberOfDoctors || 0}
-                >
-                  <HiOutlineUserGroup className="w-[18px] h-[18px]" />
-                </CustomCardTooltip>
-                <CustomCardTooltip
-                  tooltip_content="Number of active doctors"
-                  text={response?.numberOfActiveDoctors || 0}
-                >
-                  <HiOutlineUser className="w-[18px] h-[18px]" />
-                </CustomCardTooltip>
-                <CustomCardTooltip
-                  tooltip_content="Number of appointments today"
-                  text={departmentAppointments?.todayAppointment.total || 0}
-                >
-                  <HiOutlineCalendarDays className="w-[18px] h-[18px]" />
-                </CustomCardTooltip>
-                <CustomCardTooltip
-                  tooltip_content="Finished appointments"
-                  text={departmentAppointments?.todayAppointment.finished || 0}
-                >
-                  <HiOutlineCheckCircle className="w-[18px] h-[18px]" />
-                </CustomCardTooltip>
-                <CustomCardTooltip
-                  tooltip_content="Pending appointments"
-                  text={departmentAppointments?.todayAppointment.pending || 0}
-                >
-                  <HiOutlineClock className="w-[18px] h-[18px]" />
-                </CustomCardTooltip>
-              </div>
-              <div className="w-full flex h-fit">
-                <Card className="w-3/4 mr-4 text-xs">
-                  <p>Num. of appointments for next 7 days</p>
-                  <ResponsiveContainer
-                    width="100%"
-                    height="100%"
-                    className="!p-0"
-                  >
-                    <BarChart
-                      width={500}
-                      height={300}
-                      data={departmentAppointments?.appointmentsByDay}
-                      margin={{
-                        top: 0,
-                        left: -35,
-                        bottom: 0,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="value" barSize={10} fill="#1d4ed8" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </Card>
-                <Card className="w-1/3 ml-auto h-[350px]">
-                  {response?.gender.every((d) => d.value === 0) ? (
-                    <p className="text-center text-sm text-gray-400">
-                      No data available
-                    </p>
-                  ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart
-                        width={300}
-                        height={300}
-                        margin={{
-                          top: 0,
-                          left: -25,
-                        }}
-                      >
-                        <Pie
-                          data={response?.gender}
-                          cx="50%"
-                          cy="50%"
-                          label
-                          animationDuration={500}
-                          labelLine={false}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {response?.gender.map((_entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend layout="vertical" />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-                </Card>
-              </div>
+            <div className="w-full h-full flex flex-col lg:!w-3/5 gap-4 lg:!gap-0 lg:!py-3 lg:!pl-3 justify-start">
+              <p className="text-sm xxl:!text-xl text-justify">
+                We are delighted to welcome you to the{" "}
+                {response?.department.name} Department, where excellence in
+                healthcare is our commitment. As you embark on your journey with
+                us, we want to ensure you have all the essential information at
+                your fingertips to navigate your department effectively.Thank
+                you for your dedication to our mission of providing exceptional
+                healthcare to our community. Together, we will continue to make
+                a positive impact on the lives of our patients.
+              </p>
+
+              {response && departmentAppointments && (
+                <>
+                  <DepartmentStatistics
+                    numOfDoctors={response?.numberOfDoctors}
+                    numOfActiveDoctors={response.numberOfActiveDoctors}
+                    todayAppointment={departmentAppointments?.todayAppointment}
+                  />
+
+                  <DepartmentAppointmentStatistics
+                    gender={response.gender}
+                    appointmentsByDay={departmentAppointments.appointmentsByDay}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>

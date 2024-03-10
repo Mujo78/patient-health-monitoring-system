@@ -9,26 +9,26 @@ import {
 } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import ErrorMessage from "../../components/UI/ErrorMessage";
-import Footer from "../../components/UI/Footer";
-import CustomButton from "../../components/UI/CustomButton";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
+import Footer from "../../../components/UI/Footer";
+import CustomButton from "../../../components/UI/CustomButton";
 import { useSelector } from "react-redux";
 import {
   MedicineDataType,
   addNewMedicine,
   medicine,
-} from "../../features/medicine/medicineSlice";
+} from "../../../features/medicine/medicineSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   MedicineType,
   medicineValidationSchema,
-} from "../../validations/medicineValidation";
-import { useAppDispatch } from "../../app/hooks";
+} from "../../../validations/medicineValidation";
+import { useAppDispatch } from "../../../app/hooks";
 import { toast } from "react-hot-toast";
 import { HiXCircle } from "react-icons/hi2";
-import useSelectedPage from "../../hooks/useSelectedPage";
-import { errorMessageConvert } from "../../service/authSideFunctions";
-import Input from "../../components/UI/Input";
+import useSelectedPage from "../../../hooks/useSelectedPage";
+import { errorMessageConvert } from "../../../service/authSideFunctions";
+import Input from "../../../components/UI/Input";
 
 const AddMedicine: React.FC = () => {
   const { status, message } = useSelector(medicine);

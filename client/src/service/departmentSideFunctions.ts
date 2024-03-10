@@ -94,17 +94,19 @@ export async function getMyDepartment(token: string) {
   return response.data;
 }
 
-type appointmentsByDay = {
+export type appointmentsByDay = {
   name: string;
   value: number;
 };
 
+export type todayAppointmentDataType = {
+  total: number;
+  finished: number;
+  pending: number;
+};
+
 export type myDepartmentAppointments = {
-  todayAppointment: {
-    total: number;
-    finished: number;
-    pending: number;
-  };
+  todayAppointment: todayAppointmentDataType;
   appointmentsByDay: appointmentsByDay[];
 };
 

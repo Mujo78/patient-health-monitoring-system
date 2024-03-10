@@ -6,22 +6,22 @@ import {
   medicine,
   resetSpecificMedicine,
   updateMedicineById,
-} from "../../features/medicine/medicineSlice";
-import { useAppDispatch } from "../../app/hooks";
-import ErrorMessage from "../../components/UI/ErrorMessage";
-import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
+} from "../../../features/medicine/medicineSlice";
+import { useAppDispatch } from "../../../app/hooks";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
+import CustomMedicineImg from "../../../components/Pharmacy/CustomMedicineImg";
 import { HiXMark } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   MedicineType,
   medicineValidationSchema,
-} from "../../validations/medicineValidation";
+} from "../../../validations/medicineValidation";
 import { Label, Select, Textarea, ToggleSwitch } from "flowbite-react";
-import Footer from "../../components/UI/Footer";
-import CustomButton from "../../components/UI/CustomButton";
+import Footer from "../../../components/UI/Footer";
+import CustomButton from "../../../components/UI/CustomButton";
 import toast from "react-hot-toast";
-import Input from "../../components/UI/Input";
+import Input from "../../../components/UI/Input";
 
 const OneMedicine: React.FC = () => {
   const { id } = useParams();

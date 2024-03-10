@@ -55,7 +55,6 @@ const MyPatients: React.FC = () => {
             searchQuery
           );
           setPatients(response);
-          setPatients(undefined);
           navigate(`/my-patients?${query.toString()}`);
         } catch (err: any) {
           setMessage(err.response?.data);

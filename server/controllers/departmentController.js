@@ -52,7 +52,10 @@ const getMyDepartment = asyncHandler(async (req, res) => {
 
   const doctorsFromDepartment = await Doctor.find({
     department_id: department._id,
-  }).sort({ first_name: 1 });
+  })
+    .select("_id user_id first_name last_name available_days")
+    .sort({ first_name: 1 });
+
   if (doctorsFromDepartment.length === 0)
     return res
       .status(400)

@@ -343,7 +343,7 @@ const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
 const getPatientsForDoctor = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const { searchQuery } = req.query;
-  const limit = 3;
+  const limit = 8;
   const startIndx = (page - 1) * limit;
 
   const doc = await Doctor.findOne({ user_id: req.user.id });

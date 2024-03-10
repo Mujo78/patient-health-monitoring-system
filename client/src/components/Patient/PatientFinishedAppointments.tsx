@@ -48,7 +48,6 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
             page
           );
           setAppointments(response);
-          setAppointments(undefined);
           navigate(`/my-patients/${id}?${query.toString()}`);
         } catch (err: any) {
           setMessage(err.response?.data);
