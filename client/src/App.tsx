@@ -36,7 +36,6 @@ import Notification from "./pages/Notification";
 import Notifications from "./pages/Notifications";
 import MedicineOverview from "./pages/pharmacy/medicine/MedicineOverview";
 import AddMedicine from "./pages/pharmacy/medicine/AddMedicine";
-import OneMedicine from "./pages/pharmacy/medicine/OneMedicine";
 import PatientProfile from "./pages/patient/profile/PatientProfile";
 import DoctorProfile from "./pages/doctor/profile/DoctorProfile";
 import PharmacyProfile from "./pages/pharmacy/profile/PharmacyProfile";
@@ -98,9 +97,7 @@ const router = createBrowserRouter(
         </Route>
         <Route loader={PharmacyCheck}>
           <Route path="/pharmacy/:id" element={<PharmacyDashboard />} />
-          <Route path="/medicine" element={<MedicineOverview />}>
-            <Route path=":id" element={<OneMedicine />} />
-          </Route>
+          <Route path="/medicine" element={<MedicineOverview />} />
           <Route path="/add-medicine" element={<AddMedicine />} />
           <Route path="/pharmacy-notifications" element={<Notifications />}>
             <Route path=":id" element={<Notification />} />

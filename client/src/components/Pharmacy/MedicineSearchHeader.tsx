@@ -41,6 +41,11 @@ const MedicineSearchHeader = () => {
 
   const handleClickSearch = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (query.get("id")) {
+      query.delete("id");
+    }
+
     if (search !== "" && search !== searchQuery) {
       query.set("page", "1");
       query.set("searchQuery", search);
@@ -52,6 +57,9 @@ const MedicineSearchHeader = () => {
 
   const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCat(e.target.value);
+    if (query.get("id")) {
+      query.delete("id");
+    }
     query.set("category", e.target.value);
     navigate(`${location}?${query.toString()}`);
     dispatch(getMedicine({ searchQuery, category: e.target.value }));

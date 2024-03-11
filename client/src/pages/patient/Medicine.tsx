@@ -6,8 +6,6 @@ import {
   medicine,
 } from "../../features/medicine/medicineSlice";
 import { useAppDispatch } from "../../app/hooks";
-import { Card } from "flowbite-react";
-import CustomMedicineImg from "../../components/Pharmacy/CustomMedicineImg";
 import Pagination from "../../components/UI/Pagination";
 import MedicineModal from "../../components/Pharmacy/MedicineModal";
 import ErrorMessage from "../../components/UI/ErrorMessage";
@@ -18,6 +16,7 @@ import { useQuery } from "../../hooks/useQuery";
 import MedicineSearchHeader from "../../components/Pharmacy/MedicineSearchHeader";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import Footer from "../../components/UI/Footer";
+import MedicineCard from "../../components/Pharmacy/MedicineCard";
 
 const Medicine: React.FC = () => {
   const navigate = useNavigate();
@@ -74,37 +73,11 @@ const Medicine: React.FC = () => {
                 <div className="flex flex-col justify-between h-full">
                   <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2">
                     {med?.data?.map((m: MedicineType) => (
-                      <Card
-                        className="h-auto w-full md:!w-1/3 my-2 md:!m-2 cursor-pointer hover:bg-gray-50"
+                      <MedicineCard
                         key={m._id}
+                        medicine={m}
                         onClick={() => handleShow(m)}
-                      >
-                        <div className="flex flex-col gap-2 w-full justify-around">
-                          <CustomMedicineImg
-                            url={
-                              m.photo.startsWith(m.name)
-                                ? `http://localhost:3001/uploads/${m.photo}`
-                                : m.photo
-                            }
-                            className="mx-auto w-24  xxl:!w-44 h-auto"
-                          />
-                          <p className="text-xl  xxl:!text-3xl font-semibold">
-                            {m.name}
-                          </p>
-                          <p className="text-xs  xxl:!text-xl">{m.category}</p>
-                          <p className="text-md font-bold mt-auto xxl:!text-xl ml-auto">
-                            {m.available ? (
-                              <span className="text-green-800">
-                                {m.price} BAM
-                              </span>
-                            ) : (
-                              <span className="text-red-600">
-                                Not available
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                      </Card>
+                      />
                     ))}
                   </div>
 

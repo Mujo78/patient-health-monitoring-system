@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   getMedicineById,
   medicine,
@@ -22,9 +22,11 @@ import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import toast from "react-hot-toast";
 import Input from "../../../components/UI/Input";
+import { useQuery } from "../../../hooks/useQuery";
 
 const OneMedicine: React.FC = () => {
-  const { id } = useParams();
+  const query = useQuery();
+  const id = query.get("id");
   const dispatch = useAppDispatch();
   const { specificMedicine, message, status } = useSelector(medicine);
   const navigate = useNavigate();
@@ -92,35 +94,34 @@ const OneMedicine: React.FC = () => {
     navigate("/medicine", { replace: true });
   };
   return (
-    <div className="overflow-hidden">
-      {specificMedicine ? (
+    <div className="lg:!overflow-auto w-full h-full">
+      {id && specificMedicine ? (
         <div className="overflow-hidden">
           <div className="h-4">
             <HiXMark
               onClick={navigateBack}
-              className="ml-auto mr-5 mt-5 transition-all duration-300 w-[25px] h-[25px] cursor-pointer hover:w-[27px] hover:h-[27px]"
+              className="ml-auto my-3 transition-all duration-300 w-6 h-auto cursor-pointer hover:scale-125"
             />
           </div>
           {img ? (
-            <img src={img} className="mx-auto mb-4" width={200} height={200} />
+            <img src={img} className="mx-auto mb-4 w-24 mt-2 md:!w-52 h-auto" />
           ) : (
             <CustomMedicineImg
               url={
-                specificMedicine.photo.startsWith(specificMedicine.name)
+                specificMedicine?.photo?.startsWith(specificMedicine.name)
                   ? `http://localhost:3001/uploads/${specificMedicine.photo}`
                   : specificMedicine.photo
               }
-              className="mx-auto w-[200px] h-[200px]"
-              width="200"
-              height="200"
+              className="mx-auto w-24 mt-3 md:!w-52 h-auto"
             />
           )}
+
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full h-[430px] overflow-y-auto flex-col items-center"
+            className="flex w-full h-full overflow-y-auto flex-col px-4 items-center pb-16 md:!pb-2 "
           >
-            <div className=" flex text-xs gap-3 flex-col w-3/4 justify-center">
+            <div className=" flex text-xs gap-3 flex-col w-full justify-center">
               <div className="flex-grow">
                 <Input
                   value="Name"
@@ -259,13 +260,16 @@ const OneMedicine: React.FC = () => {
                     />
                   ) : (
                     status === "failed" && (
-                      <ErrorMessage text={message} className="text-xs" />
+                      <ErrorMessage
+                        text={message}
+                        className="text-xs bg-yellow-500 font-bold"
+                      />
                     )
                   )}
                 </div>
               </div>
               <div>
-                <div className="w-full ml-6">
+                <div className="w-full mx-auto">
                   <Controller
                     control={control}
                     name="available"
@@ -283,16 +287,19 @@ const OneMedicine: React.FC = () => {
               </div>
             </div>
             <Footer variant={1}>
-              <CustomButton type="submit" className="m-3">
+              <CustomButton type="submit" className="w-full">
                 Save
               </CustomButton>
             </Footer>
           </form>
         </div>
       ) : (
-        <div>
-          <ErrorMessage text={message} />
-        </div>
+        id &&
+        status === "failed" && (
+          <div className="text-center mt-14">
+            <ErrorMessage text={message} className="text-md xxl:!text-xl" />
+          </div>
+        )
       )}
     </div>
   );
