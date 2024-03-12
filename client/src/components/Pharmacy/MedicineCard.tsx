@@ -22,7 +22,7 @@ const MedicineCard: React.FC<Props> = ({ onClick, medicine, className }) => {
               ? `http://localhost:3001/uploads/${medicine.photo}`
               : medicine.photo
           }
-          className="mx-auto w-24  xxl:!w-44 h-auto"
+          className="mx-auto w-24  xxl:!w-44 h-auto rounded-full"
         />
         <p className="text-xl  xxl:!text-3xl font-semibold">{medicine.name}</p>
         <p className="text-xs  xxl:!text-xl">{medicine.category}</p>

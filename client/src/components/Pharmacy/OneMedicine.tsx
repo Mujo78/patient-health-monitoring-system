@@ -6,23 +6,23 @@ import {
   medicine,
   resetSpecificMedicine,
   updateMedicineById,
-} from "../../../features/medicine/medicineSlice";
-import { useAppDispatch } from "../../../app/hooks";
-import ErrorMessage from "../../../components/UI/ErrorMessage";
-import CustomMedicineImg from "../../../components/Pharmacy/CustomMedicineImg";
+} from "../../features/medicine/medicineSlice";
+import { useAppDispatch } from "../../app/hooks";
+import ErrorMessage from "../UI/ErrorMessage";
+import CustomMedicineImg from "./CustomMedicineImg";
 import { HiXMark } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   MedicineType,
   medicineValidationSchema,
-} from "../../../validations/medicineValidation";
+} from "../../validations/medicineValidation";
 import { Label, Select, Textarea, ToggleSwitch } from "flowbite-react";
-import Footer from "../../../components/UI/Footer";
-import CustomButton from "../../../components/UI/CustomButton";
+import Footer from "../UI/Footer";
+import CustomButton from "../UI/CustomButton";
 import toast from "react-hot-toast";
-import Input from "../../../components/UI/Input";
-import { useQuery } from "../../../hooks/useQuery";
+import Input from "../UI/Input";
+import { useQuery } from "../../hooks/useQuery";
 
 const OneMedicine: React.FC = () => {
   const query = useQuery();
@@ -94,7 +94,7 @@ const OneMedicine: React.FC = () => {
     navigate("/medicine", { replace: true });
   };
   return (
-    <div className="lg:!overflow-auto w-full h-full">
+    <div className="lg:!overflow-auto w-full h-full" id="content">
       {id && specificMedicine ? (
         <div className="overflow-hidden">
           <div className="h-4">
@@ -260,10 +260,7 @@ const OneMedicine: React.FC = () => {
                     />
                   ) : (
                     status === "failed" && (
-                      <ErrorMessage
-                        text={message}
-                        className="text-xs bg-yellow-500 font-bold"
-                      />
+                      <ErrorMessage text={message} className="text-xs" />
                     )
                   )}
                 </div>

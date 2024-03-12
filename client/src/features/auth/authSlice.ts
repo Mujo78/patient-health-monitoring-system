@@ -299,8 +299,9 @@ export const authSlice = createSlice({
       .addCase(resetPassword.fulfilled, (state) => {
         state.status = "idle";
       })
-      .addCase(resetPassword.rejected, (state) => {
+      .addCase(resetPassword.rejected, (state, action) => {
         state.status = "failed";
+        state.message = action.payload as string;
       })
       .addCase(verifyEmailAddress.pending, (state) => {
         state.status = "loading";

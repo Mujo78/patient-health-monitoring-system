@@ -12,7 +12,7 @@ export type MedicineType = {
 };
 
 export const medicineValidationSchema = Yup.object({
-  name: Yup.string().required("First name is required!"),
+  name: Yup.string().required("Name is required!"),
   strength: Yup.string().required("Strength is required!"),
   category: Yup.string().required("Category is required!"),
   description: Yup.string().required("Description is required!"),

@@ -15,11 +15,15 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
   return (
     <>
       <div className="mb-0.5 mt-1 block">
-        <Label htmlFor={id} value={value} />
+        <Label htmlFor={id} value={value} className="xxl:!text-lg" />
       </div>
-      <TextInput id={id} {...props} ref={ref} />
+      <TextInput id={id} {...props} ref={ref} className="xxl:!text-lg" />
       <div className="h-3 mt-1">
-        {error && <p className="text-red-600 text-xs">{error.message}</p>}
+        {error && (
+          <p className="text-red-600 text-xs xxl:!text-[1rem]">
+            {error.message}
+          </p>
+        )}
         {children}
       </div>
     </>

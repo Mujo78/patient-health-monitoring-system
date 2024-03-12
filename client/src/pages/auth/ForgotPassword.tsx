@@ -43,24 +43,33 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col font-Poppins items-center h-screen w-full">
-      <div className="mr-auto cursor-pointer" onClick={goToLoginPage}>
+    <div className="flex flex-col items-center h-screen gap-5 w-full">
+      <div
+        className="mx-auto lg:!mx-0 lg:!mr-auto cursor-pointer"
+        onClick={goToLoginPage}
+      >
         <Logo />
       </div>
-      <div className="w-1/3">
-        <h1 className="text-4xl font-bold">Reset Password</h1>
-        <Tabs.Group className="mt-4">
+      <div className="w-full lg:!w-1/2 flex flex-col gap-4">
+        <h1 className="text-2xl xxl:!text-4xl font-bold text-center">
+          Reset Password
+        </h1>
+        <Tabs.Group className="px-2">
           <Tabs.Item active title="Password reset">
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-3 px-20"
+              className="flex flex-col gap-3 px-4 md:!px-12 lg:!px-20"
             >
-              <p className="text-sm mb-4">
+              <p className="text-sm xxl:!text-2xl">
                 Set the new password for your account so you can login and
                 access all the features!
               </p>
               <div>
-                <Label id="password" value="Password" />
+                <Label
+                  id="password"
+                  value="Password"
+                  className="xxl:!text-lg"
+                />
                 <TextInput
                   {...register("password")}
                   id="password"
@@ -70,13 +79,17 @@ const ForgotPassword: React.FC = () => {
                   type="password"
                 />
                 <div className="h-3">
-                  <p className="text-red-600 text-xs">
+                  <p className="text-red-600 text-xs xxl:text-[1rem]">
                     {errors.password?.message}
                   </p>
                 </div>
               </div>
               <div>
-                <Label id="passwordConfirm" value="Confirm Password" />
+                <Label
+                  id="passwordConfirm"
+                  value="Confirm Password"
+                  className="xxl:!text-lg"
+                />
                 <TextInput
                   {...register("passwordConfirm")}
                   id="passwordConfirm"
@@ -91,8 +104,12 @@ const ForgotPassword: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <CustomButton disabled={status === "loading"} type="submit">
-                Reset Password
+              <CustomButton
+                disabled={status === "loading"}
+                type="submit"
+                className="md:!w-fit md:!ml-auto lg:!ml-0 lg:!mx-auto"
+              >
+                <p className="xxl:!text-xl">Reset Password</p>
               </CustomButton>
             </form>
           </Tabs.Item>

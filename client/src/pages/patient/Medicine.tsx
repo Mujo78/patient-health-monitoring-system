@@ -71,7 +71,7 @@ const Medicine: React.FC = () => {
               <MedicineSearchHeader />
               {med && med?.data?.length > 0 && status !== "failed" ? (
                 <div className="flex flex-col justify-between h-full">
-                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2">
+                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2 justify-center">
                     {med?.data?.map((m: MedicineType) => (
                       <MedicineCard
                         key={m._id}

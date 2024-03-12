@@ -54,12 +54,12 @@ const ForgotPassword: React.FC<Props> = ({
               onSubmit={handleClick}
               className="flex flex-col sm:px-20 gap-6"
             >
-              <p className="text-sm">
+              <p className="text-sm xxl:!text-xl">
                 Enter the email address associated with your account and we'll
                 send you a link to reset your password.
               </p>
               <div>
-                <Label htmlFor="email" value="Email" />
+                <Label htmlFor="email" value="Email" className="xxl:!text-lg" />
                 <TextInput
                   id="email"
                   name="email"
@@ -76,21 +76,23 @@ const ForgotPassword: React.FC<Props> = ({
                         response.startsWith("Token")
                           ? "text-green-600"
                           : "text-red-600"
-                      } text-xs mt-1`}
+                      } text-xs xxl:!text-[1rem] mt-1`}
                     >
                       {response}
                     </p>
                   )}
                 </div>
               </div>
-              <CustomButton type="submit">Continue</CustomButton>
+              <CustomButton type="submit">
+                <p className="xxl:text-xl">Continue</p>
+              </CustomButton>
             </form>
           </Tabs.Item>
         </Tabs.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button color="gray" className="ml-auto" onClick={onClose}>
-          Close
+          <p className="xxl:text-xl">Close</p>
         </Button>
       </Modal.Footer>
     </Modal>

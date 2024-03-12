@@ -13,7 +13,7 @@ import useSelectedPage from "../../../hooks/useSelectedPage";
 import { useQuery } from "../../../hooks/useQuery";
 import MedicineSearchHeader from "../../../components/Pharmacy/MedicineSearchHeader";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
-import OneMedicine from "./OneMedicine";
+import OneMedicine from "../../../components/Pharmacy/OneMedicine";
 import MedicineCard from "../../../components/Pharmacy/MedicineCard";
 
 const MedicineOverview: React.FC = () => {
@@ -60,9 +60,9 @@ const MedicineOverview: React.FC = () => {
           <div className="w-full">
             <div className="flex-grow w-full flex flex-col h-full justify-between">
               <MedicineSearchHeader />
-              {med?.data && med?.data?.length > 0 && status !== "failed" ? (
+              {med?.data && med?.data?.length > 0 ? (
                 <div className="flex flex-col justify-between h-full pb-12 md:!pb-0">
-                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2">
+                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2 justify-center xl:!mt-4">
                     {med?.data?.map((m) => (
                       <MedicineCard
                         key={m._id}
@@ -81,7 +81,8 @@ const MedicineOverview: React.FC = () => {
                   </Footer>
                 </div>
               ) : (
-                status === "failed" && (
+                status === "failed" &&
+                !medicineId && (
                   <div className="h-full w-full flex-col flex justify-center items-center mt-12">
                     <ErrorMessage
                       text={message || "There are no results!"}

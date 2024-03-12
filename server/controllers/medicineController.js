@@ -27,12 +27,10 @@ const getMedicines = asyncHandler(async (req, res) => {
   const { searchQuery, category } = req.query;
   const page = parseInt(req.query.page) || 1;
 
-  console.log(category);
-
   let responseObj = {};
   let query = Medicine.find();
 
-  const limit = 8;
+  const limit = 4;
   const startIndx = (Number(page) - 1) * limit;
 
   query = query.sort({ category: -1 }).limit(limit).skip(startIndx);

@@ -8,8 +8,8 @@ import {
   reset,
   verifyEmailAddress,
 } from "../../features/auth/authSlice";
-import { Spinner } from "flowbite-react";
 import Logo from "../../components/UI/Logo";
+import CustomSpinner from "../../components/UI/CustomSpinner";
 
 const VerificationPage: React.FC = () => {
   const { verificationToken } = useParams();
@@ -29,15 +29,19 @@ const VerificationPage: React.FC = () => {
     }
   };
 
-  if (status === "loading") return <Spinner />;
+  if (status === "loading") return <CustomSpinner size="lg" />;
 
   return (
     <div>
       <div className="flex h-screen font-Poppins gap-4 flex-col justify-center items-center">
         <Logo />
         <h1 className="text-3xl font-bold">Email verification</h1>
-        <p>Please click the button below to verify your email address!</p>
-        <CustomButton onClick={verifyMyEmail}>Verify Email</CustomButton>
+        <p className="text-center xxl:text-xl">
+          Please click the button below to verify your email address!
+        </p>
+        <CustomButton onClick={verifyMyEmail}>
+          <p className="xxl:text-xl">Verify Email</p>
+        </CustomButton>
       </div>
     </div>
   );
