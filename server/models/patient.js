@@ -71,9 +71,8 @@ patientSchema.pre("save", function (next) {
 
     if (isNaN(dateOfBirth.getTime())) return next(new Error("Invalid date!"));
 
-    const eighteenYearsAgo = new Date().setFullYear(
-      eighteenYearsAgo.getFullYear() - 18
-    );
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
 
     if (dateOfBirth > eighteenYearsAgo) {
       return next(new Error("You must be at least 18 years to register."));
