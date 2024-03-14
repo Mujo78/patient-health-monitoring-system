@@ -26,25 +26,23 @@ const LandingPage: React.FC = () => {
   }, [accessUser, route, navigate]);
 
   return (
-    <div className="text-start w-full h-screen flex items-center">
+    <div className="text-start w-full h-screen flex items-center flex-col md:flex-row">
       <div
-        className={`w-3/4 h-screen flex flex-col ${
-          signup ? "animate-slide-right" : "animate-slide-back-right"
+        className={`w-full p-3 md:p-0 md:!w-3/4 h-fit md:!h-screen flex flex-col ${
+          signup
+            ? "animate-slide-down md:!animate-slide-right"
+            : "animate-slide-back-down md:!animate-slide-back-right"
         }`}
       >
-        {signup ? (
-          <div className="h-screen">
-            <SignUpForm />
-          </div>
-        ) : (
-          <div className="h-screen">
-            <LoginForm />
-          </div>
-        )}
+        <div className="h-fit md:!h-screen flex justify-center items-center">
+          {signup ? <SignUpForm /> : <LoginForm />}
+        </div>
       </div>
       <div
-        className={`bg-photo-vertical w-1/4 h-screen flex-col relative flex items-center justify-center ${
-          signup ? "animate-slide-left" : " animate-slide-back-left"
+        className={`bg-photo-vertical w-full md:!w-1/4 h-full md:!h-screen flex-col relative flex items-center justify-center ${
+          signup
+            ? "animate-slide-up md:!animate-slide-left"
+            : "animate-slide-back-up md:!animate-slide-back-left"
         }`}
       >
         <img
@@ -52,7 +50,7 @@ const LandingPage: React.FC = () => {
           className="absolute h-full"
           alt="Background"
         />
-        <div className="w-full px-10 mx-5 flex flex-col z-10 justify-center">
+        <div className="w-full px-6 flex flex-col z-10">
           {signup ? (
             <SignUpInfo setSignUp={setSignUp} />
           ) : (

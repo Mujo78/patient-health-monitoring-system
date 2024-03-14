@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { getEighteenYearsAgoDate } from "../../service/authSideFunctions";
 
 export const signupValidationSchema = Yup.object({
   first_name: Yup.string()
@@ -17,7 +18,8 @@ export const signupValidationSchema = Yup.object({
   blood_type: Yup.string().required("Blood type is required!"),
   date_of_birth: Yup.date()
     .typeError("Invalid date!")
-    .required("Date of birth is required!"),
+    .required("Date of birth is required!")
+    .max(getEighteenYearsAgoDate(), "Invalid date"),
   email: Yup.string()
     .email("Please provide a valid eamil address!")
     .required("Email is required!")

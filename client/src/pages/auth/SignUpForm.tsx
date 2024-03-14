@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../components/UI/Logo";
-import { Alert, Label, Select, Spinner } from "flowbite-react";
+import { Alert, Label, Select } from "flowbite-react";
 import img from "../../assets/default.jpg";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "../../app/hooks";
@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { errorMessageConvert } from "../../service/authSideFunctions";
 import { HiOutlineEyeSlash, HiOutlineEye } from "react-icons/hi2";
 import Input from "../../components/UI/Input";
+import CustomSpinner from "../../components/UI/CustomSpinner";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -50,33 +51,32 @@ const SignUpForm: React.FC = () => {
   }, [status, reset]);
 
   return (
-    <div className="flex h-screen justify-between flex-row-reverse ">
-      <div className="ml-auto">
+    <div className="flex flex-col-reverse w-full md:!flex-row-reverse ">
+      <div className="mt-auto md:!h-screen md:!ml-auto md:!mx-0 mx-auto">
         <Logo />
       </div>
 
-      <div className="w-3/4 flex justify-center items-center flex-col">
+      <div className="w-full md:!my-auto md:!w-3/4 h-full ml-auto flex justify-center items-center flex-col">
         {status === "loading" ? (
-          <Spinner />
+          <CustomSpinner size="lg" />
         ) : (
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full justify-center flex-col items-center"
+            className="flex w-full justify-center flex-col gap-3 xxl:!gap-5 items-center"
           >
-            <h1 className="text-4xl flex justify-center mb-6 font-bold">
+            <h1 className="text-3xl lg:!text-5xl text-center flex justify-center font-bold">
               Create a new account
             </h1>
-            <div className="w-3/5">
-              <div className="flex justify-between">
-                <div className="border relative rounded-lg">
+            <div className="w-full xl:!w-5/6 flex flex-col gap-3 xxl:!gap-5 md:!gap-1 items-center justify-center">
+              <div className="flex w-full flex-wrap gap-3 justify-between">
+                <div className="border mx-auto relative rounded-lg">
                   <img
                     src={photo?.length > 0 ? Image : img}
-                    className="rounded-lg"
-                    width={170}
+                    className="rounded-lg w-44 xxl:!w-56 h-auto"
                     alt="Profile picture"
                   />
-                  <div className="absolute bottom-4 right-2  w-[20px] h-[10px] text-xl font-bold text-white ">
+                  <div className="absolute bottom-4 right-2 w-5 h-2 text-xl font-bold text-white ">
                     <label
                       htmlFor="inputFile"
                       className=" bg-blue-700 px-2 rounded-3xl border-2  cursor-pointer border-blue-700"
@@ -92,7 +92,7 @@ const SignUpForm: React.FC = () => {
                     />
                   </div>
                 </div>
-                <div className="w-3/5">
+                <div className="flex flex-grow flex-wrap flex-col lg:!w-3/5">
                   <Input
                     value="First name"
                     error={errors.first_name}
@@ -112,8 +112,8 @@ const SignUpForm: React.FC = () => {
                   />
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="w-3/4">
+              <div className="flex flex-wrap gap-3 w-full justify-between">
+                <div className="flex-grow">
                   <Input
                     value="Address"
                     error={errors.address}
@@ -123,8 +123,12 @@ const SignUpForm: React.FC = () => {
                     color={errors.address && "failure"}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="gender" value="Gender" />
+                <div className="flex-grow-0">
+                  <Label
+                    htmlFor="gender"
+                    value="Gender"
+                    className="xxl:!text-lg"
+                  />
                   <Select
                     className="mt-1.5"
                     id="gender"
@@ -138,8 +142,8 @@ const SignUpForm: React.FC = () => {
                   <ErrorMessage text={errors.gender?.message} />
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="w-4/5">
+              <div className="flex justify-between gap-3 flex-wrap w-full">
+                <div className="flex-grow">
                   <Input
                     value={"Phone number"}
                     id="phone_number"
@@ -148,6 +152,7 @@ const SignUpForm: React.FC = () => {
                     color={errors.phone_number && "failure"}
                   >
                     <ErrorMessage
+                      className="text-sm xxl:!text-md"
                       text={
                         errors.phone_number?.message
                           ? errors.phone_number.message
@@ -158,8 +163,12 @@ const SignUpForm: React.FC = () => {
                     />
                   </Input>
                 </div>
-                <div>
-                  <Label htmlFor="blood_type" value="Blood Type" />
+                <div className="flex-grow md:!flex-grow-0">
+                  <Label
+                    htmlFor="blood_type"
+                    value="Blood Type"
+                    className="xxl:!text-lg"
+                  />
                   <Select
                     className="mt-1.5"
                     id="blood_type"
@@ -178,8 +187,8 @@ const SignUpForm: React.FC = () => {
                   <ErrorMessage text={errors.blood_type?.message} />
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="w-4/6 pr-3">
+              <div className="flex w-full gap-3 flex-wrap justify-between">
+                <div className="flex-grow">
                   <Input
                     value="Email"
                     id="email"
@@ -188,6 +197,7 @@ const SignUpForm: React.FC = () => {
                     color={errors.email && "failure"}
                   >
                     <ErrorMessage
+                      className="text-sm xxl:!text-md"
                       text={
                         errors.email?.message
                           ? errors.email.message
@@ -198,7 +208,7 @@ const SignUpForm: React.FC = () => {
                     />
                   </Input>
                 </div>
-                <div>
+                <div className="flex-grow md:!flex-grow-0">
                   <Input
                     value="Birth Date"
                     type="date"
@@ -209,7 +219,7 @@ const SignUpForm: React.FC = () => {
                   />
                 </div>
               </div>
-              <div className="relative">
+              <div className="relative w-full">
                 <Input
                   value="Password"
                   {...register("password")}
@@ -219,31 +229,41 @@ const SignUpForm: React.FC = () => {
                   error={errors.password}
                 >
                   <div
-                    className="absolute right-2 top-11 transform -translate-y-1/2 cursor-pointer"
+                    className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
                     onClick={togglePassword}
                   >
-                    {showNewPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
+                    {showNewPassword ? (
+                      <HiOutlineEyeSlash className="xxl:w-6 xxl:h-6" />
+                    ) : (
+                      <HiOutlineEye className="xxl:w-6 xxl:h-6" />
+                    )}
                   </div>
                 </Input>
               </div>
 
-              <Input
-                value="Confirm password"
-                id="passwordConfirm"
-                type="password"
-                {...register("passwordConfirm")}
-                color={errors.passwordConfirm && "failure"}
-                error={errors.passwordConfirm}
-              />
+              <div className="w-full">
+                <Input
+                  value="Confirm password"
+                  id="passwordConfirm"
+                  type="password"
+                  {...register("passwordConfirm")}
+                  color={errors.passwordConfirm && "failure"}
+                  error={errors.passwordConfirm}
+                />
+              </div>
 
-              <div className="flex justify-between">
+              <div className="flex justify-between w-full gap-2 pb-6 md:!pb-0 flex-wrap md:!flex-nowrap">
                 {status === "idle" && (
-                  <Alert className="flex items-center justify-center h-10 text-center">
-                    <b>Action Required:</b> Please verify your email address.
+                  <Alert className="flex xxl:!text-lg items-center w-fit justify-center h-10 text-center">
+                    <strong>Action Required:</strong> Please verify your email
+                    address.
                   </Alert>
                 )}
-                <CustomButton className="ml-auto" type="submit">
-                  Sign up
+                <CustomButton
+                  className="w-full md:!ml-auto md:!w-1/3 lg:!w-fit"
+                  type="submit"
+                >
+                  <p className="xxl:text-xl">Sign up</p>
                 </CustomButton>
               </div>
             </div>

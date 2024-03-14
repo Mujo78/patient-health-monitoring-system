@@ -11,18 +11,16 @@ const LoginInfo: React.FC<Props> = ({ setSignUp }) => {
     setSignUp((n) => !n);
   };
   return (
-    <div className="flex flex-col gap-10">
-      <h1 className=" text-white text-4xl font-bold text-center ">New here?</h1>
-      <p className="text-white text-center">
-        Your health, your priority - sign up today!
-      </p>
+    <div className="flex flex-col gap-6 text-center lg:!gap-10 text-white">
+      <h1 className="text-4xl font-bold">New here?</h1>
+      <p className="xxl:text-lg">Your health, your priority - sign up today!</p>
       <Button
         disabled={status === "loading"}
         color="gray"
-        className="w-full hover:!text-black"
+        className="w-full xl:!w-1/2 mx-auto hover:!text-black"
         onClick={goSignUp}
       >
-        Sign up
+        <p className="xxl:text-xl">Sign up</p>
       </Button>
     </div>
   );

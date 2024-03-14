@@ -22,3 +22,8 @@ export function colorPick(type: string) {
     ? "text-green-600"
     : "text-red-600";
 }
+
+export function getEighteenYearsAgoDate() {
+  const today = new Date();
+  return new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+}

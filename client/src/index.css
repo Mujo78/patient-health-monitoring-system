@@ -16,3 +16,36 @@
   color: blue;
   font-weight: 400;
 }
+
+@media (min-width: 400px) {
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      transform: translateY(-420%);
+    }
+  }
+}
+
+@media (min-width: 425px) {
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      transform: translateY(-380%);
+    }
+  }
+}
+
+@media (min-width: 453px) {
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0%);
+    }
+    100% {
+      transform: translateY(-400%);
+    }
+  }
+}

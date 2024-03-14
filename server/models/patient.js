@@ -27,7 +27,7 @@ const patientSchema = new mongoose.Schema(
         validator: async function (value) {
           return validator.isMobilePhone(`${value}`);
         },
-        message: "Phone number ({VALUE}) must be valid!",
+        message: "Phone number must be valid!",
       },
     },
     address: {
@@ -63,6 +63,24 @@ const patientSchema = new mongoose.Schema(
 
 patientSchema.plugin(uniqueValidator, {
   message: "Phone number already used!",
+});
+
+patientSchema.pre("save", function (next) {
+  if (this.isModified("date_of_birth")) {
+    const dateOfBirth = new Date(this.date_of_birth);
+
+    if (isNaN(dateOfBirth.getTime())) return next(new Error("Invalid date!"));
+
+    const eighteenYearsAgo = new Date().setFullYear(
+      eighteenYearsAgo.getFullYear() - 18
+    );
+
+    if (dateOfBirth > eighteenYearsAgo) {
+      return next(new Error("You must be at least 18 years to register."));
+    }
+  }
+
+  next();
 });
 
 patientSchema.pre(/^find/, function (next) {

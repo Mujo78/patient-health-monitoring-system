@@ -28,11 +28,16 @@ export default {
         "slide-right": "slide-right 3s ease-out forwards",
         "slide-back-left": "slide-back-left 2s ease-out forwards",
         "slide-back-right": "slide-back-right 3s ease-out forwards",
+
+        "slide-up": "slide-up 2s  ease-out forwards",
+        "slide-down": "slide-down 3s ease-out forwards",
+        "slide-back-up": "slide-up-back 2s ease-out forwards",
+        "slide-back-down": "slide-down-back 3s ease-out forwards",
       },
       keyframes: {
         "slide-left": {
           "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-300%)" },
+          "100%": { transform: "translateX(-300.5%)" },
         },
         "slide-right": {
           "0%": { transform: "translateX(0%)", opacity: 0 },
@@ -45,6 +50,24 @@ export default {
         "slide-back-right": {
           "0%": { transform: "translateX(33%)", opacity: 0 },
           "100%": { transform: "translateX(0)", opacity: 3 },
+        },
+
+        "slide-up": {
+          "0%": { transform: "translateY(0%)" },
+          "100%": { transform: "translateY(-460%)" },
+        },
+        "slide-down": {
+          "0%": { transform: "translateY(0%)" },
+          "100%": { transform: "translateY(33%)" },
+        },
+
+        "slide-up-back": {
+          "0%": { transform: "translateY(0%)" },
+          "100%": { transform: "translateY(33%)" },
+        },
+        "slide-down-back": {
+          "0%": { transform: "translateY(33%)" },
+          "100%": { transform: "translateY(0%)" },
         },
       },
     },
