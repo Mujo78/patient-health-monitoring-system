@@ -22,6 +22,7 @@ import { Label, Textarea } from "flowbite-react";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import Select from "react-select";
+import FormRow from "../../../components/UI/FormRow";
 
 const AppointmentResultForm = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -149,8 +150,12 @@ const AppointmentResultForm = () => {
                   </button>
                 )}
             </div>
-            <div className="flex w-full flex-wrap justify-between gap-2.5">
-              <div className="flex-grow">
+            <FormRow
+              gap={2.5}
+              className="flex-col lg:flex-row"
+              fixed="w-full lg:!w-2/4"
+            >
+              <>
                 <Label
                   htmlFor="diagnose"
                   className="mb-1 block xxl:!text-xl"
@@ -162,8 +167,9 @@ const AppointmentResultForm = () => {
                   rows={selected.reason !== "" ? 5 : 7}
                   className="text-sm xxl:!text-lg"
                 />
-              </div>
-              <div className="w-full xl:!w-2/4">
+              </>
+
+              <>
                 <Label
                   htmlFor="therapy"
                   className="mb-1 block xxl:!text-xl"
@@ -179,10 +185,10 @@ const AppointmentResultForm = () => {
                   closeMenuOnSelect={false}
                   onChange={(value) => handleChange(value)}
                 />
-              </div>
-            </div>
-            <div className="flex w-full flex-col lg:!flex-row flex-wrap justify-between gap-2.5">
-              <div className="flex-grow">
+              </>
+            </FormRow>
+            <FormRow gap={2.5} className="flex-col lg:flex-row">
+              <>
                 <Label
                   htmlFor="other_medicine"
                   className="mb-1 block xxl:!text-xl"
@@ -194,8 +200,8 @@ const AppointmentResultForm = () => {
                   rows={selected.reason !== "" ? 5 : 7}
                   className="text-sm xxl:!text-lg"
                 />
-              </div>
-              <div className="flex-grow">
+              </>
+              <>
                 <Label
                   htmlFor="description"
                   className="mb-1 block xxl:!text-xl"
@@ -207,12 +213,12 @@ const AppointmentResultForm = () => {
                   rows={selected.reason !== "" ? 5 : 7}
                   className="text-sm xxl:!text-lg"
                 />
-              </div>
-            </div>
+              </>
+            </FormRow>
           </div>
         </div>
       )}
-      <div className="w-full md:!pb-0 pb-12">
+      <div className="w-full sm:!pb-0 pb-12">
         <Footer variant={2}>
           {selected?.finished ||
             (!laterAppointment && (
@@ -221,7 +227,7 @@ const AppointmentResultForm = () => {
                 disabled={!isDirty}
                 onClick={makeFinished}
               >
-                Save changes
+                <p className="xxl:text-xl">Save changes</p>
               </CustomButton>
             ))}
         </Footer>

@@ -66,7 +66,7 @@ const Appointment: React.FC = () => {
                   <div className="flex flex-col xl:!flex-row xl:justify-center gap-2 items-center p-0">
                     <CustomImg
                       url={selected.doctor_id.user_id.photo}
-                      className="w-md h-auto"
+                      className="w-28 xxl:!w-48 h-auto"
                     />
                     <div>
                       <h1 className="font-bold text-xl text-blue-700">

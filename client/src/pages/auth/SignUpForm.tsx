@@ -14,6 +14,7 @@ import { errorMessageConvert } from "../../service/authSideFunctions";
 import { HiOutlineEyeSlash, HiOutlineEye } from "react-icons/hi2";
 import Input from "../../components/UI/Input";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import FormRow from "../../components/UI/FormRow";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -63,14 +64,33 @@ const SignUpForm: React.FC = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full justify-center flex-col gap-3 xxl:!gap-5 items-center"
+            className="flex w-full justify-center flex-col gap-2 xxl:!gap-5 items-center"
           >
-            <h1 className="text-3xl lg:!text-5xl text-center flex justify-center font-bold">
+            <h1 className="text-3xl xxl:!text-5xl text-center flex justify-center font-bold">
               Create a new account
             </h1>
-            <div className="w-full xl:!w-5/6 flex flex-col gap-3 xxl:!gap-5 md:!gap-1 items-center justify-center">
-              <div className="flex w-full flex-wrap gap-3 justify-between">
-                <div className="border mx-auto relative rounded-lg">
+            <div className="w-full xl:!w-5/6 flex flex-col gap-1 xxl:!gap-5 md:!gap-0 items-center justify-center">
+              <FormRow className="md:!flex-row-reverse flex-col-reverse" over>
+                <FormRow className="flex-col">
+                  <Input
+                    value="First name"
+                    error={errors.first_name}
+                    id="first_name"
+                    {...register("first_name")}
+                    type="text"
+                    color={errors.first_name && "failure"}
+                  />
+
+                  <Input
+                    value="Last Name"
+                    error={errors.last_name}
+                    id="last_name"
+                    {...register("last_name")}
+                    type="text"
+                    color={errors.last_name && "failure"}
+                  />
+                </FormRow>
+                <div className="border flex justify-center mx-auto relative rounded-lg">
                   <img
                     src={photo?.length > 0 ? Image : img}
                     className="rounded-lg w-44 xxl:!w-56 h-auto"
@@ -92,38 +112,18 @@ const SignUpForm: React.FC = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-grow flex-wrap flex-col lg:!w-3/5">
-                  <Input
-                    value="First name"
-                    error={errors.first_name}
-                    id="first_name"
-                    {...register("first_name")}
-                    type="text"
-                    color={errors.first_name && "failure"}
-                  />
+              </FormRow>
 
-                  <Input
-                    value="Last Name"
-                    error={errors.last_name}
-                    id="last_name"
-                    {...register("last_name")}
-                    type="text"
-                    color={errors.last_name && "failure"}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-3 w-full justify-between">
-                <div className="flex-grow">
-                  <Input
-                    value="Address"
-                    error={errors.address}
-                    id="address"
-                    {...register("address")}
-                    type="text"
-                    color={errors.address && "failure"}
-                  />
-                </div>
-                <div className="flex-grow-0">
+              <FormRow over>
+                <Input
+                  value="Address"
+                  error={errors.address}
+                  id="address"
+                  {...register("address")}
+                  type="text"
+                  color={errors.address && "failure"}
+                />
+                <>
                   <Label
                     htmlFor="gender"
                     value="Gender"
@@ -140,30 +140,29 @@ const SignUpForm: React.FC = () => {
                     <option value="Other">Other</option>
                   </Select>
                   <ErrorMessage text={errors.gender?.message} />
-                </div>
-              </div>
-              <div className="flex justify-between gap-3 flex-wrap w-full">
-                <div className="flex-grow">
-                  <Input
-                    value={"Phone number"}
-                    id="phone_number"
-                    {...register("phone_number")}
-                    type="text"
-                    color={errors.phone_number && "failure"}
-                  >
-                    <ErrorMessage
-                      className="text-sm xxl:!text-md"
-                      text={
-                        errors.phone_number?.message
-                          ? errors.phone_number.message
-                          : message?.includes("phone_number:")
-                          ? errorMessageConvert(message, "phone_number")
-                          : ""
-                      }
-                    />
-                  </Input>
-                </div>
-                <div className="flex-grow md:!flex-grow-0">
+                </>
+              </FormRow>
+
+              <FormRow over>
+                <Input
+                  value={"Phone number"}
+                  id="phone_number"
+                  {...register("phone_number")}
+                  type="text"
+                  color={errors.phone_number && "failure"}
+                >
+                  <ErrorMessage
+                    className="text-sm xxl:!text-md"
+                    text={
+                      errors.phone_number?.message
+                        ? errors.phone_number.message
+                        : message?.includes("phone_number:")
+                        ? errorMessageConvert(message, "phone_number")
+                        : ""
+                    }
+                  />
+                </Input>
+                <>
                   <Label
                     htmlFor="blood_type"
                     value="Blood Type"
@@ -185,63 +184,65 @@ const SignUpForm: React.FC = () => {
                     <option value="O-"> O- </option>
                   </Select>
                   <ErrorMessage text={errors.blood_type?.message} />
-                </div>
-              </div>
-              <div className="flex w-full gap-3 flex-wrap justify-between">
-                <div className="flex-grow">
+                </>
+              </FormRow>
+
+              <FormRow over>
+                <Input
+                  value="Email"
+                  id="email"
+                  {...register("email")}
+                  type="text"
+                  color={errors.email && "failure"}
+                >
+                  <ErrorMessage
+                    className="text-sm xxl:!text-md"
+                    text={
+                      errors.email?.message
+                        ? errors.email.message
+                        : message.includes("email:")
+                        ? errorMessageConvert(message, "email")
+                        : ""
+                    }
+                  />
+                </Input>
+
+                <Input
+                  value="Birth Date"
+                  type="date"
+                  id="date_of_birth"
+                  {...register("date_of_birth")}
+                  color={errors.date_of_birth && "failure"}
+                  error={errors.date_of_birth}
+                />
+              </FormRow>
+
+              <FormRow>
+                <div className="relative">
                   <Input
-                    value="Email"
-                    id="email"
-                    {...register("email")}
-                    type="text"
-                    color={errors.email && "failure"}
+                    value="Password"
+                    {...register("password")}
+                    id="password"
+                    className="relative"
+                    type={showNewPassword ? "text" : "password"}
+                    color={errors.password && "failure"}
+                    error={errors.password}
                   >
-                    <ErrorMessage
-                      className="text-sm xxl:!text-md"
-                      text={
-                        errors.email?.message
-                          ? errors.email.message
-                          : message.includes("email:")
-                          ? errorMessageConvert(message, "email")
-                          : ""
-                      }
-                    />
+                    <div
+                      className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                      onClick={togglePassword}
+                    >
+                      {showNewPassword ? (
+                        <HiOutlineEyeSlash className="xxl:w-6 xxl:h-6" />
+                      ) : (
+                        <HiOutlineEye className="xxl:w-6 xxl:h-6" />
+                      )}
+                    </div>
                   </Input>
                 </div>
-                <div className="flex-grow md:!flex-grow-0">
-                  <Input
-                    value="Birth Date"
-                    type="date"
-                    id="date_of_birth"
-                    {...register("date_of_birth")}
-                    color={errors.date_of_birth && "failure"}
-                    error={errors.date_of_birth}
-                  />
-                </div>
-              </div>
-              <div className="relative w-full">
-                <Input
-                  value="Password"
-                  {...register("password")}
-                  id="password"
-                  type={showNewPassword ? "text" : "password"}
-                  color={errors.password && "failure"}
-                  error={errors.password}
-                >
-                  <div
-                    className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
-                    onClick={togglePassword}
-                  >
-                    {showNewPassword ? (
-                      <HiOutlineEyeSlash className="xxl:w-6 xxl:h-6" />
-                    ) : (
-                      <HiOutlineEye className="xxl:w-6 xxl:h-6" />
-                    )}
-                  </div>
-                </Input>
-              </div>
+              </FormRow>
 
-              <div className="w-full">
+              <FormRow>
                 <Input
                   value="Confirm password"
                   id="passwordConfirm"
@@ -250,7 +251,7 @@ const SignUpForm: React.FC = () => {
                   color={errors.passwordConfirm && "failure"}
                   error={errors.passwordConfirm}
                 />
-              </div>
+              </FormRow>
 
               <div className="flex justify-between w-full gap-2 pb-6 md:!pb-0 flex-wrap md:!flex-nowrap">
                 {status === "idle" && (

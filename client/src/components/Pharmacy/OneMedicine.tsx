@@ -23,6 +23,7 @@ import CustomButton from "../UI/CustomButton";
 import toast from "react-hot-toast";
 import Input from "../UI/Input";
 import { useQuery } from "../../hooks/useQuery";
+import FormRow from "../UI/FormRow";
 
 const OneMedicine: React.FC = () => {
   const query = useQuery();
@@ -83,7 +84,7 @@ const OneMedicine: React.FC = () => {
         dispatch(updateMedicineById({ id, data })).then((action) => {
           if (typeof action.payload === "object") {
             toast.success("Successfully updated medicine!");
-            navigate("..");
+            navigate("/medicine");
           }
         });
       }
@@ -119,10 +120,10 @@ const OneMedicine: React.FC = () => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full h-full overflow-y-auto flex-col px-4 items-center pb-16 md:!pb-2 "
+            className="flex w-full h-full overflow-y-auto flex-col px-4 items-center pb-16 sm:!pb-2 "
           >
             <div className=" flex text-xs gap-3 flex-col w-full justify-center">
-              <div className="flex-grow">
+              <FormRow>
                 <Input
                   value="Name"
                   id="name"
@@ -132,8 +133,8 @@ const OneMedicine: React.FC = () => {
                   color={errors.name && "failure"}
                   error={errors.name}
                 />
-              </div>
-              <div className="w-full">
+              </FormRow>
+              <FormRow>
                 <Input
                   value="Strength (mg)"
                   id="strength"
@@ -145,37 +146,39 @@ const OneMedicine: React.FC = () => {
                   color={errors.strength && "failure"}
                   error={errors.strength}
                 />
-              </div>
-              <div className="w-full">
-                <Label
-                  htmlFor="category"
-                  className="text-sm"
-                  value="Category"
-                />
-                <Select
-                  id="category"
-                  className="mt-1"
-                  {...register("category")}
-                  color={errors.category && "failure"}
-                >
-                  <option value="Pain Relief">Pain Relief</option>
-                  <option value="Antibiotics">Antibiotics</option>
-                  <option value="Antipyretics">Antipyretics</option>
-                  <option value="Antacids">Antacids</option>
-                  <option value="Antihistamines">Antihistamines</option>
-                  <option value="Antidepressants">Antidepressants</option>
-                  <option value="Anticoagulants">Anticoagulants</option>
-                  <option value="Antidiabetics">Antidiabetics</option>
-                  <option value="Antipsychotics">Antipsychotics</option>
-                  <option value="Vaccines">Vaccines</option>
-                  <option value="Other">Other</option>
-                </Select>
-                <ErrorMessage
-                  text={errors.category?.message}
-                  className="text-xs mt-1"
-                />
-              </div>
-              <div className="flex-grow">
+              </FormRow>
+              <FormRow>
+                <>
+                  <Label
+                    htmlFor="category"
+                    className="text-sm"
+                    value="Category"
+                  />
+                  <Select
+                    id="category"
+                    className="mt-1"
+                    {...register("category")}
+                    color={errors.category && "failure"}
+                  >
+                    <option value="Pain Relief">Pain Relief</option>
+                    <option value="Antibiotics">Antibiotics</option>
+                    <option value="Antipyretics">Antipyretics</option>
+                    <option value="Antacids">Antacids</option>
+                    <option value="Antihistamines">Antihistamines</option>
+                    <option value="Antidepressants">Antidepressants</option>
+                    <option value="Anticoagulants">Anticoagulants</option>
+                    <option value="Antidiabetics">Antidiabetics</option>
+                    <option value="Antipsychotics">Antipsychotics</option>
+                    <option value="Vaccines">Vaccines</option>
+                    <option value="Other">Other</option>
+                  </Select>
+                  <ErrorMessage
+                    text={errors.category?.message}
+                    className="text-xs mt-1"
+                  />
+                </>
+              </FormRow>
+              <FormRow>
                 <Input
                   value="Price"
                   id="price"
@@ -185,8 +188,8 @@ const OneMedicine: React.FC = () => {
                   color={errors.price && "failure"}
                   error={errors.price}
                 />
-              </div>
-              <div className="flex-grow">
+              </FormRow>
+              <FormRow>
                 <Input
                   value="Manufacturer"
                   id="manufacturer"
@@ -196,7 +199,7 @@ const OneMedicine: React.FC = () => {
                   color={errors.manufacturer && "failure"}
                   error={errors.manufacturer}
                 />
-              </div>
+              </FormRow>
               <div className="relative w-full flex flex-col gap-1">
                 <div>
                   <Input
@@ -210,10 +213,10 @@ const OneMedicine: React.FC = () => {
                   />
                 </div>
 
-                <p className="text-center">OR</p>
+                <p className="text-center xxl:text-xl">OR</p>
                 <div className="flex-grow">
                   <label
-                    className={`block w-full bg-white p-2.5 cursor-pointer ${
+                    className={`block w-full bg-white p-2.5 xxl:text-xl cursor-pointer ${
                       errors.photo
                         ? "text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
                         : "text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
@@ -239,34 +242,36 @@ const OneMedicine: React.FC = () => {
                   </label>
                 </div>
               </div>
-              <div className="w-full">
-                <Label
-                  htmlFor="description"
-                  className="text-sm"
-                  value="Description"
-                />
-                <Textarea
-                  id="description"
-                  {...register("description")}
-                  color={errors.description && "failure"}
-                  rows={5}
-                  className="text-xs mt-1"
-                />
-                <div className="h-6 mt-1">
-                  {errors.description ? (
-                    <ErrorMessage
-                      text={errors.description?.message}
-                      className="text-xs"
-                    />
-                  ) : (
-                    status === "failed" && (
-                      <ErrorMessage text={message} className="text-xs" />
-                    )
-                  )}
-                </div>
-              </div>
-              <div>
-                <div className="w-full mx-auto">
+              <FormRow>
+                <>
+                  <Label
+                    htmlFor="description"
+                    className="text-sm"
+                    value="Description"
+                  />
+                  <Textarea
+                    id="description"
+                    {...register("description")}
+                    color={errors.description && "failure"}
+                    rows={5}
+                    className="text-xs mt-1"
+                  />
+                  <div className="h-6 mt-1">
+                    {errors.description ? (
+                      <ErrorMessage
+                        text={errors.description?.message}
+                        className="text-xs"
+                      />
+                    ) : (
+                      status === "failed" && (
+                        <ErrorMessage text={message} className="text-xs" />
+                      )
+                    )}
+                  </div>
+                </>
+              </FormRow>
+              <FormRow>
+                <>
                   <Controller
                     control={control}
                     name="available"
@@ -280,12 +285,12 @@ const OneMedicine: React.FC = () => {
                     )}
                   />
                   <ErrorMessage text={errors.available?.message} />
-                </div>
-              </div>
+                </>
+              </FormRow>
             </div>
             <Footer variant={1}>
               <CustomButton type="submit" className="w-full">
-                Save
+                <p className="xxl:text-xl">Save</p>
               </CustomButton>
             </Footer>
           </form>
