@@ -14,7 +14,7 @@ import {
   Legend,
   Cell,
 } from "recharts";
-import moment from "moment";
+import { yearCalc } from "../../../service/personSideFunctions";
 
 const COLORS = ["#2986cc", "#c90076", "#cccccc"];
 
@@ -26,74 +26,73 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
     <>
       {docDash ? (
         <>
-          <Card className="max-w-xs cursor-pointer" href="/my-department">
-            <p className="text-sm">My department</p>
-            <h1 className="text-xl font-bold mx-auto">
-              {docDash.department_name}
-            </h1>
-            <p className="text-xs text-blue-700 ml-auto">See more {"->"}</p>
-          </Card>
-          <Card
-            className="cursor-pointer max-w-xs"
-            href={docDash.latest?._id && `/appointments/${docDash.latest._id}`}
-          >
-            {docDash.latest !== null ? (
-              <div className="flex items-center gap-4">
-                <CustomImg
-                  url={docDash.latest.patient_id?.user_id?.photo}
-                  className="rounded-full"
-                  width="80"
-                  height="80"
-                />
-                <div className="flex flex-col gap-1">
-                  <h1 className="text-xl font-bold">
-                    {docDash.latest?.patient_id.first_name +
-                      " " +
-                      docDash.latest.patient_id.last_name}
-                  </h1>
-                  <p className="ml-auto">
-                    Age:{" "}
-                    {moment().diff(
-                      moment(docDash.latest.patient_id.date_of_birth),
-                      "years"
-                    )}{" "}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {formatDate(docDash.latest.appointment_date)}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    ({formatStartEnd(docDash.latest.appointment_date)})
-                  </p>
+          <div className="flex gap-3 md:!flex-row xl:!flex-col flex-col xl:!items-center w-full flex-grow">
+            <Card
+              className="w-full xl:!max-w-md cursor-pointer"
+              href="/my-department"
+            >
+              <div className="flex flex-col justify-start h-full xl:gap-6">
+                <p className="text-sm xxl:!text-lg mb-auto">My department</p>
+                <h1 className="text-xl xxl:!text-3xl font-bold mb-auto mx-auto">
+                  {docDash?.department_name}
+                </h1>
+                <p className="text-xs xxl:!text-lg text-blue-700 ml-auto">
+                  See more {"->"}
+                </p>
+              </div>
+            </Card>
+            <Card
+              className="cursor-pointer w-full xl:!max-w-md xl:my-auto"
+              href={
+                docDash?.latest?._id && `/appointments/${docDash.latest._id}`
+              }
+            >
+              {docDash.latest !== null ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  <CustomImg
+                    url={docDash.latest.patient_id?.user_id?.photo}
+                    className="rounded-full mx-auto w-28 xxl:!w-40 h-auto"
+                  />
+                  <div className="flex flex-grow flex-col gap-0">
+                    <h1 className="lg:!text-lg xl:!text-xl xxl:!text-2xl font-bold">
+                      {docDash.latest?.patient_id.first_name +
+                        " " +
+                        docDash.latest.patient_id.last_name}
+                    </h1>
+                    <p className="ml-auto xxl:!text-lg">
+                      Age: {yearCalc(docDash.latest.patient_id.date_of_birth)}
+                    </p>
+                    <div className="flex flex-wrap text-gray-400 gap-1 text-xs xxl:!text-lg xxl:!mx-auto">
+                      <p>{formatDate(docDash.latest.appointment_date)}</p>
+                      <p>({formatStartEnd(docDash.latest.appointment_date)})</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="p-8">
-                <p className="text-gray-400 text-sm">No data available</p>
-              </div>
-            )}
-          </Card>
-          <Card className="max-w-xs h-2/5">
-            {docDash.gender.every((m) => m.value === 0) ? (
+              ) : (
+                <div className="text-center p-8">
+                  <p className="text-gray-400 text-sm">No data available</p>
+                </div>
+              )}
+            </Card>
+          </div>
+          <Card className="h-72 w-full xl:!max-w-md xl:!h-2/5">
+            {docDash?.gender.every((m) => m.value === 0) ? (
               <p className="text-center text-sm text-gray-400">
                 No data available.
               </p>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart
-                  width={300}
-                  height={100}
-                  className="flex items-center"
-                >
+                <PieChart className="flex items-center">
                   <Pie
                     className="cursor-pointer transition-all duration-300"
                     dataKey="value"
                     startAngle={180}
                     endAngle={0}
                     data={docDash.gender}
-                    innerRadius={50}
+                    innerRadius="50%"
+                    outerRadius="70%"
                     cx="50%"
                     cy="80%"
-                    outerRadius={75}
                     label
                   >
                     {docDash.gender?.map((_entry, index) => (

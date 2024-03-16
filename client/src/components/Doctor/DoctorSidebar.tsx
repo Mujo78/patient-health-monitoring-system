@@ -34,7 +34,7 @@ const DoctorSidebar: React.FC = () => {
     dispatch(setSelected(name));
   };
 
-  const randomNumber = Math.floor(Math.random() * 6);
+  const randomNumber = Math.floor(Math.random() * 5);
 
   return (
     <RootSidebar>
@@ -75,7 +75,7 @@ const DoctorSidebar: React.FC = () => {
         <SidebarItemText>Department</SidebarItemText>
       </Sidebar.Item>
       {location.pathname.startsWith("/doctor/") && (
-        <div className="h-2/3 flex-col justify-center hidden md:flex mr-6 flex-grow w-full items-center">
+        <div className="h-2/3 flex-col justify-center hidden md:flex flex-grow w-auto items-center">
           {show && (
             <Alert
               className="bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit"

@@ -1,16 +1,13 @@
-import { Card, Spinner } from "flowbite-react";
+import { Card } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import {
   formatDate,
   formatStartEnd,
   getLatestFinished,
+  latestFinishedType,
 } from "../../service/appointmentSideFunctions";
 import { useSelector } from "react-redux";
-import {
-  appointment,
-  doctor_id,
-  patient_id,
-} from "../../features/appointment/appointmentSlice";
+import { appointment } from "../../features/appointment/appointmentSlice";
 import { useAppDispatch } from "../../app/hooks";
 import CustomImg from "../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
@@ -19,17 +16,7 @@ import AppointmentsChart from "./AppointmentsChart";
 import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { yearCalc } from "../../service/personSideFunctions";
-
-type appointment = {
-  _id: string;
-  appointment_date: Date;
-  doctor_id: doctor_id;
-};
-
-type latestFinishedType = {
-  appointment: appointment | null;
-  patient: patient_id;
-};
+import CustomSpinner from "../../components/UI/CustomSpinner";
 
 const PatientDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -47,8 +34,6 @@ const PatientDashboard: React.FC = () => {
       dispatch(firstTime());
     }
   }, [dispatch, accessUser]);
-
-  //console.log(object);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,75 +62,79 @@ const PatientDashboard: React.FC = () => {
   return (
     <>
       {loading || status === "loading" ? (
-        <div className="h-full w-full flex justify-center items-center">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : (
-        <div className="flex duration-300 transition-all justify-between h-full w-full p-3">
-          <div className="flex flex-col flex-grow w-full justify-between">
-            <div className="w-full flex flex-grow justify-between">
+        <div className="flex flex-col xl:!flex-row duration-300 transition-all gap-3 xl:!gap-10 justify-between h-full w-full p-1 sm:!p-3 xxl:!p-6">
+          <div className="flex flex-col flex-grow w-full gap-3 xl:!gap-6 xxl:!gap-12">
+            <div className="w-full flex flex-col gap-2 xl:!gap-4 md:flex-row flex-grow justify-between">
               {latestFinished && (
                 <Card
-                  className="w-96 h-auto"
+                  className="w-full xl:!max-w-md xxl:!max-w-2xl h-auto"
                   href={`/profile/p/${latestFinished.patient._id}`}
                 >
-                  <p className="text-blue-700 font-semibold">Patient</p>
-                  <h1 className="text-md font-bold text-center">
-                    {latestFinished?.patient.first_name +
-                      " " +
-                      latestFinished?.patient.last_name}
-                  </h1>
-                  <p className="text-gray-500">Details</p>
-                  <hr />
-                  <p className="flex text-xs text-gray-500 justify-between">
-                    <span>Age :</span>
-                    <span className="ml-auto text-black">
-                      {yearCalc(latestFinished?.patient?.date_of_birth)}
-                    </span>
+                  <p className="text-blue-700 font-semibold text-md xxl:text-2xl">
+                    Patient
                   </p>
-                  <p className="flex text-xs text-gray-500 justify-between">
-                    <span>Blood type :</span>
-                    <span className="ml-auto text-black">
-                      {latestFinished.patient.blood_type}
-                    </span>
-                  </p>
-                  {latestFinished.patient.height && (
-                    <p className="flex text-xs text-gray-500 justify-between">
-                      <span>Height (m) :</span>
-                      <span className="ml-auto text-black">
-                        {Number(latestFinished.patient.height) / 100}{" "}
-                      </span>
-                    </p>
-                  )}
-                  {latestFinished.patient.weight && (
-                    <p className="flex text-xs text-gray-500 justify-between">
-                      <span>Weight (kg) :</span>
-                      <span className="ml-auto text-black">
-                        {latestFinished.patient.weight}
-                      </span>
-                    </p>
-                  )}
+                  <div className="flex flex-col gap-4 xxl:!gap-7 my-auto">
+                    <h1 className="text-md xxl:!text-3xl font-bold text-center">
+                      {latestFinished?.patient.first_name +
+                        " " +
+                        latestFinished?.patient.last_name}
+                    </h1>
+                    <p className="text-gray-500 xxl:!text-xl">Details</p>
+                    <hr />
+                    <div className="text-xs xxl:!text-lg flex flex-col gap-4 xxl:!gap-8">
+                      <p className="flex text-gray-500 justify-between">
+                        <span>Age :</span>
+                        <span className="ml-auto text-black">
+                          {yearCalc(latestFinished?.patient?.date_of_birth)}
+                        </span>
+                      </p>
+                      <p className="flex text-gray-500 justify-between">
+                        <span>Blood type :</span>
+                        <span className="ml-auto text-black">
+                          {latestFinished.patient.blood_type}
+                        </span>
+                      </p>
+                      {latestFinished.patient.height && (
+                        <p className="flex text-gray-500 justify-between">
+                          <span>Height (m) :</span>
+                          <span className="ml-auto text-black">
+                            {Number(latestFinished.patient.height) / 100}{" "}
+                          </span>
+                        </p>
+                      )}
+                      {latestFinished.patient.weight && (
+                        <p className="flex text-gray-500 justify-between">
+                          <span>Weight (kg) :</span>
+                          <span className="ml-auto text-black">
+                            {latestFinished.patient.weight}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </Card>
               )}
-              <div className=" flex flex-col w-1/2 mx-auto pb-5 justify-around h-full">
-                <Card className="bg-gradient-to-r from-blue-500 to-blue-400 ">
+              <div className="flex flex-col gap-2 xl:!gap-4 xxl:!gap-8 w-full lg:!w-1/2 mx-auto justify-center h-full">
+                <Card className="bg-gradient-to-r xl:!h-32 xxl:!h-48 from-blue-500 to-blue-400 ">
                   <div>
                     {accessUser?.data.first ? (
                       <div>
-                        <h1 className="text-xl font-bold">
+                        <h1 className="text-xl xxl:!text-3xl font-bold">
                           Welcome back, {accessUser?.info.first_name}!
                         </h1>
-                        <p className="text-xs mt-3">
+                        <p className="text-xs xxl:!text-lg mt-3">
                           Explore your health insights with the PHM System.
                           Let's make every day a healthier one.
                         </p>
                       </div>
                     ) : (
                       <div>
-                        <h1 className="text-xl font-bold">
+                        <h1 className="text-xl xxl:!text-3xl font-bold">
                           Welcome to the PHM System!
                         </h1>
-                        <p className="text-xs mt-3">
+                        <p className="text-xs xxl:!text-lg mt-3">
                           Discover a world of personalized health monitoring.
                           Take control of your health journey today
                         </p>
@@ -153,25 +142,28 @@ const PatientDashboard: React.FC = () => {
                     )}
                   </div>
                 </Card>
-                <Card onClick={handleNavigateApp} className="cursor-pointer">
+                <Card
+                  onClick={handleNavigateApp}
+                  className="cursor-pointer w-full"
+                >
                   {latestFinished && latestFinished.appointment ? (
-                    <div className="flex items-center">
+                    <div className="flex flex-wrap items-center">
                       <CustomImg
                         url={
                           latestFinished?.appointment?.doctor_id.user_id.photo
                         }
-                        width="75px"
+                        className="w-20 xl:!w-24 xxl:!w-40 mx-auto h-auto"
                       />
                       <div className="mx-auto">
-                        <h1 className="text-xl font-semibold">
+                        <h1 className="md:text-lg lg:!text-xl xxl:!text-3xl font-semibold">
                           {latestFinished?.appointment?.doctor_id.first_name +
                             " " +
                             latestFinished?.appointment?.doctor_id.last_name}
                         </h1>
-                        <p className="text-sm">
+                        <p className="text-sm xxl:!text-lg">
                           {latestFinished?.appointment?.doctor_id.speciality}
                         </p>
-                        <p className="text-xs text-gray-700 mt-1">
+                        <p className="text-xs xxl:!text-lg text-gray-700 mt-1">
                           {formatDate(
                             latestFinished?.appointment?.appointment_date
                           )}{" "}
@@ -195,7 +187,7 @@ const PatientDashboard: React.FC = () => {
             </div>
             <AppointmentsChart />
           </div>
-          <div className=" h-full w-2/5 flex justify-end">
+          <div className="h-fit xl:!h-full w-full xl:!w-2/5 flex justify-end">
             <AppointmentReviewCalendar variant={1} />
           </div>
         </div>

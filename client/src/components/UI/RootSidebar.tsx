@@ -37,7 +37,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
   return (
     <div className="w-fit h-screen hidden sm:!flex">
       <Sidebar
-        className="h-screen border-r border-r-gray-200 flex flex-col justify-between w-fit"
+        className="h-screen border-r border-r-gray-200 flex flex-col justify-between gap-12 w-fit"
         theme={theme}
       >
         <Sidebar.Items className="h-5/6 font-Poppins flex flex-col justify">

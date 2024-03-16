@@ -4,6 +4,7 @@ import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
 import {
   Appointment,
+  doctor_id,
   patient_id,
 } from "../features/appointment/appointmentSlice";
 
@@ -117,6 +118,17 @@ export async function numberOfAppointmentsPerMonthForDepartments(
   );
   return response.data;
 }
+
+export type appointment = {
+  _id: string;
+  appointment_date: Date;
+  doctor_id: doctor_id;
+};
+
+export type latestFinishedType = {
+  appointment: appointment | null;
+  patient: patient_id;
+};
 
 type Latest = {
   _id: string;

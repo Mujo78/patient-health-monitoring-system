@@ -105,42 +105,43 @@ const LoginForm: React.FC = () => {
               type="email"
               error={errors.email}
             />
-            <>
-              <div className="relative mb-5">
-                <Input
-                  value="Password"
-                  {...register("password")}
-                  color={errors.password && "failure"}
-                  id="password"
-                  disabled={status === "loading"}
-                  icon={HiLockClosed}
-                  type={showPassword ? "text" : "password"}
-                >
-                  <div className="flex justify-between text-xs xxl:!text-md">
-                    {errors.password ? (
-                      <p className="text-red-600">{errors.password.message}</p>
-                    ) : message ? (
-                      <p className="text-red-600"> {message} </p>
-                    ) : (
-                      ""
-                    )}
-                    <button
-                      className="text-xs xxl:!text-md ml-auto underline p-0 mt-1 mb-4 !bg-white text-black cursor-pointer"
-                      disabled={status === "loading"}
-                      onClick={(event) => forgotPasswordShow(event)}
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                </Input>
-                <div
-                  className="absolute right-2 bottom-50 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
-                  onClick={togglePassword}
-                >
-                  {showPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
+
+            <div className="relative">
+              <Input
+                value="Password"
+                {...register("password")}
+                color={errors.password && "failure"}
+                id="password"
+                disabled={status === "loading"}
+                icon={HiLockClosed}
+                type={showPassword ? "text" : "password"}
+              >
+                <div className="flex justify-between text-xs xxl:!text-md">
+                  {errors.password ? (
+                    <p className="text-red-600">{errors.password.message}</p>
+                  ) : message ? (
+                    <p className="text-red-600"> {message} </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
+              </Input>
+              <div
+                className="absolute right-2 bottom-50 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                onClick={togglePassword}
+              >
+                {showPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
               </div>
-            </>
+            </div>
+            <button
+              type="button"
+              className="text-xs xxl:!text-md ml-auto underline mb-2 p-0 !bg-white text-black cursor-pointer"
+              disabled={status === "loading"}
+              onClick={(event) => forgotPasswordShow(event)}
+            >
+              Forgot password?
+            </button>
+
             <CustomButton
               disabled={status === "loading"}
               className="bg-blue-700 hover:!bg-blue-600  transition-colors duration-300"

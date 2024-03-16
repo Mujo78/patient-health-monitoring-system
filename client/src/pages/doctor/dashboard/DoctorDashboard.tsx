@@ -11,8 +11,9 @@ import {
   doctorDashboard,
   doctorDashboardInfo,
 } from "../../../service/appointmentSideFunctions";
-import { Spinner } from "flowbite-react";
+
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const DoctorDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -66,27 +67,27 @@ const DoctorDashboard: React.FC = () => {
   useSelectedPage("Dashboard");
 
   return (
-    <div className="h-full w-full p-6 gap-5 flex transition-all duration-600">
+    <>
       {loading ? (
-        <div className="flex justify-center w-full h-full items-center">
-          <Spinner size="xl" />
-        </div>
+        <CustomSpinner size="xl" />
       ) : (
-        <>
-          <div className="w-4/6 h-full flex justify-between flex-col">
-            {docDashInfo && <DocDashboard docDashInfo={docDashInfo} />}
-          </div>
-          <div className="w-2/5 h-full flex justify-center">
-            <div className="flex flex-col justify-between">
-              {docDash && <DocDashboardInfo docDash={docDash} />}
+        <div className="h-full w-full p-3 gap-5 flex flex-col transition-all duration-600">
+          <div className="w-full flex gap-4 flex-col xl:!flex-row justify-between h-full">
+            <div className="w-full xl:!w-2/5 h-full flex justify-between flex-col mb-8 sm:!mb-0">
+              {docDashInfo && <DocDashboard docDashInfo={docDashInfo} />}
+            </div>
+            <div className="w-full xl:!w-1/3 xl:!px-2 xxl:!px-0 h-full flex">
+              <div className="flex flex-col lg:!flex-row xl:!flex-col w-full gap-3 justify-between xl:!items-center">
+                {docDash && <DocDashboardInfo docDash={docDash} />}
+              </div>
+            </div>
+            <div className="h-fit xl:!h-full w-full xl:!w-1/4 flex ">
+              <AppointmentReviewCalendar variant={2} />
             </div>
           </div>
-          <div className="h-full w-2/5 flex justify-end">
-            <AppointmentReviewCalendar variant={2} />
-          </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

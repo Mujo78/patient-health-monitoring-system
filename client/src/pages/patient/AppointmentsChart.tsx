@@ -57,16 +57,18 @@ const AppointmentsChart: React.FC = () => {
   };
 
   return (
-    <Card className="w-full h-2/4 flex flex-col ">
+    <Card className="w-full h-96 xl:!h-2/4 flex flex-col">
       <div className="flex items-center">
-        <p className="text-sm font-semibold">
+        <p className="text-xs xxl:!text-lg font-semibold">
           Year: {new Date().getFullYear()}
         </p>
         <div className="flex gap-5 items-center ml-auto">
-          <Label htmlFor="month">Choose a month:</Label>
+          <Label htmlFor="month" className="hidden lg:block xxl:!text-lg">
+            Choose a month:
+          </Label>
           <Select
             id="month"
-            sizing="sm"
+            sizing="sm xxl:lg"
             name="month"
             onSelect={handleSelect}
             value={month}
@@ -87,11 +89,18 @@ const AppointmentsChart: React.FC = () => {
           </Select>
         </div>
       </div>
-      <ResponsiveContainer width="90%" height="80%" className="mx-auto">
-        <BarChart width={200} height={200} data={dataApps} layout="vertical">
+      <ResponsiveContainer width="95%" height="80%" className="mx-auto">
+        <BarChart
+          width={200}
+          height={200}
+          data={dataApps}
+          layout="vertical"
+          margin={{ left: 30 }}
+        >
           <CartesianGrid horizontal={false} vertical={true} />
           <Tooltip />
           <XAxis
+            className="xxl:!text-xl"
             type="number"
             dataKey="visited"
             ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
@@ -99,7 +108,7 @@ const AppointmentsChart: React.FC = () => {
           <YAxis
             dataKey="name"
             type="category"
-            tick={{ fontSize: 9 }}
+            className="text-xs xxl:!text-lg"
             tickSize={4}
           />
           <Legend />
