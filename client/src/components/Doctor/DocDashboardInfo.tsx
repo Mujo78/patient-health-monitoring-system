@@ -3,9 +3,9 @@ import {
   DocDashboardInfoType,
   formatDate,
   formatStartEnd,
-} from "../../../service/appointmentSideFunctions";
+} from "../../service/appointmentSideFunctions";
 import { Card } from "flowbite-react";
-import CustomImg from "../../../components/UI/CustomImg";
+import CustomImg from "../UI/CustomImg";
 import {
   PieChart,
   Pie,
@@ -14,7 +14,7 @@ import {
   Legend,
   Cell,
 } from "recharts";
-import { yearCalc } from "../../../service/personSideFunctions";
+import { yearCalc } from "../../service/personSideFunctions";
 
 const COLORS = ["#2986cc", "#c90076", "#cccccc"];
 

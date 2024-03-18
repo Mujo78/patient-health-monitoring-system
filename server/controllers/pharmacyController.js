@@ -130,7 +130,7 @@ const pharmacyDashboardInfo = asyncHandler(async (req, res) => {
       },
     },
     {
-      $sort: { totalPrice: -1 },
+      $sort: { total: -1 },
     },
     {
       $limit: 5,

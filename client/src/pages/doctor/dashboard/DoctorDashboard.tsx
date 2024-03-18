@@ -3,8 +3,8 @@ import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { authUser, firstTime } from "../../../features/auth/authSlice";
 import AppointmentReviewCalendar from "../../../components/Appointment/AppointmentReviewCalendar";
-import DocDashboardInfo from "./DocDashboardInfo";
-import DocDashboard from "./DocDashboard";
+import DocDashboardInfo from "../../../components/Doctor/DocDashboardInfo";
+import DocDashboard from "../../../components/Doctor/DocDashboard";
 import {
   DocDashboardInfoType,
   DocDashboardType,

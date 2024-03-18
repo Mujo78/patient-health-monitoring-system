@@ -12,7 +12,7 @@ import { useAppDispatch } from "../../app/hooks";
 import CustomImg from "../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
 import { authUser, firstTime } from "../../features/auth/authSlice";
-import AppointmentsChart from "./AppointmentsChart";
+import AppointmentsChart from "../../components/Patient/AppointmentsChart";
 import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import { yearCalc } from "../../service/personSideFunctions";

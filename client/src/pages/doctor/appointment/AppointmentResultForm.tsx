@@ -151,7 +151,7 @@ const AppointmentResultForm = () => {
                 )}
             </div>
             <FormRow
-              gap={2.5}
+              gap={3}
               className="flex-col lg:flex-row"
               fixed="w-full lg:!w-2/4"
             >
@@ -187,7 +187,7 @@ const AppointmentResultForm = () => {
                 />
               </>
             </FormRow>
-            <FormRow gap={2.5} className="flex-col lg:flex-row">
+            <FormRow gap={4} className="flex-col lg:flex-row">
               <>
                 <Label
                   htmlFor="other_medicine"

@@ -49,13 +49,3 @@
     }
   }
 }
-
-@media (min-width: 453px) {
-  .recharts-legend-wrapper {
-    position: absolute !important;
-    width: fit-content !important;
-    right: 0% !important;
-    left: 75% !important;
-    bottom: 50% !important;
-  }
-}

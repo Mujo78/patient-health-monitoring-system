@@ -8,10 +8,10 @@ import {
   pharmacyDashboard,
   pharmacyDashboardInfo,
 } from "../../../service/pharmacySideFunctions";
-import PDashboard from "./PDashboard";
-import { Spinner } from "flowbite-react";
-import PDashboardInfo from "./PDashboardInfo";
+import PDashboard from "../../../components/Pharmacy/PDashboard";
+import PDashboardInfo from "../../../components/Pharmacy/PDashboardInfo";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const PharmacyDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -68,22 +68,22 @@ const PharmacyDashboard: React.FC = () => {
   }, [accessUser]);
 
   return (
-    <div className="h-full p-6">
+    <>
       {loading ? (
-        <div className="flex h-full justify-center items-center">
-          <Spinner size="md" />
-        </div>
+        <CustomSpinner size="lg" />
       ) : (
-        <div className="flex flex-col gap-5 h-full">
-          <div className="w-full flex justify-between h-2/4 transition-all duration-300">
-            {phDash && <PDashboard data={phDash} />}
-          </div>
-          <div className="flex w-full gap-5 h-2/4">
-            {phDashInfo && <PDashboardInfo data={phDashInfo} />}
+        <div className="h-full p-3">
+          <div className="flex w-full flex-col gap-5 h-full">
+            <div className="w-full h-fit gap-3 flex flex-wrap items-center lg:!gap-6 xl:!gap-12 xl:!h-2/4 transition-all duration-300">
+              {phDash && <PDashboard data={phDash} />}
+            </div>
+            <div className="flex h-fit lg:!h-full items-center flex-wrap w-full gap-5 xl:!h-2/4">
+              {phDashInfo && <PDashboardInfo data={phDashInfo} />}
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

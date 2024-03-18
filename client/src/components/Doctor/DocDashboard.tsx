@@ -8,15 +8,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { DocDashboardType } from "../../../service/appointmentSideFunctions";
+import { DocDashboardType } from "../../service/appointmentSideFunctions";
 import moment from "moment";
-
-/*
-const cx = 120;
-const cy = 100;
-const iR = 50;
-const oR = 70;
-*/
 
 const COLORS = ["#1d4ed8", "#F5B843", "#D4DCFF"];
 
@@ -29,7 +22,7 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
 
   return (
     <>
-      {docDashInfo ? (
+      {docDashInfo && (
         <div className="w-full h-full flex flex-col justify-between gap-3">
           <div className="flex flex-col lg:!flex-row xl:!my-auto xl:!flex-row flex-wrap gap-3 w-full justify-center">
             <div className="flex flex-grow flex-wrap lg:!flex-col gap-4 text-sm xl:!text-lg xxl:!text-xl">
@@ -79,8 +72,11 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
                     startAngle={-360}
                     endAngle={0}
                     data={docDashInfo?.patientStatistic}
-                    innerRadius="55%"
-                    outerRadius="75%"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={87}
+                    paddingAngle={6}
                     fill="#8884d8"
                     stroke="none"
                     label
@@ -94,9 +90,9 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
                   </Pie>
                   <Tooltip />
                   <Legend
+                    align="right"
                     layout="vertical"
-                    verticalAlign="bottom"
-                    align="center"
+                    verticalAlign="middle"
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -109,8 +105,6 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
             )}
           </Card>
         </div>
-      ) : (
-        <div>Nothing</div>
       )}
     </>
   );
