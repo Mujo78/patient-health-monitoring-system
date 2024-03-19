@@ -1,17 +1,17 @@
-import axios from "axios";
+import { apiClient } from "../../helpers/ApiClient";
 import {
   MakeAppointmentData,
   editObject,
   finishAppointmentObj,
 } from "./appointmentSlice";
 
-const BASE_URL = "http://localhost:3001/api/v1/appointment/";
+const URL = "/appointment/";
 
 const makeAppointment = async (
   appointmentData: MakeAppointmentData,
   token: string
 ) => {
-  const response = await axios.post(BASE_URL, appointmentData, {
+  const response = await apiClient.post(URL, appointmentData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -21,8 +21,8 @@ const makeAppointment = async (
 };
 
 const getAppointmentsForDay = async (date: Date, token: string) => {
-  const response = await axios.post(
-    `${BASE_URL}day`,
+  const response = await apiClient.post(
+    `${URL}day`,
     { date },
     {
       headers: {
@@ -35,7 +35,7 @@ const getAppointmentsForDay = async (date: Date, token: string) => {
 };
 
 const getAppointmentForPerson = async (id: string, token: string) => {
-  const response = await axios.get(`${BASE_URL}person/${id}`, {
+  const response = await apiClient.get(`${URL}person/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -44,7 +44,7 @@ const getAppointmentForPerson = async (id: string, token: string) => {
 };
 
 const getAppointment = async (id: string, token: string) => {
-  const response = await axios.get(`${BASE_URL}/${id}`, {
+  const response = await apiClient.get(`${URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -53,7 +53,7 @@ const getAppointment = async (id: string, token: string) => {
 };
 
 const deleteAppointment = async (id: string, token: string) => {
-  const response = await axios.delete(`${BASE_URL}/${id}`, {
+  const response = await apiClient.delete(`${URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -67,8 +67,8 @@ const editAppointment = async (
   editObjectData: editObject,
   token: string
 ) => {
-  const response = await axios.patch(
-    `${BASE_URL}/edit-details/${id}`,
+  const response = await apiClient.patch(
+    `${URL}/edit-details/${id}`,
     editObjectData,
     {
       headers: {
@@ -84,7 +84,7 @@ const finishAppointment = async (
   finishAppointmentObj: finishAppointmentObj,
   token: string
 ) => {
-  const response = await axios.patch(`${BASE_URL}${id}`, finishAppointmentObj, {
+  const response = await apiClient.patch(`${URL}${id}`, finishAppointmentObj, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -96,7 +96,6 @@ export const bookAppointment = createAsyncThunk<
     const safeToken = token || "";
     return await appointmentService.makeAppointment(appointmentData, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -119,7 +118,6 @@ export const editAppointment = createAsyncThunk<
       safeToken
     );
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -160,7 +158,6 @@ export const getAppointmentsForADay = createAsyncThunk<
     const safeToken = token || "";
     return await appointmentService.getAppointmentsForDay(date, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -183,7 +180,6 @@ export const getAppointmentsForPerson = createAsyncThunk<
     const _id = id || "";
     return await appointmentService.getAppointmentForPerson(_id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -202,7 +198,6 @@ export const getSelectedAppointment = createAsyncThunk<
     const safeToken = token || "";
     return await appointmentService.getAppointment(id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -221,7 +216,6 @@ export const cancelAppointment = createAsyncThunk<
     const safeToken = token || "";
     return await appointmentService.deleteAppointment(id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);

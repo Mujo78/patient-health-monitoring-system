@@ -1,7 +1,7 @@
-import axios from "axios";
 import { UserInfo } from "../features/appointment/appointmentSlice";
+import { apiClient } from "../helpers/ApiClient";
 
-const BASE_URL = "http://localhost:3001/api/v1/department";
+const URL = "/department";
 
 export type Department = {
   _id: string;
@@ -11,7 +11,7 @@ export type Department = {
 };
 
 export async function getDepartments(token: string) {
-  const response = await axios.get(`${BASE_URL}/`, {
+  const response = await apiClient.get(`${URL}/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -35,7 +35,7 @@ export type DepartmentAllInfo = {
 };
 
 export async function getDepartmentAllInfo(token: string, name: string) {
-  const response = await axios.get(`${BASE_URL}/${name}`, {
+  const response = await apiClient.get(`${URL}/${name}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -58,7 +58,7 @@ export type DoctorType = {
 };
 
 export async function getDoctorsForDepartment(token: string, name: string) {
-  const response = await axios.get(`${BASE_URL}/${name}/doctors`, {
+  const response = await apiClient.get(`${URL}/${name}/doctors`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -86,7 +86,7 @@ export type myDepartmentResult = {
 };
 
 export async function getMyDepartment(token: string) {
-  const response = await axios.get(`${BASE_URL}/my-department`, {
+  const response = await apiClient.get(`${URL}/my-department`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -111,7 +111,7 @@ export type myDepartmentAppointments = {
 };
 
 export async function getMyDepartmentAppointments(token: string) {
-  const response = await axios.get(`${BASE_URL}/my-department-appointments`, {
+  const response = await apiClient.get(`${URL}/my-department-appointments`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

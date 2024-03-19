@@ -1,7 +1,5 @@
-import axios from "axios";
 import { Patient } from "../features/medicine/medicineSlice";
-
-const BASE_URL = "http://localhost:3001/api/v1/";
+import { apiClient } from "../helpers/ApiClient";
 
 export type PatientsType = {
   currentPage: number | null;
@@ -14,7 +12,7 @@ export async function getPatientsForDoctor(
   page: number,
   searchQuery: string
 ) {
-  const response = await axios.get(`${BASE_URL}appointment/doctor-patients`, {
+  const response = await apiClient.get("/appointment/doctor-patients", {
     params: { searchQuery, page },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -25,7 +23,7 @@ export async function getPatientsForDoctor(
 }
 
 export async function getPatient(token: string, patientId: string) {
-  const response = await axios.get(`${BASE_URL}patient/${patientId}`, {
+  const response = await apiClient.get(`/patient/${patientId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

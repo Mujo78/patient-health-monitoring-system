@@ -1,9 +1,9 @@
-import axios from "axios";
+import { apiClient } from "../../helpers/ApiClient";
 
-const BASE_URL = "http://localhost:3001/api/v1/notification/";
+const URL = "http://localhost:3001/api/v1/notification/";
 
 const getOneNotification = async (id: string, token: string) => {
-  const response = await axios.get(`${BASE_URL}${id}`, {
+  const response = await apiClient.get(`${URL}${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -13,7 +13,7 @@ const getOneNotification = async (id: string, token: string) => {
 };
 
 const deleteOneNotification = async (id: string, token: string) => {
-  const response = await axios.delete(`${BASE_URL}${id}`, {
+  const response = await apiClient.delete(`${URL}${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -23,8 +23,8 @@ const deleteOneNotification = async (id: string, token: string) => {
 };
 
 const markOneNotificationAsRead = async (id: string, token: string) => {
-  const response = await axios.patch(
-    `${BASE_URL}${id}`,
+  const response = await apiClient.patch(
+    `${URL}${id}`,
     { read: true },
     {
       headers: {
@@ -37,7 +37,7 @@ const markOneNotificationAsRead = async (id: string, token: string) => {
 };
 
 const getAllNotificationsForPerson = async (token: string) => {
-  const response = await axios.get(BASE_URL, {
+  const response = await apiClient.get(URL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -47,8 +47,8 @@ const getAllNotificationsForPerson = async (token: string) => {
 };
 
 const markAllAsRead = async (token: string) => {
-  const response = await axios.patch(
-    BASE_URL,
+  const response = await apiClient.patch(
+    URL,
     {},
     {
       headers: {
@@ -61,7 +61,7 @@ const markAllAsRead = async (token: string) => {
 };
 
 const deleteAllNotifications = async (token: string) => {
-  const response = await axios.delete(BASE_URL, {
+  const response = await apiClient.delete(URL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

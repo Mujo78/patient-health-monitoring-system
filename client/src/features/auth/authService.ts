@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiClient } from "../../helpers/ApiClient";
 import {
   LoginUser,
   PatientUser,
@@ -7,10 +7,10 @@ import {
   changePasswordInterface,
 } from "./authSlice";
 
-const BASE_URL = "http://localhost:3001/api/v1/user";
+const URL = "/user";
 
 const login = async (loginData: LoginUser) => {
-  const response = await axios.post(`${BASE_URL}/login`, loginData);
+  const response = await apiClient.post(`${URL}/login`, loginData);
 
   if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
@@ -35,7 +35,7 @@ const signup = async (signupData: PatientUser) => {
   form.append("password", signupData.password);
   form.append("passwordConfirm", signupData.passwordConfirm);
 
-  const response = await axios.post(`${BASE_URL}/signup`, form, {
+  const response = await apiClient.post(`${URL}/signup`, form, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -49,8 +49,8 @@ const logout = () => {
 };
 
 const resetPassword = async (ResetPasswordData: ResetPassword) => {
-  const response = await axios.patch(
-    `${BASE_URL}/reset-password/${ResetPasswordData.token}`,
+  const response = await apiClient.patch(
+    `${URL}/reset-password/${ResetPasswordData.token}`,
     ResetPasswordData
   );
 
@@ -58,13 +58,13 @@ const resetPassword = async (ResetPasswordData: ResetPassword) => {
 };
 
 const verifyEmail = async (verificationToken: string) => {
-  const response = await axios.get(`${BASE_URL}/verify/${verificationToken}`);
+  const response = await apiClient.get(`${URL}/verify/${verificationToken}`);
 
   return response.data;
 };
 
 const updateUser = async (token: string, data: UpdateUserInterface) => {
-  const response = await axios.patch(`${BASE_URL}/update-me`, data, {
+  const response = await apiClient.patch(`${URL}/update-me`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -77,7 +77,7 @@ const deactivateMyAccount = async (
   token: string,
   data: { active: boolean }
 ) => {
-  const response = await axios.patch(`${BASE_URL}/deactivate`, data, {
+  const response = await apiClient.patch(`${URL}/deactivate`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -90,7 +90,7 @@ export async function updatePhoto(token: string, photo: File) {
   const form = new FormData();
   form.append("photo", photo);
 
-  const response = await axios.patch(`${BASE_URL}/update-photo`, form, {
+  const response = await apiClient.patch(`${URL}/update-photo`, form, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
@@ -100,8 +100,8 @@ export async function updatePhoto(token: string, photo: File) {
 }
 
 const firstTimeUsing = async (token: string) => {
-  const response = await axios.patch(
-    `${BASE_URL}/`,
+  const response = await apiClient.patch(
+    `${URL}/`,
     {},
     {
       headers: {
@@ -117,8 +117,8 @@ const changeMyPassword = async (
   token: string,
   changePasswordData: changePasswordInterface
 ) => {
-  const response = await axios.patch(
-    `${BASE_URL}/change-password`,
+  const response = await apiClient.patch(
+    `${URL}/change-password`,
     changePasswordData,
     {
       headers: {

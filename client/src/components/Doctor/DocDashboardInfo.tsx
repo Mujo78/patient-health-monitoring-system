@@ -51,7 +51,7 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
                 <div className="flex flex-wrap items-center gap-3">
                   <CustomImg
                     url={docDash.latest.patient_id?.user_id?.photo}
-                    className="rounded-full mx-auto w-28 xxl:!w-40 h-auto"
+                    className="rounded-full mx-auto w-24 xxl:!w-40 h-auto"
                   />
                   <div className="flex flex-grow flex-col gap-0">
                     <h1 className="lg:!text-lg xl:!text-xl xxl:!text-2xl font-bold">

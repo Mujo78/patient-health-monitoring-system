@@ -95,7 +95,6 @@ export const login = createAsyncThunk(
     try {
       return await authServices.login(loginData);
     } catch (error: any) {
-      console.log(error);
       const message = error.response.data;
 
       return thunkAPI.rejectWithValue(message);
@@ -115,7 +114,6 @@ export const changePassword = createAsyncThunk<
     const safeToken = token || "";
     return await authServices.changeMyPassword(safeToken, data);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -128,7 +126,6 @@ export const signup = createAsyncThunk(
     try {
       return await authServices.signup(signupData);
     } catch (error: any) {
-      console.log(error);
       const message = error.response.data;
 
       return thunkAPI.rejectWithValue(message);
@@ -142,7 +139,6 @@ export const verifyEmailAddress = createAsyncThunk(
     try {
       return await authServices.verifyEmail(verificationToken);
     } catch (error: any) {
-      console.log(error);
       const message = error.response.data;
 
       return thunkAPI.rejectWithValue(message);
@@ -156,7 +152,6 @@ export const resetPassword = createAsyncThunk(
     try {
       return await authServices.resetPassword(ResetPasswordData);
     } catch (error: any) {
-      console.log(error);
       const message = error.response.data;
 
       return thunkAPI.rejectWithValue(message);
@@ -168,7 +163,6 @@ export const logout = createAsyncThunk("/auth/logout", async (_, thunkAPI) => {
   try {
     return authServices.logout();
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -187,7 +181,6 @@ export const updatePicture = createAsyncThunk<
     const safeToken = token || "";
     return authServices.updatePhoto(safeToken, photo);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -206,7 +199,6 @@ export const firstTime = createAsyncThunk<
     const safeToken = token || "";
     return authServices.firstTimeUsing(safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -223,7 +215,6 @@ export const updateUser = createAsyncThunk<
     const response = await authServices.updateUser(token, data);
     return response;
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -239,7 +230,6 @@ export const deactivateAccount = createAsyncThunk<
     const token = thunkAPI.getState().auth.accessUser?.token as string;
     return authServices.deactivateMyAccount(token, data);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);

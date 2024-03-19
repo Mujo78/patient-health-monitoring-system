@@ -1,10 +1,8 @@
-import axios from "axios";
 import moment from "moment";
-
-const BASE_URL = "http://localhost:3001/api/v1/";
+import { apiClient } from "../helpers/ApiClient";
 
 export async function getMe(token: string) {
-  const response = await axios.get(`${BASE_URL}patient/get-me`, {
+  const response = await apiClient.get("/patient/get-me", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,21 +12,17 @@ export async function getMe(token: string) {
 }
 
 export async function updateMe(token: string, data: unknown) {
-  const response = await axios.patch(
-    `${BASE_URL}patient/edit-my-profile`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await apiClient.patch("/patient/edit-my-profile", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response.data;
 }
 
 export async function getDoctorInfo(token: string) {
-  const response = await axios.get(`${BASE_URL}doctor/get-me`, {
+  const response = await apiClient.get("/doctor/get-me", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -38,7 +32,7 @@ export async function getDoctorInfo(token: string) {
 }
 
 export async function updateDoctorInfo(token: string, data: unknown) {
-  const response = await axios.patch(`${BASE_URL}doctor/`, data, {
+  const response = await apiClient.patch("/doctor/", data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

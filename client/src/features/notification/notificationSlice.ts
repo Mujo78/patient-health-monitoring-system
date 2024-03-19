@@ -40,7 +40,6 @@ export const getOneNotification = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.getOneNotification(id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -59,7 +58,6 @@ export const getPersonNotifications = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.getAllNotificationsForPerson(safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -78,7 +76,6 @@ export const deleteAllNotifications = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.deleteAllNotifications(safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -97,7 +94,6 @@ export const deleteOneNotification = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.deleteOneNotification(id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -116,7 +112,6 @@ export const markOneAsRead = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.markOneNotificationAsRead(id, safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);
@@ -135,7 +130,6 @@ export const markAllAsRead = createAsyncThunk<
     const safeToken = token || "";
     return await notificationServices.markAllAsRead(safeToken);
   } catch (error: any) {
-    console.log(error);
     const message = error.response.data;
 
     return thunkAPI.rejectWithValue(message);

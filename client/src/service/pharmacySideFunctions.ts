@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiClient } from "../helpers/ApiClient";
 
 export type PharmacyUpdateType = {
   name: string;
@@ -8,10 +8,10 @@ export type PharmacyUpdateType = {
   working_hours: string;
 };
 
-const BASE_URL = "http://localhost:3001/api/v1/pharmacy/";
+const URL = "/pharmacy/";
 
 export async function getData(token: string) {
-  const response = await axios.get(`${BASE_URL}/get-me`, {
+  const response = await apiClient.get(`${URL}/get-me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -20,7 +20,7 @@ export async function getData(token: string) {
 }
 
 export async function getPharmacy(token: string) {
-  const response = await axios.get(`${BASE_URL}`, {
+  const response = await apiClient.get(URL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -29,7 +29,7 @@ export async function getPharmacy(token: string) {
 }
 
 export async function updateData(data: PharmacyUpdateType, token: string) {
-  const response = await axios.patch(`${BASE_URL}/`, data, {
+  const response = await apiClient.patch(URL, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -67,7 +67,7 @@ export type PharmacyDashboardType = {
 };
 
 export async function pharmacyDashboard(token: string) {
-  const response = await axios.get(`${BASE_URL}/dashboard`, {
+  const response = await apiClient.get(`${URL}dashboard`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -99,7 +99,7 @@ export type PharmacyDashboardInfoType = {
 };
 
 export async function pharmacyDashboardInfo(token: string) {
-  const response = await axios.get(`${BASE_URL}/dashboard-info`, {
+  const response = await apiClient.get(`${URL}dashboard-info`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

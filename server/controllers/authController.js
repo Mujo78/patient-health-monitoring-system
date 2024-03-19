@@ -6,7 +6,6 @@ const User = require("../models/user");
 const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
 const Pharmacy = require("../models/pharmacy");
-const Notification = require("../models/notification");
 const Email = require("../utils/email");
 
 const signToken = (id) => {
@@ -26,6 +25,10 @@ const createToken = async (user, statusCode, res) => {
   user.password = undefined;
 
   const info = await ModelToUse.findOne({ user_id: user._id });
+
+  if (!info) {
+    return res.status(404).json("Incorrect password or email!");
+  }
 
   let inf = {};
 

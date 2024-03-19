@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Medicine, MedicineDataType } from "./medicineSlice";
+import { apiClient } from "../../helpers/ApiClient";
 
-const BASE_URL = "http://localhost:3001/api/v1/medicine/";
+const URL = "/medicine/";
 
 const getAllMedicine = async (
   token: string,
@@ -9,7 +10,7 @@ const getAllMedicine = async (
   search?: string,
   category?: string
 ) => {
-  const response = await axios.get(`${BASE_URL}`, {
+  const response = await apiClient.get(URL, {
     params: { page: page, searchQuery: search, category: category },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -19,7 +20,7 @@ const getAllMedicine = async (
 };
 
 const getMedicine = async (token: string, id: string) => {
-  const response = await axios.get(`${BASE_URL}/${id}`, {
+  const response = await apiClient.get(`${URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,7 +38,7 @@ const addMedicine = async (token: string, data: MedicineDataType) => {
   form.append("price", data.price);
   form.append("photo", data.photo);
 
-  const response = await axios.post(`${BASE_URL}`, data, {
+  const response = await apiClient.post(URL, data, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
@@ -47,7 +48,7 @@ const addMedicine = async (token: string, data: MedicineDataType) => {
 };
 
 const deleteOneMedicine = async (token: string, id: string) => {
-  const response = await axios.delete(`${BASE_URL}/${id}`, {
+  const response = await axios.delete(`${URL}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -66,7 +67,7 @@ const updateMedicine = async (token: string, id: string, data: Medicine) => {
   form.append("price", data.price);
   form.append("photo", data.photo);
 
-  const response = await axios.patch(`${BASE_URL}/${id}`, form, {
+  const response = await apiClient.patch(`${URL}/${id}`, form, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,

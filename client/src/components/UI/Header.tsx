@@ -5,7 +5,7 @@ type Props = {
   size?: string;
   className?: string;
   bold?: boolean;
-  position: "start" | "center" | "end";
+  position?: "start" | "center" | "end";
 };
 
 const Header: React.FC<Props> = ({ position, text, size, className, bold }) => {

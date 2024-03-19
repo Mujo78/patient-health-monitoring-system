@@ -1,5 +1,5 @@
-import axios from "axios";
 import moment from "moment";
+import { apiClient } from "../helpers/ApiClient";
 import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
 import {
@@ -7,8 +7,6 @@ import {
   doctor_id,
   patient_id,
 } from "../features/appointment/appointmentSlice";
-
-const BASE_URL = "http://localhost:3001/api/v1/";
 
 export type MyEvent = {
   id: string;
@@ -18,7 +16,7 @@ export type MyEvent = {
 };
 
 export async function getDoctor(token: string, id: string) {
-  const response = await axios.get(`${BASE_URL}doctor/${id}`, {
+  const response = await apiClient.get(`/doctor/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -36,8 +34,8 @@ export async function getLatestAppointment(
   id: string,
   latestApp: latestApp
 ) {
-  const response = await axios.post(
-    `${BASE_URL}appointment/${id}/patient-latest-record`,
+  const response = await apiClient.post(
+    `/appointment/${id}/patient-latest-record`,
     latestApp,
     {
       headers: {
@@ -86,7 +84,7 @@ export async function getPatientFinishedAppointments(
   id: string,
   page: number
 ) {
-  const response = await axios.get(`${BASE_URL}appointment/patient/${id}`, {
+  const response = await apiClient.get(`/appointment/patient/${id}`, {
     params: { page },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -96,7 +94,7 @@ export async function getPatientFinishedAppointments(
 }
 
 export async function getLatestFinished(token: string) {
-  const response = await axios.get(`${BASE_URL}appointment/`, {
+  const response = await apiClient.get(`/appointment/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -108,14 +106,11 @@ export async function numberOfAppointmentsPerMonthForDepartments(
   token: string,
   month: string
 ) {
-  const response = await axios.get(
-    `${BASE_URL}appointment/per-month/${month}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await apiClient.get(`/appointment/per-month/${month}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
 
@@ -143,14 +138,11 @@ export type DocDashboardInfoType = {
 };
 
 export async function doctorDashboardInfo(token: string) {
-  const response = await axios.get(
-    `${BASE_URL}appointment/doctor-dashboard-info`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await apiClient.get("/appointment/doctor-dashboard-info", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
 
@@ -166,7 +158,7 @@ export type DocDashboardType = {
 };
 
 export async function doctorDashboard(token: string) {
-  const response = await axios.get(`${BASE_URL}appointment/doctor-dashboard`, {
+  const response = await apiClient.get("/appointment/doctor-dashboard", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -179,8 +171,8 @@ export async function getOtherAppsForDay(
   date: Date,
   doctor_id: string
 ) {
-  const response = await axios.post(
-    `${BASE_URL}appointment/others-today`,
+  const response = await apiClient.post(
+    "/appointment/others-today",
     { date, doctor_id },
     {
       headers: {
