@@ -7,7 +7,7 @@ type Props = {
   show: boolean;
   onClose: () => void;
   medicine: Medicine;
-  url: string;
+  url?: string;
 };
 
 const MedicineModal: React.FC<Props> = ({ show, onClose, medicine, url }) => {

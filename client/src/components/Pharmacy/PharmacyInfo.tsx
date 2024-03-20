@@ -42,7 +42,7 @@ const PharmacyInfo = () => {
               url={pharmacy.user_id.photo}
               className="rounded-full w-20 lg:!w-28 xxl:!w-44 h-auto"
             />
-            <div className="flex flex-col text-sm lg:!text-md xl:!text-lg xxl:!text-2xl gap-2">
+            <div className="flex flex-col text-sm lg:!text-md xl:!text-[1rem] xxl:!text-2xl gap-2 xl:!gap-4">
               <p>
                 Name: <span className="text-blue-700"> {pharmacy.name}</span>
               </p>

@@ -369,7 +369,7 @@ const AppointmentOverviewEdit: React.FC = () => {
           ""
         )}
       </Tabs.Group>
-      {medicine && url && (
+      {medicine && (
         <MedicineModal
           show={show}
           medicine={medicine}
