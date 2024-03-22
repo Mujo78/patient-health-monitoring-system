@@ -4,30 +4,29 @@ import {
   HiOutlineIdentification,
   HiOutlineLockClosed,
 } from "react-icons/hi2";
-import { Link } from "react-router-dom";
 import Profile from "../../../components/Layout/Profile";
 import useSelectedPage from "../../../hooks/useSelectedPage";
+import { useSelector } from "react-redux";
+import { authUser } from "../../../features/auth/authSlice";
+import ProfileLink from "../../../components/Profile/ProfileLink";
 
 const PatientProfile: React.FC = () => {
+  const { accessUser } = useSelector(authUser);
   useSelectedPage("Profile");
 
   return (
     <Profile>
-      <Link to="." className="p-2 flex items-center hover:bg-gray-100">
-        <HiOutlineCog6Tooth className="text-[20px]" />
-        <span className="ml-3 text-sm">General</span>
-      </Link>
-      <Link
-        to="personal-info"
-        className="p-2 flex items-center hover:bg-gray-100"
-      >
-        <HiOutlineIdentification className="text-[20px]" />
-        <span className="ml-3 text-sm">Personal information</span>
-      </Link>
-      <Link to="security" className="p-2 flex items-center hover:bg-gray-100">
-        <HiOutlineLockClosed className="text-[20px]" />
-        <span className="ml-3 text-sm">Security</span>
-      </Link>
+      <ProfileLink to={`/profile/p/${accessUser?.data._id}`} text="General">
+        <HiOutlineCog6Tooth className="size-5 xxl:!size-7" />
+      </ProfileLink>
+
+      <ProfileLink to="personal-info" text="Personal informations">
+        <HiOutlineIdentification className="size-5 xxl:!size-7" />
+      </ProfileLink>
+
+      <ProfileLink to="security" text="Security">
+        <HiOutlineLockClosed className="size-5 xxl:!size-7" />
+      </ProfileLink>
     </Profile>
   );
 };

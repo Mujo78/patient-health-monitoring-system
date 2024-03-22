@@ -17,7 +17,7 @@ import {
   HiOutlineEyeSlash,
 } from "react-icons/hi2";
 
-import ForgotPasswordModal from "../../components/ForgotPasswordModal";
+import ForgotPasswordModal from "../../components/Profile/ForgotPasswordModal";
 import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
 import Input from "../../components/UI/Input";

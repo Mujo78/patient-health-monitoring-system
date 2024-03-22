@@ -14,7 +14,7 @@ const Header: React.FC<Props> = ({ position, text, size, className, bold }) => {
       <p
         className={`font-${bold ? "bold" : "semibold"} text-${
           position ?? "center"
-        } text-${size ? size : "2xl"} xxl:text-4xl ${className}`}
+        } text-${size ? size : "2xl"} xxl:!text-4xl ${className}`}
       >
         {text}
       </p>

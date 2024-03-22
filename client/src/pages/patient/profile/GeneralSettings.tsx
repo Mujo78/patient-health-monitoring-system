@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../../components/UI/Header";
 import Footer from "../../../components/UI/Footer";
-import {
-  Button,
-  Label,
-  Modal,
-  Spinner,
-  TextInput,
-  ToggleSwitch,
-} from "flowbite-react";
+import { Button, Label, Modal, TextInput, ToggleSwitch } from "flowbite-react";
 import { useSelector } from "react-redux";
 import {
   updateUser,
@@ -28,6 +21,8 @@ import {
   patientGeneralSettings,
 } from "../../../validations/personValidation";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import FormRow from "../../../components/UI/FormRow";
 
 const GeneralSettings: React.FC = () => {
   const { accessUser, status, message: errorMessage } = useSelector(authUser);
@@ -88,47 +83,55 @@ const GeneralSettings: React.FC = () => {
       >
         <div className="h-full py-5 flex flex-col gap-4">
           {status === "loading" ? (
-            <div className="mx-auto my-auto justify-center items-center">
-              <Spinner />
-            </div>
+            <CustomSpinner />
           ) : (
             <>
-              <div>
+              <>
                 <p className="flex justify-between">
-                  <span className="text-blue-700 font-semibold">Patient</span>
-                  <span className="font-bold">
+                  <span className="text-blue-700 xxl:!text-xl font-semibold">
+                    Patient
+                  </span>
+                  <span className="font-bold xxl:!text-2xl">
                     {accessUser?.info.first_name +
                       " " +
                       accessUser?.info.last_name}
                   </span>
                 </p>
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-xs" htmlFor="email" value="Your email" />
-                <div className="flex flex-col w-3/5">
-                  <TextInput
-                    id="email"
-                    color={errors.email && "failure"}
-                    {...register("email")}
-                    required
-                    type="email"
-                  />
+              </>
 
-                  <ErrorMessage
-                    text={
-                      errors.email?.message
-                        ? errors.email.message
-                        : errorMessage?.includes("email")
-                        ? errorMessageConvert(errorMessage, "email")
-                        : ""
-                    }
-                    className="text-xs mt-1"
-                  />
-                </div>
-              </div>
+              <FormRow className="items-center">
+                <Label
+                  className="text-sm xxl:!text-lg"
+                  htmlFor="email"
+                  value="Your email"
+                />
+                <>
+                  <div className="flex flex-col flex-grow ml-auto xl:!w-11/12">
+                    <TextInput
+                      id="email"
+                      color={errors.email && "failure"}
+                      {...register("email")}
+                      required
+                      type="email"
+                    />
+
+                    <ErrorMessage
+                      text={
+                        errors.email?.message
+                          ? errors.email.message
+                          : errorMessage?.includes("email")
+                          ? errorMessageConvert(errorMessage, "email")
+                          : ""
+                      }
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                </>
+              </FormRow>
+
               <div className="flex items-center mt-3 justify-between">
                 <Label
-                  className="text-xs"
+                  className="text-sm xxl:!text-lg"
                   htmlFor="notification"
                   value="Email notifications"
                 />
@@ -148,7 +151,7 @@ const GeneralSettings: React.FC = () => {
 
               <div className="flex items-center mt-3 justify-between">
                 <Label
-                  className="text-xs"
+                  className="text-sm xxl:!text-lg"
                   htmlFor="deactivate"
                   value="Deactivate my account"
                 />
@@ -158,7 +161,7 @@ const GeneralSettings: React.FC = () => {
                   size="xs"
                   onClick={() => setDeactivate(true)}
                 >
-                  Deactivate
+                  <p className="text-sm xxl:!text-lg">Deactivate</p>
                 </Button>
               </div>
             </>
@@ -168,10 +171,10 @@ const GeneralSettings: React.FC = () => {
           <CustomButton
             size="sm"
             disabled={!isDirty}
-            className="mt-3"
+            className="mt-3 w-full sm:!w-fit"
             type="submit"
           >
-            Save changes
+            <p className="xxl:!text-lg">Save changes</p>
           </CustomButton>
         </Footer>
       </form>
@@ -185,16 +188,15 @@ const GeneralSettings: React.FC = () => {
         <Modal.Body>
           <div className="space-y-6">
             <div>
-              <p className="font-semibold">
+              <p className="font-semibold xxl:!text-xl">
                 Are you sure, you want to deactivate your account?
               </p>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs xxl:!text-lg text-gray-500">
                 By deactivating your account, you need to know:
               </span>
-              <ol className="text-xs list-disc ml-10 text-gray-500">
+              <ol className="text-xs xxl:!text-lg list-disc ml-10 text-gray-500">
                 <li> All of your future appointments will be cancelled</li>
                 <li>
-                  {" "}
                   You can always come back, just by login into your account
                 </li>
               </ol>
@@ -202,11 +204,11 @@ const GeneralSettings: React.FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button color="failure" onClick={handleOperation}>
-            Yes
+          <Button className="ml-auto" color="failure" onClick={handleOperation}>
+            <p className="xxl:!text-lg">Yes</p>
           </Button>
-          <Button color="gray" onClick={closeModal}>
-            Close
+          <Button className="ml-auto" color="gray" onClick={closeModal}>
+            <p className="xxl:!text-lg">Close</p>
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Label, Modal, Tabs, TextInput } from "flowbite-react";
-import CustomButton from "./UI/CustomButton";
+import CustomButton from "../UI/CustomButton";
 import { HiEnvelope } from "react-icons/hi2";
-import { useAppDispatch } from "../app/hooks";
-import forgotPasswordMethod from "../service/authSideFunctions";
-import { reset } from "../features/auth/authSlice";
+import { useAppDispatch } from "../../app/hooks";
+import forgotPasswordMethod from "../../service/authSideFunctions";
+import { reset } from "../../features/auth/authSlice";
 
 type Props = {
   forgotPassword: boolean;
