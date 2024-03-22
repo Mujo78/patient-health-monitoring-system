@@ -4,11 +4,11 @@ import {
   HiOutlineIdentification,
   HiOutlineLockClosed,
 } from "react-icons/hi2";
-import Profile from "../../../components/Layout/Profile";
-import useSelectedPage from "../../../hooks/useSelectedPage";
+import Profile from "../Layout/Profile";
+import useSelectedPage from "../../hooks/useSelectedPage";
 import { useSelector } from "react-redux";
-import { authUser } from "../../../features/auth/authSlice";
-import ProfileLink from "../../../components/Profile/ProfileLink";
+import { authUser } from "../../features/auth/authSlice";
+import ProfileLink from "../Profile/ProfileLink";
 
 const PatientProfile: React.FC = () => {
   const { accessUser } = useSelector(authUser);

@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { getEighteenYearsAgoDate } from "../service/authSideFunctions";
 
 export type patient = {
   blood_type: string;
@@ -12,6 +13,9 @@ export type patient = {
   address: string;
 };
 
+export const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+export const genders = ["Male", "Female", "Other"];
+
 export const personValidationSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required!")
@@ -20,15 +24,20 @@ export const personValidationSchema = Yup.object({
     .required("Last name is required!")
     .min(2, "Last name is too short!"),
   phone_number: Yup.string()
+    .required("Phone number is required!")
     .matches(/^[0-9]+$/, "Phone number must contain only numbers!")
-    .max(12, "Length error! (max 12)")
-    .required("Phone number is required!"),
+    .max(12, "Length error! (max 12)"),
   address: Yup.string().required("Address is required!"),
-  gender: Yup.string().required("Gender is required!"),
-  blood_type: Yup.string().required("Blood type is required!"),
+  gender: Yup.string()
+    .required("Gender is required!")
+    .oneOf(genders, "Invalid gender!"),
+  blood_type: Yup.string()
+    .required("Blood type is required!")
+    .oneOf(bloodTypes, "Invalid blood type!"),
   date_of_birth: Yup.date()
     .typeError("Invalid date!")
-    .required("Date of birth is required!"),
+    .required("Date of birth is required!")
+    .max(getEighteenYearsAgoDate(), "Invalid date"),
   weight: Yup.string().default(""),
   height: Yup.string().default(""),
 });

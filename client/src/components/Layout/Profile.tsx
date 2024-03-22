@@ -87,8 +87,7 @@ const Profile: React.FC<Props> = ({ children }) => {
             <ul>{children}</ul>
             <div>
               <p className="text-sm xxl:!text-lg mt-1">Joined</p>
-              <p className="text-center text-sm xxl:!text-lg">
-                asdsadasd
+              <p className="text-center text-md xxl:!text-xl">
                 {formatDate(accessUser?.data.createdAt as Date)}
               </p>
             </div>

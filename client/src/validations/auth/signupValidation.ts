@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { getEighteenYearsAgoDate } from "../../service/authSideFunctions";
+import { bloodTypes, genders } from "../personValidation";
 
 export const signupValidationSchema = Yup.object({
   first_name: Yup.string()
@@ -14,8 +15,12 @@ export const signupValidationSchema = Yup.object({
     .max(12, "Length error! (max 12)"),
   address: Yup.string().required("Address is required!"),
   photo: Yup.mixed(),
-  gender: Yup.string().required("Gender is required!"),
-  blood_type: Yup.string().required("Blood type is required!"),
+  gender: Yup.string()
+    .required("Gender is required!")
+    .oneOf(genders, "Invalid gender!"),
+  blood_type: Yup.string()
+    .required("Blood type is required!")
+    .oneOf(bloodTypes, "Invalid blood type!"),
   date_of_birth: Yup.date()
     .typeError("Invalid date!")
     .required("Date of birth is required!")

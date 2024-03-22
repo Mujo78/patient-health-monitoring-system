@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/UI/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Spinner } from "flowbite-react";
 import CustomButton from "../components/UI/CustomButton";
 import { useForm } from "react-hook-form";
 import {
@@ -16,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../app/hooks";
 import { toast } from "react-hot-toast";
 import Input from "../components/UI/Input";
+import CustomSpinner from "../components/UI/CustomSpinner";
 
 const Security: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -51,17 +51,15 @@ const Security: React.FC = () => {
     <div className="flex flex-col justify-between h-full">
       <Header text="Security" />
       {status === "loading" ? (
-        <div className="mx-auto my-auto">
-          <Spinner />
-        </div>
+        <CustomSpinner />
       ) : (
-        <div className="flex w-full justify-around h-full items-center">
-          <div className="">
-            <h1 className="font-semibold mb-4 text-3xl text-left">
+        <div className="flex flex-wrap gap-4 w-full justify-around h-full items-center">
+          <div className="flex flex-col flex-grow items-start gap-3 mt-3">
+            <h1 className="font-semibold text-xl xl:!text-3xl text-center lg:!text-left">
               Change password
             </h1>
-            <p className="text-sm mb-1">Password suggestion:</p>
-            <ol className="text-xs list-disc ml-6 text-gray-500">
+            <p className="text-sm xxl:!text-xl mb-1">Password suggestion:</p>
+            <ol className="text-xs xxl:!text-lg list-disc ml-6 text-gray-500">
               <li>At least 6 characters</li>
               <li>At least 1 upper case letter (A-Z)</li>
               <li>At least 1 lower case letter (a-z)</li>
@@ -70,7 +68,7 @@ const Security: React.FC = () => {
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex w-2/5 my-auto flex-col"
+            className="flex flex-grow lg:!justify-start lg:!w-2/4 flex-col xxl:gap-3"
           >
             <div className="relative">
               <Input
@@ -84,12 +82,16 @@ const Security: React.FC = () => {
                 {errors.currentPassword ? (
                   <ErrorMessage
                     text={errors.currentPassword?.message}
-                    className="mt-1"
+                    className="mt-1 xxl:!text-[1rem]"
                     size="xs"
                   />
                 ) : (
                   status === "failed" && (
-                    <ErrorMessage text={message} className="mt-1" size="xs" />
+                    <ErrorMessage
+                      text={message}
+                      className="mt-1 xxl:!text-[1rem]"
+                      size="xs"
+                    />
                   )
                 )}
               </Input>
@@ -105,10 +107,14 @@ const Security: React.FC = () => {
                 error={errors.newPassword}
               >
                 <div
-                  className="absolute right-2 top-12 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
                   onClick={toggleNewPassword}
                 >
-                  {showNewPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
+                  {showNewPassword ? (
+                    <HiOutlineEyeSlash className="xxl:!size-6" />
+                  ) : (
+                    <HiOutlineEye className="xxl:!size-6" />
+                  )}
                 </div>
               </Input>
             </div>
@@ -123,19 +129,19 @@ const Security: React.FC = () => {
                 error={errors.confirmNewPassword}
               >
                 <div
-                  className="absolute right-2 top-12 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
                   onClick={toggleConfirmNewPassword}
                 >
                   {showConfirmNewPassword ? (
-                    <HiOutlineEyeSlash />
+                    <HiOutlineEyeSlash className="xxl:!size-6" />
                   ) : (
-                    <HiOutlineEye />
+                    <HiOutlineEye className="xxl:!size-6" />
                   )}
                 </div>
               </Input>
             </div>
             <CustomButton type="submit" className="mt-3">
-              Save changes
+              <p className="xxl:!text-lg">Save changes</p>
             </CustomButton>
           </form>
         </div>

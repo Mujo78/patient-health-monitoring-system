@@ -329,8 +329,8 @@ export const authSlice = createSlice({
         state.message = action.payload as string;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.status = "idle";
-        if (state.accessUser) {
+        if (state.accessUser && action.payload._id) {
+          state.status = "idle";
           state.accessUser.data = action.payload;
           localStorage.setItem("user", JSON.stringify(state.accessUser));
         }
@@ -339,8 +339,8 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(deactivateAccount.fulfilled, (state, action) => {
-        state.status = "idle";
-        if (state.accessUser) {
+        if (state.accessUser && action.payload._id) {
+          state.status = "idle";
           state.accessUser.data = action.payload;
         }
         localStorage.setItem("user", JSON.stringify(state.accessUser));

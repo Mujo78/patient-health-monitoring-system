@@ -4,6 +4,8 @@ import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useForm } from "react-hook-form";
 import {
+  bloodTypes,
+  genders,
   patient,
   personValidationSchema,
 } from "../../../validations/personValidation";
@@ -39,7 +41,8 @@ const PersonalInformation: React.FC = () => {
           reset(response);
         }
       } catch (err: any) {
-        console.log(err);
+        toast.error("Something went wrong, please try again later!");
+        throw new Error(err);
       }
     };
 
@@ -58,9 +61,6 @@ const PersonalInformation: React.FC = () => {
       try {
         setLoading(true);
         const response = await updateMe(accessUser.token, realData);
-
-        console.log(response);
-
         setMessage("");
 
         if (!response.message) {
@@ -76,8 +76,9 @@ const PersonalInformation: React.FC = () => {
           setMessage(response.message);
         }
       } catch (err: any) {
-        console.log(err);
         setLoading(false);
+        toast.error("Something went wrong, please try again later!");
+        throw new Error(err);
       } finally {
         setLoading(false);
       }
@@ -137,11 +138,17 @@ const PersonalInformation: React.FC = () => {
                     color={errors.gender && "failure"}
                     className="mt-1.5"
                   >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    {genders.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {gender}
+                      </option>
+                    ))}
                   </Select>
-                  <ErrorMessage text={errors.gender?.message} />
+                  <ErrorMessage
+                    text={errors.gender?.message}
+                    size="xs"
+                    className="mt-1 xxl:!text-[1rem]"
+                  />
                 </div>
               </FormRow>
 
@@ -154,6 +161,8 @@ const PersonalInformation: React.FC = () => {
                   color={errors.phone_number && "failure"}
                 >
                   <ErrorMessage
+                    size="xs"
+                    className="mt-1 xxl:!text-[1rem]"
                     text={
                       errors.phone_number?.message
                         ? errors.phone_number.message
@@ -176,16 +185,17 @@ const PersonalInformation: React.FC = () => {
                     color={errors.blood_type && "failure"}
                     className="mt-1.5"
                   >
-                    <option value="A+"> A+ </option>
-                    <option value="A-"> A- </option>
-                    <option value="B+"> B+ </option>
-                    <option value="B-"> B- </option>
-                    <option value="AB+"> AB+ </option>
-                    <option value="AB-"> AB- </option>
-                    <option value="O+"> O+ </option>
-                    <option value="O-"> O- </option>
+                    {bloodTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
                   </Select>
-                  <ErrorMessage text={errors.blood_type?.message} />
+                  <ErrorMessage
+                    text={errors.blood_type?.message}
+                    size="xs"
+                    className="mt-1 xxl:!text-[1rem]"
+                  />
                 </div>
               </FormRow>
 

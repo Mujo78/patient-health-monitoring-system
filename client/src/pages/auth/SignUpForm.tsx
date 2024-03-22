@@ -15,6 +15,7 @@ import { HiOutlineEyeSlash, HiOutlineEye } from "react-icons/hi2";
 import Input from "../../components/UI/Input";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import FormRow from "../../components/UI/FormRow";
+import { bloodTypes, genders } from "../../validations/personValidation";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -135,9 +136,11 @@ const SignUpForm: React.FC = () => {
                     {...register("gender")}
                     color={errors.gender && "failure"}
                   >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    {genders.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {gender}
+                      </option>
+                    ))}
                   </Select>
                   <ErrorMessage text={errors.gender?.message} />
                 </>
@@ -174,14 +177,11 @@ const SignUpForm: React.FC = () => {
                     {...register("blood_type")}
                     color={errors.blood_type && "failure"}
                   >
-                    <option value="A+"> A+ </option>
-                    <option value="A-"> A- </option>
-                    <option value="B+"> B+ </option>
-                    <option value="B-"> B- </option>
-                    <option value="AB+"> AB+ </option>
-                    <option value="AB-"> AB- </option>
-                    <option value="O+"> O+ </option>
-                    <option value="O-"> O- </option>
+                    {bloodTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
                   </Select>
                   <ErrorMessage text={errors.blood_type?.message} />
                 </>

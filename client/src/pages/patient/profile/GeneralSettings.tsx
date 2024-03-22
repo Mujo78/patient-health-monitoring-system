@@ -54,8 +54,13 @@ const GeneralSettings: React.FC = () => {
 
   const onSubmit = (data: patientGeneralSettings) => {
     dispatch(updateUser(data)).then((action) => {
-      if (typeof action.payload === "object") {
+      if (
+        typeof action.payload === "object" &&
+        Object.prototype.hasOwnProperty.call(action.payload, "_id")
+      ) {
         toast.success("Account successfully updated");
+      } else {
+        toast.error("Something went wrong, please try again later!");
       }
     });
   };
@@ -68,11 +73,24 @@ const GeneralSettings: React.FC = () => {
     e.stopPropagation();
     if (deactivate) {
       const data: { active: boolean } = { active: false };
-      dispatch(deactivateAccount(data));
-      setDeactivate(false);
-      dispatch(logout());
+      dispatch(deactivateAccount(data)).then((action) => {
+        if (
+          typeof action?.payload === "object" &&
+          Object.prototype.hasOwnProperty.call(action.payload, "_id")
+        ) {
+          setDeactivate(false);
+          dispatch(logout());
+        } else {
+          toast.error("Something went wrong, please try again later!");
+        }
+      });
     }
   };
+
+  useEffect(() => {
+    if (status === "failed" && !errorMessage)
+      toast.error("Something went wrong, please try again later!");
+  }, [status, errorMessage]);
 
   return (
     <div className="flex flex-col h-full">
@@ -116,6 +134,7 @@ const GeneralSettings: React.FC = () => {
                     />
 
                     <ErrorMessage
+                      size="xs"
                       text={
                         errors.email?.message
                           ? errors.email.message
@@ -123,7 +142,7 @@ const GeneralSettings: React.FC = () => {
                           ? errorMessageConvert(errorMessage, "email")
                           : ""
                       }
-                      className="text-xs mt-1"
+                      className="xxl:!text-[1rem] mt-1"
                     />
                   </div>
                 </>

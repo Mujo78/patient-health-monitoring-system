@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { genders } from "./personValidation";
 
 type optionsType = {
   value: string;
@@ -22,12 +23,14 @@ export const doctorValidationSchema = Yup.object({
   first_name: Yup.string().required("First name is required!"),
   last_name: Yup.string().required("Last name is required!"),
   phone_number: Yup.string()
+    .required("Phone number is required!")
     .matches(/^[0-9]+$/, "Phone number must contain only numbers!")
-    .max(12, "Length error! (max 12)")
-    .required("Phone number is required!"),
+    .max(12, "Length error! (max 12)"),
   speciality: Yup.string().required("Speciality is required!"),
   qualification: Yup.string().required("Qualification is required!"),
-  gender: Yup.string().required("Gender is required!"),
+  gender: Yup.string()
+    .required("Gender is required!")
+    .oneOf(genders, "Invalid gender!"),
   address: Yup.string().required("Address is required!"),
   bio: Yup.string().required("Bio is required!"),
   age: Yup.string()
