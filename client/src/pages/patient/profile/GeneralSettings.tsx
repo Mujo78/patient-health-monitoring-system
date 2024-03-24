@@ -126,6 +126,7 @@ const GeneralSettings: React.FC = () => {
                 <>
                   <div className="flex flex-col flex-grow ml-auto xl:!w-11/12">
                     <TextInput
+                      autoComplete="true"
                       id="email"
                       color={errors.email && "failure"}
                       {...register("email")}
@@ -159,6 +160,7 @@ const GeneralSettings: React.FC = () => {
                   name="notification"
                   render={({ field: { value, onChange } }) => (
                     <ToggleSwitch
+                      id="notification"
                       label=""
                       color="success"
                       checked={value}

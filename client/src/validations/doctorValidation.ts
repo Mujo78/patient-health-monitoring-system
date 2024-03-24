@@ -20,8 +20,12 @@ export type doctorType = {
 };
 
 export const doctorValidationSchema = Yup.object({
-  first_name: Yup.string().required("First name is required!"),
-  last_name: Yup.string().required("Last name is required!"),
+  first_name: Yup.string()
+    .required("First name is required!")
+    .min(3, "First name is too short!"),
+  last_name: Yup.string()
+    .required("Last name is required!")
+    .min(3, "Last name is too short!"),
   phone_number: Yup.string()
     .required("Phone number is required!")
     .matches(/^[0-9]+$/, "Phone number must contain only numbers!")
@@ -32,7 +36,7 @@ export const doctorValidationSchema = Yup.object({
     .required("Gender is required!")
     .oneOf(genders, "Invalid gender!"),
   address: Yup.string().required("Address is required!"),
-  bio: Yup.string().required("Bio is required!"),
+  bio: Yup.string().required("Bio is required!").min(10, "Bio is too short!"),
   age: Yup.string()
     .required("Age is required!")
     .matches(/^[0-9]+$/, "Age must contain only numbers!")

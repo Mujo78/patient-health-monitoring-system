@@ -74,6 +74,7 @@ const SignUpForm: React.FC = () => {
               <FormRow className="md:!flex-row-reverse flex-col-reverse" over>
                 <FormRow className="flex-col">
                   <Input
+                    autoComplete="true"
                     value="First name"
                     error={errors.first_name}
                     id="first_name"
@@ -117,6 +118,7 @@ const SignUpForm: React.FC = () => {
 
               <FormRow over>
                 <Input
+                  autoComplete="true"
                   value="Address"
                   error={errors.address}
                   id="address"
@@ -189,6 +191,7 @@ const SignUpForm: React.FC = () => {
 
               <FormRow over>
                 <Input
+                  autoComplete="true"
                   value="Email"
                   id="email"
                   {...register("email")}

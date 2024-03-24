@@ -162,6 +162,7 @@ const AppointmentResultForm = () => {
                   value="Diagnose"
                 />
                 <Textarea
+                  id="diagnose"
                   {...register("diagnose")}
                   disabled={selected?.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
@@ -177,7 +178,7 @@ const AppointmentResultForm = () => {
                 />
                 <Select
                   options={options}
-                  id="therapy"
+                  inputId="therapy"
                   defaultValue={ifIsFinished}
                   isDisabled={selected?.finished || laterAppointment}
                   className="mt-1 text-xs xxl:!text-lg"
@@ -195,6 +196,7 @@ const AppointmentResultForm = () => {
                   value="Other medicine"
                 />
                 <Textarea
+                  id="other_medicine"
                   {...register("other_medicine")}
                   disabled={selected?.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
@@ -208,6 +210,7 @@ const AppointmentResultForm = () => {
                   value="Description"
                 />
                 <Textarea
+                  id="description"
                   {...register("description")}
                   disabled={selected?.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}

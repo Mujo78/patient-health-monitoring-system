@@ -94,6 +94,7 @@ const AddMedicine: React.FC = () => {
                 </h1>
                 <FormRow over gap={4} className="flex-col md:flex-row">
                   <Input
+                    autoComplete="true"
                     value="Name"
                     id="name"
                     className="mt-1"

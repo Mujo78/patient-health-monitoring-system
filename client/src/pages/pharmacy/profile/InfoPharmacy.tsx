@@ -103,6 +103,7 @@ const InfoPharmacy: React.FC = () => {
             <div className="w-full flex gap-4 items-center">
               <div className="flex-grow">
                 <Input
+                  autoComplete="true"
                   value="Name"
                   id="name"
                   {...register("name")}
@@ -146,6 +147,7 @@ const InfoPharmacy: React.FC = () => {
             <div className="flex justify-between items-center gap-4">
               <div className="flex-grow">
                 <Input
+                  autoComplete="true"
                   value="Address"
                   id="address"
                   {...register("address")}

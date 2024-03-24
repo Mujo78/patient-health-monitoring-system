@@ -21,6 +21,7 @@ import {
   convert12HourTo24Hour,
   isDSTFunc,
   isDoctorAvailable,
+  workTime,
 } from "../../../service/appointmentSideFunctions";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,29 +30,6 @@ import moment from "moment";
 import { Medicine } from "../../../features/medicine/medicineSlice";
 import MedicineModal from "../../../components/Pharmacy/MedicineModal";
 import { authUser } from "../../../features/auth/authSlice";
-
-const workTime = [
-  "9:00",
-  "9:20",
-  "9:40",
-  "10:00",
-  "10:20",
-  "10:40",
-  "11:00",
-  "11:20",
-  "11:40",
-  "12:00",
-  "1:00",
-  "1:20",
-  "1:40",
-  "2:00",
-  "2:20",
-  "2:40",
-  "3:00",
-  "3:20",
-  "3:40",
-  "4:00",
-];
 
 const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate();

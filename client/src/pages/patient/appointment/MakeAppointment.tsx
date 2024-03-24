@@ -8,6 +8,7 @@ import {
   convert12HourTo24Hour,
   getDoctor,
   isDoctorAvailable,
+  workTime,
 } from "../../../service/appointmentSideFunctions";
 import { HiOutlineClock } from "react-icons/hi2";
 import { useAppDispatch } from "../../../app/hooks";
@@ -27,29 +28,6 @@ import { authUser } from "../../../features/auth/authSlice";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import { DoctorType } from "../../../service/departmentSideFunctions";
-
-const workTime = [
-  "9:00",
-  "9:20",
-  "9:40",
-  "10:00",
-  "10:20",
-  "10:40",
-  "11:00",
-  "11:20",
-  "11:40",
-  "12:00",
-  "1:00",
-  "1:20",
-  "1:40",
-  "2:00",
-  "2:20",
-  "2:40",
-  "3:00",
-  "3:20",
-  "3:40",
-  "4:00",
-];
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];

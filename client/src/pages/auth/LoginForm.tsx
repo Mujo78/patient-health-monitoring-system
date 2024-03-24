@@ -95,6 +95,7 @@ const LoginForm: React.FC = () => {
             className="flex mx-auto max-w-sm xxl:!max-w-md flex-col gap-1"
           >
             <Input
+              autoComplete="true"
               value="Email"
               {...register("email")}
               id="email"

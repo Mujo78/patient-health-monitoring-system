@@ -125,6 +125,7 @@ const OneMedicine: React.FC = () => {
             <div className=" flex text-xs gap-3 flex-col w-full justify-center">
               <FormRow>
                 <Input
+                  autoComplete="true"
                   value="Name"
                   id="name"
                   className="mt-1"

@@ -61,6 +61,7 @@ const ForgotPassword: React.FC<Props> = ({
               <div>
                 <Label htmlFor="email" value="Email" className="xxl:!text-lg" />
                 <TextInput
+                  autoComplete="true"
                   id="email"
                   name="email"
                   value={email}

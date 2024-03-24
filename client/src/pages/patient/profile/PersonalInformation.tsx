@@ -99,6 +99,7 @@ const PersonalInformation: React.FC = () => {
             <div className="w-full h-full flex flex-col items-center lg:!justify-start xl:!mt-3 xl:gap-3">
               <FormRow gap={3} className="flex lg:!flex-nowrap">
                 <Input
+                  autoComplete="true"
                   value="First Name"
                   id="first_name"
                   {...register("first_name")}
@@ -118,6 +119,7 @@ const PersonalInformation: React.FC = () => {
               </FormRow>
               <FormRow gap={3} over>
                 <Input
+                  autoComplete="true"
                   value="Address"
                   id="address"
                   {...register("address")}

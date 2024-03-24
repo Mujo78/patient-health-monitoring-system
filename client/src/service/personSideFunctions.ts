@@ -21,6 +21,16 @@ export async function updateMe(token: string, data: unknown) {
   return response.data;
 }
 
+export const availableDaysOptions = [
+  { value: "Monday", label: "Monday" },
+  { value: "Tuesday", label: "Tuesday" },
+  { value: "Wednesday", label: "Wednesday" },
+  { value: "Thursday", label: "Thursday" },
+  { value: "Friday", label: "Friday" },
+  { value: "Saturday", label: "Saturday" },
+  { value: "Sunday", label: "Sunday" },
+];
+
 export async function getDoctorInfo(token: string) {
   const response = await apiClient.get("/doctor/get-me", {
     headers: {

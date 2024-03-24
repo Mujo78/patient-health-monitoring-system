@@ -9,15 +9,11 @@ import {
   doctorValidationSchema,
 } from "../../../validations/doctorValidation";
 import {
+  availableDaysOptions,
   getDoctorInfo,
   updateDoctorInfo,
 } from "../../../service/personSideFunctions";
-import {
-  Label,
-  Spinner,
-  Textarea,
-  Select as CustomSelect,
-} from "flowbite-react";
+import { Label, Textarea, Select as CustomSelect } from "flowbite-react";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
@@ -26,16 +22,9 @@ import { toast } from "react-hot-toast";
 import { useAppDispatch } from "../../../app/hooks";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
 import Input from "../../../components/UI/Input";
-
-const availableDaysOptions = [
-  { value: "Monday", label: "Monday" },
-  { value: "Tuesday", label: "Tuesday" },
-  { value: "Wednesday", label: "Wednesday" },
-  { value: "Thursday", label: "Thursday" },
-  { value: "Friday", label: "Friday" },
-  { value: "Saturday", label: "Saturday" },
-  { value: "Sunday", label: "Sunday" },
-];
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import FormRow from "../../../components/UI/FormRow";
+import { genders } from "../../../validations/personValidation";
 
 type OptionDays = {
   value: string;
@@ -55,6 +44,7 @@ const PersonalInfoDoc: React.FC = () => {
     const fetchData = async () => {
       try {
         if (accessUser) {
+          setLoading(true);
           const response = await getDoctorInfo(accessUser.token);
           const data = {
             ...response,
@@ -64,16 +54,19 @@ const PersonalInfoDoc: React.FC = () => {
             })),
           };
           reset(data);
+          setLoading(false);
         }
       } catch (err: any) {
-        console.log(err);
+        setLoading(false);
+        toast.error("Something went wrong, please try again later!");
+        throw new Error(err);
       }
     };
     fetchData();
   }, [accessUser, reset]);
 
   const onSubmit = async (data: doctorType) => {
-    console.log(data);
+    setMessage("");
     const days = data?.available_days?.map((n) => n.value);
 
     const dataToSend = {
@@ -85,6 +78,7 @@ const PersonalInfoDoc: React.FC = () => {
       try {
         setLoading(true);
         const response = await updateDoctorInfo(accessUser.token, dataToSend);
+
         if (!response.message) {
           const data = {
             ...response,
@@ -100,11 +94,12 @@ const PersonalInfoDoc: React.FC = () => {
           };
           dispatch(setInfoAccessUser(userInfo));
           toast.success("Successfully updated profile.");
+        } else {
+          setMessage(response.message);
         }
-        setMessage(response.message);
       } catch (err: any) {
-        console.log(err);
-        setMessage(err);
+        toast.error("Something went wrong, please try again later!");
+        setMessage(err.message);
         setLoading(false);
       } finally {
         setLoading(false);
@@ -122,43 +117,40 @@ const PersonalInfoDoc: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col h-full">
       <Header text="Personal information" />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full h-full flex-col items-center"
       >
         {loading ? (
-          <div className="mx-auto my-auto">
-            <Spinner />
-          </div>
+          <CustomSpinner />
         ) : (
-          <div className="w-full flex text-xs gap-1 flex-col h-full justify-center">
-            <div className="w-full flex mt-1 gap-4">
-              <div className="flex-grow">
-                <Input
-                  value="First Name"
-                  id="first_name"
-                  className="mt-1"
-                  {...register("first_name")}
-                  type="text"
-                  color={errors.first_name && "failure"}
-                  error={errors.first_name}
-                />
-              </div>
-              <div className="flex-grow">
-                <Input
-                  value="Last Name"
-                  id="last_name"
-                  className="mt-1"
-                  {...register("last_name")}
-                  type="text"
-                  color={errors.last_name && "failure"}
-                  error={errors.last_name}
-                />
-              </div>
-            </div>
-            <div className="flex justify-between gap-4">
+          <div className="w-full flex gap-0.5 flex-col h-full justify-start lg:!justify-start xxl:!gap-2">
+            <FormRow gap={3} className="flex lg:!flex-nowrap">
+              <Input
+                autoComplete="true"
+                value="First Name"
+                id="first_name"
+                className="mt-1"
+                {...register("first_name")}
+                type="text"
+                color={errors.first_name && "failure"}
+                error={errors.first_name}
+              />
+
+              <Input
+                value="Last Name"
+                id="last_name"
+                className="mt-1"
+                {...register("last_name")}
+                type="text"
+                color={errors.last_name && "failure"}
+                error={errors.last_name}
+              />
+            </FormRow>
+
+            <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
               <div className="flex-grow">
                 <Input
                   value="Qualification"
@@ -182,56 +174,6 @@ const PersonalInfoDoc: React.FC = () => {
                 />
               </div>
               <div className="flex-grow">
-                <Label
-                  htmlFor="speciality"
-                  className="text-sm"
-                  value="Gender"
-                />
-                <CustomSelect
-                  id="gender"
-                  {...register("gender")}
-                  color={errors.gender && "failure"}
-                  className="mt-2"
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </CustomSelect>
-                <ErrorMessage
-                  text={errors.gender?.message}
-                  className="text-xs"
-                />
-              </div>
-            </div>
-            <div className="flex justify-between gap-4">
-              <div className="w-2/5">
-                <Input
-                  value="Phone number"
-                  id="phone_number"
-                  className="mt-1"
-                  {...register("phone_number")}
-                  type="text"
-                  color={errors.phone_number && "failure"}
-                >
-                  {errors.phone_number?.message
-                    ? errors.phone_number?.message
-                    : message?.includes("phone_number")
-                    ? errorMessageConvert(message, "phone_number")
-                    : ""}
-                </Input>
-              </div>
-              <div className="w-3/5">
-                <Input
-                  value="Address"
-                  id="address"
-                  className="mt-1"
-                  {...register("address")}
-                  type="text"
-                  color={errors.address && "failure"}
-                  error={errors.address}
-                />
-              </div>
-              <div className="w-2/6">
                 <Input
                   value="Age"
                   id="age"
@@ -243,34 +185,78 @@ const PersonalInfoDoc: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex gap-4 justify-center items-center">
-              <div className="w-full">
+
+            <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
+              <div className="flex-grow">
+                <Input
+                  value="Phone number"
+                  id="phone_number"
+                  className="mt-1"
+                  {...register("phone_number")}
+                  type="text"
+                  color={errors.phone_number && "failure"}
+                >
+                  <ErrorMessage
+                    size="xs"
+                    className="mt-1 xxl:!text-[1rem]"
+                    text={
+                      errors?.phone_number?.message
+                        ? errors?.phone_number?.message
+                        : message?.includes("phone_number")
+                        ? errorMessageConvert(message, "phone_number")
+                        : ""
+                    }
+                  />
+                </Input>
+              </div>
+              <div className="flex-grow">
+                <Input
+                  autoComplete="true"
+                  value="Address"
+                  id="address"
+                  className="mt-1"
+                  {...register("address")}
+                  type="text"
+                  color={errors.address && "failure"}
+                  error={errors.address}
+                />
+              </div>
+              <div className="flex-grow-0">
                 <Label
-                  htmlFor="available_days"
-                  className="text-xs"
-                  value="Available days"
+                  htmlFor="gender"
+                  className="text-sm xxl:!text-lg"
+                  value="Gender"
                 />
-                <Controller
-                  name="available_days"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      options={available_options}
-                      id="available_days"
-                      className="mt-1"
-                      {...field}
-                      isMulti
-                      closeMenuOnSelect={false}
-                    />
-                  )}
-                />
+                <CustomSelect
+                  id="gender"
+                  {...register("gender")}
+                  color={errors.gender && "failure"}
+                  className="mt-1.5"
+                >
+                  {genders.map((gender) => (
+                    <option key={gender} value={gender}>
+                      {gender}
+                    </option>
+                  ))}
+                </CustomSelect>
                 <ErrorMessage
-                  text={errors.available_days?.message}
+                  text={errors.gender?.message}
                   className="text-xs"
                 />
               </div>
-              <div className="w-full">
-                <Label htmlFor="bio" className="text-xs" value="Bio" />
+            </div>
+
+            <FormRow
+              gap={3}
+              className="flex-col lg:!flex-row-reverse"
+              fixed="w-full lg:!w-2/4 mb-1"
+            >
+              <>
+                <Label
+                  htmlFor="bio"
+                  className="text-sm xxl:!text-lg"
+                  value="Bio"
+                />
                 <Textarea
                   id="bio"
                   {...register("bio")}
@@ -279,13 +265,45 @@ const PersonalInfoDoc: React.FC = () => {
                   className="text-xs mt-1"
                 />
                 <ErrorMessage text={errors.bio?.message} className="text-xs" />
-              </div>
-            </div>
+              </>
+              <>
+                <Controller
+                  name="available_days"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Label
+                        htmlFor="available_days"
+                        className="text-sm xxl:!text-lg"
+                        value="Available days"
+                      />
+
+                      <Select
+                        inputId="available_days"
+                        options={available_options}
+                        className="mt-1 text-xs xl:!text-lg"
+                        {...field}
+                        isMulti
+                        closeMenuOnSelect={false}
+                      />
+                    </>
+                  )}
+                />
+                <ErrorMessage
+                  text={errors.available_days?.message}
+                  className="text-xs xxl:!text-[1rem]"
+                />
+              </>
+            </FormRow>
           </div>
         )}
         <Footer variant={1}>
-          <CustomButton type="submit" className="mt-3" disabled={!isDirty}>
-            Save
+          <CustomButton
+            type="submit"
+            className="mt-2 w-full lg:!w-fit"
+            disabled={!isDirty}
+          >
+            <p className="text-md xxl:!text-lg">Save</p>
           </CustomButton>
         </Footer>
       </form>

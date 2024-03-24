@@ -8,6 +8,29 @@ import {
   patient_id,
 } from "../features/appointment/appointmentSlice";
 
+export const workTime = [
+  "9:00",
+  "9:20",
+  "9:40",
+  "10:00",
+  "10:20",
+  "10:40",
+  "11:00",
+  "11:20",
+  "11:40",
+  "12:00",
+  "1:00",
+  "1:20",
+  "1:40",
+  "2:00",
+  "2:20",
+  "2:40",
+  "3:00",
+  "3:20",
+  "3:40",
+  "4:00",
+];
+
 export type MyEvent = {
   id: string;
   start: Date;

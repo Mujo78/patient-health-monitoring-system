@@ -66,7 +66,7 @@ const ForgotPassword: React.FC = () => {
               </p>
               <div>
                 <Label
-                  id="password"
+                  htmlFor="password"
                   value="Password"
                   className="xxl:!text-lg"
                 />
@@ -86,7 +86,7 @@ const ForgotPassword: React.FC = () => {
               </div>
               <div>
                 <Label
-                  id="passwordConfirm"
+                  htmlFor="passwordConfirm"
                   value="Confirm Password"
                   className="xxl:!text-lg"
                 />
