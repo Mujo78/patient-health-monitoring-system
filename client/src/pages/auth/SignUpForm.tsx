@@ -157,7 +157,6 @@ const SignUpForm: React.FC = () => {
                   color={errors.phone_number && "failure"}
                 >
                   <ErrorMessage
-                    className="text-sm xxl:!text-md"
                     text={
                       errors.phone_number?.message
                         ? errors.phone_number.message
@@ -199,7 +198,6 @@ const SignUpForm: React.FC = () => {
                   color={errors.email && "failure"}
                 >
                   <ErrorMessage
-                    className="text-sm xxl:!text-md"
                     text={
                       errors.email?.message
                         ? errors.email.message

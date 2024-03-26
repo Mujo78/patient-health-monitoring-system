@@ -10,13 +10,15 @@ import {
   PharmacyUpdateType,
   pharmacyValidationSchema,
 } from "../../../validations/pharmacyValidation";
-import { Spinner, TextInput, Label, Textarea } from "flowbite-react";
+import { TextInput, Label, Textarea } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useAppDispatch } from "../../../app/hooks";
 import { toast } from "react-hot-toast";
 import Input from "../../../components/UI/Input";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import FormRow from "../../../components/UI/FormRow";
 
 const InfoPharmacy: React.FC = () => {
   const { accessUser } = useSelector(authUser);
@@ -31,6 +33,7 @@ const InfoPharmacy: React.FC = () => {
     const fetchData = async () => {
       try {
         if (accessUser) {
+          setLoading(true);
           const response = await getData(accessUser.token);
           const data = {
             ...response,
@@ -46,9 +49,12 @@ const InfoPharmacy: React.FC = () => {
           };
           delete data.working_hours;
           reset(data);
+          setLoading(false);
         }
       } catch (err: any) {
-        console.log(err);
+        setLoading(false);
+        toast.error("Something went wrong, please try again later!");
+        throw new Error(err);
       }
     };
     fetchData();
@@ -80,8 +86,10 @@ const InfoPharmacy: React.FC = () => {
         toast.success("Successfully updated profile.");
       }
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      toast.error("Something went wrong, please try again later!");
       setLoading(false);
+      throw new Error(error);
     } finally {
       setLoading(false);
     }
@@ -95,28 +103,25 @@ const InfoPharmacy: React.FC = () => {
         className="flex w-full h-full flex-col items-center"
       >
         {loading ? (
-          <div className="mx-auto my-auto">
-            <Spinner />
-          </div>
+          <CustomSpinner />
         ) : (
-          <div className="w-full flex flex-col h-full justify-center">
-            <div className="w-full flex gap-4 items-center">
-              <div className="flex-grow">
-                <Input
-                  autoComplete="true"
-                  value="Name"
-                  id="name"
-                  {...register("name")}
-                  type="text"
-                  className="mt-1"
-                  color={errors.name && "failure"}
-                  error={errors.name}
-                />
-              </div>
-              <div className="flex-grow w-2/6 ml-auto text-xs ">
+          <div className="w-full flex flex-col h-full mt-3 justify-start">
+            <FormRow over gap={4}>
+              <Input
+                autoComplete="true"
+                value="Name"
+                id="name"
+                {...register("name")}
+                type="text"
+                className="mt-1"
+                color={errors.name && "failure"}
+                error={errors.name}
+              />
+
+              <div>
                 <Label
                   htmlFor="from"
-                  className="text-sm"
+                  className="text-sm xxl:!text-lg"
                   value="Working Hours (from - to)"
                 />
                 <div className="flex gap-4 mt-2 items-center">
@@ -137,62 +142,63 @@ const InfoPharmacy: React.FC = () => {
                     type="number"
                     color={errors.to && "failure"}
                   />
-                  <p className="text-[16px]">AM - PM</p>
+                  <p className="text-md">AM - PM</p>
                 </div>
                 <ErrorMessage
                   text={errors.from?.message || errors.to?.message}
                 />
               </div>
-            </div>
-            <div className="flex justify-between items-center gap-4">
-              <div className="flex-grow">
-                <Input
-                  autoComplete="true"
-                  value="Address"
-                  id="address"
-                  {...register("address")}
-                  type="text"
-                  className="mt-1"
-                  color={errors.address && "failure"}
-                  error={errors.address}
-                />
-              </div>
-              <div className="flex-grow">
-                <Input
-                  value="Phone number"
-                  id="phone_number"
-                  {...register("phone_number")}
-                  type="text"
-                  color={errors.phone_number && "failure"}
-                  className="mt-1"
-                  error={errors.phone_number}
-                />
-              </div>
-            </div>
-            <div className="flex-grow">
-              <Label
-                htmlFor="description"
-                className="text-xs"
-                value="Description"
+            </FormRow>
+
+            <FormRow gap={4}>
+              <Input
+                autoComplete="true"
+                value="Address"
+                id="address"
+                {...register("address")}
+                type="text"
+                className="mt-1"
+                color={errors.address && "failure"}
+                error={errors.address}
               />
-              <Textarea
-                id="description"
-                {...register("description")}
-                color={errors.description && "failure"}
-                rows={4}
-                className="text-xs mt-1"
+
+              <Input
+                value="Phone number"
+                id="phone_number"
+                {...register("phone_number")}
+                type="text"
+                color={errors.phone_number && "failure"}
+                className="mt-1"
+                error={errors.phone_number}
               />
-              <ErrorMessage text={errors.description?.message} />
-            </div>
+            </FormRow>
+
+            <FormRow>
+              <div>
+                <Label
+                  htmlFor="description"
+                  className="text-sm xxl:!text-lg"
+                  value="Description"
+                />
+                <Textarea
+                  id="description"
+                  {...register("description")}
+                  color={errors.description && "failure"}
+                  rows={4}
+                  className="text-xs mt-1"
+                />
+                <ErrorMessage text={errors.description?.message} />
+              </div>
+            </FormRow>
           </div>
         )}
-        <Footer variant={1}>
+        <Footer variant={1} className="mt-3 lg:!mt-0">
           <CustomButton
             type="submit"
-            className="mt-3"
+            className="mt-3 w-full lg:!w-fit"
             disabled={loading || !isDirty}
           >
-            Save
+            <p className="xxl:!text-lg">Save</p>
           </CustomButton>
         </Footer>
       </form>

@@ -197,8 +197,6 @@ const PersonalInfoDoc: React.FC = () => {
                   color={errors.phone_number && "failure"}
                 >
                   <ErrorMessage
-                    size="xs"
-                    className="mt-1 xxl:!text-[1rem]"
                     text={
                       errors?.phone_number?.message
                         ? errors?.phone_number?.message
@@ -239,10 +237,7 @@ const PersonalInfoDoc: React.FC = () => {
                     </option>
                   ))}
                 </CustomSelect>
-                <ErrorMessage
-                  text={errors.gender?.message}
-                  className="text-xs"
-                />
+                <ErrorMessage text={errors.gender?.message} />
               </div>
             </div>
 
@@ -264,7 +259,7 @@ const PersonalInfoDoc: React.FC = () => {
                   rows={5}
                   className="text-xs mt-1"
                 />
-                <ErrorMessage text={errors.bio?.message} className="text-xs" />
+                <ErrorMessage text={errors.bio?.message} />
               </>
               <>
                 <Controller
@@ -281,7 +276,7 @@ const PersonalInfoDoc: React.FC = () => {
                       <Select
                         inputId="available_days"
                         options={available_options}
-                        className="mt-1 text-xs xl:!text-lg"
+                        className="mt-1 text-xs xxl:!text-lg"
                         {...field}
                         isMulti
                         closeMenuOnSelect={false}
@@ -289,10 +284,7 @@ const PersonalInfoDoc: React.FC = () => {
                     </>
                   )}
                 />
-                <ErrorMessage
-                  text={errors.available_days?.message}
-                  className="text-xs xxl:!text-[1rem]"
-                />
+                <ErrorMessage text={errors.available_days?.message} />
               </>
             </FormRow>
           </div>

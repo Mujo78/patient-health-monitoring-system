@@ -30,6 +30,7 @@ import { errorMessageConvert } from "../../../service/authSideFunctions";
 import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
+import { categories } from "../../../validations/pharmacyValidation";
 
 const AddMedicine: React.FC = () => {
   const { status, message } = useSelector(medicine);
@@ -136,22 +137,13 @@ const AddMedicine: React.FC = () => {
                       {...register("category")}
                       color={errors.category && "failure"}
                     >
-                      <option value="Pain Relief">Pain Relief</option>
-                      <option value="Antibiotics">Antibiotics</option>
-                      <option value="Antipyretics">Antipyretics</option>
-                      <option value="Antacids">Antacids</option>
-                      <option value="Antihistamines">Antihistamines</option>
-                      <option value="Antidepressants">Antidepressants</option>
-                      <option value="Anticoagulants">Anticoagulants</option>
-                      <option value="Antidiabetics">Antidiabetics</option>
-                      <option value="Antipsychotics">Antipsychotics</option>
-                      <option value="Vaccines">Vaccines</option>
-                      <option value="Other">Other</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
                     </Select>
-                    <ErrorMessage
-                      text={errors.category?.message}
-                      className="xxl:!text-[1rem]"
-                    />
+                    <ErrorMessage text={errors.category?.message} />
                   </>
 
                   <Input
@@ -189,10 +181,7 @@ const AddMedicine: React.FC = () => {
                         />
                       )}
                     />
-                    <ErrorMessage
-                      text={errors.available?.message}
-                      className="xxl:!text-[1rem]"
-                    />
+                    <ErrorMessage text={errors.available?.message} />
                   </div>
                 </FormRow>
 
@@ -286,16 +275,10 @@ const AddMedicine: React.FC = () => {
                     />
                     <div className="h-6 mt-1">
                       {errors.description ? (
-                        <ErrorMessage
-                          text={errors.description?.message}
-                          className="text-xs xxl:!text-[1rem]"
-                        />
+                        <ErrorMessage text={errors.description?.message} />
                       ) : (
                         status === "failed" && (
-                          <ErrorMessage
-                            text={message}
-                            className="text-xs mt-2 xxl:!text-[1rem]"
-                          />
+                          <ErrorMessage text={message} className="mt-2" />
                         )
                       )}
                     </div>

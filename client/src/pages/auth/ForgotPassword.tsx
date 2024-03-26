@@ -10,6 +10,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector } from "react-redux";
+import ErrorMessage from "../../components/UI/ErrorMessage";
 
 type PasswordReset = {
   password: string;
@@ -78,11 +79,7 @@ const ForgotPassword: React.FC = () => {
                   icon={HiLockClosed}
                   type="password"
                 />
-                <div className="h-3">
-                  <p className="text-red-600 text-xs xxl:text-[1rem]">
-                    {errors.password?.message}
-                  </p>
-                </div>
+                <ErrorMessage text={errors.password?.message} />
               </div>
               <div>
                 <Label
@@ -98,11 +95,7 @@ const ForgotPassword: React.FC = () => {
                   icon={HiLockClosed}
                   type="password"
                 />
-                <div className="h-4">
-                  <p className="text-red-600 text-xs">
-                    {errors.passwordConfirm?.message}
-                  </p>
-                </div>
+                <ErrorMessage text={errors.passwordConfirm?.message} />
               </div>
               <CustomButton
                 disabled={status === "loading"}

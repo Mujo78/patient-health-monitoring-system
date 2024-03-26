@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import Input from "../UI/Input";
 import { useQuery } from "../../hooks/useQuery";
 import FormRow from "../UI/FormRow";
+import { categories } from "../../validations/pharmacyValidation";
 
 const OneMedicine: React.FC = () => {
   const query = useQuery();
@@ -161,22 +162,13 @@ const OneMedicine: React.FC = () => {
                     {...register("category")}
                     color={errors.category && "failure"}
                   >
-                    <option value="Pain Relief">Pain Relief</option>
-                    <option value="Antibiotics">Antibiotics</option>
-                    <option value="Antipyretics">Antipyretics</option>
-                    <option value="Antacids">Antacids</option>
-                    <option value="Antihistamines">Antihistamines</option>
-                    <option value="Antidepressants">Antidepressants</option>
-                    <option value="Anticoagulants">Anticoagulants</option>
-                    <option value="Antidiabetics">Antidiabetics</option>
-                    <option value="Antipsychotics">Antipsychotics</option>
-                    <option value="Vaccines">Vaccines</option>
-                    <option value="Other">Other</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
                   </Select>
-                  <ErrorMessage
-                    text={errors.category?.message}
-                    className="text-xs mt-1"
-                  />
+                  <ErrorMessage text={errors.category?.message} />
                 </>
               </FormRow>
               <FormRow>
@@ -259,14 +251,9 @@ const OneMedicine: React.FC = () => {
                   />
                   <div className="h-6 mt-1">
                     {errors.description ? (
-                      <ErrorMessage
-                        text={errors.description?.message}
-                        className="text-xs"
-                      />
+                      <ErrorMessage text={errors.description?.message} />
                     ) : (
-                      status === "failed" && (
-                        <ErrorMessage text={message} className="text-xs" />
-                      )
+                      status === "failed" && <ErrorMessage text={message} />
                     )}
                   </div>
                 </>

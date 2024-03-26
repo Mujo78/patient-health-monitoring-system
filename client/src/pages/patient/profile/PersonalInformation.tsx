@@ -146,11 +146,7 @@ const PersonalInformation: React.FC = () => {
                       </option>
                     ))}
                   </Select>
-                  <ErrorMessage
-                    text={errors.gender?.message}
-                    size="xs"
-                    className="mt-1 xxl:!text-[1rem]"
-                  />
+                  <ErrorMessage text={errors.gender?.message} />
                 </div>
               </FormRow>
 
@@ -163,8 +159,6 @@ const PersonalInformation: React.FC = () => {
                   color={errors.phone_number && "failure"}
                 >
                   <ErrorMessage
-                    size="xs"
-                    className="mt-1 xxl:!text-[1rem]"
                     text={
                       errors.phone_number?.message
                         ? errors.phone_number.message
@@ -193,11 +187,7 @@ const PersonalInformation: React.FC = () => {
                       </option>
                     ))}
                   </Select>
-                  <ErrorMessage
-                    text={errors.blood_type?.message}
-                    size="xs"
-                    className="mt-1 xxl:!text-[1rem]"
-                  />
+                  <ErrorMessage text={errors.blood_type?.message} />
                 </div>
               </FormRow>
 
@@ -243,7 +233,7 @@ const PersonalInformation: React.FC = () => {
               className="mt-3 w-full md:!w-fit"
               disabled={!isDirty}
             >
-              <p className=" xxl:!text-lg">Save</p>
+              <p className="xxl:!text-lg">Save</p>
             </CustomButton>
           </Footer>
         </form>

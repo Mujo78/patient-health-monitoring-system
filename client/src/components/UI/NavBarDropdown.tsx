@@ -1,6 +1,6 @@
 import React from "react";
 import CustomButton from "./CustomButton";
-import { Spinner, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import {
   HiOutlineXCircle,
   HiOutlineUserGroup,
@@ -17,6 +17,7 @@ import moment from "moment";
 import { useAppDispatch } from "../../app/hooks";
 import { authUser } from "../../features/auth/authSlice";
 import { colorPick } from "../../service/authSideFunctions";
+import CustomSpinner from "./CustomSpinner";
 
 type Props = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -74,7 +75,7 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
               {status === "loading" ? (
                 <Table.Row>
                   <Table.Cell>
-                    <Spinner />
+                    <CustomSpinner />
                   </Table.Cell>
                 </Table.Row>
               ) : readed ? (

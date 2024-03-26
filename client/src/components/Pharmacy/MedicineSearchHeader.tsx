@@ -5,6 +5,7 @@ import { useQuery } from "../../hooks/useQuery";
 import { useAppDispatch } from "../../app/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getMedicine } from "../../features/medicine/medicineSlice";
+import { categories } from "../../validations/pharmacyValidation";
 
 const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
   field: {
@@ -98,17 +99,11 @@ const MedicineSearchHeader = () => {
             onChange={(e) => handleChangeCategory(e)}
           >
             <option value="">Category</option>
-            <option value="Pain Relief">Pain Relief</option>
-            <option value="Antibiotics">Antibiotics</option>
-            <option value="Antipyretics">Antipyretics</option>
-            <option value="Antacids">Antacids</option>
-            <option value="Antihistamines">Antihistamines</option>
-            <option value="Antidepressants">Antidepressants</option>
-            <option value="Anticoagulants">Anticoagulants</option>
-            <option value="Antidiabetics">Antidiabetics</option>
-            <option value="Antipsychotics">Antipsychotics</option>
-            <option value="Vaccines">Vaccines</option>
-            <option value="Other">Other</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </Select>
           <span
             onClick={clearSearch}

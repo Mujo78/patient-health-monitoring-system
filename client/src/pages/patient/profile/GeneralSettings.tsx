@@ -135,7 +135,6 @@ const GeneralSettings: React.FC = () => {
                     />
 
                     <ErrorMessage
-                      size="xs"
                       text={
                         errors.email?.message
                           ? errors.email.message
@@ -143,7 +142,6 @@ const GeneralSettings: React.FC = () => {
                           ? errorMessageConvert(errorMessage, "email")
                           : ""
                       }
-                      className="xxl:!text-[1rem] mt-1"
                     />
                   </div>
                 </>

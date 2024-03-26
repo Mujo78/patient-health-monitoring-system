@@ -80,19 +80,9 @@ const Security: React.FC = () => {
                 type="password"
               >
                 {errors.currentPassword ? (
-                  <ErrorMessage
-                    text={errors.currentPassword?.message}
-                    className="mt-1 xxl:!text-[1rem]"
-                    size="xs"
-                  />
+                  <ErrorMessage text={errors.currentPassword?.message} />
                 ) : (
-                  status === "failed" && (
-                    <ErrorMessage
-                      text={message}
-                      className="mt-1 xxl:!text-[1rem]"
-                      size="xs"
-                    />
-                  )
+                  status === "failed" && <ErrorMessage text={message} />
                 )}
               </Input>
             </div>
