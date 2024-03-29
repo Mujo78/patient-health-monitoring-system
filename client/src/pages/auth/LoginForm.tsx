@@ -21,6 +21,7 @@ import ForgotPasswordModal from "../../components/Profile/ForgotPasswordModal";
 import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
 import Input from "../../components/UI/Input";
+import Header from "../../components/UI/Header";
 
 type User = {
   email: string;
@@ -52,12 +53,13 @@ const LoginForm: React.FC = () => {
       navigate("/");
     }
   }, [accessUser, dispatch, status, route, navigate]);
+
   const onSubmit = (data: User) => {
     dispatch(login(data));
   };
 
   const forgotPasswordShow = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     event.preventDefault();
     setForgotPassword(true);
@@ -74,8 +76,8 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="h-fit lg:!h-screen flex items-center w-full flex-col">
-      <div className="flex items-start justify-center lg:!mr-auto lg:!justify-start">
+    <div className="flex h-fit w-full flex-col items-center lg:!h-screen">
+      <div className="flex items-start justify-center lg:!mr-auto">
         <Logo />
       </div>
       <div className="my-auto">
@@ -86,17 +88,15 @@ const LoginForm: React.FC = () => {
           />
         )}
         <div>
-          <h1 className="text-3xl text-center lg:!text-5xl mb-5 flex justify-center font-bold">
-            Log in to Your Account
-          </h1>
+          <Header text="Log in to You Account" bold size={3} normal />
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex mx-auto max-w-sm xxl:!max-w-md flex-col gap-1"
+            className="mx-auto mt-5 flex max-w-sm flex-col gap-1 xxl:!max-w-md"
           >
             <Input
               autoComplete="true"
-              value="Email"
+              label="Email"
               {...register("email")}
               id="email"
               disabled={status === "loading"}
@@ -109,7 +109,7 @@ const LoginForm: React.FC = () => {
 
             <div className="relative">
               <Input
-                value="Password"
+                label="Password"
                 {...register("password")}
                 color={errors.password && "failure"}
                 id="password"
@@ -117,7 +117,7 @@ const LoginForm: React.FC = () => {
                 icon={HiLockClosed}
                 type={showPassword ? "text" : "password"}
               >
-                <div className="flex justify-between text-xs xxl:!text-md">
+                <div className="xxl:!text-md text-xs">
                   {errors.password ? (
                     <p className="text-red-600">{errors.password.message}</p>
                   ) : message ? (
@@ -128,27 +128,27 @@ const LoginForm: React.FC = () => {
                 </div>
               </Input>
               <div
-                className="absolute right-2 bottom-50 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                className="bottom-50 absolute right-2 top-12 -translate-y-1/2 transform cursor-pointer xxl:!top-14"
                 onClick={togglePassword}
               >
-                {showPassword ? <HiOutlineEyeSlash /> : <HiOutlineEye />}
+                {showPassword ? (
+                  <HiOutlineEyeSlash className="xxl:!size-6" />
+                ) : (
+                  <HiOutlineEye className="xxl:!size-6" />
+                )}
               </div>
             </div>
             <button
               type="button"
-              className="text-xs xxl:!text-md ml-auto underline mb-2 p-0 !bg-white text-black cursor-pointer"
+              className="xxl:!text-md mb-2 ml-auto cursor-pointer !bg-white p-0 text-xs text-black underline"
               disabled={status === "loading"}
               onClick={(event) => forgotPasswordShow(event)}
             >
               Forgot password?
             </button>
 
-            <CustomButton
-              disabled={status === "loading"}
-              className="bg-blue-700 hover:!bg-blue-600  transition-colors duration-300"
-              type="submit"
-            >
-              <p className="xxl:!text-xl">Log in</p>
+            <CustomButton disabled={status === "loading"} type="submit">
+              <p className="xxl:!text-lg">Log in</p>
             </CustomButton>
           </form>
         </div>

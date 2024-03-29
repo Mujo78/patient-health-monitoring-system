@@ -4,7 +4,6 @@ import { useAppDispatch } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { restartNotifications } from "../../features/notification/notificationSlice";
 import { logout, reset, setSelected } from "../../features/auth/authSlice";
-reset;
 
 const LogoutButton = () => {
   const dispatch = useAppDispatch();

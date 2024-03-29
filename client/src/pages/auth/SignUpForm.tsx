@@ -16,6 +16,8 @@ import Input from "../../components/UI/Input";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import FormRow from "../../components/UI/FormRow";
 import { bloodTypes, genders } from "../../validations/personValidation";
+import Header from "../../components/UI/Header";
+import toast from "react-hot-toast";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -49,33 +51,39 @@ const SignUpForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (status === "idle") reset();
-  }, [status, reset]);
+    if (status === "idle") {
+      reset();
+    } else if (status === "failed" && !message.includes("validation")) {
+      toast.error("Something went wrong, please try again later!");
+    }
+  }, [status, reset, message]);
 
   return (
-    <div className="flex flex-col-reverse w-full md:!flex-row-reverse ">
-      <div className="mt-auto md:!h-screen md:!ml-auto md:!mx-0 mx-auto">
+    <div className="flex w-full flex-col-reverse md:!flex-row-reverse ">
+      <div className="mx-auto md:!mx-0 md:!ml-auto md:!h-screen">
         <Logo />
       </div>
 
-      <div className="w-full md:!my-auto md:!w-3/4 h-full ml-auto flex justify-center items-center flex-col">
+      <div className="ml-auto flex h-full w-full flex-col items-center justify-center md:!my-auto md:!w-3/4">
         {status === "loading" ? (
           <CustomSpinner size="lg" />
         ) : (
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full justify-center flex-col gap-2 xxl:!gap-5 items-center"
+            className="flex w-full flex-col items-center justify-center gap-2 xxl:!gap-5"
           >
-            <h1 className="text-3xl xxl:!text-5xl text-center flex justify-center font-bold">
-              Create a new account
-            </h1>
-            <div className="w-full xl:!w-5/6 flex flex-col gap-1 xxl:!gap-5 md:!gap-0 items-center justify-center">
-              <FormRow className="md:!flex-row-reverse flex-col-reverse" over>
+            <Header text="Create a new account" bold size={3} />
+
+            <div className="flex w-full flex-col items-center justify-center gap-1 md:!gap-0 xl:!w-5/6 xxl:!gap-5">
+              <FormRow
+                className="flex-col-reverse gap-6 md:!flex-row-reverse"
+                over
+              >
                 <FormRow className="flex-col">
                   <Input
                     autoComplete="true"
-                    value="First name"
+                    label="First name"
                     error={errors.first_name}
                     id="first_name"
                     {...register("first_name")}
@@ -84,7 +92,7 @@ const SignUpForm: React.FC = () => {
                   />
 
                   <Input
-                    value="Last Name"
+                    label="Last Name"
                     error={errors.last_name}
                     id="last_name"
                     {...register("last_name")}
@@ -92,16 +100,16 @@ const SignUpForm: React.FC = () => {
                     color={errors.last_name && "failure"}
                   />
                 </FormRow>
-                <div className="border flex justify-center mx-auto relative rounded-lg">
+                <div className="relative mx-auto flex justify-center rounded-lg border">
                   <img
                     src={photo?.length > 0 ? Image : img}
-                    className="rounded-lg w-44 xxl:!w-56 h-auto"
+                    className="h-auto w-44 rounded-lg xxl:!w-56"
                     alt="Profile picture"
                   />
-                  <div className="absolute bottom-4 right-2 w-5 h-2 text-xl font-bold text-white ">
+                  <div className="absolute bottom-4 right-2 h-2 w-5 text-xl font-bold text-white ">
                     <label
                       htmlFor="inputFile"
-                      className=" bg-blue-700 px-2 rounded-3xl border-2  cursor-pointer border-blue-700"
+                      className=" cursor-pointer rounded-3xl border-2 border-blue-700  bg-blue-700 px-2"
                     >
                       +
                     </label>
@@ -119,7 +127,7 @@ const SignUpForm: React.FC = () => {
               <FormRow over>
                 <Input
                   autoComplete="true"
-                  value="Address"
+                  label="Address"
                   error={errors.address}
                   id="address"
                   {...register("address")}
@@ -150,7 +158,7 @@ const SignUpForm: React.FC = () => {
 
               <FormRow over>
                 <Input
-                  value={"Phone number"}
+                  label="Phone number"
                   id="phone_number"
                   {...register("phone_number")}
                   type="text"
@@ -161,8 +169,8 @@ const SignUpForm: React.FC = () => {
                       errors.phone_number?.message
                         ? errors.phone_number.message
                         : message?.includes("phone_number:")
-                        ? errorMessageConvert(message, "phone_number")
-                        : ""
+                          ? errorMessageConvert(message, "phone_number")
+                          : ""
                     }
                   />
                 </Input>
@@ -191,7 +199,7 @@ const SignUpForm: React.FC = () => {
               <FormRow over>
                 <Input
                   autoComplete="true"
-                  value="Email"
+                  label="Email"
                   id="email"
                   {...register("email")}
                   type="text"
@@ -202,14 +210,14 @@ const SignUpForm: React.FC = () => {
                       errors.email?.message
                         ? errors.email.message
                         : message.includes("email:")
-                        ? errorMessageConvert(message, "email")
-                        : ""
+                          ? errorMessageConvert(message, "email")
+                          : ""
                     }
                   />
                 </Input>
 
                 <Input
-                  value="Birth Date"
+                  label="Birth Date"
                   type="date"
                   id="date_of_birth"
                   {...register("date_of_birth")}
@@ -221,7 +229,7 @@ const SignUpForm: React.FC = () => {
               <FormRow>
                 <div className="relative">
                   <Input
-                    value="Password"
+                    label="Password"
                     {...register("password")}
                     id="password"
                     className="relative"
@@ -230,13 +238,13 @@ const SignUpForm: React.FC = () => {
                     error={errors.password}
                   >
                     <div
-                      className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                      className="absolute right-2 top-12 -translate-y-1/2 transform cursor-pointer xxl:!top-14"
                       onClick={togglePassword}
                     >
                       {showNewPassword ? (
-                        <HiOutlineEyeSlash className="xxl:w-6 xxl:h-6" />
+                        <HiOutlineEyeSlash className="xxl:h-6 xxl:w-6" />
                       ) : (
-                        <HiOutlineEye className="xxl:w-6 xxl:h-6" />
+                        <HiOutlineEye className="xxl:h-6 xxl:w-6" />
                       )}
                     </div>
                   </Input>
@@ -245,7 +253,7 @@ const SignUpForm: React.FC = () => {
 
               <FormRow>
                 <Input
-                  value="Confirm password"
+                  label="Confirm password"
                   id="passwordConfirm"
                   type="password"
                   {...register("passwordConfirm")}
@@ -254,9 +262,9 @@ const SignUpForm: React.FC = () => {
                 />
               </FormRow>
 
-              <div className="flex justify-between w-full gap-2 pb-6 md:!pb-0 flex-wrap md:!flex-nowrap">
+              <div className="flex w-full flex-wrap justify-between gap-2 pb-6 md:!flex-nowrap md:!pb-0">
                 {status === "idle" && (
-                  <Alert className="flex xxl:!text-lg items-center w-fit justify-center h-10 text-center">
+                  <Alert className="flex h-10 w-fit items-center justify-center xxl:!text-lg">
                     <strong>Action Required:</strong> Please verify your email
                     address.
                   </Alert>
@@ -265,7 +273,7 @@ const SignUpForm: React.FC = () => {
                   className="w-full md:!ml-auto md:!w-1/3 lg:!w-fit"
                   type="submit"
                 >
-                  <p className="xxl:text-xl">Sign up</p>
+                  <p className="xxl:text-lg">Sign up</p>
                 </CustomButton>
               </div>
             </div>

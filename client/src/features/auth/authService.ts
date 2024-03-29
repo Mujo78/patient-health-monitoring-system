@@ -51,7 +51,7 @@ const logout = () => {
 const resetPassword = async (ResetPasswordData: ResetPassword) => {
   const response = await apiClient.patch(
     `${URL}/reset-password/${ResetPasswordData.token}`,
-    ResetPasswordData
+    ResetPasswordData,
   );
 
   return response.data;
@@ -75,7 +75,7 @@ const updateUser = async (token: string, data: UpdateUserInterface) => {
 
 const deactivateMyAccount = async (
   token: string,
-  data: { active: boolean }
+  data: { active: boolean },
 ) => {
   const response = await apiClient.patch(`${URL}/deactivate`, data, {
     headers: {
@@ -107,7 +107,7 @@ const firstTimeUsing = async (token: string) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;
@@ -115,7 +115,7 @@ const firstTimeUsing = async (token: string) => {
 
 const changeMyPassword = async (
   token: string,
-  changePasswordData: changePasswordInterface
+  changePasswordData: changePasswordInterface,
 ) => {
   const response = await apiClient.patch(
     `${URL}/change-password`,
@@ -124,7 +124,7 @@ const changeMyPassword = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return response.data;

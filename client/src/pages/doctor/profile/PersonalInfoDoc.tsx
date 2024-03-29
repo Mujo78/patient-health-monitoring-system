@@ -130,7 +130,7 @@ const PersonalInfoDoc: React.FC = () => {
             <FormRow gap={3} className="flex lg:!flex-nowrap">
               <Input
                 autoComplete="true"
-                value="First Name"
+                label="First Name"
                 id="first_name"
                 className="mt-1"
                 {...register("first_name")}
@@ -140,7 +140,7 @@ const PersonalInfoDoc: React.FC = () => {
               />
 
               <Input
-                value="Last Name"
+                label="Last Name"
                 id="last_name"
                 className="mt-1"
                 {...register("last_name")}
@@ -153,7 +153,7 @@ const PersonalInfoDoc: React.FC = () => {
             <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
               <div className="flex-grow">
                 <Input
-                  value="Qualification"
+                  label="Qualification"
                   id="qualification"
                   className="mt-1"
                   {...register("qualification")}
@@ -164,7 +164,7 @@ const PersonalInfoDoc: React.FC = () => {
               </div>
               <div className="flex-grow">
                 <Input
-                  value="Speciality"
+                  label="Speciality"
                   id="speciality"
                   className="mt-1"
                   {...register("speciality")}
@@ -175,7 +175,7 @@ const PersonalInfoDoc: React.FC = () => {
               </div>
               <div className="flex-grow">
                 <Input
-                  value="Age"
+                  label="Age"
                   id="age"
                   className="mt-1"
                   {...register("age")}
@@ -189,7 +189,7 @@ const PersonalInfoDoc: React.FC = () => {
             <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
               <div className="flex-grow">
                 <Input
-                  value="Phone number"
+                  label="Phone number"
                   id="phone_number"
                   className="mt-1"
                   {...register("phone_number")}
@@ -210,7 +210,7 @@ const PersonalInfoDoc: React.FC = () => {
               <div className="flex-grow">
                 <Input
                   autoComplete="true"
-                  value="Address"
+                  label="Address"
                   id="address"
                   className="mt-1"
                   {...register("address")}

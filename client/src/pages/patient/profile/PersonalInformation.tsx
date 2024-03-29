@@ -100,7 +100,7 @@ const PersonalInformation: React.FC = () => {
               <FormRow gap={3} className="flex lg:!flex-nowrap">
                 <Input
                   autoComplete="true"
-                  value="First Name"
+                  label="First Name"
                   id="first_name"
                   {...register("first_name")}
                   type="text"
@@ -109,7 +109,7 @@ const PersonalInformation: React.FC = () => {
                 />
 
                 <Input
-                  value="Last Name"
+                  label="Last Name"
                   id="last_name"
                   {...register("last_name")}
                   type="text"
@@ -120,7 +120,7 @@ const PersonalInformation: React.FC = () => {
               <FormRow gap={3} over>
                 <Input
                   autoComplete="true"
-                  value="Address"
+                  label="Address"
                   id="address"
                   {...register("address")}
                   type="text"
@@ -152,7 +152,7 @@ const PersonalInformation: React.FC = () => {
 
               <FormRow gap={3} over>
                 <Input
-                  value="Phone number"
+                  label="Phone number"
                   id="phone_number"
                   {...register("phone_number")}
                   type="text"
@@ -194,7 +194,7 @@ const PersonalInformation: React.FC = () => {
               <div className="flex justify-between w-full flex-col xl:!flex-row xl:!gap-3">
                 <div className="flex-grow">
                   <Input
-                    value="Birth Date"
+                    label="Birth Date"
                     type="date"
                     id="date_of_birth"
                     {...register("date_of_birth")}
@@ -205,7 +205,7 @@ const PersonalInformation: React.FC = () => {
                 <div className="flex gap-3 flex-grow xl:!flex-grow-0 justify-between flex-wrap lg:!flex-nowrap">
                   <div className="flex-grow">
                     <Input
-                      value="Weight (kg)"
+                      label="Weight (kg)"
                       type="number"
                       id="weight"
                       {...register("weight")}
@@ -215,7 +215,7 @@ const PersonalInformation: React.FC = () => {
                   </div>
                   <div className="flex-grow">
                     <Input
-                      value="Height (cm)"
+                      label="Height (cm)"
                       type="number"
                       id="height"
                       {...register("height")}

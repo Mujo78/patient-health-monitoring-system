@@ -109,7 +109,7 @@ const InfoPharmacy: React.FC = () => {
             <FormRow over gap={4}>
               <Input
                 autoComplete="true"
-                value="Name"
+                label="Name"
                 id="name"
                 {...register("name")}
                 type="text"
@@ -153,7 +153,7 @@ const InfoPharmacy: React.FC = () => {
             <FormRow gap={4}>
               <Input
                 autoComplete="true"
-                value="Address"
+                label="Address"
                 id="address"
                 {...register("address")}
                 type="text"
@@ -163,7 +163,7 @@ const InfoPharmacy: React.FC = () => {
               />
 
               <Input
-                value="Phone number"
+                label="Phone number"
                 id="phone_number"
                 {...register("phone_number")}
                 type="text"

@@ -96,7 +96,7 @@ const AddMedicine: React.FC = () => {
                 <FormRow over gap={4} className="flex-col md:flex-row">
                   <Input
                     autoComplete="true"
-                    value="Name"
+                    label="Name"
                     id="name"
                     className="mt-1"
                     {...register("name")}
@@ -113,7 +113,7 @@ const AddMedicine: React.FC = () => {
                   </Input>
 
                   <Input
-                    value="Strength (mg)"
+                    label="Strength (mg)"
                     id="strength"
                     className="mt-1"
                     {...register("strength")}
@@ -147,7 +147,7 @@ const AddMedicine: React.FC = () => {
                   </>
 
                   <Input
-                    value="Price (BAM)"
+                    label="Price (BAM)"
                     id="price"
                     className="bg-black"
                     {...register("price")}
@@ -159,7 +159,7 @@ const AddMedicine: React.FC = () => {
 
                 <FormRow className="lg:!items-center flex-col lg:flex-row w-full">
                   <Input
-                    value="Manufacturer"
+                    label="Manufacturer"
                     id="manufacturer"
                     className="mt-1"
                     {...register("manufacturer")}

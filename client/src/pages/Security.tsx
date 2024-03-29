@@ -72,7 +72,7 @@ const Security: React.FC = () => {
           >
             <div className="relative">
               <Input
-                value="Current Password"
+                label="Current Password"
                 id="currentPassword"
                 required
                 color={errors.currentPassword && "failure"}
@@ -88,7 +88,7 @@ const Security: React.FC = () => {
             </div>
             <div className="relative">
               <Input
-                value="New password"
+                label="New password"
                 id="newPassword"
                 required
                 color={errors.newPassword && "failure"}
@@ -110,7 +110,7 @@ const Security: React.FC = () => {
             </div>
             <div className="relative">
               <Input
-                value="Confirm New Password"
+                label="Confirm New Password"
                 id="confirmNewPassword"
                 required
                 color={errors.confirmNewPassword && "failure"}

@@ -10,6 +10,7 @@ import {
 } from "../../features/auth/authSlice";
 import Logo from "../../components/UI/Logo";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import Header from "../../components/UI/Header";
 
 const VerificationPage: React.FC = () => {
   const { verificationToken } = useParams();
@@ -33,14 +34,14 @@ const VerificationPage: React.FC = () => {
 
   return (
     <div>
-      <div className="flex h-screen font-Poppins gap-4 flex-col justify-center items-center">
+      <div className="flex h-screen flex-col items-center justify-center gap-4 text-center font-Poppins">
         <Logo />
-        <h1 className="text-3xl font-bold">Email verification</h1>
-        <p className="text-center xxl:text-xl">
+        <Header text="Email verification" size={3} bold />
+        <p className="xxl:text-xl">
           Please click the button below to verify your email address!
         </p>
         <CustomButton onClick={verifyMyEmail}>
-          <p className="xxl:text-xl">Verify Email</p>
+          <p className="xxl:text-lg">Verify Email</p>
         </CustomButton>
       </div>
     </div>

@@ -6,6 +6,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import { useAppDispatch } from "../../app/hooks";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import { HiOutlineCheckCircle, HiOutlineXCircle } from "react-icons/hi2";
+import Header from "../../components/UI/Header";
 
 const VerificationPageRes: React.FC = () => {
   const navigate = useNavigate();
@@ -20,32 +21,42 @@ const VerificationPageRes: React.FC = () => {
   if (status === "loading") return <CustomSpinner fromTop={12} size="lg" />;
 
   return (
-    <div className="flex flex-col justify-center gap-4 h-screen items-center">
+    <div className="flex h-screen flex-col items-center justify-center gap-4">
       {status === "idle" ? (
-        <div className="flex justify-center gap-4 items-center flex-col">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
           <HiOutlineCheckCircle
             color="green"
-            className="w-28 xxl:w-56 h-auto"
+            className="h-auto w-28 xxl:w-56"
           />
-          <h1 className="text-xl xxl:!text-3xl text-center font-bold">
-            You have successfully verified your email address!
-          </h1>
+          <Header
+            bold
+            size={1}
+            text="You have successfully verified your email address!"
+          />
         </div>
       ) : (
         status === "failed" && (
-          <div className="flex justify-center text-center gap-4 items-center flex-col">
-            <HiOutlineXCircle color="red" className="w-28 xxl:!w-56 h-auto" />
-            <h1 className="text-xl xxl:!text-3xl text-red-600 font-bold">
-              {message}
-            </h1>
-            <p className="text-md xxl:text-2xl text-red-600">
+          <div className="flex flex-col items-center justify-center gap-4 text-center">
+            <HiOutlineXCircle color="red" className="h-auto w-28 xxl:!w-56" />
+            <Header
+              text={
+                message.includes("/api/")
+                  ? "Something went wrong, please try again later!"
+                  : message
+              }
+              bold
+              size={1}
+              className="!text-red-600"
+            />
+
+            <p className="text-md text-red-600 xxl:text-2xl">
               Please try again later!
             </p>
           </div>
         )
       )}
       <CustomButton onClick={goToLogin}>
-        <p className="xxl:!text-2xl">{status === "idle" ? "Login" : "Home"}</p>
+        <p className="xxl:!text-lg">{status === "idle" ? "Login" : "Home"}</p>
       </CustomButton>
     </div>
   );

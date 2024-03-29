@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Button, Label, Modal, Tabs, TextInput } from "flowbite-react";
+import React, { useState } from "react";
+import { Button, Modal, Tabs } from "flowbite-react";
 import CustomButton from "../UI/CustomButton";
 import { HiEnvelope } from "react-icons/hi2";
 import { useAppDispatch } from "../../app/hooks";
 import forgotPasswordMethod from "../../service/authSideFunctions";
 import { reset } from "../../features/auth/authSlice";
+import { forgotPasswordSchema } from "../../validations/auth/loginValidation";
+import ErrorMessage from "../UI/ErrorMessage";
+import Input from "../UI/Input";
 
 type Props = {
   forgotPassword: boolean;
@@ -18,29 +21,48 @@ const ForgotPassword: React.FC<Props> = ({
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>("");
   const [response, setResponse] = useState<string>("");
-
-  useEffect(() => {
-    if (response.startsWith("Token")) {
-      setEmail("");
-    }
-  }, [response]);
+  const [errors, setErrors] = useState<string>("");
 
   const onClose = () => {
     dispatch(reset());
     setForgotPassword(false);
   };
 
-  const handleClick = async (event: React.FormEvent) => {
+  const validateForm = async () => {
+    try {
+      await forgotPasswordSchema.validate({ email }, { abortEarly: false });
+      return true;
+    } catch (error: any) {
+      const errors = error.message;
+      setErrors(errors);
+      return false;
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (email !== "") {
-      const res = await forgotPasswordMethod(email);
-      setResponse(res);
+    setErrors("");
+    const isValid = await validateForm();
+
+    if (isValid) {
+      try {
+        const res = await forgotPasswordMethod(email);
+        setResponse(res);
+        setEmail("");
+      } catch (error: any) {
+        const res = error.response.data;
+        console.log(error);
+        setResponse(
+          res.includes("/api/v1/")
+            ? "Something went wrong, please try again later"
+            : res,
+        );
+      }
     }
   };
 
   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-
     setEmail(value);
   };
 
@@ -51,41 +73,36 @@ const ForgotPassword: React.FC<Props> = ({
         <Tabs.Group>
           <Tabs.Item active title="Email verification">
             <form
-              onSubmit={handleClick}
-              className="flex flex-col sm:px-20 gap-6"
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-6 sm:px-20"
             >
               <p className="text-sm xxl:!text-xl">
                 Enter the email address associated with your account and we'll
                 send you a link to reset your password.
               </p>
               <div>
-                <Label htmlFor="email" value="Email" className="xxl:!text-lg" />
-                <TextInput
+                <Input
                   autoComplete="true"
-                  id="email"
-                  name="email"
+                  label="Email"
                   value={email}
                   onChange={onChange}
                   icon={HiEnvelope}
+                  name="email"
+                  id="email"
                   placeholder="name@example.com"
-                  type="email"
-                />
-                <div className="h-3">
-                  {response !== "" && (
-                    <p
-                      className={`${
-                        response.startsWith("Token")
-                          ? "text-green-600"
-                          : "text-red-600"
-                      } text-xs xxl:!text-[1rem] mt-1`}
-                    >
-                      {response}
-                    </p>
-                  )}
-                </div>
+                >
+                  <ErrorMessage
+                    text={errors !== "" ? errors : response}
+                    className={
+                      response && response.startsWith("Token") && errors === ""
+                        ? "!text-green-600"
+                        : ""
+                    }
+                  />
+                </Input>
               </div>
               <CustomButton type="submit">
-                <p className="xxl:text-xl">Continue</p>
+                <p className="xxl:text-lg">Continue</p>
               </CustomButton>
             </form>
           </Tabs.Item>
@@ -93,7 +110,7 @@ const ForgotPassword: React.FC<Props> = ({
       </Modal.Body>
       <Modal.Footer>
         <Button color="gray" className="ml-auto" onClick={onClose}>
-          <p className="xxl:text-xl">Close</p>
+          <p className="xxl:text-lg">Close</p>
         </Button>
       </Modal.Footer>
     </Modal>

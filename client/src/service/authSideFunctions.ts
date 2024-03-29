@@ -2,7 +2,6 @@ import { apiClient } from "../helpers/ApiClient";
 
 export default async (email: string) => {
   const response = await apiClient.patch("/user/forgot-password", { email });
-
   return response.data;
 };
 
@@ -17,8 +16,8 @@ export function colorPick(type: string) {
   return type === "MESSAGE"
     ? "text-blue-700"
     : type === "INFO"
-    ? "text-green-600"
-    : "text-red-600";
+      ? "text-green-600"
+      : "text-red-600";
 }
 
 export function getEighteenYearsAgoDate() {

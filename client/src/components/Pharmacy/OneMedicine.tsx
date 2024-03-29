@@ -127,7 +127,7 @@ const OneMedicine: React.FC = () => {
               <FormRow>
                 <Input
                   autoComplete="true"
-                  value="Name"
+                  label="Name"
                   id="name"
                   className="mt-1"
                   {...register("name")}
@@ -138,7 +138,7 @@ const OneMedicine: React.FC = () => {
               </FormRow>
               <FormRow>
                 <Input
-                  value="Strength (mg)"
+                  label="Strength (mg)"
                   id="strength"
                   className="mt-1"
                   {...register("strength")}
@@ -173,7 +173,7 @@ const OneMedicine: React.FC = () => {
               </FormRow>
               <FormRow>
                 <Input
-                  value="Price"
+                  label="Price"
                   id="price"
                   className="mt-1"
                   {...register("price")}
@@ -184,7 +184,7 @@ const OneMedicine: React.FC = () => {
               </FormRow>
               <FormRow>
                 <Input
-                  value="Manufacturer"
+                  label="Manufacturer"
                   id="manufacturer"
                   className="mt-1"
                   {...register("manufacturer")}
@@ -196,7 +196,7 @@ const OneMedicine: React.FC = () => {
               <div className="relative w-full flex flex-col gap-1">
                 <div>
                   <Input
-                    value="Photo URL (optional)"
+                    label="Photo URL (optional)"
                     id="photo"
                     className="mt-1"
                     {...register("photo")}

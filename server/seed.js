@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Hospital = require("./models/hospital");
 const User = require("./models/user");
 const asyncHandler = require("express-async-handler");
 const connectDB = require("./config/db");

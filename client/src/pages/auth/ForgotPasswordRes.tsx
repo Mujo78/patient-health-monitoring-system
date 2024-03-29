@@ -5,6 +5,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineCheckCircle, HiOutlineXCircle } from "react-icons/hi2";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import Header from "../../components/UI/Header";
 
 const ForgotPasswordRes: React.FC = () => {
   const { status, message } = useSelector(authUser);
@@ -17,29 +18,36 @@ const ForgotPasswordRes: React.FC = () => {
   if (status === "loading") return <CustomSpinner fromTop={12} size="lg" />;
 
   return (
-    <div className="h-screen flex justify-center items-center flex-col gap-4">
+    <div className="flex h-screen flex-col items-center justify-center gap-4">
       {status === "idle" ? (
-        <div className="flex justify-center gap-4 items-center flex-col">
+        <div className="flex flex-col items-center justify-center gap-4">
           <HiOutlineCheckCircle
             color="green"
-            className="w-28 xxl:!w-56 h-auto"
+            className="h-auto w-28 xxl:!w-56"
           />
-          <p className="text-md xxl:!text-2xl text-center font-semibold">
-            You have successfully restarted your pasword!
-          </p>
+          <Header
+            text="You have successfully restarted your pasword!"
+            size={1}
+          />
         </div>
       ) : (
         status === "failed" && (
-          <div className="flex justify-center gap-4 items-center flex-col">
-            <HiOutlineXCircle color="red" className="w-28 xxl:!w-56 h-auto" />
-            <p className="text-red-600 text-md xxl:!text-2xl font-semibold">
-              {message}
-            </p>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <HiOutlineXCircle color="red" className="h-auto w-28 xxl:!w-56" />
+            <Header
+              text={
+                message.includes("/api/")
+                  ? "Something went wrong, please try again later!"
+                  : message
+              }
+              size={1}
+              className="!text-red-600"
+            />
           </div>
         )
       )}
       <CustomButton onClick={goToLoginPage}>
-        <p className="xxl:!text-2xl">
+        <p className="xxl:!text-lg">
           {status === "idle" ? "Go to Login Page" : "Home Page"}
         </p>
       </CustomButton>

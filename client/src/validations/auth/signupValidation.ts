@@ -26,8 +26,8 @@ export const signupValidationSchema = Yup.object({
     .required("Date of birth is required!")
     .max(getEighteenYearsAgoDate(), "Invalid date"),
   email: Yup.string()
-    .email("Please provide a valid eamil address!")
     .required("Email is required!")
+    .email("Please provide a valid eamil address!")
     .test(
       "email-valid",
       "Email is not valid, use valid email to create an account.",
@@ -36,7 +36,7 @@ export const signupValidationSchema = Yup.object({
           return false;
         }
         return true;
-      }
+      },
     ),
   password: Yup.string()
     .required("Password is required!")
