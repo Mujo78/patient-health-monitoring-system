@@ -90,11 +90,7 @@ export const bookAppointment = createAsyncThunk<
   { state: RootState }
 >("appointment/post", async (appointmentData, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.makeAppointment(appointmentData, safeToken);
+    return await appointmentService.makeAppointment(appointmentData);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -108,15 +104,7 @@ export const editAppointment = createAsyncThunk<
   { state: RootState }
 >("appointment/patch", async ({ id, editObjectData }, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.editAppointment(
-      id,
-      editObjectData,
-      safeToken
-    );
+    return await appointmentService.editAppointment(id, editObjectData);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -130,15 +118,7 @@ export const makeAppointmentFinished = createAsyncThunk<
   { state: RootState }
 >("appointment-finish/patch", async ({ id, finishAppointment }, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.finishAppointment(
-      id,
-      finishAppointment,
-      safeToken
-    );
+    return await appointmentService.finishAppointment(id, finishAppointment);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -152,11 +132,7 @@ export const getAppointmentsForADay = createAsyncThunk<
   { state: RootState }
 >("appointment-day/get", async (date, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.getAppointmentsForDay(date, safeToken);
+    return await appointmentService.getAppointmentsForDay(date);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -170,15 +146,11 @@ export const getAppointmentsForPerson = createAsyncThunk<
   { state: RootState }
 >("appointments/get", async (_, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
     const id = thunkAPI.getState().auth.accessUser?.data._id as
       | string
       | undefined;
     const _id = id || "";
-    return await appointmentService.getAppointmentForPerson(_id, safeToken);
+    return await appointmentService.getAppointmentForPerson(_id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -192,11 +164,7 @@ export const getSelectedAppointment = createAsyncThunk<
   { state: RootState }
 >("appointment/get", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.getAppointment(id, safeToken);
+    return await appointmentService.getAppointment(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -210,11 +178,7 @@ export const cancelAppointment = createAsyncThunk<
   { state: RootState }
 >("appointment/delete", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await appointmentService.deleteAppointment(id, safeToken);
+    return await appointmentService.deleteAppointment(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -258,6 +222,7 @@ export const appointmentSlice = createSlice({
       .addCase(getAppointmentsForPerson.fulfilled, (state, action) => {
         (state.status = "idle"), (state.personAppointments = action.payload);
       })
+
       .addCase(getAppointmentsForADay.pending, (state) => {
         state.status = "loading";
       })
@@ -266,8 +231,10 @@ export const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentsForADay.fulfilled, (state, action) => {
         (state.status = "idle"),
+          (state.message = ""),
           (state.selectedDayAppointments = action.payload);
       })
+
       .addCase(getSelectedAppointment.pending, (state) => {
         state.status = "loading";
       })
@@ -286,14 +253,14 @@ export const appointmentSlice = createSlice({
       .addCase(cancelAppointment.fulfilled, (state, action) => {
         (state.status = "idle"),
           (state.personAppointments = state.personAppointments.filter(
-            (n) => n._id !== action.payload._id
+            (n) => n._id !== action.payload._id,
           ));
         const i = state.selectedDayAppointments.findIndex(
-          (el) => el._id === action.payload._id
+          (el) => el._id === action.payload._id,
         );
         if (i !== -1)
           state.selectedDayAppointments = state.selectedDayAppointments.filter(
-            (n) => n._id !== action.payload._id
+            (n) => n._id !== action.payload._id,
           );
         state.selectedAppointment = null;
       })
@@ -305,7 +272,7 @@ export const appointmentSlice = createSlice({
       })
       .addCase(editAppointment.fulfilled, (state, action) => {
         const i = state.personAppointments.findIndex(
-          (el) => el._id === action.payload._id
+          (el) => el._id === action.payload._id,
         );
         if (i !== -1) state.personAppointments[i] = action.payload;
         state.status = "idle";

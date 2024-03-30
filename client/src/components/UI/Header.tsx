@@ -26,7 +26,7 @@ const Header: React.FC<Props> = ({
           position ?? "center"
         } text-${
           size
-            ? `${size}xl ${
+            ? `${size === 1 ? "" : size}xl ${
                 normal ? `lg:!text-${size + 2}xl` : `xxl:!text-${size + 2}xl`
               }`
             : "2xl xxl:!text-4xl"

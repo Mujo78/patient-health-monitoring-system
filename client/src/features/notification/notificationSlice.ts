@@ -34,11 +34,7 @@ export const getOneNotification = createAsyncThunk<
   { state: RootState }
 >("notification/get", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.getOneNotification(id, safeToken);
+    return await notificationServices.getOneNotification(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -52,11 +48,7 @@ export const getPersonNotifications = createAsyncThunk<
   { state: RootState }
 >("notifications/get", async (_, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.getAllNotificationsForPerson(safeToken);
+    return await notificationServices.getAllNotificationsForPerson();
   } catch (error: any) {
     const message = error.response.data;
 
@@ -70,11 +62,7 @@ export const deleteAllNotifications = createAsyncThunk<
   { state: RootState }
 >("notifications/delete", async (_, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.deleteAllNotifications(safeToken);
+    return await notificationServices.deleteAllNotifications();
   } catch (error: any) {
     const message = error.response.data;
 
@@ -88,11 +76,7 @@ export const deleteOneNotification = createAsyncThunk<
   { state: RootState }
 >("notification/delete", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.deleteOneNotification(id, safeToken);
+    return await notificationServices.deleteOneNotification(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -106,11 +90,7 @@ export const markOneAsRead = createAsyncThunk<
   { state: RootState }
 >("notification/update", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.markOneNotificationAsRead(id, safeToken);
+    return await notificationServices.markOneNotificationAsRead(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -124,11 +104,7 @@ export const markAllAsRead = createAsyncThunk<
   { state: RootState }
 >("notifications/update", async (_, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await notificationServices.markAllAsRead(safeToken);
+    return await notificationServices.markAllAsRead();
   } catch (error: any) {
     const message = error.response.data;
 
@@ -193,7 +169,7 @@ export const notificationSlice = createSlice({
       })
       .addCase(markOneAsRead.fulfilled, (state, action) => {
         const i = state.personNotifications.findIndex(
-          (el) => el._id === action.payload._id
+          (el) => el._id === action.payload._id,
         );
         if (i !== -1) state.personNotifications[i] = action.payload;
         state.status = "failed";
@@ -217,7 +193,7 @@ export const notificationSlice = createSlice({
       })
       .addCase(deleteOneNotification.fulfilled, (state, action) => {
         state.personNotifications = state.personNotifications.filter(
-          (el) => el._id !== action.payload._id
+          (el) => el._id !== action.payload._id,
         );
         state.status = "idle";
       });

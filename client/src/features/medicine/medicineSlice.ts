@@ -74,16 +74,7 @@ export const getMedicine = createAsyncThunk<
   { state: RootState }
 >("medicine/get", async ({ page, searchQuery, category }, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await medicineService.getAllMedicine(
-      safeToken,
-      page,
-      searchQuery,
-      category
-    );
+    return await medicineService.getAllMedicine(page, searchQuery, category);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -97,11 +88,7 @@ export const getMedicineById = createAsyncThunk<
   { state: RootState }
 >("medicine/get/id", async (id, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await medicineService.getMedicine(safeToken, id);
+    return await medicineService.getMedicine(id);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -115,11 +102,7 @@ export const updateMedicineById = createAsyncThunk<
   { state: RootState }
 >("medicine/update", async ({ id, data }, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await medicineService.updateMedicine(safeToken, id, data);
+    return await medicineService.updateMedicine(id, data);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -151,11 +134,7 @@ export const addNewMedicine = createAsyncThunk<
   { state: RootState }
 >("medicine/post", async (data, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await medicineService.addMedicine(safeToken, data);
+    return await medicineService.addMedicine(data);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -219,7 +198,7 @@ export const medicineSlice = createSlice({
       .addCase(updateMedicineById.fulfilled, (state, action) => {
         if (state.medicine?.data) {
           const i = state.medicine.data.findIndex(
-            (el) => el._id === action.payload._id
+            (el) => el._id === action.payload._id,
           );
           if (i !== -1) state.medicine.data[i] = action.payload;
         }

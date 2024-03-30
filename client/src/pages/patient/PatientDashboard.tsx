@@ -6,52 +6,47 @@ import {
   getLatestFinished,
   latestFinishedType,
 } from "../../service/appointmentSideFunctions";
-import { useSelector } from "react-redux";
-import { appointment } from "../../features/appointment/appointmentSlice";
-import { useAppDispatch } from "../../app/hooks";
+import { shallowEqual, useSelector } from "react-redux";
 import CustomImg from "../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
-import { authUser, firstTime } from "../../features/auth/authSlice";
+import { authUser } from "../../features/auth/authSlice";
 import AppointmentsChart from "../../components/Patient/AppointmentsChart";
 import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
 import useSelectedPage from "../../hooks/useSelectedPage";
-import { yearCalc } from "../../service/personSideFunctions";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import Header from "../../components/UI/Header";
+import PatientCard from "../../components/Patient/PatientCard";
+import NoDataAvailable from "../../components/UI/NoDataAvailable";
+import toast from "react-hot-toast";
 
 const PatientDashboard: React.FC = () => {
-  const navigate = useNavigate();
   const [latestFinished, setLatestFinished] = useState<latestFinishedType>();
   const [loading, setLoading] = useState<boolean>(false);
-  const { accessUser } = useSelector(authUser);
-
-  const { status } = useSelector(appointment);
-  const dispatch = useAppDispatch();
+  const [error, setError] = useState<string>();
+  const navigate = useNavigate();
+  const { accessUser } = useSelector(authUser, shallowEqual);
 
   useSelectedPage("Dashboard");
-
-  useEffect(() => {
-    if (accessUser && !accessUser.data.first) {
-      dispatch(firstTime());
-    }
-  }, [dispatch, accessUser]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (accessUser) {
-          const response = await getLatestFinished(accessUser.token);
-          setLatestFinished(response);
-        }
+        const response = await getLatestFinished();
+        setLatestFinished(response);
       } catch (err: any) {
+        setError(err.message);
         throw new Error(err?.message);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, [accessUser]);
+  }, []);
+
+  useEffect(() => {
+    if (error) toast.error("Something went wrong, please try refresh page!");
+  }, [error]);
 
   const handleNavigateApp = () => {
     if (latestFinished && latestFinished.appointment) {
@@ -61,80 +56,43 @@ const PatientDashboard: React.FC = () => {
 
   return (
     <>
-      {loading || status === "loading" ? (
+      {loading ? (
         <CustomSpinner size="xl" />
       ) : (
-        <div className="flex flex-col xl:!flex-row duration-300 transition-all gap-3 xl:!gap-10 justify-between h-full w-full p-1 sm:!p-3 xxl:!p-6">
-          <div className="flex flex-col flex-grow w-full gap-3 xl:!gap-6 xxl:!gap-12">
-            <div className="w-full flex flex-col gap-2 xl:!gap-4 md:flex-row flex-grow justify-between">
-              {latestFinished && (
-                <Card
-                  className="w-full xl:!max-w-md xxl:!max-w-2xl h-auto"
-                  href={`/profile/p/${latestFinished.patient._id}`}
-                >
-                  <p className="text-blue-700 font-semibold text-md xxl:text-2xl">
-                    Patient
-                  </p>
-                  <div className="flex flex-col gap-4 xxl:!gap-7 my-auto">
-                    <h1 className="text-md xxl:!text-3xl font-bold text-center">
-                      {latestFinished?.patient.first_name +
-                        " " +
-                        latestFinished?.patient.last_name}
-                    </h1>
-                    <p className="text-gray-500 xxl:!text-xl">Details</p>
-                    <hr />
-                    <div className="text-xs xxl:!text-lg flex flex-col gap-4 xxl:!gap-8">
-                      <p className="flex text-gray-500 justify-between">
-                        <span>Age :</span>
-                        <span className="ml-auto text-black">
-                          {yearCalc(latestFinished?.patient?.date_of_birth)}
-                        </span>
-                      </p>
-                      <p className="flex text-gray-500 justify-between">
-                        <span>Blood type :</span>
-                        <span className="ml-auto text-black">
-                          {latestFinished.patient.blood_type}
-                        </span>
-                      </p>
-                      {latestFinished.patient.height && (
-                        <p className="flex text-gray-500 justify-between">
-                          <span>Height (m) :</span>
-                          <span className="ml-auto text-black">
-                            {Number(latestFinished.patient.height) / 100}{" "}
-                          </span>
-                        </p>
-                      )}
-                      {latestFinished.patient.weight && (
-                        <p className="flex text-gray-500 justify-between">
-                          <span>Weight (kg) :</span>
-                          <span className="ml-auto text-black">
-                            {latestFinished.patient.weight}
-                          </span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              )}
-              <div className="flex flex-col gap-2 xl:!gap-4 xxl:!gap-8 w-full lg:!w-1/2 mx-auto justify-center h-full">
-                <Card className="bg-gradient-to-r xl:!h-32 xxl:!h-48 from-blue-500 to-blue-400 ">
+        <div className="flex h-full w-full flex-col justify-between gap-3 p-1 transition-all duration-300 sm:!p-3 xl:!flex-row xl:!gap-10 xxl:!p-6">
+          <div className="flex w-full flex-grow flex-col gap-3 xl:!gap-6 xxl:!gap-12">
+            <div className="flex w-full flex-grow flex-col justify-between gap-2 md:flex-row xl:!gap-4">
+              <PatientCard
+                data={latestFinished?.patient}
+                variant={1}
+                className="xl:!max-w-md xxl:!max-w-2xl"
+              />
+
+              <div className="mx-auto flex h-full w-full flex-col justify-center gap-2 lg:!w-1/2 xl:!gap-4 xxl:!gap-8">
+                <Card className="bg-gradient-to-r from-blue-500 to-blue-400 xl:!h-32 xxl:!h-48 ">
                   <div>
                     {accessUser?.data.first ? (
                       <div>
-                        <h1 className="text-xl xxl:!text-3xl font-bold">
-                          Welcome back, {accessUser?.info.first_name}!
-                        </h1>
-                        <p className="text-xs xxl:!text-lg mt-3">
+                        <Header
+                          text={`Welcome back, ${accessUser?.info.first_name}`}
+                          bold
+                          position="start"
+                          size={2}
+                        />
+                        <p className="mt-3 text-xs xxl:!text-lg">
                           Explore your health insights with the PHM System.
                           Let's make every day a healthier one.
                         </p>
                       </div>
                     ) : (
                       <div>
-                        <h1 className="text-xl xxl:!text-3xl font-bold">
-                          Welcome to the PHM System!
-                        </h1>
-                        <p className="text-xs xxl:!text-lg mt-3">
+                        <Header
+                          text="Welcome to the PHM System!"
+                          bold
+                          size={2}
+                          position="start"
+                        />
+                        <p className="mt-3 text-xs xxl:!text-lg">
                           Discover a world of personalized health monitoring.
                           Take control of your health journey today
                         </p>
@@ -142,9 +100,10 @@ const PatientDashboard: React.FC = () => {
                     )}
                   </div>
                 </Card>
+
                 <Card
                   onClick={handleNavigateApp}
-                  className="cursor-pointer w-full"
+                  className="w-full cursor-pointer"
                 >
                   {latestFinished && latestFinished.appointment ? (
                     <div className="flex flex-wrap items-center">
@@ -152,42 +111,43 @@ const PatientDashboard: React.FC = () => {
                         url={
                           latestFinished?.appointment?.doctor_id.user_id.photo
                         }
-                        className="w-20 xl:!w-24 xxl:!w-40 mx-auto h-auto"
+                        className="mx-auto h-auto w-20 xl:!w-24 xxl:!w-40"
                       />
                       <div className="mx-auto">
-                        <h1 className="md:text-lg lg:!text-xl xxl:!text-3xl font-semibold">
-                          {latestFinished?.appointment?.doctor_id.first_name +
+                        <Header
+                          text={
+                            latestFinished?.appointment?.doctor_id.first_name +
                             " " +
-                            latestFinished?.appointment?.doctor_id.last_name}
-                        </h1>
+                            latestFinished?.appointment?.doctor_id.last_name
+                          }
+                          position="start"
+                          size={1}
+                        />
+
                         <p className="text-sm xxl:!text-lg">
                           {latestFinished?.appointment?.doctor_id.speciality}
                         </p>
-                        <p className="text-xs xxl:!text-lg text-gray-700 mt-1">
+                        <p className="mt-1 text-xs text-gray-700 xxl:!text-lg">
                           {formatDate(
-                            latestFinished?.appointment?.appointment_date
+                            latestFinished?.appointment?.appointment_date,
                           )}{" "}
                           (
                           {formatStartEnd(
-                            latestFinished?.appointment?.appointment_date
+                            latestFinished?.appointment?.appointment_date,
                           )}
                           )
                         </p>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-3 text-center">
-                      <p className="text-sm text-gray-400">
-                        No data available.
-                      </p>
-                    </div>
+                    <NoDataAvailable />
                   )}
                 </Card>
               </div>
             </div>
-            <AppointmentsChart />
+            <AppointmentsChart setError={setError} />
           </div>
-          <div className="h-fit xl:!h-full w-full xl:!w-2/5 flex justify-end">
+          <div className="flex h-fit w-full justify-end xl:!h-full xl:!w-2/5">
             <AppointmentReviewCalendar variant={1} />
           </div>
         </div>

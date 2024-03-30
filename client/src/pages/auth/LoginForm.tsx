@@ -88,7 +88,7 @@ const LoginForm: React.FC = () => {
           />
         )}
         <div>
-          <Header text="Log in to You Account" bold size={3} normal />
+          <Header text="Log in to You Account" bold size={5} normal />
 
           <form
             onSubmit={handleSubmit(onSubmit)}

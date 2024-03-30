@@ -1,4 +1,4 @@
-import { apiClient } from "../../helpers/ApiClient";
+import { apiClientAuth } from "../../helpers/ApiClient";
 import {
   MakeAppointmentData,
   editObject,
@@ -7,74 +7,36 @@ import {
 
 const URL = "/appointment/";
 
-const makeAppointment = async (
-  appointmentData: MakeAppointmentData,
-  token: string
-) => {
-  const response = await apiClient.post(URL, appointmentData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const makeAppointment = async (appointmentData: MakeAppointmentData) => {
+  const response = await apiClientAuth.post(URL, appointmentData);
+  return response.data;
+};
+
+const getAppointmentsForDay = async (date: Date) => {
+  const response = await apiClientAuth.post(`${URL}day`, { date });
+  return response.data;
+};
+
+const getAppointmentForPerson = async (id: string) => {
+  const response = await apiClientAuth.get(`${URL}person/${id}`);
+  return response.data;
+};
+
+const getAppointment = async (id: string) => {
+  const response = await apiClientAuth.get(`${URL}/${id}`);
+  return response.data;
+};
+
+const deleteAppointment = async (id: string) => {
+  const response = await apiClientAuth.delete(`${URL}/${id}`);
 
   return response.data;
 };
 
-const getAppointmentsForDay = async (date: Date, token: string) => {
-  const response = await apiClient.post(
-    `${URL}day`,
-    { date },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return response.data;
-};
-
-const getAppointmentForPerson = async (id: string, token: string) => {
-  const response = await apiClient.get(`${URL}person/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
-const getAppointment = async (id: string, token: string) => {
-  const response = await apiClient.get(`${URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
-const deleteAppointment = async (id: string, token: string) => {
-  const response = await apiClient.delete(`${URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
-};
-
-const editAppointment = async (
-  id: string,
-  editObjectData: editObject,
-  token: string
-) => {
-  const response = await apiClient.patch(
+const editAppointment = async (id: string, editObjectData: editObject) => {
+  const response = await apiClientAuth.patch(
     `${URL}/edit-details/${id}`,
     editObjectData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
   );
   return response.data;
 };
@@ -82,13 +44,11 @@ const editAppointment = async (
 const finishAppointment = async (
   id: string,
   finishAppointmentObj: finishAppointmentObj,
-  token: string
 ) => {
-  const response = await apiClient.patch(`${URL}${id}`, finishAppointmentObj, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await apiClientAuth.patch(
+    `${URL}${id}`,
+    finishAppointmentObj,
+  );
   return response.data;
 };
 

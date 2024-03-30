@@ -55,7 +55,7 @@ type latestApp = {
 export async function getLatestAppointment(
   token: string,
   id: string,
-  latestApp: latestApp
+  latestApp: latestApp,
 ) {
   const response = await apiClient.post(
     `/appointment/${id}/patient-latest-record`,
@@ -64,7 +64,7 @@ export async function getLatestAppointment(
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
   return response.data;
 }
@@ -105,7 +105,7 @@ export type modalDataType = {
 export async function getPatientFinishedAppointments(
   token: string,
   id: string,
-  page: number
+  page: number,
 ) {
   const response = await apiClient.get(`/appointment/patient/${id}`, {
     params: { page },
@@ -116,24 +116,15 @@ export async function getPatientFinishedAppointments(
   return response.data;
 }
 
-export async function getLatestFinished(token: string) {
-  const response = await apiClient.get(`/appointment/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getLatestFinished() {
+  const response = await apiClient.get(`/appointment/`);
   return response.data;
 }
 
 export async function numberOfAppointmentsPerMonthForDepartments(
-  token: string,
-  month: string
+  month: string,
 ) {
-  const response = await apiClient.get(`/appointment/per-month/${month}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await apiClient.get(`/appointment/per-month/${month}`);
   return response.data;
 }
 
@@ -192,7 +183,7 @@ export async function doctorDashboard(token: string) {
 export async function getOtherAppsForDay(
   token: string,
   date: Date,
-  doctor_id: string
+  doctor_id: string,
 ) {
   const response = await apiClient.post(
     "/appointment/others-today",
@@ -201,7 +192,7 @@ export async function getOtherAppsForDay(
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
   return response.data;
 }
@@ -219,7 +210,7 @@ export function formatDate(date: Date) {
 export async function availableTimeForApp(
   value: Date,
   doctor_id: string,
-  token: string
+  token: string,
 ) {
   const response = await getOtherAppsForDay(token, value, doctor_id);
 

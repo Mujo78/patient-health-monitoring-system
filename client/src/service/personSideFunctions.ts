@@ -21,6 +21,8 @@ export async function updateMe(token: string, data: unknown) {
   return response.data;
 }
 
+// export const availalbeDaysOptions = moment.weekdays().map(m => ({value: m, label: m}))
+
 export const availableDaysOptions = [
   { value: "Monday", label: "Monday" },
   { value: "Tuesday", label: "Tuesday" },

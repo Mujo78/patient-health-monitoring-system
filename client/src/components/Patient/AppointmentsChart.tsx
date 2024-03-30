@@ -11,103 +11,105 @@ import {
   Tooltip,
 } from "recharts";
 import { numberOfAppointmentsPerMonthForDepartments } from "../../service/appointmentSideFunctions";
-import { useSelector } from "react-redux";
-import { authUser } from "../../features/auth/authSlice";
+
 import moment from "moment";
+import NoDataAvailable from "../UI/NoDataAvailable";
+import CustomSpinner from "../UI/CustomSpinner";
 
 type dataAppointments = {
   name: string;
   visited: number;
 };
 
-const AppointmentsChart: React.FC = () => {
-  const { accessUser } = useSelector(authUser);
+type Props = {
+  setError: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
+const AppointmentsChart: React.FC<Props> = ({ setError }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [month, setMonth] = useState<string>(moment().format("MMMM"));
   const [dataApps, setDataApps] = useState<dataAppointments[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (month && accessUser) {
-        try {
-          const response = await numberOfAppointmentsPerMonthForDepartments(
-            accessUser.token,
-            month
-          );
-          setDataApps(response);
-        } catch (err: any) {
-          console.log(err);
-        }
+      try {
+        setLoading(true);
+        const response =
+          await numberOfAppointmentsPerMonthForDepartments(month);
+        setDataApps(response);
+      } catch (err: any) {
+        setError(err.message);
+        throw new Error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
-  }, [month, accessUser]);
+  }, [month, setError]);
 
-  const handleSelect = async () => {
-    if (month && accessUser) {
-      try {
-        const response = await numberOfAppointmentsPerMonthForDepartments(
-          accessUser.token,
-          month
-        );
-        setDataApps(response);
-      } catch (err: any) {
-        console.log(err);
-      }
-    }
+  const onHandleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setMonth(event.target.value);
   };
 
   return (
-    <Card className="w-full h-96 xl:!h-2/4 flex flex-col">
-      <div className="flex items-center">
-        <p className="text-xs xxl:!text-lg font-semibold">
-          Year: {new Date().getFullYear()}
-        </p>
-        <div className="flex gap-5 items-center ml-auto">
-          <Label htmlFor="month" className="hidden lg:block xxl:!text-lg">
-            Choose a month:
-          </Label>
-          <Select
-            id="month"
-            sizing="sm xxl:lg"
-            name="month"
-            onSelect={handleSelect}
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-          >
-            {moment.monthsShort().map((month) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </Select>
-        </div>
-      </div>
-      <ResponsiveContainer width="95%" height="80%" className="mx-auto">
-        <BarChart
-          width={200}
-          height={200}
-          data={dataApps}
-          layout="vertical"
-          margin={{ left: 30 }}
-        >
-          <CartesianGrid horizontal={false} vertical={true} />
-          <Tooltip />
-          <XAxis
-            className="xxl:!text-xl"
-            type="number"
-            dataKey="visited"
-            ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-          />
-          <YAxis
-            dataKey="name"
-            type="category"
-            className="text-xs xxl:!text-lg"
-            tickSize={4}
-          />
-          <Legend />
-          <Bar dataKey="visited" barSize={16} fill="#3b82f6" />
-        </BarChart>
-      </ResponsiveContainer>
+    <Card className="flex h-96 w-full flex-col xl:!h-2/4">
+      {loading ? (
+        <CustomSpinner />
+      ) : dataApps.length > 0 ? (
+        <>
+          <div className="flex items-center">
+            <p className="text-xs font-semibold xxl:!text-lg">
+              Year: {new Date().getFullYear()}
+            </p>
+            <div className="ml-auto flex items-center gap-5">
+              <Label htmlFor="month" className="hidden lg:block xxl:!text-lg">
+                Choose a month:
+              </Label>
+              <Select
+                id="month"
+                sizing="sm xxl:lg"
+                name="month"
+                value={month}
+                onChange={onHandleChange}
+              >
+                {moment.monthsShort().map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
+          <ResponsiveContainer width="95%" height="80%" className="mx-auto">
+            <BarChart
+              width={200}
+              height={200}
+              data={dataApps}
+              layout="vertical"
+              margin={{ left: 30 }}
+            >
+              <CartesianGrid horizontal={false} vertical={true} />
+              <Tooltip />
+              <XAxis
+                className="xxl:!text-xl"
+                type="number"
+                dataKey="visited"
+                ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+              />
+              <YAxis
+                dataKey="name"
+                type="category"
+                className="text-xs xxl:!text-lg"
+                tickSize={4}
+              />
+              <Legend />
+              <Bar dataKey="visited" barSize={16} fill="#3b82f6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </>
+      ) : (
+        <NoDataAvailable />
+      )}
     </Card>
   );
 };

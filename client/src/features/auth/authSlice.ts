@@ -99,7 +99,7 @@ export const login = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const changePassword = createAsyncThunk<
@@ -108,11 +108,7 @@ export const changePassword = createAsyncThunk<
   { state: RootState }
 >("/auth/update-password", async (data, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return await authServices.changeMyPassword(safeToken, data);
+    return await authServices.changeMyPassword(data);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -130,7 +126,7 @@ export const signup = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const verifyEmailAddress = createAsyncThunk(
@@ -143,7 +139,7 @@ export const verifyEmailAddress = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const resetPassword = createAsyncThunk(
@@ -156,7 +152,7 @@ export const resetPassword = createAsyncThunk(
 
       return thunkAPI.rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const logout = createAsyncThunk("/auth/logout", async (_, thunkAPI) => {
@@ -175,11 +171,7 @@ export const updatePicture = createAsyncThunk<
   { state: RootState }
 >("/user/update-picture", async (photo, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return authServices.updatePhoto(safeToken, photo);
+    return authServices.updatePhoto(photo);
   } catch (error: any) {
     const message = error.response.data;
 
@@ -193,11 +185,7 @@ export const firstTime = createAsyncThunk<
   { state: RootState }
 >("/auth/first-using", async (_, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as
-      | string
-      | undefined;
-    const safeToken = token || "";
-    return authServices.firstTimeUsing(safeToken);
+    return authServices.firstTimeUsing();
   } catch (error: any) {
     const message = error.response.data;
 
@@ -211,8 +199,7 @@ export const updateUser = createAsyncThunk<
   { state: RootState }
 >("/auth/update", async (data, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as string;
-    const response = await authServices.updateUser(token, data);
+    const response = await authServices.updateUser(data);
     return response;
   } catch (error: any) {
     const message = error.response.data;
@@ -227,8 +214,7 @@ export const deactivateAccount = createAsyncThunk<
   { state: RootState }
 >("/auth/deactivate", async (data, thunkAPI) => {
   try {
-    const token = thunkAPI.getState().auth.accessUser?.token as string;
-    return authServices.deactivateMyAccount(token, data);
+    return authServices.deactivateMyAccount(data);
   } catch (error: any) {
     const message = error.response.data;
 

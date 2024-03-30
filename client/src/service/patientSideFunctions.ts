@@ -10,7 +10,7 @@ export type PatientsType = {
 export async function getPatientsForDoctor(
   token: string,
   page: number,
-  searchQuery: string
+  searchQuery: string,
 ) {
   const response = await apiClient.get("/appointment/doctor-patients", {
     params: { searchQuery, page },

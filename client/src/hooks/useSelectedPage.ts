@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useAppDispatch } from "../app/hooks";
 import { authUser, setSelected } from "../features/auth/authSlice";
 import { useEffect } from "react";
 
 function useSelectedPage(pageName: string) {
   const dispatch = useAppDispatch();
-  const { selected } = useSelector(authUser);
+  const { selected } = useSelector(authUser, shallowEqual);
 
   useEffect(() => {
     if (selected !== pageName) {

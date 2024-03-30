@@ -1,4 +1,4 @@
-import { apiClient } from "../../helpers/ApiClient";
+import { apiClient, apiClientAuth } from "../../helpers/ApiClient";
 import {
   LoginUser,
   PatientUser,
@@ -63,68 +63,42 @@ const verifyEmail = async (verificationToken: string) => {
   return response.data;
 };
 
-const updateUser = async (token: string, data: UpdateUserInterface) => {
-  const response = await apiClient.patch(`${URL}/update-me`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const updateUser = async (data: UpdateUserInterface) => {
+  const response = await apiClientAuth.patch(`${URL}/update-me`, data);
 
   return response.data;
 };
 
-const deactivateMyAccount = async (
-  token: string,
-  data: { active: boolean },
-) => {
-  const response = await apiClient.patch(`${URL}/deactivate`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const deactivateMyAccount = async (data: { active: boolean }) => {
+  const response = await apiClientAuth.patch(`${URL}/deactivate`, data);
 
   return response.data;
 };
 
-export async function updatePhoto(token: string, photo: File) {
+export async function updatePhoto(photo: File) {
   const form = new FormData();
   form.append("photo", photo);
 
-  const response = await apiClient.patch(`${URL}/update-photo`, form, {
+  const response = await apiClientAuth.patch(`${URL}/update-photo`, form, {
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
     },
   });
   return response.data;
 }
 
-const firstTimeUsing = async (token: string) => {
-  const response = await apiClient.patch(
-    `${URL}/`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+const firstTimeUsing = async () => {
+  const response = await apiClientAuth.patch(`${URL}/`, {});
 
   return response.data;
 };
 
 const changeMyPassword = async (
-  token: string,
   changePasswordData: changePasswordInterface,
 ) => {
-  const response = await apiClient.patch(
+  const response = await apiClientAuth.patch(
     `${URL}/change-password`,
     changePasswordData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
   );
 
   return response.data;

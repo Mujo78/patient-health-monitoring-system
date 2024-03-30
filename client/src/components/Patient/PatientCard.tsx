@@ -4,9 +4,11 @@ import { Patient } from "../../features/medicine/medicineSlice";
 import CustomImg from "../UI/CustomImg";
 import { useNavigate } from "react-router-dom";
 import { yearCalc } from "../../service/personSideFunctions";
+import Header from "../UI/Header";
+import NoDataAvailable from "../UI/NoDataAvailable";
 
 type Props = {
-  data: Patient;
+  data?: Patient;
   variant: 1 | 2;
   className?: string;
 };
@@ -15,50 +17,55 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    if (variant === 2) {
-      navigate(`/my-patients/${data._id}`);
+    if (data) {
+      if (variant === 2) {
+        navigate(`/my-patients/${data._id}`);
+      } else {
+        navigate(`/profile/p/${data._id}`);
+      }
     }
   };
   return (
     <Card
       onClick={handleNavigate}
-      className={` ${className} w-full md:!w-2/5 xl:!w-1/5 xxl:!w-1/4 md:!flex-grow-0 h-auto ${
-        variant === 2 && "cursor-pointer"
-      }`}
+      className={` ${className} h-auto w-full cursor-pointer`}
     >
-      {variant === 1 && <p className="text-blue-700 font-semibold">Patient</p>}
-      {variant === 2 && (
-        <CustomImg
-          url={data?.user_id?.photo}
-          className="mx-auto w-20 xxl:!w-40 h-auto"
-        />
-      )}
-      <h1 className="text-xl xxl:!text-2xl font-bold text-center">
-        {data.first_name + " " + data.last_name}
-      </h1>
-      {variant === 1 && <p className="text-gray-500">Details</p>}
-      <hr />
-      <p className="flex text-sm xxl:!text-xl text-gray-500 justify-between">
-        Age:
-        <span className="ml-auto text-black">
-          {yearCalc(data?.date_of_birth)}
-        </span>
-      </p>
-      {variant === 1 && (
+      {data ? (
         <>
-          <p className="flex text-sm text-gray-500 justify-between">
-            <span>Blood type :</span>
-            <span className="ml-auto text-black">A+</span>
+          {variant === 1 && (
+            <p className="font-semibold text-blue-700">Patient</p>
+          )}
+          {variant === 2 && (
+            <CustomImg
+              url={data?.user_id?.photo}
+              className="mx-auto h-auto w-20 xxl:!w-40"
+            />
+          )}
+          <Header text={data.first_name + " " + data.last_name} bold size={1} />
+          {variant === 1 && <p className="text-gray-500">Details</p>}
+          <hr />
+          <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
+            Age:
+            <span className="ml-auto text-black">
+              {yearCalc(data?.date_of_birth)}
+            </span>
           </p>
-          <p className="flex text-sm text-gray-500 justify-between">
-            <span>Height (m) :</span>
-            <span className="ml-auto text-black">1.70</span>
-          </p>
-          <p className="flex text-sm text-gray-500 justify-between">
-            <span>Weight (kg) :</span>
-            <span className="ml-auto text-black">60</span>
-          </p>
+          {variant === 1 && (
+            <>
+              <p className="flex justify-between text-sm text-gray-500">
+                Blood type :<span className="ml-auto text-black">A+</span>
+              </p>
+              <p className="flex justify-between text-sm text-gray-500">
+                Height (m) :<span className="ml-auto text-black">1.70</span>
+              </p>
+              <p className="flex justify-between text-sm text-gray-500">
+                Weight (kg) :<span className="ml-auto text-black">60</span>
+              </p>
+            </>
+          )}
         </>
+      ) : (
+        <NoDataAvailable />
       )}
     </Card>
   );

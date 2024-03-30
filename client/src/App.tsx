@@ -125,8 +125,8 @@ const router = createBrowserRouter(
         element={<VerificationPageRes />}
       />
       <Route path="*" element={<ErrorPage />} />
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 const App = () => {

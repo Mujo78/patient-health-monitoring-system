@@ -52,7 +52,7 @@ const MyPatients: React.FC = () => {
           const response = await getPatientsForDoctor(
             accessUser.token,
             page,
-            searchQuery
+            searchQuery,
           );
           setPatients(response);
           navigate(`/my-patients?${query.toString()}`);
@@ -73,7 +73,7 @@ const MyPatients: React.FC = () => {
       const response = await getPatientsForDoctor(
         accessUser.token,
         page,
-        searchQuery
+        searchQuery,
       );
       setPatients(response);
       navigate(`/my-patients?${query.toString()}`);
@@ -89,7 +89,7 @@ const MyPatients: React.FC = () => {
       const response = await getPatientsForDoctor(
         accessUser.token,
         page,
-        searchQuery
+        searchQuery,
       );
       setPatients(response);
       navigate(`/my-patients?${query.toString()}`);
@@ -106,14 +106,14 @@ const MyPatients: React.FC = () => {
   };
 
   return (
-    <div className="h-fit md:!h-full mx-2">
+    <div className="mx-2 h-fit md:!h-full">
       {id ? (
         <Outlet />
       ) : (
-        <div className="w-full flex flex-col h-full">
-          <div className="flex w-full p-2 mx-auto items-center">
+        <div className="flex h-full w-full flex-col">
+          <div className="mx-auto flex w-full items-center p-2">
             <form onSubmit={handleSearch} className="w-full py-3">
-              <div className="flex gap-2 mx-auto w-full xl:!w-3/4">
+              <div className="mx-auto flex w-full gap-2 xl:!w-3/4">
                 <TextInput
                   theme={customTextInputTheme}
                   className="flex-grow"
@@ -135,7 +135,7 @@ const MyPatients: React.FC = () => {
                 <div className="my-2 ml-2 text-end">
                   <span
                     onClick={clearSearch}
-                    className="text-sm xxl:!text-2xl md:mr-1.5 cursor-pointer text-red-500 hover:underline"
+                    className="cursor-pointer text-sm text-red-500 hover:underline md:mr-1.5 xxl:!text-2xl"
                   >
                     Clear
                   </span>
@@ -146,15 +146,15 @@ const MyPatients: React.FC = () => {
           {loading ? (
             <CustomSpinner size="lg" fromTop={24} />
           ) : (
-            <div className="flex flex-col gap-4 h-full">
+            <div className="flex h-full flex-col gap-4">
               {patients && patients.data?.length > 0 ? (
-                <div className="flex flex-col justify-between h-full gap-4">
-                  <div className="w-full h-fit">
-                    <div className="flex justify-start w-full mx-1 gap-1 flex-wrap">
+                <div className="flex h-full flex-col justify-between gap-4">
+                  <div className="h-fit w-full">
+                    <div className="mx-1 flex w-full flex-wrap justify-start gap-1">
                       {patients?.data.map((n) => (
                         <PatientCard
                           key={n._id}
-                          className="m-1"
+                          className="m-1 md:!w-2/5 md:!flex-grow-0 xl:!w-1/5 xxl:!w-1/4"
                           data={n}
                           variant={2}
                         />
@@ -163,7 +163,7 @@ const MyPatients: React.FC = () => {
                   </div>
 
                   <Footer variant={1}>
-                    <div className="pb-12 w-full md:!pb-0">
+                    <div className="w-full pb-12 md:!pb-0">
                       <Pagination
                         page={Number(page)}
                         totalPages={patients.numOfPages}
@@ -173,7 +173,7 @@ const MyPatients: React.FC = () => {
                   </Footer>
                 </div>
               ) : (
-                <div className="text-center mt-16">
+                <div className="mt-16 text-center">
                   <ErrorMessage
                     className="mx-auto my-auto xxl:text-2xl"
                     text={message || "No data available."}

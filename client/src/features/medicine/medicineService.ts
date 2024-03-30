@@ -1,34 +1,26 @@
 import axios from "axios";
 import { Medicine, MedicineDataType } from "./medicineSlice";
-import { apiClient } from "../../helpers/ApiClient";
+import { apiClientAuth } from "../../helpers/ApiClient";
 
 const URL = "/medicine/";
 
 const getAllMedicine = async (
-  token: string,
   page?: number,
   search?: string,
-  category?: string
+  category?: string,
 ) => {
-  const response = await apiClient.get(URL, {
+  const response = await apiClientAuth.get(URL, {
     params: { page: page, searchQuery: search, category: category },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
   return response.data;
 };
 
-const getMedicine = async (token: string, id: string) => {
-  const response = await apiClient.get(`${URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const getMedicine = async (id: string) => {
+  const response = await apiClientAuth.get(`${URL}/${id}`);
   return response.data;
 };
 
-const addMedicine = async (token: string, data: MedicineDataType) => {
+const addMedicine = async (data: MedicineDataType) => {
   const form = new FormData();
   form.append("category", data.category);
   form.append("category", data.category);
@@ -38,25 +30,20 @@ const addMedicine = async (token: string, data: MedicineDataType) => {
   form.append("price", data.price);
   form.append("photo", data.photo);
 
-  const response = await apiClient.post(URL, data, {
+  const response = await apiClientAuth.post(URL, data, {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
 };
 
-const deleteOneMedicine = async (token: string, id: string) => {
-  const response = await axios.delete(`${URL}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+const deleteOneMedicine = async (id: string) => {
+  const response = await axios.delete(`${URL}/${id}`);
   return response.data;
 };
 
-const updateMedicine = async (token: string, id: string, data: Medicine) => {
+const updateMedicine = async (id: string, data: Medicine) => {
   const form = new FormData();
   form.append("category", data.category);
   form.append("available", data.available.toString());
@@ -67,10 +54,9 @@ const updateMedicine = async (token: string, id: string, data: Medicine) => {
   form.append("price", data.price);
   form.append("photo", data.photo);
 
-  const response = await apiClient.patch(`${URL}/${id}`, form, {
+  const response = await apiClientAuth.patch(`${URL}/${id}`, form, {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
