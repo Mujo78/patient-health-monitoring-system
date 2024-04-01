@@ -89,7 +89,6 @@ const router = createBrowserRouter(
             <Route index element={<PersonalInfoDoc />} />
             <Route path="security-page" element={<Security />} />
           </Route>
-          <Route path="/my-patients/search" element={<MyPatients />} />
           <Route path="/my-department" element={<MyDepartment />} />
           <Route path="/doctor-notifications" element={<Notifications />}>
             <Route path=":id" element={<Notification />} />

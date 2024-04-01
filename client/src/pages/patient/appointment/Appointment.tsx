@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   appointment,
   cancelAppointment,
@@ -13,8 +13,13 @@ import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomImg from "../../../components/UI/CustomImg";
 import Footer from "../../../components/UI/Footer";
 import AppointmentOverviewEdit from "./AppointmentOverviewEdit";
-import { formatStartEnd } from "../../../service/appointmentSideFunctions";
+import {
+  canCancelOrEdit,
+  formatStartEnd,
+} from "../../../service/appointmentSideFunctions";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Header from "../../../components/UI/Header";
+import moment from "moment";
 
 const Appointment: React.FC = () => {
   const { id } = useParams();
@@ -24,7 +29,7 @@ const Appointment: React.FC = () => {
     selectedAppointment: selected,
     status,
     message,
-  } = useSelector(appointment);
+  } = useSelector(appointment, shallowEqual);
 
   useEffect(() => {
     if (id) {
@@ -37,11 +42,7 @@ const Appointment: React.FC = () => {
   }, [id, dispatch]);
 
   const mailtoLink = `mailto:${selected?.doctor_id.user_id.email}`;
-  const appDate = selected?.appointment_date.toString().slice(0, 10);
-
-  const date = new Date(selected?.appointment_date as Date).getTime();
-  const diff = date - new Date().getTime();
-  const canCancel = (diff / (1000 * 60)).toFixed(0);
+  const appDate = moment(selected?.appointment_date).format("DD/MM/YYYY");
 
   const cancelAppointmentNow = () => {
     if (selected) {
@@ -60,49 +61,53 @@ const Appointment: React.FC = () => {
       ) : (
         <>
           {selected !== null ? (
-            <div className="h-full flex flex-col p-3">
-              <div className="flex flex-col lg:flex-row gap-3 justify-between items-center">
-                <Card className="xl:w-full xxl:!w-fit h-auto xxl:p-12">
-                  <div className="flex flex-col xl:!flex-row xl:justify-center gap-2 items-center p-0">
+            <div className="flex h-full flex-col p-3">
+              <div className="flex flex-col items-center justify-between gap-3 lg:flex-row">
+                <Card className="h-auto xl:w-full xxl:!w-fit xxl:p-12">
+                  <div className="flex flex-col items-center gap-2 p-0 xl:!flex-row xl:justify-center">
                     <CustomImg
                       url={selected.doctor_id.user_id.photo}
-                      className="w-28 xxl:!w-48 h-auto"
+                      className="h-auto w-28 xxl:!w-48"
                     />
                     <div>
-                      <h1 className="font-bold text-xl text-blue-700">
-                        {"Dr. " +
+                      <Header
+                        text={
+                          "Dr. " +
                           selected.doctor_id.first_name +
                           " " +
-                          selected.doctor_id.last_name}
-                      </h1>
-                      <div className="text-xs xl:!text-md xxl:!text-xl text-gray-600">
+                          selected.doctor_id.last_name
+                        }
+                        size={1}
+                        bold
+                        position="start"
+                        className="!text-blue-700"
+                      />
+                      <div className="xl:!text-md text-xs text-gray-600 xxl:!text-xl">
                         <p>
-                          {" "}
                           Age: {selected.doctor_id.age} |{" "}
                           {selected.doctor_id.speciality}{" "}
                         </p>
-                        <p className="mt-2 mb">
-                          <span className="text-gray-600"> Qualification:</span>{" "}
-                          {selected.doctor_id.qualification}
+                        <p className="mb mt-2">
+                          Qualification: {selected.doctor_id.qualification}
                         </p>
-                        <p className="">
-                          <span className="text-gray-600"> Email: </span>
+                        <p>
+                          Email:{" "}
                           <Link
                             to={mailtoLink}
-                            className="text-blue-500 underline hover:text-blue-700 cursor-pointer"
+                            className="cursor-pointer text-blue-500 underline hover:text-blue-700"
                           >
                             {selected.doctor_id.user_id.email}
                           </Link>
                         </p>
                       </div>
-                      <p className="text-xs xl:!text-md xxl:!text-xl text-gray-500 mt-2 text-justify">
-                        {selected.doctor_id.bio.split(".")[0]}
+                      <p className="xl:!text-md mt-2 line-clamp-2 text-justify text-xs text-gray-500 xxl:!text-xl">
+                        {selected.doctor_id.bio}
                       </p>
                     </div>
                   </div>
                 </Card>
-                <div className="h-full w-full flex flex-col gap-3">
-                  <div className="flex flex-col gap-3 xxl:!text-2xl xl:!text-sm">
+                <div className="flex h-full w-full flex-col gap-3">
+                  <div className="flex flex-col gap-3 xl:!text-sm xxl:!text-2xl">
                     <p className="flex flex-col">
                       <span className="text-md font-semibold">Date&Time</span>
                       {appDate} ({formatStartEnd(selected.appointment_date)})
@@ -115,26 +120,26 @@ const Appointment: React.FC = () => {
                     )}
                   </div>
 
-                  {Number(canCancel) > 60 && !selected.finished && (
-                    <Button
-                      onClick={cancelAppointmentNow}
-                      className="md:mt-auto md:ml-auto w-full lg:!w-fit"
-                      color="failure"
-                    >
-                      <p className="xxl:text-xl">Cancel Appointment</p>
-                    </Button>
-                  )}
+                  {canCancelOrEdit(selected.appointment_date) &&
+                    !selected.finished && (
+                      <Button
+                        onClick={cancelAppointmentNow}
+                        className="w-full md:ml-auto md:mt-auto lg:!w-fit"
+                        color="failure"
+                      >
+                        <p className="xxl:text-lg">Cancel Appointment</p>
+                      </Button>
+                    )}
                 </div>
               </div>
-              <div className="flex justify-between flex-col h-full mt-6">
+              <div className="mt-6 flex h-full flex-col justify-between">
                 <AppointmentOverviewEdit />
                 <Footer variant={2} />
               </div>
-              <div></div>
             </div>
           ) : (
-            <div className="flex h-full justify-center items-center">
-              <ErrorMessage size="md" text={message} />
+            <div className="flex h-full items-center justify-center">
+              <ErrorMessage text={message} />
             </div>
           )}
         </>

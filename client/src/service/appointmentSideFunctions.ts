@@ -1,5 +1,5 @@
 import moment from "moment";
-import { apiClient } from "../helpers/ApiClient";
+import { apiClientAuth } from "../helpers/ApiClient";
 import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
 import {
@@ -7,6 +7,7 @@ import {
   doctor_id,
   patient_id,
 } from "../features/appointment/appointmentSlice";
+import { Value } from "../pages/patient/appointment/MakeAppointment";
 
 export const workTime = [
   "9:00",
@@ -39,7 +40,7 @@ export type MyEvent = {
 };
 
 export async function getDoctor(token: string, id: string) {
-  const response = await apiClient.get(`/doctor/${id}`, {
+  const response = await apiClientAuth.get(`/doctor/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -57,7 +58,7 @@ export async function getLatestAppointment(
   id: string,
   latestApp: latestApp,
 ) {
-  const response = await apiClient.post(
+  const response = await apiClientAuth.post(
     `/appointment/${id}/patient-latest-record`,
     latestApp,
     {
@@ -107,7 +108,7 @@ export async function getPatientFinishedAppointments(
   id: string,
   page: number,
 ) {
-  const response = await apiClient.get(`/appointment/patient/${id}`, {
+  const response = await apiClientAuth.get(`/appointment/patient/${id}`, {
     params: { page },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -117,14 +118,14 @@ export async function getPatientFinishedAppointments(
 }
 
 export async function getLatestFinished() {
-  const response = await apiClient.get(`/appointment/`);
+  const response = await apiClientAuth.get(`/appointment/`);
   return response.data;
 }
 
 export async function numberOfAppointmentsPerMonthForDepartments(
   month: string,
 ) {
-  const response = await apiClient.get(`/appointment/per-month/${month}`);
+  const response = await apiClientAuth.get(`/appointment/per-month/${month}`);
   return response.data;
 }
 
@@ -152,11 +153,14 @@ export type DocDashboardInfoType = {
 };
 
 export async function doctorDashboardInfo(token: string) {
-  const response = await apiClient.get("/appointment/doctor-dashboard-info", {
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await apiClientAuth.get(
+    "/appointment/doctor-dashboard-info",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   return response.data;
 }
 
@@ -172,7 +176,7 @@ export type DocDashboardType = {
 };
 
 export async function doctorDashboard(token: string) {
-  const response = await apiClient.get("/appointment/doctor-dashboard", {
+  const response = await apiClientAuth.get("/appointment/doctor-dashboard", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -180,20 +184,11 @@ export async function doctorDashboard(token: string) {
   return response.data;
 }
 
-export async function getOtherAppsForDay(
-  token: string,
-  date: Date,
-  doctor_id: string,
-) {
-  const response = await apiClient.post(
-    "/appointment/others-today",
-    { date, doctor_id },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+export async function getOtherAppsForDay(date: Date, doctor_id: string) {
+  const response = await apiClientAuth.post("/appointment/others-today", {
+    date,
+    doctor_id,
+  });
   return response.data;
 }
 
@@ -207,12 +202,8 @@ export function formatDate(date: Date) {
   return newDate;
 }
 
-export async function availableTimeForApp(
-  value: Date,
-  doctor_id: string,
-  token: string,
-) {
-  const response = await getOtherAppsForDay(token, value, doctor_id);
+export async function availableTimeForApp(value: Date, doctor_id: string) {
+  const response = await getOtherAppsForDay(value, doctor_id);
 
   const appTime =
     response &&
@@ -273,4 +264,43 @@ export function isDSTFunc() {
   const date = moment().isDST();
   const time = date ? 2 : 1;
   return time;
+}
+
+export function canCancelOrEdit(appDate: Date) {
+  const date = new Date(appDate).getTime();
+  const diff = date - new Date().getTime();
+  const canCancel = (diff / (1000 * 60)).toFixed(0);
+
+  return Number(canCancel) > 60;
+}
+
+type CorrectDate = {
+  value: Value;
+  newTime: string;
+};
+
+export function getCorrectDate({ value, newTime }: CorrectDate) {
+  const time = convert12HourTo24Hour(newTime);
+
+  const index = value
+    ?.toLocaleString()
+    .indexOf(new Date(value.toString()).getFullYear().toString());
+
+  const date = value
+    ?.toLocaleString()
+    .slice(0, Number(index) + 4)
+    .replace(/\./g, "-")
+    .replace(/\s+/g, "");
+
+  const newAppDate =
+    date?.replace(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, (_, p1, p2, p3) => {
+      const month = p1.padStart(2, "0");
+      const day = p2.padStart(2, "0");
+      return `${p3}-${month}-${day}`;
+    }) +
+    "T" +
+    time +
+    ":00";
+
+  return new Date(newAppDate.replace(/\//g, "-").trim());
 }

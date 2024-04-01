@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useAppDispatch } from "../../../app/hooks";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   appointment,
   getAppointmentsForPerson,
@@ -13,6 +13,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import { MyEvent } from "../../../service/appointmentSideFunctions";
+import toast from "react-hot-toast";
 
 const localizer = momentLocalizer(moment);
 
@@ -20,7 +21,7 @@ const MyAppointments: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { personAppointments, status } = useSelector(appointment);
+  const { personAppointments, status } = useSelector(appointment, shallowEqual);
 
   useSelectedPage("My appointments");
 
@@ -32,29 +33,36 @@ const MyAppointments: React.FC = () => {
     };
   }, [dispatch]);
 
-  const myEventsList: MyEvent[] = personAppointments.map((n) => ({
-    id: n._id,
-    start: new Date(n.appointment_date),
-    end: new Date(new Date(n.appointment_date).getTime() + 20 * 60000),
-    title: `A: ${n.doctor_id.speciality}`,
-  }));
+  const myEventsList: MyEvent[] = useMemo(() => {
+    return personAppointments.map((n) => ({
+      id: n._id,
+      start: new Date(n.appointment_date),
+      end: new Date(new Date(n.appointment_date).getTime() + 20 * 60000),
+      title: `A: ${n.doctor_id.speciality}`,
+    }));
+  }, [personAppointments]);
 
   const handleNavigate = ({ id }: { id: string }) => {
     navigate(id);
   };
+
+  useEffect(() => {
+    if (status === "failed")
+      toast.error("Something went wrong, please try again later!");
+  }, [status]);
 
   return (
     <>
       {id ? (
         <Outlet />
       ) : (
-        <div className="px-4 py-3 h-full w-full flex-col text-sm flex justify-center items-center">
+        <div className="flex h-full w-full flex-col items-center justify-center px-4 py-3 text-sm">
           {status === "loading" ? (
             <CustomSpinner size="xl" />
           ) : (
             <>
               <Calendar
-                className="w-full h-full flex flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"
+                className="flex h-full w-full flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"
                 localizer={localizer}
                 events={myEventsList}
                 onSelectEvent={handleNavigate}

@@ -63,15 +63,15 @@ const Medicine: React.FC = () => {
   return (
     <div className="h-fit md:!h-full">
       <div className="h-full transition-all duration-300">
-        <div className="h-full lg:pl-3 lg:divide-x flex flex-col gap-4 md:!gap-0 lg:!gap-3 lg:!flex-row w-full">
+        <div className="flex h-full w-full flex-col gap-4 md:!gap-0 lg:!flex-row lg:!gap-3 lg:divide-x lg:pl-3">
           {status === "loading" ? (
             <CustomSpinner size="xl" />
           ) : (
-            <div className=" w-full flex flex-col h-full lg:!w-2/3 justify-start px-2 lg:!px-0">
+            <div className=" flex h-full w-full flex-col justify-start px-2 lg:!w-2/3 lg:!px-0">
               <MedicineSearchHeader />
               {med && med?.data?.length > 0 && status !== "failed" ? (
-                <div className="flex flex-col justify-between h-full">
-                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2 justify-center">
+                <div className="flex h-full flex-col justify-between">
+                  <div className="flex h-fit w-full flex-col flex-wrap justify-center md:!flex-row xxl:mt-2">
                     {med?.data?.map((m: MedicineType) => (
                       <MedicineCard
                         key={m._id}
@@ -90,7 +90,7 @@ const Medicine: React.FC = () => {
                   </Footer>
                 </div>
               ) : (
-                <div className="h-full w-full flex-col flex justify-center items-center">
+                <div className="flex h-full w-full flex-col items-center justify-center">
                   <ErrorMessage
                     text={message || "No data available."}
                     size="md"
@@ -109,11 +109,7 @@ const Medicine: React.FC = () => {
           show={show}
           onClose={onClose}
           medicine={m}
-          url={
-            m.photo.startsWith(m.name)
-              ? `http://localhost:3001/uploads/${m.photo}`
-              : m.photo
-          }
+          url={m.photo}
         />
       )}
     </div>

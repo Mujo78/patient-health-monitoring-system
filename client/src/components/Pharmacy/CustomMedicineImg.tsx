@@ -1,5 +1,5 @@
 import React from "react";
-import defaultIg from "../../assets/default-medicine.jpg";
+import defaultImg from "../../assets/default-medicine.jpg";
 
 type Props = {
   url: string;
@@ -15,9 +15,9 @@ const CustomMedicineImg: React.FC<Props> = ({
   height,
 }) => {
   const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
-    e.currentTarget.src = defaultIg;
+    e.currentTarget.src = defaultImg;
   };
 
   return (
