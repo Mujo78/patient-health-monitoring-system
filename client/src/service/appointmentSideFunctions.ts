@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { MomentInput } from "moment";
 import { apiClientAuth } from "../helpers/ApiClient";
 import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
@@ -7,7 +7,9 @@ import {
   doctor_id,
   patient_id,
 } from "../features/appointment/appointmentSlice";
-import { Value } from "../pages/patient/appointment/MakeAppointment";
+
+type ValuePiece = Date | null;
+export type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export const workTime = [
   "9:00",
@@ -39,12 +41,9 @@ export type MyEvent = {
   title: string;
 };
 
-export async function getDoctor(token: string, id: string) {
-  const response = await apiClientAuth.get(`/doctor/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getDoctor(id: string) {
+  //const docId = id.slice(0, 23) + "e";
+  const response = await apiClientAuth.get(`/doctor/${id}`);
   return response.data;
 }
 
@@ -208,17 +207,29 @@ export async function availableTimeForApp(value: Date, doctor_id: string) {
   const appTime =
     response &&
     response.map((n: Appointment) => {
-      const date = new Date(n.appointment_date);
-      const localTime = new Date(date.getTime());
-      const formattedTime = localTime.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-      });
-      const newTime = formattedTime.slice(0, 5).trim();
-      return newTime;
+      const formattedTime = moment(n.appointment_date).format("h:mm");
+      return formattedTime;
     });
 
   return appTime;
+}
+
+export function getAvailableTime(
+  time: string[] | null | undefined,
+  selectedDayAppointments: Appointment[],
+) {
+  if (time && selectedDayAppointments) {
+    const appTime = selectedDayAppointments.map((n) => {
+      const formattedTime = moment(n.appointment_date).format("h:mm");
+      return formattedTime;
+    });
+
+    const mergedArrayTime = appTime.concat(time);
+    const timeToReturn =
+      mergedArrayTime && workTime.filter((m) => !mergedArrayTime.includes(m));
+
+    return timeToReturn;
+  }
 }
 
 export function isDoctorAvailable(date: Date, available_days: string[]) {
@@ -267,40 +278,16 @@ export function isDSTFunc() {
 }
 
 export function canCancelOrEdit(appDate: Date) {
-  const date = new Date(appDate).getTime();
-  const diff = date - new Date().getTime();
-  const canCancel = (diff / (1000 * 60)).toFixed(0);
+  const diff = moment(appDate).diff(moment(), "minutes");
 
-  return Number(canCancel) > 60;
+  return diff > 60;
 }
 
-type CorrectDate = {
-  value: Value;
-  newTime: string;
-};
-
-export function getCorrectDate({ value, newTime }: CorrectDate) {
+export function getCorrectDate(value: Value, newTime: string) {
   const time = convert12HourTo24Hour(newTime);
 
-  const index = value
-    ?.toLocaleString()
-    .indexOf(new Date(value.toString()).getFullYear().toString());
+  const date = moment(value as MomentInput).format("YYYY-MM-DD");
 
-  const date = value
-    ?.toLocaleString()
-    .slice(0, Number(index) + 4)
-    .replace(/\./g, "-")
-    .replace(/\s+/g, "");
-
-  const newAppDate =
-    date?.replace(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, (_, p1, p2, p3) => {
-      const month = p1.padStart(2, "0");
-      const day = p2.padStart(2, "0");
-      return `${p3}-${month}-${day}`;
-    }) +
-    "T" +
-    time +
-    ":00";
-
-  return new Date(newAppDate.replace(/\//g, "-").trim());
+  const newAppDate = `${date}T${time}:00`;
+  return new Date(newAppDate);
 }

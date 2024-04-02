@@ -4,11 +4,21 @@ type Props = {
   text?: string;
   size?: string;
   className?: string;
+  smHide?: boolean;
+  xlHide?: boolean;
 };
 
-const ErrorMessage: React.FC<Props> = ({ text, size, className }) => {
+const ErrorMessage: React.FC<Props> = ({
+  text,
+  size,
+  className,
+  smHide,
+  xlHide,
+}) => {
   return (
-    <div className="h-3 font-Poppins">
+    <div
+      className={`h-3 font-Poppins ${smHide && "hidden xl:!flex"} ${xlHide && "flex xl:!hidden"}`}
+    >
       <p
         className={`text-red-600 text-${
           size ? size : "xs"

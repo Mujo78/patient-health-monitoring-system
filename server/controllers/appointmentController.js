@@ -21,8 +21,11 @@ const makeAppointment = asyncHandler(async (req, res) => {
 
   const appointmentDateWithoutTime =
     moment(appointment_date).tz("Europe/Sarajevo");
-  const startOfDay = appointmentDateWithoutTime.startOf("day").toDate();
-  const endOfDay = appointmentDateWithoutTime.endOf("day").toDate();
+  const startOfDay = appointmentDateWithoutTime
+    .startOf("day")
+    .utc(true)
+    .toDate();
+  const endOfDay = appointmentDateWithoutTime.endOf("day").utc(true).toDate();
 
   const existingAppointment = await Appointment.findOne({
     patient_id: { $ne: patient._id },
@@ -291,8 +294,8 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
 
   if (!userDate.isValid()) return res.status(400).json("Invalid date format");
 
-  const startOfDay = userDate.clone().startOf("day").utc().toDate();
-  const endOfDay = userDate.clone().endOf("day").utc().toDate();
+  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
+  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
 
   query[mod_id] = mod._id;
   query.appointment_date = {
@@ -301,6 +304,7 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
   };
 
   const appointmentsDay = await Appointment.find(query);
+
   if (appointmentsDay) return res.status(200).json(appointmentsDay);
 
   return res.status(404).json("There was an error, please try again later!");
@@ -308,7 +312,6 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
 
 const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
   const { date, doctor_id } = req.body;
-
   const user = await User.findById(req.user._id);
   if (!user)
     return res.status(404).json("There was an error, please try again later!");
@@ -323,8 +326,8 @@ const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
     return res.status(400).json("Invalid date format");
   }
 
-  const startOfDay = userDate.clone().startOf("day").utc().toDate();
-  const endOfDay = userDate.clone().endOf("day").utc().toDate();
+  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
+  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
 
   const appointmentsDay = await Appointment.find({
     doctor_id: doctor_id,

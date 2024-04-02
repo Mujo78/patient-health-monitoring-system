@@ -12,7 +12,7 @@ import { Button, Card } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomImg from "../../../components/UI/CustomImg";
 import Footer from "../../../components/UI/Footer";
-import AppointmentOverviewEdit from "./AppointmentOverviewEdit";
+import AppointmentOverviewEdit from "../../../components/Appointment/AppointmentOverviewEdit";
 import {
   canCancelOrEdit,
   formatStartEnd,

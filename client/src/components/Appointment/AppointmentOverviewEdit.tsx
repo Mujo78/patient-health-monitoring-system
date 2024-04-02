@@ -1,36 +1,37 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Tabs, Textarea, Badge } from "flowbite-react";
+import { Tabs, Textarea } from "flowbite-react";
 import {
   appointment,
   editAppointment,
   getAppointmentsForADay,
   reset,
   resetAppointmentDay,
-} from "../../../features/appointment/appointmentSlice";
-import ErrorMessage from "../../../components/UI/ErrorMessage";
+} from "../../features/appointment/appointmentSlice";
+import ErrorMessage from "../UI/ErrorMessage";
 import { shallowEqual, useSelector } from "react-redux";
 import {
   HiOutlinePencilSquare,
   HiOutlineDocumentDuplicate,
 } from "react-icons/hi2";
-import CalendarAppointment from "../../../components/Appointment/CalendarAppointment";
-import { Value } from "./MakeAppointment";
-import { useAppDispatch } from "../../../app/hooks";
+import CalendarAppointment from "./CalendarAppointment";
+import { useAppDispatch } from "../../app/hooks";
 import {
+  Value,
   availableTimeForApp,
   canCancelOrEdit,
   convert12HourTo24Hour,
+  getAvailableTime,
   getCorrectDate,
   isDSTFunc,
   isDoctorAvailable,
-  workTime,
-} from "../../../service/appointmentSideFunctions";
-import CustomButton from "../../../components/UI/CustomButton";
+} from "../../service/appointmentSideFunctions";
+import CustomButton from "../UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import moment, { MomentInput } from "moment";
-import AppointmentOverview from "../../../components/Appointment/AppointmentOverview";
-import CustomSpinner from "../../../components/UI/CustomSpinner";
+import AppointmentOverview from "./AppointmentOverview";
+import CustomSpinner from "../UI/CustomSpinner";
+import TimeButton from "./TimeButton";
 
 const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const AppointmentOverviewEdit: React.FC = () => {
     status,
     message,
   } = useSelector(appointment, shallowEqual);
+  const dispatch = useAppDispatch();
 
   const appointmentReason = sApp?.reason ?? "";
   const formatedAppointmentTime = convert12HourTo24Hour(
@@ -58,37 +60,40 @@ const AppointmentOverviewEdit: React.FC = () => {
   const [reason, setReason] = useState<string>(appointmentReason);
   const [active, setActive] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        if (sApp?.doctor_id._id && active === 1) {
+        if (sApp?.doctor_id._id && value) {
           setLoading(true);
+
           const response = await availableTimeForApp(
             value as Date,
             sApp?.doctor_id._id,
           );
+
           setTime(response);
         }
       } catch (error: any) {
-        setError(error.message);
-        throw new Error(error.message);
+        setError(true);
+        throw new Error(error);
       } finally {
         setLoading(false);
       }
     }
 
-    if (value) {
+    if (active === 1) {
       fetchData();
     }
   }, [value, active, sApp?.doctor_id._id]);
 
   useEffect(() => {
-    if (error) toast.error("Something went wrong, please try again later!");
+    if (error) {
+      setActive(1);
+      toast.error("Something went wrong, please try again later!");
+    }
   }, [error]);
-
-  const dispatch = useAppDispatch();
 
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value));
@@ -96,34 +101,15 @@ const AppointmentOverviewEdit: React.FC = () => {
   };
 
   const availableTime = useMemo(() => {
-    if (time && selectedDayAppointments) {
-      const appTime = selectedDayAppointments.map((n) => {
-        const date = new Date(n.appointment_date);
-        const localTime = new Date(date.getTime());
-        const formattedTime = localTime.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-        });
-        const newTime = formattedTime.slice(0, 5).trim();
-        return newTime;
-      });
-
-      const mergedArrayTime = appTime.concat(time);
-
-      return (
-        mergedArrayTime && workTime.filter((m) => !mergedArrayTime.includes(m))
-      );
+    if (active === 1) {
+      return getAvailableTime(time, selectedDayAppointments);
     }
-  }, [selectedDayAppointments, time]);
-
-  const setTimeForDate = (time: string) => {
-    setNewTime(time);
-  };
+  }, [selectedDayAppointments, time, active]);
 
   const handleEdit = () => {
     const editObjectData = {
       reason,
-      appointment_date: getCorrectDate({ value, newTime }),
+      appointment_date: getCorrectDate(value, newTime),
     };
 
     if (
@@ -138,7 +124,7 @@ const AppointmentOverviewEdit: React.FC = () => {
             navigate("../");
             dispatch(reset());
           } else {
-            setActive(1);
+            setError(true);
           }
         });
       }
@@ -151,6 +137,10 @@ const AppointmentOverviewEdit: React.FC = () => {
       dispatch(getAppointmentsForADay(value as Date));
       dispatch(resetAppointmentDay());
     }
+  };
+
+  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setReason(event.target.value);
   };
 
   return (
@@ -185,7 +175,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                     name="reason"
                     id="content"
                     className="text-sm xxl:!text-xl"
-                    onChange={(e) => setReason(e.currentTarget.value)}
+                    onChange={onChange}
                     value={reason}
                     rows={10}
                   />
@@ -203,35 +193,26 @@ const AppointmentOverviewEdit: React.FC = () => {
                       Date:
                       {" " +
                         moment(value as MomentInput).format("DD/MM/YYYY")}{" "}
-                      {availableTime && availableTime.length}
+                      ({availableTime && availableTime.length})
                     </h1>
                     <div className="flex w-full flex-wrap rounded-lg border border-gray-300 p-1">
                       {isDoctorAvailable(
                         value as Date,
                         sApp?.doctor_id.available_days as string[],
                       ) ? (
-                        <div className="mx-auto my-auto">
-                          <ErrorMessage text="You can not make appointment today" />
-                        </div>
+                        <div className="mx-auto my-auto"></div>
                       ) : loading && !error ? (
-                        <CustomSpinner />
-                      ) : availableTime ? (
+                        <div className="w-full p-16">
+                          <CustomSpinner />
+                        </div>
+                      ) : availableTime && status !== "failed" && !error ? (
                         availableTime.map((n) => (
-                          <Badge
-                            size="sm"
+                          <TimeButton
                             key={n}
-                            onClick={() => setTimeForDate(n)}
-                            color="gray"
-                            className={`m-1 xxl:!text-xl ${
-                              (newTime === convert12HourTo24Hour(n) ||
-                                newTime === n) &&
-                              "bg-blue-700 text-white hover:text-white"
-                            } cursor-pointer  focus:!ring-blue-600`}
-                          >
-                            {parseInt(n.split(":")[0]) < 9
-                              ? `${n} PM`
-                              : `${n} AM`}
-                          </Badge>
+                            setNewTime={setNewTime}
+                            newTime={newTime}
+                            time={n}
+                          />
                         ))
                       ) : (
                         <p className="lg:!text-md mx-auto my-auto text-sm xxl:!text-xl">

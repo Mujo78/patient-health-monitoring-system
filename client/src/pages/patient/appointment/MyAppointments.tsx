@@ -26,29 +26,35 @@ const MyAppointments: React.FC = () => {
   useSelectedPage("My appointments");
 
   useEffect(() => {
-    dispatch(getAppointmentsForPerson());
+    if (!id) {
+      dispatch(getAppointmentsForPerson());
+    }
 
     return () => {
       dispatch(resetPersonAppointment());
     };
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const myEventsList: MyEvent[] = useMemo(() => {
-    return personAppointments.map((n) => ({
-      id: n._id,
-      start: new Date(n.appointment_date),
-      end: new Date(new Date(n.appointment_date).getTime() + 20 * 60000),
-      title: `A: ${n.doctor_id.speciality}`,
-    }));
-  }, [personAppointments]);
+    if (!id) {
+      return personAppointments.map((n) => ({
+        id: n._id,
+        start: new Date(n.appointment_date),
+        end: new Date(new Date(n.appointment_date).getTime() + 20 * 60000),
+        title: `A: ${n.doctor_id.speciality}`,
+      }));
+    }
+    return [];
+  }, [personAppointments, id]);
 
   const handleNavigate = ({ id }: { id: string }) => {
     navigate(id);
   };
 
   useEffect(() => {
-    if (status === "failed")
+    if (status === "failed") {
       toast.error("Something went wrong, please try again later!");
+    }
   }, [status]);
 
   return (

@@ -1,33 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CustomButton from "../UI/CustomButton";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import useSelectedPage from "../../hooks/useSelectedPage";
 
 const AppointmentLayout: React.FC = () => {
   const navigate = useNavigate();
-  const [newApp, setNewApp] = useState<boolean>(false);
-  const location = useLocation();
+  const location = useLocation().pathname;
 
-  useEffect(() => {
-    if (location.pathname !== "/appointment") {
-      setNewApp(true);
-    } else {
-      setNewApp(false);
-    }
-  }, [location]);
+  useSelectedPage("Book appointment");
 
   const makeNewAppointment = () => {
     navigate("new", { replace: true });
-    setNewApp(true);
   };
 
   return (
     <>
-      {newApp ? (
+      {location !== "/appointment" ? (
         <Outlet />
       ) : (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex h-full items-center justify-center">
           <CustomButton onClick={makeNewAppointment}>
-            <p className="text-md xxl:!text-xl">Make appointment</p>
+            <p className="text-md xxl:!text-lg">Make appointment</p>
           </CustomButton>
         </div>
       )}

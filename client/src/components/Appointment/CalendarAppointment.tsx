@@ -1,8 +1,10 @@
 import React from "react";
 import Calendar, { OnClickFunc } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Value } from "../../pages/patient/appointment/MakeAppointment";
-import { isDoctorAvailable } from "../../service/appointmentSideFunctions";
+import {
+  isDoctorAvailable,
+  Value,
+} from "../../service/appointmentSideFunctions";
 
 type Props = {
   value: Value;
@@ -21,8 +23,8 @@ const CalendarAppointment: React.FC<Props> = ({
 }) => {
   return (
     <Calendar
-      className={`font-Poppins shadow-xl w-full lg:w-fit xxl:!text-xl xxl:!p-8 border-gray-300 rounded-xl ${
-        variant === 1 ? "text-md mt-3 w-full p-4" : "text-sm mt-0  h-fit p-2"
+      className={`w-full rounded-xl border-gray-300 font-Poppins shadow-xl lg:w-fit xxl:!p-8 xxl:!text-xl ${
+        variant === 1 ? "text-md mt-3 w-full p-4" : "mt-0 h-fit  p-2 text-sm"
       }`}
       onChange={setValue}
       onClickDay={handleGetAppForADay}

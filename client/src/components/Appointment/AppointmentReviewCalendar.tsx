@@ -1,7 +1,7 @@
 import { Card, Spinner, Table } from "flowbite-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Calendar from "react-calendar";
-import { Value } from "../../pages/patient/appointment/MakeAppointment";
+import { Value } from "../../service/appointmentSideFunctions";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector, shallowEqual } from "react-redux";
 import {

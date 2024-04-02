@@ -1,5 +1,5 @@
 import { UserInfo } from "../features/appointment/appointmentSlice";
-import { apiClient } from "../helpers/ApiClient";
+import { apiClient, apiClientAuth } from "../helpers/ApiClient";
 
 const URL = "/department";
 
@@ -10,12 +10,8 @@ export type Department = {
   phone_number: string;
 };
 
-export async function getDepartments(token: string) {
-  const response = await apiClient.get(`${URL}/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getDepartments() {
+  const response = await apiClientAuth.get(`${URL}/`);
 
   return response.data;
 }
@@ -57,12 +53,8 @@ export type DoctorType = {
   available_days: string[];
 };
 
-export async function getDoctorsForDepartment(token: string, name: string) {
-  const response = await apiClient.get(`${URL}/${name}/doctors`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getDoctorsForDepartment(name: string) {
+  const response = await apiClientAuth.get(`${URL}/${name}/doctors`);
 
   return response.data;
 }

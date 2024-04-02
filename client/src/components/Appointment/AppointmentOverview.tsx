@@ -67,9 +67,10 @@ const AppointmentOverview: React.FC = () => {
       ) : (
         <div className="flex h-80 flex-col items-center justify-center gap-6 text-center md:!gap-0 md:text-balance">
           <ErrorMessage
+            className="xxl:!text-xl"
             text={`Your appointment date: ${moment(sApp?.appointment_date).format("DD/MM/YYYY")}`}
           />
-          <p className="mt-2 text-xs text-gray-400 xxl:!text-lg">
+          <p className="mt-2 text-xs text-gray-400 xxl:!mt-4 xxl:!text-xl">
             You will be able to see overview after doctor make it finished
           </p>
         </div>
