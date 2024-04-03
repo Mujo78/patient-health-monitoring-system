@@ -25,7 +25,7 @@ const MakeAppointmentInfo: React.FC<Props> = ({ loading, doctor }) => {
             />
             <div className="w-full">
               <h1 className="text-md mb-1 font-bold text-blue-700 xxl:text-3xl">
-                {"Dr. " + doctor.first_name + " " + doctor.last_name}
+                Dr. {doctor.first_name + " " + doctor.last_name}
               </h1>
               <p className="line-clamp-2 text-xs xxl:!text-lg">{doctor.bio}</p>
             </div>

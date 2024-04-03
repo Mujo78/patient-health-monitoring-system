@@ -13,7 +13,7 @@ const ProfileLink: React.FC<Props> = ({ children, to, text }) => {
   return (
     <Link
       to={to}
-      className={`p-2 flex items-center hover:bg-gray-100 transition-all duration-300 ${
+      className={`flex items-center p-2 transition-all duration-300 hover:bg-gray-100 ${
         (location === to && "bg-gray-100") ||
         (location.endsWith(to) && "bg-gray-100")
       }`}

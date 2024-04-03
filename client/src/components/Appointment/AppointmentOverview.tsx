@@ -77,12 +77,7 @@ const AppointmentOverview: React.FC = () => {
       )}
 
       {medicine && (
-        <MedicineModal
-          show={show}
-          medicine={medicine}
-          url={medicine.photo}
-          onClose={onClose}
-        />
+        <MedicineModal show={show} medicine={medicine} onClose={onClose} />
       )}
     </>
   );

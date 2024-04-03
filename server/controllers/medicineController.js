@@ -33,7 +33,7 @@ const getMedicines = asyncHandler(async (req, res) => {
   const limit = 4;
   const startIndx = (Number(page) - 1) * limit;
 
-  query = query.sort({ category: -1 }).limit(limit).skip(startIndx);
+  query = query.limit(limit).skip(startIndx);
 
   if (searchQuery) {
     if (category) {
@@ -47,7 +47,7 @@ const getMedicines = asyncHandler(async (req, res) => {
   }
 
   const result = await query.exec();
-  if (result.length === 0) return res.status(404).json("No data available.");
+  if (result.length === 0) return res.status(404).json("No data available");
 
   const total = await Medicine.countDocuments(query.getFilter());
   responseObj.currentPage = Number(page);

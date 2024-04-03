@@ -3,11 +3,11 @@ import { HiOutlineCog6Tooth, HiOutlineLockClosed } from "react-icons/hi2";
 import Profile from "../Layout/Profile";
 import useSelectedPage from "../../hooks/useSelectedPage";
 import ProfileLink from "../Profile/ProfileLink";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
 
 const PharmacyProfile: React.FC = () => {
-  const { accessUser } = useSelector(authUser);
+  const { accessUser } = useSelector(authUser, shallowEqual);
   useSelectedPage("Profile");
 
   return (

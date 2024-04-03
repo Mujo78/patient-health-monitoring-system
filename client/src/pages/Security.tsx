@@ -11,24 +11,24 @@ import {
 import { changePasswordValidationSchema } from "../validations/auth/changePasswordValidation";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 import ErrorMessage from "../components/UI/ErrorMessage";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useAppDispatch } from "../app/hooks";
 import { toast } from "react-hot-toast";
 import Input from "../components/UI/Input";
 import CustomSpinner from "../components/UI/CustomSpinner";
 
 const Security: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] =
     useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const { status, message } = useSelector(authUser, shallowEqual);
+
   const { register, handleSubmit, formState, reset } =
     useForm<changePasswordInterface>({
       resolver: yupResolver(changePasswordValidationSchema),
     });
   const { errors } = formState;
-
-  const { status, message } = useSelector(authUser);
 
   const toggleNewPassword = () => {
     setShowNewPassword((n) => !n);
@@ -43,23 +43,25 @@ const Security: React.FC = () => {
       if (typeof action.payload === "object") {
         toast.success("Successfully changed password.");
         reset();
+      } else {
+        toast.error(
+          "Something went wrong while changing your password, try again later!",
+        );
       }
     });
   };
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex h-full flex-col justify-between">
       <Header text="Security" />
       {status === "loading" ? (
         <CustomSpinner />
       ) : (
-        <div className="flex flex-wrap gap-4 w-full justify-around h-full items-center">
-          <div className="flex flex-col flex-grow items-start gap-3 mt-3">
-            <h1 className="font-semibold text-xl xl:!text-3xl text-center lg:!text-left">
-              Change password
-            </h1>
-            <p className="text-sm xxl:!text-xl mb-1">Password suggestion:</p>
-            <ol className="text-xs xxl:!text-lg list-disc ml-6 text-gray-500">
+        <div className="flex h-full w-full flex-wrap items-center justify-around gap-2">
+          <div className="mt-3 flex flex-grow flex-col items-start gap-3">
+            <Header text="Change password" size={2} className="xl:!text-3xl" />
+            <p className="mb-1 text-sm xxl:!text-xl">Password suggestions:</p>
+            <ol className="ml-6 list-disc text-xs text-gray-500 xxl:!text-lg">
               <li>At least 6 characters</li>
               <li>At least 1 upper case letter (A-Z)</li>
               <li>At least 1 lower case letter (a-z)</li>
@@ -68,7 +70,7 @@ const Security: React.FC = () => {
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-grow lg:!justify-start lg:!w-2/4 flex-col xxl:gap-3"
+            className="flex flex-grow flex-col lg:!w-2/4 lg:!justify-start xxl:gap-3"
           >
             <div className="relative">
               <Input
@@ -97,7 +99,7 @@ const Security: React.FC = () => {
                 error={errors.newPassword}
               >
                 <div
-                  className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 -translate-y-1/2 transform cursor-pointer xxl:!top-14"
                   onClick={toggleNewPassword}
                 >
                   {showNewPassword ? (
@@ -119,7 +121,7 @@ const Security: React.FC = () => {
                 error={errors.confirmNewPassword}
               >
                 <div
-                  className="absolute right-2 top-12 xxl:!top-14 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute right-2 top-12 -translate-y-1/2 transform cursor-pointer xxl:!top-14"
                   onClick={toggleConfirmNewPassword}
                 >
                   {showConfirmNewPassword ? (

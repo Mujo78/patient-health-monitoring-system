@@ -190,7 +190,11 @@ const changeMyPassword = asyncHandler(async (req, res) => {
 
   const user = await User.findById(req.user._id).select("+password");
 
-  if (!(await user.correctPassword(currentPassword, user.password))) {
+  if (user === undefined) {
+    return res.status(404).json("User not found! Something went wrong!");
+  }
+
+  if (!(await user?.correctPassword(currentPassword, user.password))) {
     return res.status(400).json("Wrong password!");
   }
 

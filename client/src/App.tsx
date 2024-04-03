@@ -18,7 +18,7 @@ import PatientCheck from "./helpers/PatientCheck";
 import MakeAppointment from "./pages/patient/appointment/MakeAppointment";
 import MyAppointments from "./pages/patient/appointment/MyAppointments";
 import MedicalStaff from "./pages/patient/staff/MedicalStaff";
-import Medicine from "./pages/patient/Medicine";
+import Medicine from "./pages/patient/medicine/Medicine";
 import PatientDashboard from "./pages/patient/PatientDashboard";
 import DoctorCheck from "./helpers/DoctorCheck";
 import PharmacyCheck from "./helpers/PharmacyCheck";

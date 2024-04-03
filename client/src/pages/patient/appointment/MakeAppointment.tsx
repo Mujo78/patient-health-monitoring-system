@@ -30,10 +30,6 @@ import MakeAppointmentInfo from "../../../components/Appointment/MakeAppointment
 import TimeButton from "../../../components/Appointment/TimeButton";
 
 const MakeAppointment: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { status, message, selectedDayAppointments } = useSelector(appointment);
-  const { doctorId } = useParams();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [time, setTime] = useState<string[] | null>();
@@ -41,6 +37,11 @@ const MakeAppointment: React.FC = () => {
   const [newTime, setNewTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [doctor, setDoctor] = useState<DoctorType>();
+
+  const { doctorId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { status, message, selectedDayAppointments } = useSelector(appointment);
 
   useEffect(() => {
     const fetchData = async () => {

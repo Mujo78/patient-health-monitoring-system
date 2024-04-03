@@ -2,7 +2,7 @@ import React from "react";
 import { CustomFlowbiteTheme, Sidebar } from "flowbite-react";
 import hospitalImage from "../../assets/hospital-logos.webp";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { authUser, setSelected } from "../../features/auth/authSlice";
 import { useAppDispatch } from "../../app/hooks";
 import LogoutButton from "./LogoutButton";
@@ -24,24 +24,23 @@ type Props = {
 };
 
 const RootSidebar: React.FC<Props> = ({ children }) => {
-  const { accessUser } = useSelector(authUser);
+  const dispatch = useAppDispatch();
+  const { accessUser } = useSelector(authUser, shallowEqual);
 
   const route = accessUser?.data.role.toLowerCase();
-
-  const dispatch = useAppDispatch();
 
   const onClickSelect = (name: string) => {
     dispatch(setSelected(name));
   };
 
   return (
-    <div className="w-fit h-screen hidden sm:!flex">
+    <div className="hidden h-screen w-fit sm:!flex">
       <Sidebar
-        className="h-screen border-r border-r-gray-200 flex flex-col justify-between gap-12 w-fit"
+        className="flex h-screen w-fit flex-col justify-between gap-12 border-r border-r-gray-200"
         theme={theme}
       >
-        <Sidebar.Items className="h-5/6 font-Poppins flex flex-col justify">
-          <Sidebar.ItemGroup className="h-full flex flex-col justify-between">
+        <Sidebar.Items className="justify flex h-5/6 flex-col font-Poppins">
+          <Sidebar.ItemGroup className="flex h-full flex-col justify-between">
             <Sidebar.ItemGroup>
               <Sidebar.Item
                 className=" hover:bg-white"
@@ -51,7 +50,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
               >
                 <img
                   src={hospitalImage}
-                  className="rounded mx-auto bg-white h-auto w-32"
+                  className="mx-auto h-auto w-32 rounded bg-white"
                   alt="Hospital logo"
                 />
               </Sidebar.Item>

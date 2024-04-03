@@ -216,9 +216,7 @@ const getAllInfoAboutDepartment = asyncHandler(async (req, res) => {
 
   const result = {
     department,
-    doctors: departmentDoctors
-      ? departmentDoctors
-      : "There are no doctors for this department!",
+    doctors: departmentDoctors,
   };
 
   return res.status(200).json(result);

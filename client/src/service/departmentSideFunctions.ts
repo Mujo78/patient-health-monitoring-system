@@ -27,16 +27,11 @@ type DoctorInfo = {
 
 export type DepartmentAllInfo = {
   department: Department;
-  doctors: DoctorInfo[] | string;
+  doctors: DoctorInfo[];
 };
 
-export async function getDepartmentAllInfo(token: string, name: string) {
-  const response = await apiClient.get(`${URL}/${name}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function getDepartmentAllInfo(name: string) {
+  const response = await apiClientAuth.get(`${URL}/${name}`);
   return response.data;
 }
 

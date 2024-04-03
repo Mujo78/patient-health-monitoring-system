@@ -1,36 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   Medicine as MedicineType,
   getMedicine,
   medicine,
-} from "../../features/medicine/medicineSlice";
-import { useAppDispatch } from "../../app/hooks";
-import Pagination from "../../components/UI/Pagination";
-import MedicineModal from "../../components/Pharmacy/MedicineModal";
-import ErrorMessage from "../../components/UI/ErrorMessage";
+} from "../../../features/medicine/medicineSlice";
+import { useAppDispatch } from "../../../app/hooks";
+import Pagination from "../../../components/UI/Pagination";
+import MedicineModal from "../../../components/Pharmacy/MedicineModal";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { useNavigate } from "react-router-dom";
-import useSelectedPage from "../../hooks/useSelectedPage";
-import PharmacyInfo from "../../components/Pharmacy/PharmacyInfo";
-import { useQuery } from "../../hooks/useQuery";
-import MedicineSearchHeader from "../../components/Pharmacy/MedicineSearchHeader";
-import CustomSpinner from "../../components/UI/CustomSpinner";
-import Footer from "../../components/UI/Footer";
-import MedicineCard from "../../components/Pharmacy/MedicineCard";
+import useSelectedPage from "../../../hooks/useSelectedPage";
+import PharmacyInfo from "../../../components/Pharmacy/PharmacyInfo";
+import { useQuery } from "../../../hooks/useQuery";
+import MedicineSearchHeader from "../../../components/Pharmacy/MedicineSearchHeader";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Footer from "../../../components/UI/Footer";
+import MedicineCard from "../../../components/Pharmacy/MedicineCard";
 
 const Medicine: React.FC = () => {
+  const [show, setShow] = useState<boolean>(false);
+  const [medicineData, setMedicineData] = useState<MedicineType>();
+  const lastQuery = useRef<string>();
+
   const navigate = useNavigate();
-  const { medicine: med, status, message } = useSelector(medicine);
+  const {
+    medicine: med,
+    status,
+    message,
+  } = useSelector(medicine, shallowEqual);
+  const dispatch = useAppDispatch();
+
   const query = useQuery();
   const page = Number(query.get("page")) || 1;
   const searchQuery = query.get("searchQuery") || "";
   const category = query.get("category") || "";
-
-  const [show, setShow] = useState<boolean>(false);
-  const [m, setM] = useState<MedicineType>();
-
-  const dispatch = useAppDispatch();
-  const lastQuery = useRef<string>();
 
   useEffect(() => {
     if (query.toString() !== lastQuery.current) {
@@ -54,7 +58,7 @@ const Medicine: React.FC = () => {
   };
 
   const handleShow = (data: MedicineType) => {
-    setM(data);
+    setMedicineData(data);
     setShow(true);
   };
 
@@ -65,7 +69,9 @@ const Medicine: React.FC = () => {
       <div className="h-full transition-all duration-300">
         <div className="flex h-full w-full flex-col gap-4 md:!gap-0 lg:!flex-row lg:!gap-3 lg:divide-x lg:pl-3">
           {status === "loading" ? (
-            <CustomSpinner size="xl" />
+            <div className="w-full lg:!w-2/3">
+              <CustomSpinner size="xl" />
+            </div>
           ) : (
             <div className=" flex h-full w-full flex-col justify-start px-2 lg:!w-2/3 lg:!px-0">
               <MedicineSearchHeader />
@@ -92,9 +98,9 @@ const Medicine: React.FC = () => {
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <ErrorMessage
-                    text={message || "No data available."}
+                    text={message || "No data available"}
                     size="md"
-                    className="my-auto mt-5  xxl:!text-2xl"
+                    className="my-auto mt-5 xxl:!text-2xl"
                   />
                 </div>
               )}
@@ -104,13 +110,8 @@ const Medicine: React.FC = () => {
         </div>
       </div>
 
-      {m && (
-        <MedicineModal
-          show={show}
-          onClose={onClose}
-          medicine={m}
-          url={m.photo}
-        />
+      {medicineData && (
+        <MedicineModal show={show} onClose={onClose} medicine={medicineData} />
       )}
     </div>
   );

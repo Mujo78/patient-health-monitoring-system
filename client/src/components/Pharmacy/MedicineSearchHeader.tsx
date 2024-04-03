@@ -37,8 +37,7 @@ const MedicineSearchHeader = () => {
   const category = query.get("category") || "";
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const [cat, setCat] = useState<string>(category || "");
+  const [categorySearch, setCategorySearch] = useState<string>(category || "");
 
   const handleClickSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,13 +50,12 @@ const MedicineSearchHeader = () => {
       query.set("page", "1");
       query.set("searchQuery", search);
 
-      dispatch(getMedicine({ searchQuery }));
       navigate(`${location}?${query.toString()}`);
     }
   };
 
   const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCat(e.target.value);
+    setCategorySearch(e.target.value);
     if (query.get("id")) {
       query.delete("id");
     }
@@ -74,12 +72,12 @@ const MedicineSearchHeader = () => {
   return (
     <>
       <form onSubmit={handleClickSearch}>
-        <div className="flex justify-center lg:w-3/4 lg:!mx-auto gap-3 my-4 items-center">
+        <div className="my-4 flex items-center justify-center gap-3 lg:!mx-auto lg:w-3/4">
           <TextInput
             theme={customTextInputTheme}
             sizing="md"
             className="w-full lg:w-3/4 xxl:!text-2xl"
-            placeholder="Amoxicilline"
+            placeholder="Amoxicilline, Prozac"
             name="search"
             onChange={(e) => setSearch(e.target.value)}
             value={search}
@@ -94,7 +92,7 @@ const MedicineSearchHeader = () => {
           <Select
             sizing="md"
             theme={customSelectTheme}
-            value={cat}
+            value={categorySearch}
             name="category"
             onChange={(e) => handleChangeCategory(e)}
           >
@@ -107,7 +105,7 @@ const MedicineSearchHeader = () => {
           </Select>
           <span
             onClick={clearSearch}
-            className="text-sm  xxl:!text-2xl md:mr-1.5 cursor-pointer text-red-500 hover:underline"
+            className="cursor-pointer  text-sm text-red-500 hover:underline md:mr-1.5 xxl:!text-2xl"
           >
             Clear
           </span>

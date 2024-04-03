@@ -1,4 +1,4 @@
-import { apiClient } from "../helpers/ApiClient";
+import { apiClient, apiClientAuth } from "../helpers/ApiClient";
 
 export type PharmacyUpdateType = {
   name: string;
@@ -19,12 +19,8 @@ export async function getData(token: string) {
   return response.data;
 }
 
-export async function getPharmacy(token: string) {
-  const response = await apiClient.get(URL, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getPharmacy() {
+  const response = await apiClientAuth.get(URL);
   return response.data;
 }
 

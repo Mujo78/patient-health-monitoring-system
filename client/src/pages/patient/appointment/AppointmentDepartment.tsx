@@ -18,8 +18,6 @@ import Header from "../../../components/UI/Header";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 
 const AppointmentDepartment: React.FC = () => {
-  const { doctorId } = useParams();
-  const navigate = useNavigate();
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,6 +25,9 @@ const AppointmentDepartment: React.FC = () => {
   const [loadingDoc, setLoadingDoc] = useState<boolean>(false);
   const [departments, setDepartments] = useState<Department[] | null>();
   const [doctors, setDoctors] = useState<DoctorType[]>();
+
+  const { doctorId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {

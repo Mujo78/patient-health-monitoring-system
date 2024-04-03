@@ -7,11 +7,10 @@ type Props = {
   show: boolean;
   onClose: () => void;
   medicine: Medicine;
-  url?: string;
 };
 
-const MedicineModal: React.FC<Props> = ({ show, onClose, medicine, url }) => {
-  const URLToUse = url?.startsWith(medicine.name)
+const MedicineModal: React.FC<Props> = ({ show, onClose, medicine }) => {
+  const URLToUse = medicine?.photo?.startsWith(medicine.name)
     ? `http://localhost:3001/uploads/${medicine.photo}`
     : medicine?.photo;
 
@@ -25,10 +24,10 @@ const MedicineModal: React.FC<Props> = ({ show, onClose, medicine, url }) => {
       <Modal.Body className="flex flex-col items-center justify-around md:flex-row">
         <CustomMedicineImg
           url={URLToUse ?? ""}
-          className=" h-auto w-52 xxl:!w-72"
+          className="h-auto w-52 xxl:!w-72"
         />
 
-        <div className="space-y-6  text-black xxl:!text-2xl">
+        <div className="space-y-6 text-black xxl:!text-2xl">
           <p>
             <span className="font-semibold">Category:</span>{" "}
             {medicine?.category}

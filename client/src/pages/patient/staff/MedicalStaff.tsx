@@ -3,21 +3,23 @@ import {
   Department,
   getDepartments,
 } from "../../../service/departmentSideFunctions";
-import { useSelector } from "react-redux";
-import { authUser } from "../../../features/auth/authSlice";
 import { Table } from "flowbite-react";
 import { HiChevronRight } from "react-icons/hi2";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Header from "../../../components/UI/Header";
+import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import toast from "react-hot-toast";
 
 const MedicalStaff: React.FC = () => {
+  const [departments, setDepartments] = useState<Department[]>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const { departmentName } = useParams();
-  const [departments, setDepartments] = useState<Department[] | undefined>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const { accessUser } = useSelector(authUser);
 
   useSelectedPage("Medical staff");
 
@@ -25,39 +27,48 @@ const MedicalStaff: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (accessUser) {
-          const response = await getDepartments(accessUser.token);
-          setDepartments(response);
-        }
+        const response = await getDepartments();
+        setDepartments(response);
+      } catch (error: any) {
+        setError(true);
+        throw new Error(error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, [accessUser]);
+  }, []);
 
   const chooseDepartment = (name: string) => {
     navigate(name);
   };
 
   useEffect(() => {
-    if (departments && departments?.length > 0) {
+    if (error) toast.error("There was an error, try again later!");
+  }, [error]);
+
+  useEffect(() => {
+    if (departments && !departmentName) {
       navigate(departments[0]?.name);
     }
-  }, [departments, navigate]);
+  }, [departments, navigate, departmentName]);
 
   return (
     <div className="h-full w-full">
       {loading ? (
         <CustomSpinner size="xl" />
-      ) : departments !== undefined && departments?.length > 0 ? (
-        <div className="flex flex-wrap lg:!flex-nowrap gap-3 lg:!gap-0 h-full w-full lg:!divide-x">
+      ) : departments && departments?.length > 0 ? (
+        <div className="flex h-full w-full flex-wrap gap-3 lg:!flex-nowrap lg:!gap-0 lg:!divide-x">
           <div className="w-full lg:!w-1/3">
-            <p className="m-4 text-2xl xxl:!text-3xl font-semibold">
-              Select a department
-            </p>
+            <Header
+              text="Select a department"
+              position="start"
+              size={2}
+              className="m-4"
+            />
             <hr className="hidden lg:!block" />
-            <div className="px-3 mt-2">
+            <div className="mt-2 px-3">
               <Table>
                 <Table.Body className="divide-y">
                   {departments &&
@@ -65,11 +76,11 @@ const MedicalStaff: React.FC = () => {
                       <Table.Row
                         onClick={() => chooseDepartment(n.name)}
                         key={n._id}
-                        className={`bg-white cursor-pointer dark:border-gray-700 ${
+                        className={`cursor-pointer bg-white dark:border-gray-700 ${
                           departmentName === n.name && "bg-blue-200"
                         } dark:bg-gray-800`}
                       >
-                        <Table.Cell className="whitespace-nowrap text-center lg:!text-start xxl:!text-2xl font-medium text-gray-900 dark:text-white">
+                        <Table.Cell className="whitespace-nowrap text-center font-medium text-gray-900 dark:text-white lg:!text-start xxl:!text-2xl">
                           {n.name}
                         </Table.Cell>
                         <Table.Cell className="hidden lg:!table-cell">
@@ -89,22 +100,14 @@ const MedicalStaff: React.FC = () => {
             {departmentName ? (
               <Outlet />
             ) : (
-              <div className="w-full h-full flex justify-center lg:!items-center items-start">
-                <ErrorMessage
-                  text="You haven't selected any department"
-                  size="sm"
-                  className="lg:!text-md xxl:!text-3xl"
-                />
+              <div className="flex h-full w-full items-start justify-center lg:!items-center">
+                <ErrorMessage text="You haven't selected any department" />
               </div>
             )}
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center h-full">
-          <p className="text-md xxl:!text-3xl text-gray-400">
-            No data available.
-          </p>
-        </div>
+        <NoDataAvailable className="flex h-full items-center justify-center" />
       )}
     </div>
   );
