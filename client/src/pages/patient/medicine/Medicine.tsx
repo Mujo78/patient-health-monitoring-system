@@ -98,7 +98,7 @@ const Medicine: React.FC = () => {
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <ErrorMessage
-                    text={message || "No data available"}
+                    text={message}
                     size="md"
                     className="my-auto mt-5 xxl:!text-2xl"
                   />

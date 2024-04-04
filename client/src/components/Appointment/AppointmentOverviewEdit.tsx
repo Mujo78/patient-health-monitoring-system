@@ -32,6 +32,7 @@ import moment, { MomentInput } from "moment";
 import AppointmentOverview from "./AppointmentOverview";
 import CustomSpinner from "../UI/CustomSpinner";
 import TimeButton from "./TimeButton";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate();
@@ -88,13 +89,6 @@ const AppointmentOverviewEdit: React.FC = () => {
     }
   }, [value, active, sApp?.doctor_id._id]);
 
-  useEffect(() => {
-    if (error) {
-      setActive(1);
-      toast.error("Something went wrong, please try again later!");
-    }
-  }, [error]);
-
   const handleGetAppForADay = (value: Date) => {
     dispatch(getAppointmentsForADay(value));
     dispatch(resetAppointmentDay());
@@ -119,7 +113,7 @@ const AppointmentOverviewEdit: React.FC = () => {
     ) {
       if (id) {
         dispatch(editAppointment({ id, editObjectData })).then((action) => {
-          if (typeof action.payload === "object") {
+          if (isFulfilled(action)) {
             toast.success("Successfully edited appointment.");
             navigate("../");
             dispatch(reset());
@@ -133,7 +127,7 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   const handleGet = (tab: number) => {
     setActive(tab);
-    if (tab === 1 && status !== "failed") {
+    if (tab === 1) {
       dispatch(getAppointmentsForADay(value as Date));
       dispatch(resetAppointmentDay());
     }
@@ -205,7 +199,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                         <div className="w-full p-16">
                           <CustomSpinner />
                         </div>
-                      ) : availableTime && status !== "failed" && !error ? (
+                      ) : availableTime ? (
                         availableTime.map((n) => (
                           <TimeButton
                             key={n}

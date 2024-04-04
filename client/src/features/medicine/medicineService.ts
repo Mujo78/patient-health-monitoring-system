@@ -12,6 +12,7 @@ const getAllMedicine = async (
   const response = await apiClientAuth.get(URL, {
     params: { page: page, searchQuery: search, category: category },
   });
+
   return response.data;
 };
 

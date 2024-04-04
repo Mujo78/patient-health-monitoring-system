@@ -28,10 +28,12 @@ import Header from "../../../components/UI/Header";
 import moment, { MomentInput } from "moment";
 import MakeAppointmentInfo from "../../../components/Appointment/MakeAppointmentInfo";
 import TimeButton from "../../../components/Appointment/TimeButton";
+import { isFulfilled } from "@reduxjs/toolkit";
+import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 
 const MakeAppointment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
   const [time, setTime] = useState<string[] | null>();
   const [value, setValue] = useState<Value>(new Date());
   const [newTime, setNewTime] = useState<string>("");
@@ -52,7 +54,7 @@ const MakeAppointment: React.FC = () => {
           setDoctor(response);
         }
       } catch (error: any) {
-        setError(true);
+        setError(error.response.data ?? error.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -70,7 +72,7 @@ const MakeAppointment: React.FC = () => {
           setTime(resTime);
         }
       } catch (error: any) {
-        setError(true);
+        setError(error.response.data ?? error.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -97,7 +99,7 @@ const MakeAppointment: React.FC = () => {
       };
 
       dispatch(bookAppointment(appointmentData)).then((action) => {
-        if (typeof action.payload === "object") {
+        if (isFulfilled(action)) {
           toast.success("Appointment successfully created!");
           navigate("/appointment", { replace: true });
         }
@@ -117,7 +119,7 @@ const MakeAppointment: React.FC = () => {
     <div className="mt-6 xl:!mt-0 xl:!h-full">
       {!doctor && loading ? (
         <CustomSpinner size="xl" />
-      ) : doctor ? (
+      ) : doctor && !error ? (
         <div className="mx-1.5 flex h-full flex-col lg:!mx-3">
           <div className="flex h-full w-full flex-col items-center justify-center gap-4 xl:!flex-row xl:!gap-12">
             <div className="h-full w-full xl:!my-auto xl:!flex-grow">
@@ -177,7 +179,10 @@ const MakeAppointment: React.FC = () => {
                   <div className="flex h-20 w-full items-center justify-center">
                     <ErrorMessage text="You can not make appointment today" />
                   </div>
-                ) : availableTime && availableTime.length > 0 ? (
+                ) : availableTime &&
+                  availableTime.length > 0 &&
+                  !error &&
+                  !message ? (
                   availableTime.map((n) => (
                     <TimeButton
                       key={n}
@@ -187,16 +192,17 @@ const MakeAppointment: React.FC = () => {
                     />
                   ))
                 ) : (
-                  error && (
+                  error ||
+                  (message && (
                     <p className="mx-auto my-auto text-sm">
                       There are no more available appointments for this day
                     </p>
-                  )
+                  ))
                 )}
               </div>
             </div>
 
-            <ErrorMessage text={message} xlHide className=" pb-6" />
+            <ErrorMessage text={message} xlHide className="pb-6" />
           </div>
           <Footer variant={2} className="mt-5 xl:!mt-0">
             <CustomButton
@@ -216,12 +222,12 @@ const MakeAppointment: React.FC = () => {
             </CustomButton>
           </Footer>
         </div>
+      ) : error ? (
+        <div className="mt-12 h-full w-full text-center">
+          <ErrorMessage text={error} />
+        </div>
       ) : (
-        error && (
-          <div className="mt-12 h-full w-full text-center">
-            <ErrorMessage text="Something went went wrong, please try again later!" />
-          </div>
-        )
+        <NoDataAvailable className="mt-5" />
       )}
     </div>
   );

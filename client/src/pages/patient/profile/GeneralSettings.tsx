@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../../components/UI/Header";
 import Footer from "../../../components/UI/Footer";
 import { Button, Label, Modal, TextInput, ToggleSwitch } from "flowbite-react";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   updateUser,
   authUser,
@@ -23,9 +23,14 @@ import {
 import { errorMessageConvert } from "../../../service/authSideFunctions";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 const GeneralSettings: React.FC = () => {
-  const { accessUser, status, message: errorMessage } = useSelector(authUser);
+  const {
+    accessUser,
+    status,
+    message: errorMessage,
+  } = useSelector(authUser, shallowEqual);
   const dispatch = useAppDispatch();
   const [deactivate, setDeactivate] = useState<boolean>(false);
 
@@ -40,9 +45,7 @@ const GeneralSettings: React.FC = () => {
   });
   const { errors, isDirty } = formState;
 
-  useEffect(() => {
-    dispatch(reset());
-
+  const resetFormMemoized = useCallback(() => {
     if (accessUser?.data) {
       const data = {
         email: accessUser.data.email,
@@ -50,17 +53,18 @@ const GeneralSettings: React.FC = () => {
       };
       resetForm(data);
     }
-  }, [dispatch, accessUser, resetForm]);
+  }, [accessUser, resetForm]);
+
+  useEffect(() => {
+    dispatch(reset());
+
+    resetFormMemoized();
+  }, [dispatch, resetFormMemoized]);
 
   const onSubmit = (data: patientGeneralSettings) => {
     dispatch(updateUser(data)).then((action) => {
-      if (
-        typeof action.payload === "object" &&
-        Object.prototype.hasOwnProperty.call(action.payload, "_id")
-      ) {
+      if (isFulfilled(action)) {
         toast.success("Account successfully updated");
-      } else {
-        toast.error("Something went wrong, please try again later!");
       }
     });
   };
@@ -74,10 +78,7 @@ const GeneralSettings: React.FC = () => {
     if (deactivate) {
       const data: { active: boolean } = { active: false };
       dispatch(deactivateAccount(data)).then((action) => {
-        if (
-          typeof action?.payload === "object" &&
-          Object.prototype.hasOwnProperty.call(action.payload, "_id")
-        ) {
+        if (isFulfilled(action)) {
           setDeactivate(false);
           dispatch(logout());
         } else {
@@ -87,26 +88,21 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (status === "failed" && !errorMessage)
-      toast.error("Something went wrong, please try again later!");
-  }, [status, errorMessage]);
-
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <Header text="General settings" />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col justify-between h-full"
+        className="flex h-full flex-col justify-between"
       >
-        <div className="h-full py-5 flex flex-col gap-4">
+        <div className="flex h-full flex-col gap-4 py-5">
           {status === "loading" ? (
             <CustomSpinner />
           ) : (
             <>
               <>
                 <p className="flex justify-between">
-                  <span className="text-blue-700 xxl:!text-xl font-semibold">
+                  <span className="font-semibold text-blue-700 xxl:!text-xl">
                     Patient
                   </span>
                   <span className="font-bold xxl:!text-2xl">
@@ -124,13 +120,12 @@ const GeneralSettings: React.FC = () => {
                   value="Your email"
                 />
                 <>
-                  <div className="flex flex-col flex-grow ml-auto xl:!w-11/12">
+                  <div className="ml-auto flex flex-grow flex-col xl:!w-11/12">
                     <TextInput
                       autoComplete="true"
                       id="email"
                       color={errors.email && "failure"}
                       {...register("email")}
-                      required
                       type="email"
                     />
 
@@ -139,15 +134,15 @@ const GeneralSettings: React.FC = () => {
                         errors.email?.message
                           ? errors.email.message
                           : errorMessage?.includes("email")
-                          ? errorMessageConvert(errorMessage, "email")
-                          : ""
+                            ? errorMessageConvert(errorMessage, "email")
+                            : errorMessage
                       }
                     />
                   </div>
                 </>
               </FormRow>
 
-              <div className="flex items-center mt-3 justify-between">
+              <div className="mt-3 flex items-center justify-between">
                 <Label
                   className="text-sm xxl:!text-lg"
                   htmlFor="notification"
@@ -168,7 +163,7 @@ const GeneralSettings: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center mt-3 justify-between">
+              <div className="mt-3 flex items-center justify-between">
                 <Label
                   className="text-sm xxl:!text-lg"
                   htmlFor="deactivate"
@@ -210,10 +205,10 @@ const GeneralSettings: React.FC = () => {
               <p className="font-semibold xxl:!text-xl">
                 Are you sure, you want to deactivate your account?
               </p>
-              <span className="text-xs xxl:!text-lg text-gray-500">
+              <span className="text-xs text-gray-500 xxl:!text-lg">
                 By deactivating your account, you need to know:
               </span>
-              <ol className="text-xs xxl:!text-lg list-disc ml-10 text-gray-500">
+              <ol className="ml-10 list-disc text-xs text-gray-500 xxl:!text-lg">
                 <li> All of your future appointments will be cancelled</li>
                 <li>
                   You can always come back, just by login into your account

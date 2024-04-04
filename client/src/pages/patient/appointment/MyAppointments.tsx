@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -14,10 +14,13 @@ import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import { MyEvent } from "../../../service/appointmentSideFunctions";
 import toast from "react-hot-toast";
+import { isRejected } from "@reduxjs/toolkit";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 
 const localizer = momentLocalizer(moment);
 
 const MyAppointments: React.FC = () => {
+  const [error, setError] = useState<string>();
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -27,7 +30,9 @@ const MyAppointments: React.FC = () => {
 
   useEffect(() => {
     if (!id) {
-      dispatch(getAppointmentsForPerson());
+      dispatch(getAppointmentsForPerson()).then((action: any) => {
+        if (isRejected(action)) setError(action.payload);
+      });
     }
 
     return () => {
@@ -52,10 +57,11 @@ const MyAppointments: React.FC = () => {
   };
 
   useEffect(() => {
-    if (status === "failed") {
-      toast.error("Something went wrong, please try again later!");
-    }
-  }, [status]);
+    if (error)
+      toast.error(
+        "Something went wrong while getting your appointments data, please try again later!",
+      );
+  }, [error]);
 
   return (
     <>
@@ -65,7 +71,7 @@ const MyAppointments: React.FC = () => {
         <div className="flex h-full w-full flex-col items-center justify-center px-4 py-3 text-sm">
           {status === "loading" ? (
             <CustomSpinner size="xl" />
-          ) : (
+          ) : personAppointments && personAppointments.length > 0 ? (
             <>
               <Calendar
                 className="flex h-full w-full flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"
@@ -79,6 +85,8 @@ const MyAppointments: React.FC = () => {
                 max={new Date(0, 0, 0, 17, 0, 0, 0)}
               />
             </>
+          ) : (
+            error && <ErrorMessage text={error} />
           )}
         </div>
       )}

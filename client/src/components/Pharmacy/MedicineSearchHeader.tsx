@@ -2,9 +2,7 @@ import { CustomFlowbiteTheme, Select, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import CustomButton from "../UI/CustomButton";
 import { useQuery } from "../../hooks/useQuery";
-import { useAppDispatch } from "../../app/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getMedicine } from "../../features/medicine/medicineSlice";
 import { categories } from "../../validations/pharmacyValidation";
 
 const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
@@ -35,7 +33,6 @@ const MedicineSearchHeader = () => {
   const query = useQuery();
   const searchQuery = query.get("searchQuery") || "";
   const category = query.get("category") || "";
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [categorySearch, setCategorySearch] = useState<string>(category || "");
 
@@ -61,7 +58,6 @@ const MedicineSearchHeader = () => {
     }
     query.set("category", e.target.value);
     navigate(`${location}?${query.toString()}`);
-    dispatch(getMedicine({ searchQuery, category: e.target.value }));
   };
 
   const clearSearch = () => {

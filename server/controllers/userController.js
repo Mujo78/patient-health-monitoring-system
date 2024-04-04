@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 const User = require("../models/user");
 const Appointment = require("../models/appointment");
 const asyncHandler = require("express-async-handler");
+const Patient = require("../models/patient");
 
 const multerStorage = multer.memoryStorage();
 
@@ -90,13 +91,19 @@ const updatePhoto = asyncHandler(async (req, res) => {
 const deactivateMyAccount = asyncHandler(async (req, res) => {
   const { active } = req.body;
   const user = await User.findById(req.user._id);
-  if (!user) return res.status(404).json("User doesn't exists");
+  if (!user)
+    return res.status(404).json("User doesn't exists! Something went wrong!");
 
   user.active = active;
   user.save();
 
   if (!user.active) {
+    const patientUser = await Patient.findOne({ user_id: user._id });
+    if (!patientUser)
+      return res.status(404).json("User doesn't exists! Something went wrong!");
+
     const newApps = await Appointment.find({
+      patient_id: patientUser._id,
       appointment_date: { $gte: new Date() },
     });
 

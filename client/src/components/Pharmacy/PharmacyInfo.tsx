@@ -4,8 +4,8 @@ import { getPharmacy } from "../../service/pharmacySideFunctions";
 import CustomImg from "../UI/CustomImg";
 import { Link } from "react-router-dom";
 import CustomSpinner from "../UI/CustomSpinner";
-import NoDataAvailable from "../UI/NoDataAvailable";
 import toast from "react-hot-toast";
+import ErrorMessage from "../UI/ErrorMessage";
 
 const PharmacyInfo = () => {
   const [pharmacy, setPharmacy] = useState<Pharmacy>();
@@ -73,9 +73,11 @@ const PharmacyInfo = () => {
           </div>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center">
-          <NoDataAvailable />
-        </div>
+        error && (
+          <div className="flex h-full items-center justify-center">
+            <ErrorMessage text={error} />
+          </div>
+        )
       )}
     </div>
   );

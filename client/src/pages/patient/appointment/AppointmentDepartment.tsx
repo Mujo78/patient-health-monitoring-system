@@ -21,7 +21,7 @@ const AppointmentDepartment: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
   const [loadingDoc, setLoadingDoc] = useState<boolean>(false);
   const [departments, setDepartments] = useState<Department[] | null>();
   const [doctors, setDoctors] = useState<DoctorType[]>();
@@ -36,7 +36,7 @@ const AppointmentDepartment: React.FC = () => {
         const response = await getDepartments();
         setDepartments(response);
       } catch (error: any) {
-        setError(true);
+        setError(error.response.data ?? error.message);
         throw new Error(error.message);
       } finally {
         setLoading(false);
@@ -48,7 +48,10 @@ const AppointmentDepartment: React.FC = () => {
   }, [departments, doctorId]);
 
   useEffect(() => {
-    if (error) toast.error("Something went wrong, please try again later!");
+    if (error)
+      toast.error(
+        "Something went wrong while getting departments data, please try again later!",
+      );
   }, [error]);
 
   const chooseDepartment = async (name: string) => {
@@ -61,7 +64,7 @@ const AppointmentDepartment: React.FC = () => {
         const response = await getDoctorsForDepartment(name);
         setDoctors(response);
       } catch (error: any) {
-        setError(true);
+        setError(error.response.data ?? error.message);
         throw new Error(error.message);
       } finally {
         setLoadingDoc(false);
@@ -81,7 +84,7 @@ const AppointmentDepartment: React.FC = () => {
     <>
       {doctorId ? (
         <Outlet />
-      ) : departments ? (
+      ) : departments && departments.length > 0 ? (
         <div className=" flex h-full flex-col px-3">
           <div className="mt-2 flex flex-grow flex-wrap justify-between gap-8 xl:!flex-nowrap">
             <div className="w-full xl:!flex-grow">
@@ -137,10 +140,10 @@ const AppointmentDepartment: React.FC = () => {
                     Please choose doctor from{" "}
                     <strong>{selectedDepartment}</strong> department.
                   </p>
-                  <Table className="flex w-full flex-col justify-center xl:!w-4/5">
-                    <Table.Body className="divide-y">
-                      {doctors.length > 0 ? (
-                        doctors.map((n) => (
+                  {doctors.length > 0 ? (
+                    <Table className="flex w-full flex-col justify-center xl:!w-4/5">
+                      <Table.Body className="divide-y">
+                        {doctors.map((n) => (
                           <Table.Row
                             key={n._id}
                             className={`${
@@ -160,17 +163,17 @@ const AppointmentDepartment: React.FC = () => {
                               </h1>
                             </Table.Cell>
                           </Table.Row>
-                        ))
-                      ) : (
-                        <NoDataAvailable />
-                      )}
-                    </Table.Body>
-                  </Table>
+                        ))}
+                      </Table.Body>
+                    </Table>
+                  ) : (
+                    <NoDataAvailable />
+                  )}
                 </>
               ) : (
                 error && (
-                  <div className="mt-2 w-full text-center">
-                    <ErrorMessage text="Something went wrong, please try agian later!" />
+                  <div className="my-auto flex h-full items-center justify-center text-center">
+                    <ErrorMessage text={error} />
                   </div>
                 )
               )}
@@ -187,12 +190,14 @@ const AppointmentDepartment: React.FC = () => {
             </CustomButton>
           </Footer>
         </div>
+      ) : error ? (
+        <div className="flex h-full items-center justify-center">
+          <ErrorMessage text={error} />
+        </div>
       ) : (
-        error && (
-          <div className="flex h-full items-center justify-center">
-            <ErrorMessage text="There was an error, please try again later!" />
-          </div>
-        )
+        <div className="flex h-full w-full items-center justify-center">
+          <NoDataAvailable />
+        </div>
       )}
     </>
   );

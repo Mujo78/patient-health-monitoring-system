@@ -24,9 +24,7 @@ const ErrorMessage: React.FC<Props> = ({
           size ? size : "xs"
         } xxl:!text-[1rem] ${className}`}
       >
-        {text?.includes("/api/")
-          ? "Something went wrong, please try again later!"
-          : text}
+        {text}
       </p>
     </div>
   );

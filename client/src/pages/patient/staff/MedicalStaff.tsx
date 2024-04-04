@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 const MedicalStaff: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
   const navigate = useNavigate();
   const { departmentName } = useParams();
@@ -30,7 +30,7 @@ const MedicalStaff: React.FC = () => {
         const response = await getDepartments();
         setDepartments(response);
       } catch (error: any) {
-        setError(true);
+        setError(error.response.data ?? error.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -45,7 +45,10 @@ const MedicalStaff: React.FC = () => {
   };
 
   useEffect(() => {
-    if (error) toast.error("There was an error, try again later!");
+    if (error)
+      toast.error(
+        "There was an error while getting departments, try again later!",
+      );
   }, [error]);
 
   useEffect(() => {
@@ -105,6 +108,10 @@ const MedicalStaff: React.FC = () => {
               </div>
             )}
           </div>
+        </div>
+      ) : error ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <ErrorMessage text={error} />
         </div>
       ) : (
         <NoDataAvailable className="flex h-full items-center justify-center" />

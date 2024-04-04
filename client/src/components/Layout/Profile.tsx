@@ -9,6 +9,8 @@ import CustomButton from "../UI/CustomButton";
 import { useAppDispatch } from "../../app/hooks";
 import { formatDate } from "../../service/appointmentSideFunctions";
 import ProfileLayout from "./ProfileLayout";
+import toast from "react-hot-toast";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 type Props = {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ const Profile: React.FC<Props> = ({ children }) => {
   const [show, setShow] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  const { accessUser, status } = useSelector(authUser, shallowEqual);
+  const { accessUser } = useSelector(authUser, shallowEqual);
 
   useEffect(() => {
     let objectURL: string;
@@ -35,15 +37,14 @@ const Profile: React.FC<Props> = ({ children }) => {
 
   const updateProfilePicture = () => {
     if (selectedImg) {
-      dispatch(updatePicture(selectedImg));
+      dispatch(updatePicture(selectedImg)).then((action: any) => {
+        if (isFulfilled(action)) {
+          toast.success("Successfully updated profile picture!");
+          setShow(false);
+        }
+      });
     }
   };
-
-  useEffect(() => {
-    if (status === "idle") {
-      setShow(false);
-    }
-  }, [status]);
 
   return (
     <ProfileLayout>

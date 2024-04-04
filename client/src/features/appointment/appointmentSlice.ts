@@ -221,6 +221,7 @@ export const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentsForPerson.fulfilled, (state, action) => {
         (state.status = "idle"), (state.personAppointments = action.payload);
+        state.message = "";
       })
 
       .addCase(getAppointmentsForADay.pending, (state) => {

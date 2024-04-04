@@ -10,11 +10,11 @@ export const changePasswordValidationSchema = Yup.object({
       "Old and new password are the same!",
       function (value) {
         return value !== this.parent.currentPassword;
-      }
+      },
     ),
   confirmNewPassword: Yup.string()
     .required("Confirm password is required")
-    .min(5, "Confirm password is too short!")
+    .min(6, "Confirm password is too short!")
     .test("password-match-confirm", "Passwords must match", function (value) {
       return value === this.parent.newPassword;
     }),

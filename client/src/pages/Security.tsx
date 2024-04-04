@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/UI/Header";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomButton from "../components/UI/CustomButton";
@@ -7,6 +7,7 @@ import {
   authUser,
   changePassword,
   changePasswordInterface,
+  reset as resetStates,
 } from "../features/auth/authSlice";
 import { changePasswordValidationSchema } from "../validations/auth/changePasswordValidation";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
@@ -16,6 +17,7 @@ import { useAppDispatch } from "../app/hooks";
 import { toast } from "react-hot-toast";
 import Input from "../components/UI/Input";
 import CustomSpinner from "../components/UI/CustomSpinner";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 const Security: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
@@ -30,6 +32,10 @@ const Security: React.FC = () => {
     });
   const { errors } = formState;
 
+  useEffect(() => {
+    dispatch(resetStates());
+  }, [dispatch]);
+
   const toggleNewPassword = () => {
     setShowNewPassword((n) => !n);
   };
@@ -40,7 +46,7 @@ const Security: React.FC = () => {
 
   const onSubmit = (data: changePasswordInterface) => {
     dispatch(changePassword(data)).then((action) => {
-      if (typeof action.payload === "object") {
+      if (isFulfilled(action)) {
         toast.success("Successfully changed password.");
         reset();
       } else {
