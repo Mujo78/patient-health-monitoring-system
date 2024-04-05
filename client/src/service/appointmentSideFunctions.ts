@@ -42,7 +42,6 @@ export type MyEvent = {
 };
 
 export async function getDoctor(id: string) {
-  //const docId = id.slice(0, 23) + "e";
   const response = await apiClientAuth.get(`/doctor/${id}`);
   return response.data;
 }

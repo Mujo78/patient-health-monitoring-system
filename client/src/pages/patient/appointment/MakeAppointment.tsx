@@ -227,7 +227,7 @@ const MakeAppointment: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <NoDataAvailable className="mt-5" />
+        !doctor && status === "idle" && <NoDataAvailable className="mt-5" />
       )}
     </div>
   );

@@ -16,8 +16,9 @@ const makeAppointment = asyncHandler(async (req, res) => {
   const { doctor_id, reason, appointment_date } = req.body;
 
   const patient = await Patient.findOne({ user_id: req.user._id });
+
   if (!patient)
-    return res.status(404).json("There was an error, please try again later!");
+    return res.status(404).json("User not found! Something went wrong!");
 
   const appointmentDateWithoutTime =
     moment(appointment_date).tz("Europe/Sarajevo");
@@ -273,7 +274,7 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
   const { date } = req.body;
   const user = await User.findById(req.user._id);
   if (!user)
-    return res.status(404).json("There was an error, please try again later!");
+    return res.status(404).json("User not found! Something went wrong!");
 
   let model, mod_id;
   let query = {};
@@ -288,7 +289,7 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
 
   const mod = await model.findOne({ user_id: user._id });
   if (!mod)
-    return res.status(404).json("There was an error, please try again later!");
+    return res.status(404).json("Model not found! Something went wrong!");
 
   const userDate = moment.tz(date, "Europe/Sarajevo");
 
@@ -307,7 +308,7 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
 
   if (appointmentsDay) return res.status(200).json(appointmentsDay);
 
-  return res.status(404).json("There was an error, please try again later!");
+  return res.status(404).json("No data available.");
 });
 
 const getOtherAppointmentsForDay = asyncHandler(async (req, res) => {
@@ -730,7 +731,7 @@ const getOneAppointment = asyncHandler(async (req, res) => {
     return res.status(200).json(appointment);
   }
 
-  return res.status(404).json("Appointment doesn't exists.");
+  return res.status(404).json("Appointment not found! Something went wrong!");
 });
 const getAllAppointments = getAllData(Appointment);
 const cancelAppointment = deleteDoc(Appointment);

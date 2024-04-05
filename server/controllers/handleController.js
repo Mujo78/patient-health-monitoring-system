@@ -10,7 +10,7 @@ const getAllData = (Model) =>
   asyncHandler(async (req, res) => {
     const data = await Model.find();
     if (data) return res.status(200).json(data);
-    return res.status(404).json("There was an error");
+    return res.status(404).json("No data available.");
   });
 
 const createNewDoc = (Model) =>
@@ -77,6 +77,9 @@ const getAllDocForUser = () =>
     const query = {};
 
     const model = await mod.findOne({ user_id: req.params.id });
+
+    if (!model)
+      return res.status(404).json("User not found! Something went wrong!");
     query[mod_id] = model._id;
     const allApp = await Appointment.find(query);
 

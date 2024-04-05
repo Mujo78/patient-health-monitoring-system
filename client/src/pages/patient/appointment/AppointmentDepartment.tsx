@@ -84,50 +84,47 @@ const AppointmentDepartment: React.FC = () => {
     <>
       {doctorId ? (
         <Outlet />
+      ) : loading ? (
+        <CustomSpinner />
       ) : departments && departments.length > 0 ? (
         <div className=" flex h-full flex-col px-3">
           <div className="mt-2 flex flex-grow flex-wrap justify-between gap-8 xl:!flex-nowrap">
             <div className="w-full xl:!flex-grow">
               <Header text="Departments" size={3} position="start" />
-
               <p className="my-2 text-sm text-gray-600 xxl:!text-lg">
                 Please choose department for appointment. Make sure to choose
                 only one department!
               </p>
               <div className="flex w-full justify-center">
-                {loading ? (
-                  <CustomSpinner />
-                ) : (
-                  <Table hoverable>
-                    <Table.Head className="xxl:!text-xl">
-                      <Table.HeadCell>Name</Table.HeadCell>
-                      <Table.HeadCell>Description</Table.HeadCell>
-                      <Table.HeadCell className="hidden lg:!table-cell"></Table.HeadCell>
-                    </Table.Head>
-                    <Table.Body className="divide-y">
-                      {departments.length > 0 &&
-                        departments.map((n) => (
-                          <Table.Row
-                            onClick={() => chooseDepartment(n.name)}
-                            key={n._id}
-                            className={`cursor-pointer bg-white dark:border-gray-700 ${
-                              selectedDepartment === n.name && "bg-blue-200"
-                            } dark:bg-gray-800`}
-                          >
-                            <Table.Cell className="whitespace-nowrap  font-medium text-gray-900 dark:text-white xxl:!text-xl">
-                              {n.name}
-                            </Table.Cell>
-                            <Table.Cell className="text-[0.7rem] xxl:!text-lg">
-                              <p className="line-clamp-1">{n.description}</p>
-                            </Table.Cell>
-                            <Table.Cell className="hidden lg:!table-cell">
-                              <HiChevronRight />
-                            </Table.Cell>
-                          </Table.Row>
-                        ))}
-                    </Table.Body>
-                  </Table>
-                )}
+                <Table hoverable>
+                  <Table.Head className="xxl:!text-xl">
+                    <Table.HeadCell>Name</Table.HeadCell>
+                    <Table.HeadCell>Description</Table.HeadCell>
+                    <Table.HeadCell className="hidden lg:!table-cell"></Table.HeadCell>
+                  </Table.Head>
+                  <Table.Body className="divide-y">
+                    {departments.length > 0 &&
+                      departments.map((n) => (
+                        <Table.Row
+                          onClick={() => chooseDepartment(n.name)}
+                          key={n._id}
+                          className={`cursor-pointer bg-white dark:border-gray-700 ${
+                            selectedDepartment === n.name && "bg-blue-200"
+                          } dark:bg-gray-800`}
+                        >
+                          <Table.Cell className="whitespace-nowrap  font-medium text-gray-900 dark:text-white xxl:!text-xl">
+                            {n.name}
+                          </Table.Cell>
+                          <Table.Cell className="text-[0.7rem] xxl:!text-lg">
+                            <p className="line-clamp-1">{n.description}</p>
+                          </Table.Cell>
+                          <Table.Cell className="hidden lg:!table-cell">
+                            <HiChevronRight />
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                  </Table.Body>
+                </Table>
               </div>
             </div>
             <div className="w-full xl:!flex-grow">
@@ -195,9 +192,12 @@ const AppointmentDepartment: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <NoDataAvailable />
-        </div>
+        !error &&
+        !loading && (
+          <div className="flex h-full w-full items-center justify-center">
+            <NoDataAvailable />
+          </div>
+        )
       )}
     </>
   );

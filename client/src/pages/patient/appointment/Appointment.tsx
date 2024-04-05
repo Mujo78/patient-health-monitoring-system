@@ -21,15 +21,17 @@ import Header from "../../../components/UI/Header";
 import moment from "moment";
 import toast from "react-hot-toast";
 import { isFulfilled } from "@reduxjs/toolkit";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
 
 const Appointment: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { selectedAppointment: selected, message } = useSelector(
-    appointment,
-    shallowEqual,
-  );
+  const {
+    selectedAppointment: selected,
+    message,
+    status,
+  } = useSelector(appointment, shallowEqual);
 
   useEffect(() => {
     if (id) {
@@ -59,7 +61,9 @@ const Appointment: React.FC = () => {
 
   return (
     <>
-      {selected !== null ? (
+      {status === "loading" ? (
+        <CustomSpinner size="xl" />
+      ) : selected !== null ? (
         <div className="flex h-full flex-col p-3">
           <div className="flex flex-col items-center justify-between gap-3 lg:flex-row">
             <Card className="h-auto xl:w-full xxl:!w-fit xxl:p-12">

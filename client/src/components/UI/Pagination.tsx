@@ -28,48 +28,48 @@ const Pagination: React.FC<Props> = ({
 
   const pagesToDisplay = Array.from(
     { length: endPage - startPage + 1 },
-    (_, i) => startPage + i
+    (_, i) => startPage + i,
   );
 
   return (
     <div
-      className={`flex items-center ${className} w-full mt-auto bg-white px-4 py-3 sm:px-6`}
+      className={`flex items-center ${className} mt-auto w-full bg-white px-4 py-3 sm:px-6`}
     >
       <div className="flex-1">
         <nav
-          className="relative w-full justify-between z-0 inline-flex -space-x-px"
+          className="relative z-0 inline-flex w-full justify-between -space-x-px"
           aria-label="Pagination"
         >
           <div className="w-2/12">
             {pageNum > 1 && (
               <Button
                 onClick={() => handlePageChange(pageNum - 1)}
-                className="relative inline-flex items-center  active:!bg-transparent active:ring-1 active:ring-indigo-100 text-gray-700 bg-white hover:!bg-gray-50"
+                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 active:!bg-transparent active:ring-1 active:ring-indigo-100"
               >
                 <HiArrowLongLeft className="xxl:!text-2xl" />
               </Button>
             )}
           </div>
-          <div className="flex justify-center gap-2 items-center">
+          <div className="flex items-center justify-center gap-2">
             {pagesToDisplay.map((pageNumber) => (
               <Button
                 key={pageNumber}
                 onClick={() => handlePageChange(pageNumber)}
-                className={`relative inline-flex items-center mx-auto justify-center rounded-lg text-sm hover:!bg-indigo-100 active:!bg-indigo-100 active:ring-1 active:ring-indigo-100 font-medium ${
+                className={`relative mx-auto inline-flex items-center justify-center rounded-lg text-sm font-medium hover:!bg-indigo-100 active:!bg-indigo-100 active:ring-1 active:ring-indigo-100 ${
                   pageNumber === pageNum
-                    ? "text-blue-600 bg-indigo-100"
-                    : "text-gray-700 bg-white hover:bg-gray-50"
+                    ? "bg-indigo-100 text-blue-600"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <p className=" xxl:!text-2xl">{pageNumber}</p>
               </Button>
             ))}
           </div>
-          <div className="flex justify-end w-2/12">
+          <div className="flex w-2/12 justify-end">
             {pageNum < totalPages && (
               <Button
                 onClick={() => handlePageChange(pageNum + 1)}
-                className="relative inline-flex items-center  active:!bg-transparent active:ring-1 active:ring-indigo-100 text-gray-700 bg-white hover:!bg-gray-50"
+                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 active:!bg-transparent active:ring-1 active:ring-indigo-100"
               >
                 <HiArrowLongRight className="xxl:!text-2xl" />
               </Button>

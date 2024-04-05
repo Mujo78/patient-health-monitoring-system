@@ -35,7 +35,7 @@ const PatientDashboard: React.FC = () => {
         const response = await getLatestFinished();
         setLatestFinished(response);
       } catch (err: any) {
-        setError(err.message);
+        setError(err.response?.data ?? err.message);
         throw new Error(err?.message);
       } finally {
         setLoading(false);
@@ -45,7 +45,7 @@ const PatientDashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (error) toast.error("Something went wrong, please try refresh page!");
+    if (error) toast.error(error);
   }, [error]);
 
   const handleNavigateApp = () => {
@@ -145,7 +145,7 @@ const PatientDashboard: React.FC = () => {
                 </Card>
               </div>
             </div>
-            <AppointmentsChart setError={setError} />
+            <AppointmentsChart setError={setError} error={error} />
           </div>
           <div className="flex h-fit w-full justify-end xl:!h-full xl:!w-2/5">
             <AppointmentReviewCalendar variant={1} />

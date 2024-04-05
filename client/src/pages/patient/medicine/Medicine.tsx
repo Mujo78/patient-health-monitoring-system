@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import {
   Medicine as MedicineType,
@@ -32,23 +32,26 @@ const Medicine: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const query = useQuery();
-  const page = Number(query.get("page")) || 1;
+  const page = Number(query.get("page")) ?? 1;
   const searchQuery = query.get("searchQuery") || "";
   const category = query.get("category") || "";
 
-  useEffect(() => {
-    if (query.toString() !== lastQuery.current) {
-      lastQuery.current = query.toString();
-      dispatch(getMedicine({ page, searchQuery, category }));
-      navigate(`/medicine-overview?${query.toString()}`);
-    }
+  const queryParamsSame = query.toString() !== lastQuery.current;
+
+  const handleGetMedicine = useCallback(() => {
+    lastQuery.current = query.toString();
+    dispatch(getMedicine({ page, searchQuery, category }));
+    navigate(`/medicine-overview?${query.toString()}`);
   }, [page, dispatch, navigate, category, searchQuery, query]);
+
+  useEffect(() => {
+    if (queryParamsSame) handleGetMedicine();
+  }, [queryParamsSame, handleGetMedicine]);
 
   const handleNavigate = (pageNum: number) => {
     if (page !== pageNum) {
       const page = pageNum;
       query.set("page", page.toString());
-      dispatch(getMedicine({ page, searchQuery, category }));
       navigate(`/medicine-overview?${query.toString()}`);
     }
   };
@@ -96,12 +99,8 @@ const Medicine: React.FC = () => {
                   </Footer>
                 </div>
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center">
-                  <ErrorMessage
-                    text={message}
-                    size="md"
-                    className="my-auto mt-5 xxl:!text-2xl"
-                  />
+                <div className="flex h-full w-full flex-col items-center justify-center pb-6 lg:!pb-0">
+                  <ErrorMessage text={message} className="my-auto" />
                 </div>
               )}
             </div>

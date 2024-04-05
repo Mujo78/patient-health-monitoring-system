@@ -78,14 +78,21 @@ const updateMe = asyncHandler(async (req, res) => {
 
 const updatePhoto = asyncHandler(async (req, res) => {
   if (req.file) req.body.photo = req.file.filename;
+  try {
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+      runValidators: true,
+      context: "query",
+    });
 
-  const user = await User.findByIdAndUpdate(req.user._id, req.body, {
-    new: true,
-    runValidators: true,
-    context: "query",
-  });
-  if (!user) return res.status(404).json("User doesn't exists");
-  return res.status(200).json(user.photo);
+    if (!user) {
+      return res.status(404).json("User doesn't exists! Something went wrong!");
+    }
+
+    return res.status(200).json(user.photo);
+  } catch (error) {
+    return res.status(400).json(error.message);
+  }
 });
 
 const deactivateMyAccount = asyncHandler(async (req, res) => {

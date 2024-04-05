@@ -34,9 +34,7 @@ const MedicalStaffDepartment: React.FC = () => {
       }
     };
 
-    if (departmentName) {
-      fetchData();
-    }
+    fetchData();
   }, [departmentName]);
 
   return (
@@ -97,11 +95,11 @@ const MedicalStaffDepartment: React.FC = () => {
         </div>
       ) : error ? (
         <div className="flex h-full w-full items-center justify-center">
-          <ErrorMessage text={error} size="md" />
+          <ErrorMessage text={error} />
         </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center">
-          <ErrorMessage text="You haven't selected any department" size="md" />
+          <ErrorMessage text="You haven't selected any department" />
         </div>
       )}
     </>

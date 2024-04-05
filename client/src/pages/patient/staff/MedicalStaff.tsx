@@ -30,7 +30,7 @@ const MedicalStaff: React.FC = () => {
         const response = await getDepartments();
         setDepartments(response);
       } catch (error: any) {
-        setError(error.response.data ?? error.message);
+        setError(error.response?.data ?? error.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -98,7 +98,7 @@ const MedicalStaff: React.FC = () => {
           <div
             className={`${
               departmentName ? "h-full" : "h-fit lg:!h-full"
-            } w-full p-4`}
+            } w-full p-4 lg:!w-2/3`}
           >
             {departmentName ? (
               <Outlet />

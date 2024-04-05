@@ -84,17 +84,20 @@ const addDoctor = asyncHandler(async (req, res) => {
 });
 
 const getAllDoctors = asyncHandler(async (req, res) => {
-  let filter = {};
-  const depr = await Department.findOne({ name: req.params.departmentName });
-  if (depr) {
-    filter = {
-      department_id: depr._id,
-    };
-  }
+  const departmentName = req.params.departmentName;
 
-  const doctors = await Doctor.find(filter);
+  const department = await Department.findOne({
+    name: departmentName,
+  });
 
-  if (!doctors) return res.status(404).json("There was an error!");
+  if (!department)
+    return res
+      .status(404)
+      .json("Department doesn't exists! Something went wrong!");
+
+  const doctors = await Doctor.find({ department_id: department._id });
+
+  if (!doctors) return res.status(404).json("No data available.");
 
   return res.status(200).json(doctors);
 });

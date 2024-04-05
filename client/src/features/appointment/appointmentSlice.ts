@@ -212,6 +212,7 @@ export const appointmentSlice = createSlice({
       })
       .addCase(bookAppointment.fulfilled, (state) => {
         state.status = "idle";
+        state.message = "";
       })
       .addCase(getAppointmentsForPerson.pending, (state) => {
         state.status = "loading";
@@ -232,7 +233,6 @@ export const appointmentSlice = createSlice({
       })
       .addCase(getAppointmentsForADay.fulfilled, (state, action) => {
         (state.status = "idle"),
-          (state.message = ""),
           (state.selectedDayAppointments = action.payload);
       })
 
@@ -244,6 +244,7 @@ export const appointmentSlice = createSlice({
       })
       .addCase(getSelectedAppointment.fulfilled, (state, action) => {
         (state.status = "idle"), (state.selectedAppointment = action.payload);
+        state.message = "";
       })
       .addCase(cancelAppointment.pending, (state) => {
         state.status = "loading";
@@ -264,6 +265,7 @@ export const appointmentSlice = createSlice({
             (n) => n._id !== action.payload._id,
           );
         state.selectedAppointment = null;
+        state.message = "";
       })
       .addCase(editAppointment.pending, (state) => {
         state.status = "loading";
@@ -277,6 +279,7 @@ export const appointmentSlice = createSlice({
         );
         if (i !== -1) state.personAppointments[i] = action.payload;
         state.status = "idle";
+        state.message = "";
       })
       .addCase(makeAppointmentFinished.pending, (state) => {
         state.status = "loading";
@@ -286,6 +289,7 @@ export const appointmentSlice = createSlice({
       })
       .addCase(makeAppointmentFinished.fulfilled, (state) => {
         state.status = "idle";
+        state.message = "";
       });
   },
 });

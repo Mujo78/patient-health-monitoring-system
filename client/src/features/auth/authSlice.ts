@@ -171,9 +171,9 @@ export const updatePicture = createAsyncThunk<
   { state: RootState }
 >("/user/update-picture", async (photo, thunkAPI) => {
   try {
-    return authServices.updatePhoto(photo);
+    return await authServices.updatePhoto(photo);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error.response?.data ?? error.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -300,9 +300,10 @@ export const authSlice = createSlice({
         state.message = action.payload as string;
       })
       .addCase(updatePicture.fulfilled, (state, action) => {
-        state.status = "idle";
         if (state.accessUser) {
+          state.status = "idle";
           state.accessUser.data.photo = action.payload as string;
+          state.message = "";
         }
         localStorage.setItem("user", JSON.stringify(state.accessUser));
       })

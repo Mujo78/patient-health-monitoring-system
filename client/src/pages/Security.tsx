@@ -50,9 +50,7 @@ const Security: React.FC = () => {
         toast.success("Successfully changed password.");
         reset();
       } else {
-        toast.error(
-          "Something went wrong while changing your password, try again later!",
-        );
+        toast.error("Something went wrong while changing your password!");
       }
     });
   };
@@ -78,7 +76,7 @@ const Security: React.FC = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-grow flex-col lg:!w-2/4 lg:!justify-start xxl:gap-3"
           >
-            <div className="relative">
+            <div className={`${status === "failed" && "mb-6"} relative`}>
               <Input
                 label="Current Password"
                 id="currentPassword"

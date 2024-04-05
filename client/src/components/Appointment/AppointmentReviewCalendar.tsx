@@ -19,7 +19,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({ variant }) => {
   const [value, setValue] = useState<Value>(new Date());
   const prevValueRef = useRef<Value | undefined>();
 
-  const { selectedDayAppointments, status } = useSelector(
+  const { selectedDayAppointments, status, message } = useSelector(
     appointment,
     shallowEqual,
   );
@@ -86,6 +86,12 @@ const AppointmentReviewCalendar: React.FC<Props> = ({ variant }) => {
                       <AppointmentRow key={n._id} variant={variant} data={n} />
                     ),
                 )
+              ) : status === "failed" ? (
+                <Table.Row className="h-52">
+                  <Table.Cell className="text-md mx-auto w-full py-3 text-center text-red-600 xxl:text-lg">
+                    {message}
+                  </Table.Cell>
+                </Table.Row>
               ) : (
                 <Table.Row className="h-52">
                   <Table.Cell className="text-md mx-auto w-full py-3 text-center text-gray-500 xxl:text-lg">

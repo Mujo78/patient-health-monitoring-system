@@ -23,9 +23,10 @@ type dataAppointments = {
 
 type Props = {
   setError: React.Dispatch<React.SetStateAction<string | undefined>>;
+  error: string | undefined;
 };
 
-const AppointmentsChart: React.FC<Props> = ({ setError }) => {
+const AppointmentsChart: React.FC<Props> = ({ setError, error }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [month, setMonth] = useState<string>(moment().format("MMMM"));
   const [dataApps, setDataApps] = useState<dataAppointments[]>([]);
@@ -38,14 +39,16 @@ const AppointmentsChart: React.FC<Props> = ({ setError }) => {
           await numberOfAppointmentsPerMonthForDepartments(month);
         setDataApps(response);
       } catch (err: any) {
-        setError(err.message);
+        if (!error) {
+          setError(err.response?.data ?? err.message);
+        }
         throw new Error(err);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [month, setError]);
+  }, [month, setError, error]);
 
   const onHandleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMonth(event.target.value);

@@ -41,6 +41,8 @@ const Profile: React.FC<Props> = ({ children }) => {
         if (isFulfilled(action)) {
           toast.success("Successfully updated profile picture!");
           setShow(false);
+        } else {
+          toast.error(action.payload);
         }
       });
     }

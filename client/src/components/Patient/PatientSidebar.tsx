@@ -66,7 +66,7 @@ const PatientSidebar: React.FC = () => {
         onClick={() => onClickSelect("Medicine overview")}
         icon={HiOutlineDocumentText}
         active={location.pathname === "/medicine-overview"}
-        to={"/medicine-overview"}
+        to={"/medicine-overview?page=1"}
       >
         <SidebarItemText>Medicine</SidebarItemText>
       </Sidebar.Item>
