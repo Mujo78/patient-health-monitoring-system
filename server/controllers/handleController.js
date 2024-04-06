@@ -25,7 +25,9 @@ const deleteDoc = (Model) =>
     const deleted = await Model.findByIdAndDelete(req.params.id, { new: true });
 
     if (!deleted)
-      return res.status(404).json("There is no document with that ID!", 404);
+      return res
+        .status(404)
+        .json(`${Model.modelName} not found! Something went wrong!`);
 
     return res.status(200).json(deleted);
   });
@@ -37,7 +39,10 @@ const updateDoc = (Model) =>
       runValidators: true,
     });
 
-    if (!updatedDoc) return res.status(404).json("No doc found with that ID!");
+    if (!updatedDoc)
+      return res
+        .status(404)
+        .json(`${Model.modelName} not found! Something went wrong!`);
 
     return res.status(200).json(updatedDoc);
   });
@@ -47,7 +52,9 @@ const getDoc = (Model) =>
     const data = await Model.findById(req.params.id);
 
     if (data) return res.status(200).json(data);
-    return res.status(404).json("There is no such document in database!");
+    return res
+      .status(404)
+      .json(`${Model.modelName} not found! Something went wrong!`);
   });
 
 const getMyInfo = (Model) =>
@@ -57,7 +64,10 @@ const getMyInfo = (Model) =>
     if (!user) return res.status(404).json("There is no user with such ID!");
 
     const model = await Model.findOne({ user_id: user._id });
-    if (!model) return res.status(404).json("There is no doc with such ID!");
+    if (!model)
+      return res
+        .status(404)
+        .json(`${Model.modelName} not found! Something went wrong!`);
 
     return res.status(200).json(model);
   });
@@ -94,7 +104,8 @@ const updateMyInfo = (Model) =>
       { new: true, runValidators: true }
     );
 
-    if (!info) return res.status(404).json("There is no user with that ID!");
+    if (!info)
+      return res.status(404).json("User not found! Something went wrong!");
 
     return res.status(200).json(info);
   });

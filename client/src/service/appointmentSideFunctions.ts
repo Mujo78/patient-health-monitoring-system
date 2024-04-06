@@ -278,7 +278,6 @@ export function isDSTFunc() {
 
 export function canCancelOrEdit(appDate: Date) {
   const diff = moment(appDate).diff(moment(), "minutes");
-
   return diff > 60;
 }
 

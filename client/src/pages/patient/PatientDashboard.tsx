@@ -31,9 +31,11 @@ const PatientDashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const response = await getLatestFinished();
-        setLatestFinished(response);
+        if (!latestFinished) {
+          setLoading(true);
+          const response = await getLatestFinished();
+          setLatestFinished(response);
+        }
       } catch (err: any) {
         setError(err.response?.data ?? err.message);
         throw new Error(err?.message);
@@ -42,7 +44,7 @@ const PatientDashboard: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [latestFinished]);
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -145,10 +147,12 @@ const PatientDashboard: React.FC = () => {
                 </Card>
               </div>
             </div>
-            <AppointmentsChart setError={setError} error={error} />
+            {latestFinished && (
+              <AppointmentsChart setError={setError} error={error} />
+            )}
           </div>
           <div className="flex h-fit w-full justify-end xl:!h-full xl:!w-2/5">
-            <AppointmentReviewCalendar variant={1} />
+            {latestFinished && <AppointmentReviewCalendar variant={1} />}
           </div>
         </div>
       )}

@@ -75,7 +75,7 @@ const AppointmentsChart: React.FC<Props> = ({ setError, error }) => {
                 value={month}
                 onChange={onHandleChange}
               >
-                {moment.monthsShort().map((month) => (
+                {moment.months().map((month) => (
                   <option key={month} value={month}>
                     {month}
                   </option>

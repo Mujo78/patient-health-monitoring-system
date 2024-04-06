@@ -56,9 +56,11 @@ const AppointmentOverviewEdit: React.FC = () => {
   const [value, setValue] = useState<Value>(
     new Date(sApp?.appointment_date as Date),
   );
+
+  const isFinished = sApp?.finished ? 0 : 1;
   const [newTime, setNewTime] = useState<string>(formatedAppointmentTime);
   const [reason, setReason] = useState<string>(appointmentReason);
-  const [active, setActive] = useState<number>(sApp?.finished ? 0 : 1);
+  const [active] = useState<number>(isFinished);
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState<boolean>(false);
 
@@ -123,27 +125,16 @@ const AppointmentOverviewEdit: React.FC = () => {
     }
   };
 
-  const handleGet = (tab: number) => {
-    setActive(tab);
-    if (tab === 1) {
-      dispatch(getAppointmentsForADay(value as Date));
-      dispatch(resetAppointmentDay());
-    }
-  };
-
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReason(event.target.value);
   };
 
   return (
     <>
-      <Tabs.Group
-        aria-label="Default tabs"
-        style="default"
-        onActiveTabChange={(tab) => handleGet(tab)}
-        tabIndex={active}
-      >
-        {sApp?.finished ? (
+      <Tabs.Group aria-label="Default tabs" style="default" tabIndex={active}>
+        {sApp?.finished ||
+        (sApp?.finished === false &&
+          !canCancelOrEdit(sApp?.appointment_date)) ? (
           <Tabs.Item
             active={active === 0}
             title="Overview"

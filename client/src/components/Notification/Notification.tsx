@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { shallowEqual, useSelector } from "react-redux";
 import {
-  deleteOneNotification,
+  Link,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
+import {
   getOneNotification,
   markOneAsRead,
   notification,
@@ -13,12 +17,19 @@ import Footer from "../UI/Footer";
 import Logo from "../UI/Logo";
 import DeleteNotificationButton from "./DeleteNotificationButton";
 import CustomSpinner from "../UI/CustomSpinner";
+import { isRejected } from "@reduxjs/toolkit";
+import ErrorMessage from "../UI/ErrorMessage";
+import { ContextTyped } from "../../pages/notification/Notifications";
 
 const Notification: React.FC = () => {
+  const { setError } = useOutletContext<ContextTyped>();
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { oneNotification, status, message } = useSelector(notification);
+  const { oneNotification, status, message } = useSelector(
+    notification,
+    shallowEqual,
+  );
 
   useEffect(() => {
     if (id) {
@@ -32,18 +43,16 @@ const Notification: React.FC = () => {
 
   useEffect(() => {
     if (oneNotification && !oneNotification.read) {
-      dispatch(markOneAsRead(oneNotification._id));
-    }
-  }, [dispatch, oneNotification]);
-
-  const deleteOne = () => {
-    if (oneNotification) {
-      dispatch(deleteOneNotification(oneNotification._id)).then((action) => {
-        if (typeof action === "object") {
-          navigate("../");
+      dispatch(markOneAsRead(oneNotification._id)).then((action: any) => {
+        if (isRejected(action)) {
+          setError(action.payload);
         }
       });
     }
+  }, [dispatch, oneNotification, setError]);
+
+  const handleNavigate = () => {
+    navigate("../");
   };
 
   const mailtoLink = `mailto:${import.meta.env.VITE_EMAIL_SUPPORT}`;
@@ -53,16 +62,16 @@ const Notification: React.FC = () => {
       {status === "loading" ? (
         <CustomSpinner size="lg" />
       ) : oneNotification ? (
-        <div className="w-full flex flex-col justify-between h-full">
-          <div className="flex justify-center flex-col items-center h-full gap-3">
+        <div className="flex h-full w-full flex-col justify-between">
+          <div className="flex h-full flex-col items-center justify-center gap-3">
             {oneNotification?.name.startsWith("Welcome to the") ? (
-              <div className="flex flex-col justify-center items-center gap-4">
+              <div className="flex flex-col items-center justify-center gap-4">
                 <Logo />
-                <h2 className="text-lg xxl:!text-2xl font-bold text-blue-700">
+                <h2 className="text-lg font-bold text-blue-700 xxl:!text-2xl">
                   {oneNotification.name}
                 </h2>
-                <div className="flex flex-col w-2/3 gap-3">
-                  <p className="text-xs xxl:!text-lg text-gray-600 text-justify ">
+                <div className="flex w-2/3 flex-col gap-3">
+                  <p className="text-justify text-xs text-gray-600 xxl:!text-lg ">
                     Welcome to the Patient Health Monitoring System! 🏥 We're
                     delighted to have you here. Your health and well-being are
                     our top priorities. Our platform is designed to help you
@@ -73,7 +82,7 @@ const Notification: React.FC = () => {
                     support you on your health journey. Stay healthy and stay
                     connected
                   </p>
-                  <p className="text-xs ml-auto xxl:!text-lg">
+                  <p className="ml-auto text-xs xxl:!text-lg">
                     Support email:{" "}
                     <Link
                       className="text-blue-700 hover:!underline"
@@ -85,30 +94,30 @@ const Notification: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col h-full gap-6 justify-center items-center">
+              <div className="flex h-full flex-col items-center justify-center gap-6">
                 <h2
                   className={`${
                     oneNotification?.type === "ALERT"
                       ? "text-red-600"
                       : "text-green-600"
-                  } font-bold text-lg xxl:!text-2xl`}
+                  } text-lg font-bold xxl:!text-2xl`}
                 >
                   {oneNotification?.name}
                 </h2>
                 <div className="w-2/3 gap-3">
-                  <p className="text-sm xxl:!text-lg text-justify text-gray-600">
+                  <p className="text-justify text-sm text-gray-600 xxl:!text-lg">
                     {oneNotification?.content}
                   </p>
-                  <div className="flex justify-between w-full mt-2">
+                  <div className="mt-2 flex w-full justify-between">
                     {oneNotification?.link && (
                       <Link
                         to={oneNotification?.link}
-                        className="text-md xxl:!text-lg underline text-green-600"
+                        className="text-md text-green-600 underline xxl:!text-lg"
                       >
                         See Appointment Results
                       </Link>
                     )}
-                    <p className="text-xs xxl:!text-lg ml-auto text-end">
+                    <p className="ml-auto text-end text-xs xxl:!text-lg">
                       Support email:{" "}
                       <Link
                         className="text-blue-700 hover:!underline"
@@ -123,17 +132,20 @@ const Notification: React.FC = () => {
             )}
           </div>
           <Footer variant={1}>
-            <DeleteNotificationButton
-              className="mr-3 mt-3"
-              onClick={deleteOne}
-            />
+            {oneNotification && (
+              <DeleteNotificationButton
+                className="mr-3 mt-3"
+                notificationId={oneNotification._id}
+                onClick={handleNavigate}
+              />
+            )}
           </Footer>
         </div>
       ) : (
         status === "failed" &&
         !oneNotification && (
-          <div className="h-full flex items-center text-md xxl:!text-2xl">
-            <p>{message || "Something went wrong, please try again later!"}</p>
+          <div className="flex h-full items-center">
+            <ErrorMessage text={message} />
           </div>
         )
       )}

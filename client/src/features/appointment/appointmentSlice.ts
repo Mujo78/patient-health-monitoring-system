@@ -195,7 +195,7 @@ export const appointmentSlice = createSlice({
     },
     resetAppointmentDay: (state) => {
       state.selectedDayAppointments = [];
-      (state.status = ""), (state.message = "");
+      state.status = "";
     },
     resetPersonAppointment: (state) => {
       state.personAppointments = [];
@@ -244,7 +244,6 @@ export const appointmentSlice = createSlice({
       })
       .addCase(getSelectedAppointment.fulfilled, (state, action) => {
         (state.status = "idle"), (state.selectedAppointment = action.payload);
-        state.message = "";
       })
       .addCase(cancelAppointment.pending, (state) => {
         state.status = "loading";

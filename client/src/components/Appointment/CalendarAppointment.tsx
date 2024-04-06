@@ -9,7 +9,7 @@ import {
 type Props = {
   value: Value;
   setValue: React.Dispatch<React.SetStateAction<Value>>;
-  handleGetAppForADay: OnClickFunc;
+  handleGetAppForADay?: OnClickFunc;
   variant: number;
   docAvailable: string[];
 };

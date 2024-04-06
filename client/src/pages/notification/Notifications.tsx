@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import {
-  Notification,
-  deleteOneNotification,
   getPersonNotifications,
   markOneAsRead,
   notification,
-  restartNotification,
 } from "../../features/notification/notificationSlice";
 import { Table } from "flowbite-react";
 import ErrorMessage from "../../components/UI/ErrorMessage";
@@ -18,12 +15,37 @@ import { colorPick } from "../../service/authSideFunctions";
 import NotificationHeader from "../../components/Notification/NotificationHeader";
 import DeleteNotificationButton from "../../components/Notification/DeleteNotificationButton";
 import CustomSpinner from "../../components/UI/CustomSpinner";
+import NoDataAvailable from "../../components/UI/NoDataAvailable";
+import { isRejected } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
+
+export type ContextTyped = {
+  error: string | undefined;
+  setError: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
 
 const Notifications: React.FC = () => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  const { personNotifications, status, message } = useSelector(notification);
+  const { personNotifications, status, message } = useSelector(
+    notification,
+    shallowEqual,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useSelectedPage("Notifications");
 
@@ -32,26 +54,26 @@ const Notifications: React.FC = () => {
   };
 
   useEffect(() => {
-    if (id === undefined) {
+    if (!id && !personNotifications) {
       dispatch(getPersonNotifications());
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, personNotifications]);
 
-  const deleteOne = (notificationId: string) => {
-    if (notificationId) {
-      dispatch(deleteOneNotification(notificationId)).then((action) => {
-        if (typeof action === "object") {
-          dispatch(restartNotification());
-        }
-      });
+  useEffect(() => {
+    if (windowWidth < 1020 && id) {
+      navigate(-1);
     }
+  }, [navigate, windowWidth, id]);
+
+  const markAsRead = (id: string) => {
+    dispatch(markOneAsRead(id)).then((action: any) => {
+      if (isRejected(action)) setError(action.payload);
+    });
   };
 
-  const markAsRead = (notification: Notification) => {
-    if (notification && !notification.read) {
-      dispatch(markOneAsRead(notification._id));
-    }
-  };
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   const mailtoLink = `mailto:${import.meta.env.VITE_EMAIL_SUPPORT}`;
 
@@ -60,40 +82,42 @@ const Notifications: React.FC = () => {
       {status === "loading" && !id ? (
         <CustomSpinner size="lg" />
       ) : personNotifications && personNotifications.length > 0 ? (
-        <div className="h-full flex lg:!divide-x pb-16 sm:!pb-2">
+        <div className="flex h-full pb-16 sm:!pb-2 lg:!divide-x">
           <div
             id="content"
             className={`h-full ${
-              id === "" ? "w-full flex lg:!w-1/4" : "w-full lg:!w-1/4 lg:!flex"
-            } w-1/4 overflow-y-auto flex-col gap-1`}
+              id === "" ? "flex w-full lg:!w-1/4" : "w-full lg:!flex lg:!w-1/4"
+            } w-1/4 flex-col gap-1 overflow-y-auto`}
           >
-            <NotificationHeader className="lg:!hidden" />
+            <NotificationHeader setError={setError} className="lg:!hidden" />
             <Table className="overflow-y-auto">
               <Table.Body className="divide-y overflow-y-auto">
                 {personNotifications.map((n) => (
                   <Table.Row
                     key={n._id}
                     onClick={() => {
-                      if (window.innerWidth > 768) {
+                      if (windowWidth > 1020) {
                         handleNavigate(n._id);
                       } else {
-                        markAsRead(n);
+                        if (!n.read) {
+                          markAsRead(n._id);
+                        }
                       }
                     }}
                     className={`cursor-pointer hover:!bg-gray-200 ${
                       id === n._id && "!bg-gray-200"
                     }  ${n.read ? "bg-gray-100" : "bg-white"}`}
                   >
-                    <Table.Cell className="flex gap-2 items-center p-2">
-                      <div className="flex flex-col w-full text-xs">
+                    <Table.Cell className="flex items-center gap-2 p-2">
+                      <div className="flex w-full flex-col text-xs">
                         <h3
-                          className={`font-bold xxl:!text-lg text-sm ${colorPick(
-                            n.type
+                          className={`text-sm font-bold xxl:!text-lg ${colorPick(
+                            n.type,
                           )}`}
                         >
                           {n.name}
                         </h3>
-                        <div className="text-[0.7rem] xxl:!text-sm flex gap-3 flex-col w-full">
+                        <div className="flex w-full flex-col gap-3 text-[0.7rem] xxl:!text-sm">
                           {n?.name.startsWith("Welcome to the") ? (
                             <>
                               <p className="lg:!line-clamp-2">
@@ -109,7 +133,7 @@ const Notifications: React.FC = () => {
                                 your health journey. Stay healthy and stay
                                 connected
                               </p>
-                              <p className="text-xs mr-auto lg:!hidden">
+                              <p className="mr-auto text-xs lg:!hidden">
                                 Support email:{" "}
                                 <Link
                                   className="text-blue-700 hover:!underline"
@@ -125,7 +149,7 @@ const Notifications: React.FC = () => {
                           )}
 
                           <div className="flex flex-col gap-1">
-                            <div className="flex justify-between flex-wrap">
+                            <div className="flex flex-wrap justify-between">
                               {n.link && (
                                 <Link
                                   to={n.link}
@@ -140,8 +164,8 @@ const Notifications: React.FC = () => {
                               </p>
                             </div>
                             <DeleteNotificationButton
-                              onClick={() => deleteOne(n._id)}
-                              className="mt-1 ml-auto lg:!hidden"
+                              notificationId={n._id}
+                              className="ml-auto mt-1 lg:!hidden"
                             />
                           </div>
                         </div>
@@ -153,12 +177,12 @@ const Notifications: React.FC = () => {
             </Table>
           </div>
 
-          <div className="w-full hidden lg:!flex justify-between flex-col h-full items-center">
-            <NotificationHeader />
+          <div className="hidden h-full w-full flex-col items-center justify-between lg:!flex">
+            <NotificationHeader setError={setError} />
             {id ? (
-              <Outlet />
+              <Outlet context={{ error, setError } satisfies ContextTyped} />
             ) : (
-              <div className="hidden w-full h-full lg:flex items-center justify-center">
+              <div className="hidden h-full w-full items-center justify-center lg:flex">
                 <p className="text-gray-400">
                   Please, choose notification for review.
                 </p>
@@ -166,14 +190,13 @@ const Notifications: React.FC = () => {
             )}
           </div>
         </div>
-      ) : (
-        <div className="flex justify-center items-center h-full">
-          <ErrorMessage
-            className="xxl:!text-2xl"
-            text={message || "There are no notifications."}
-            size="md"
-          />
+      ) : status === "failed" && message ? (
+        <div className="flex h-full items-center justify-center">
+          <ErrorMessage text={message} />
         </div>
+      ) : (
+        personNotifications.length === 0 &&
+        status === "idle" && <NoDataAvailable className="mt-12" />
       )}
     </>
   );

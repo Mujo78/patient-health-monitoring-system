@@ -155,13 +155,14 @@ const editAppointmentInfo = asyncHandler(async (req, res) => {
       .status(400)
       .json("You already have an appointment with this doctor on this day.");
 
+  console.log(
+    moment(req.body.appointment_date).tz("Europe/Sarajevo").utc(false)
+  );
   const overlappingAppointment = await Appointment.findOne({
     doctor_id: { $ne: appToEdit.doctor_id },
     patient_id: appToEdit.patient_id,
     appointment_date: {
-      $eq: moment(req.body.appointment_date)
-        .tz("Europe/Sarajevo")
-        .subtract(2, "hours"),
+      $eq: moment(req.body.appointment_date).tz("Europe/Sarajevo").utc(false),
     },
   });
   if (overlappingAppointment)

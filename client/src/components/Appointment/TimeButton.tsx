@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react";
 import React from "react";
+import { convert12HourTo24Hour } from "../../service/appointmentSideFunctions";
 
 type Props = {
   newTime: string;
@@ -18,7 +19,8 @@ const TimeButton: React.FC<Props> = ({ newTime, time, setNewTime }) => {
       onClick={onClick}
       color="light"
       className={`m-1.5 ${
-        newTime === time && "bg-blue-500 text-white hover:text-black"
+        (newTime === convert12HourTo24Hour(time) || newTime === time) &&
+        "bg-blue-500 text-white hover:text-black"
       }  focus:!ring-blue-600`}
     >
       <p className="xxl:text-xl">
