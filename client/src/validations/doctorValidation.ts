@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { genders } from "./personValidation";
 
-type optionsType = {
+export type optionsType = {
   value: string;
   label: string;
 };
@@ -49,7 +49,7 @@ export const doctorValidationSchema = Yup.object({
       Yup.object().shape({
         value: Yup.string().required("Value is required"),
         label: Yup.string().required("Label is required!"),
-      })
+      }),
     )
     .required("Available days are required!")
     .min(3, "You have to choose at least 3 days!")

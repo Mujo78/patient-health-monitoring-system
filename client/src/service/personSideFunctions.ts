@@ -1,5 +1,5 @@
 import moment from "moment";
-import { apiClient, apiClientAuth } from "../helpers/ApiClient";
+import { apiClientAuth } from "../helpers/ApiClient";
 
 export async function getMe() {
   const response = await apiClientAuth.get("/patient/get-me");
@@ -12,36 +12,17 @@ export async function updateMe(data: unknown) {
 
   return response.data;
 }
+export const availableDaysOptions = moment
+  .weekdays()
+  .map((m) => ({ value: m, label: m }));
 
-// export const availalbeDaysOptions = moment.weekdays().map(m => ({value: m, label: m}))
-
-export const availableDaysOptions = [
-  { value: "Monday", label: "Monday" },
-  { value: "Tuesday", label: "Tuesday" },
-  { value: "Wednesday", label: "Wednesday" },
-  { value: "Thursday", label: "Thursday" },
-  { value: "Friday", label: "Friday" },
-  { value: "Saturday", label: "Saturday" },
-  { value: "Sunday", label: "Sunday" },
-];
-
-export async function getDoctorInfo(token: string) {
-  const response = await apiClient.get("/doctor/get-me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function getDoctorInfo() {
+  const response = await apiClientAuth.get("/doctor/get-me");
   return response.data;
 }
 
-export async function updateDoctorInfo(token: string, data: unknown) {
-  const response = await apiClient.patch("/doctor/", data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function updateDoctorInfo(data: unknown) {
+  const response = await apiClientAuth.patch("/doctor/", data);
   return response.data;
 }
 

@@ -29,7 +29,6 @@ const getAppointment = async (id: string) => {
 
 const deleteAppointment = async (id: string) => {
   const response = await apiClientAuth.delete(`${URL}/${id}`);
-
   return response.data;
 };
 

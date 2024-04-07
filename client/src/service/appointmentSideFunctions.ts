@@ -3,36 +3,12 @@ import { apiClientAuth } from "../helpers/ApiClient";
 import { Medicine, Patient } from "../features/medicine/medicineSlice";
 import { GenderArray } from "./departmentSideFunctions";
 import {
-  Appointment,
   doctor_id,
   patient_id,
 } from "../features/appointment/appointmentSlice";
 
 type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-export const workTime = [
-  "9:00",
-  "9:20",
-  "9:40",
-  "10:00",
-  "10:20",
-  "10:40",
-  "11:00",
-  "11:20",
-  "11:40",
-  "12:00",
-  "1:00",
-  "1:20",
-  "1:40",
-  "2:00",
-  "2:20",
-  "2:40",
-  "3:00",
-  "3:20",
-  "3:40",
-  "4:00",
-];
 
 export type MyEvent = {
   id: string;
@@ -198,37 +174,6 @@ export function formatDate(date: Date) {
   const index = date?.toString().indexOf("T");
   const newDate = date?.toString().slice(0, index);
   return newDate;
-}
-
-export async function availableTimeForApp(value: Date, doctor_id: string) {
-  const response = await getOtherAppsForDay(value, doctor_id);
-
-  const appTime =
-    response &&
-    response.map((n: Appointment) => {
-      const formattedTime = moment(n.appointment_date).format("h:mm");
-      return formattedTime;
-    });
-
-  return appTime;
-}
-
-export function getAvailableTime(
-  time: string[] | null | undefined,
-  selectedDayAppointments: Appointment[],
-) {
-  if (time && selectedDayAppointments) {
-    const appTime = selectedDayAppointments.map((n) => {
-      const formattedTime = moment(n.appointment_date).format("h:mm");
-      return formattedTime;
-    });
-
-    const mergedArrayTime = appTime.concat(time);
-    const timeToReturn =
-      mergedArrayTime && workTime.filter((m) => !mergedArrayTime.includes(m));
-
-    return timeToReturn;
-  }
 }
 
 export function isDoctorAvailable(date: Date, available_days: string[]) {

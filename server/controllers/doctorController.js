@@ -103,10 +103,32 @@ const getAllDoctors = asyncHandler(async (req, res) => {
 });
 
 const getDoctor = getDoc(Doctor);
-const updateDoctor = updateMyInfo(Doctor);
+
+const updateDoctor = asyncHandler(async (req, res) => {
+  const doctor = await Doctor.findOneAndUpdate(
+    { user_id: req.user._id },
+    req.body,
+    { new: true, runValidators: true }
+  );
+
+  if (!doctor)
+    return res.status(404).json("Doctor not found! Something went wrong!");
+
+  const response = {
+    ...doctor._doc,
+    available_days: doctor.available_days.map((day) => ({
+      value: day,
+      label: day,
+    })),
+  };
+
+  return res.status(200).json(response);
+});
+
 const deleteDoctor = asyncHandler(async (req, res) => {
-  const doc = await Doctor.findById(req.params.id);
-  if (!doc) return res.status(400).json("There was an error!");
+  const doctor = await Doctor.findById(req.params.id);
+  if (!doctor)
+    return res.status(400).json("Doctor not found! Something went wrong!");
 
   const user = await User.findByIdAndUpdate(
     doc.user_id,
@@ -117,7 +139,26 @@ const deleteDoctor = asyncHandler(async (req, res) => {
   return res.status(200).json(user);
 });
 
-const getMe = getMyInfo(Doctor);
+const getMe = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user)
+    return res.status(404).json("User not found! Something went wrong!");
+
+  const doctor = await Doctor.findOne({ user_id: user._id });
+  if (!doctor)
+    return res.status(404).json("Doctor not found! Something went wrong!");
+
+  const response = {
+    ...doctor._doc,
+    available_days: doctor.available_days.map((day) => ({
+      value: day,
+      label: day,
+    })),
+  };
+
+  return res.status(200).json(response);
+});
 
 module.exports = {
   addDoctor,

@@ -1,10 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Textarea } from "flowbite-react";
 import {
   appointment,
   editAppointment,
-  getAppointmentsForADay,
-  resetAppointmentDay,
 } from "../../features/appointment/appointmentSlice";
 import ErrorMessage from "../UI/ErrorMessage";
 import { shallowEqual, useSelector } from "react-redux";
@@ -16,10 +14,9 @@ import CalendarAppointment from "./CalendarAppointment";
 import { useAppDispatch } from "../../app/hooks";
 import {
   Value,
-  availableTimeForApp,
+  getOtherAppsForDay,
   canCancelOrEdit,
   convert12HourTo24Hour,
-  getAvailableTime,
   getCorrectDate,
   isDSTFunc,
   isDoctorAvailable,
@@ -38,7 +35,6 @@ const AppointmentOverviewEdit: React.FC = () => {
   const { id } = useParams();
   const {
     selectedAppointment: sApp,
-    selectedDayAppointments,
     status,
     message,
   } = useSelector(appointment, shallowEqual);
@@ -62,7 +58,7 @@ const AppointmentOverviewEdit: React.FC = () => {
   const [reason, setReason] = useState<string>(appointmentReason);
   const [active] = useState<number>(isFinished);
   const [loading, setLoading] = useState<boolean>();
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     async function fetchData() {
@@ -70,7 +66,7 @@ const AppointmentOverviewEdit: React.FC = () => {
         if (sApp?.doctor_id._id && value) {
           setLoading(true);
 
-          const response = await availableTimeForApp(
+          const response = await getOtherAppsForDay(
             value as Date,
             sApp?.doctor_id._id,
           );
@@ -78,7 +74,7 @@ const AppointmentOverviewEdit: React.FC = () => {
           setTime(response);
         }
       } catch (error: any) {
-        setError(true);
+        setError(error?.response?.data ?? error?.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -90,17 +86,6 @@ const AppointmentOverviewEdit: React.FC = () => {
     }
   }, [value, active, sApp?.doctor_id._id]);
 
-  const handleGetAppForADay = (value: Date) => {
-    dispatch(getAppointmentsForADay(value));
-    dispatch(resetAppointmentDay());
-  };
-
-  const availableTime = useMemo(() => {
-    if (active === 1) {
-      return getAvailableTime(time, selectedDayAppointments);
-    }
-  }, [selectedDayAppointments, time, active]);
-
   const handleEdit = () => {
     const editObjectData = {
       reason,
@@ -109,16 +94,14 @@ const AppointmentOverviewEdit: React.FC = () => {
 
     if (
       reason !== sApp?.reason ||
-      editObjectData.appointment_date.getTime() !==
+      editObjectData?.appointment_date?.getTime() !==
         new Date(sApp.appointment_date).getTime()
     ) {
-      if (id) {
+      if (id && time?.length !== 0) {
         dispatch(editAppointment({ id, editObjectData })).then((action) => {
           if (isFulfilled(action)) {
             toast.success("Successfully edited appointment.");
             navigate("../");
-          } else {
-            setError(true);
           }
         });
       }
@@ -169,7 +152,6 @@ const AppointmentOverviewEdit: React.FC = () => {
                       variant={2}
                       value={value}
                       setValue={setValue}
-                      handleGetAppForADay={handleGetAppForADay}
                       docAvailable={sApp?.doctor_id.available_days as string[]}
                     />
                     <div className="my-auto flex h-full w-full flex-col justify-around lg:w-2/5 xxl:!text-xl">
@@ -179,7 +161,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                           moment(value as MomentInput).format(
                             "DD/MM/YYYY",
                           )}{" "}
-                        ({availableTime && availableTime.length})
+                        ({time && time.length})
                       </h1>
                       <div className="flex w-full flex-wrap rounded-lg border border-gray-300 p-1">
                         {isDoctorAvailable(
@@ -191,8 +173,8 @@ const AppointmentOverviewEdit: React.FC = () => {
                           <div className="w-full p-16">
                             <CustomSpinner />
                           </div>
-                        ) : availableTime ? (
-                          availableTime.map((n) => (
+                        ) : time && time.length > 0 ? (
+                          time.map((n) => (
                             <TimeButton
                               key={n}
                               setNewTime={setNewTime}
@@ -201,7 +183,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                             />
                           ))
                         ) : (
-                          <p className="lg:!text-md mx-auto my-auto text-sm xxl:!text-xl">
+                          <p className="lg:!text-md mx-auto my-auto p-16 text-sm xxl:!text-xl">
                             There are no available appointments!
                           </p>
                         )}
@@ -210,12 +192,15 @@ const AppointmentOverviewEdit: React.FC = () => {
                   </div>
                 </div>
                 <div
-                  className={`${status === "failed" && "pb-8"} w-full lg:pb-0`}
+                  className={`${(status === "failed" || error) && "pb-8"} w-full lg:pb-0`}
                 >
-                  {status === "failed" && <ErrorMessage text={message} />}
+                  {(status === "failed" || error) && (
+                    <ErrorMessage text={message || error} />
+                  )}
                 </div>
                 <div className="mt-auto w-full pb-12 md:pb-0">
                   <CustomButton
+                    disabled={time?.length === 0}
                     onClick={handleEdit}
                     className="mx-auto w-full md:w-fit lg:!mx-0 lg:!ml-auto lg:!w-fit"
                   >

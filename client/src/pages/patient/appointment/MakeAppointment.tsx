@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "../../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { Textarea } from "flowbite-react";
 import {
   Value,
-  availableTimeForApp,
-  getAvailableTime,
+  getOtherAppsForDay,
   getCorrectDate,
   getDoctor,
   isDoctorAvailable,
@@ -15,8 +14,6 @@ import { useSelector } from "react-redux";
 import {
   appointment,
   bookAppointment,
-  getAppointmentsForADay,
-  resetAppointmentDay,
 } from "../../../features/appointment/appointmentSlice";
 import { toast } from "react-hot-toast";
 import Footer from "../../../components/UI/Footer";
@@ -33,6 +30,7 @@ import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 
 const MakeAppointment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDoc, setLoadingDoc] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const [time, setTime] = useState<string[] | null>();
   const [value, setValue] = useState<Value>(new Date());
@@ -43,36 +41,36 @@ const MakeAppointment: React.FC = () => {
   const { doctorId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { status, message, selectedDayAppointments } = useSelector(appointment);
+  const { status, message } = useSelector(appointment);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        if (doctorId) {
+        setLoadingDoc(true);
+        if (doctorId && !doctor) {
           const response = await getDoctor(doctorId);
           setDoctor(response);
         }
       } catch (error: any) {
-        setError(error.response.data ?? error.message);
+        setError(error?.response?.data ?? error?.message);
         throw new Error(error);
       } finally {
-        setLoading(false);
+        setLoadingDoc(false);
       }
     };
     fetchData();
-  }, [doctorId]);
+  }, [doctorId, doctor]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         if (doctorId && !error) {
-          const resTime = await availableTimeForApp(value as Date, doctorId);
+          const resTime = await getOtherAppsForDay(value as Date, doctorId);
           setTime(resTime);
         }
       } catch (error: any) {
-        setError(error.response.data ?? error.message);
+        setError(error?.response?.data ?? error?.message);
         throw new Error(error);
       } finally {
         setLoading(false);
@@ -80,15 +78,6 @@ const MakeAppointment: React.FC = () => {
     };
     fetchData();
   }, [doctorId, value, error]);
-
-  useEffect(() => {
-    if (error) toast.error("Something went wrong, please try again later!");
-  }, [error]);
-
-  const handleGetAppForADay = (value: Date) => {
-    dispatch(getAppointmentsForADay(value));
-    dispatch(resetAppointmentDay());
-  };
 
   const makeNewAppointment = () => {
     if (doctorId && newTime) {
@@ -107,23 +96,19 @@ const MakeAppointment: React.FC = () => {
     }
   };
 
-  const availableTime = useMemo(() => {
-    return getAvailableTime(time, selectedDayAppointments);
-  }, [time, selectedDayAppointments]);
-
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReason(event.target.value);
   };
 
   return (
     <div className="mt-6 xl:!mt-0 xl:!h-full">
-      {!doctor && loading ? (
+      {!doctor && loadingDoc ? (
         <CustomSpinner size="xl" />
       ) : doctor && !error ? (
         <div className="mx-1.5 flex h-full flex-col lg:!mx-3">
           <div className="flex h-full w-full flex-col items-center justify-center gap-4 xl:!flex-row xl:!gap-12">
             <div className="h-full w-full xl:!my-auto xl:!flex-grow">
-              <MakeAppointmentInfo loading={loading} doctor={doctor} />
+              <MakeAppointmentInfo loading={loadingDoc} doctor={doctor} />
             </div>
             <div className="my-auto flex w-full flex-col xl:!flex-grow">
               <Header size={1} position="start" text="Set Date" />
@@ -145,7 +130,6 @@ const MakeAppointment: React.FC = () => {
                     variant={1}
                     value={value}
                     setValue={setValue}
-                    handleGetAppForADay={handleGetAppForADay}
                     docAvailable={doctor?.available_days as string[]}
                   />
                 </div>
@@ -164,7 +148,7 @@ const MakeAppointment: React.FC = () => {
             <div className="flex h-1/4 w-full flex-col justify-center gap-3 xl:!flex-grow">
               <Header
                 size={1}
-                text={`Date: ${moment(value as MomentInput).format("DD/MM/YYYY")} (${isDoctorAvailable(value as Date, doctor.available_days) ? 0 : availableTime && availableTime.length})`}
+                text={`Date: ${moment(value as MomentInput).format("DD/MM/YYYY")} (${isDoctorAvailable(value as Date, doctor.available_days) ? 0 : time && time.length})`}
                 position="start"
               />
               <div className="flex h-fit w-full flex-wrap rounded-lg border border-gray-300 p-1.5">
@@ -179,11 +163,8 @@ const MakeAppointment: React.FC = () => {
                   <div className="flex h-20 w-full items-center justify-center">
                     <ErrorMessage text="You can not make appointment today" />
                   </div>
-                ) : availableTime &&
-                  availableTime.length > 0 &&
-                  !error &&
-                  !message ? (
-                  availableTime.map((n) => (
+                ) : time && time.length > 0 ? (
+                  time.map((n) => (
                     <TimeButton
                       key={n}
                       setNewTime={setNewTime}
@@ -192,17 +173,14 @@ const MakeAppointment: React.FC = () => {
                     />
                   ))
                 ) : (
-                  error ||
-                  (message && (
-                    <p className="mx-auto my-auto text-sm">
-                      There are no more available appointments for this day
-                    </p>
-                  ))
+                  <p className="mx-auto my-auto px-12 py-16 text-sm">
+                    There are no more available appointments for this day
+                  </p>
                 )}
               </div>
             </div>
 
-            <ErrorMessage text={message} xlHide className="pb-6" />
+            <ErrorMessage text={message || error} xlHide className="pb-6" />
           </div>
           <Footer variant={2} className="mt-5 xl:!mt-0">
             <CustomButton
@@ -222,9 +200,9 @@ const MakeAppointment: React.FC = () => {
             </CustomButton>
           </Footer>
         </div>
-      ) : error ? (
+      ) : error || message ? (
         <div className="mt-12 h-full w-full text-center">
-          <ErrorMessage text={error} />
+          <ErrorMessage text={error || message} />
         </div>
       ) : (
         !doctor && status === "idle" && <NoDataAvailable className="mt-5" />

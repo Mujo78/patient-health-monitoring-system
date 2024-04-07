@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "../../../components/UI/Header";
-import { useSelector } from "react-redux";
-import { authUser, setInfoAccessUser } from "../../../features/auth/authSlice";
+import { setInfoAccessUser } from "../../../features/auth/authSlice";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   doctorType,
   doctorValidationSchema,
+  optionsType,
 } from "../../../validations/doctorValidation";
 import {
   availableDaysOptions,
@@ -26,47 +26,37 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
 import { genders } from "../../../validations/personValidation";
 
-type OptionDays = {
-  value: string;
-  label: string;
-};
-
 const PersonalInfoDoc: React.FC = () => {
-  const { accessUser } = useSelector(authUser);
+  const [data, setData] = useState<doctorType>();
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, control, formState, getValues, reset } =
+  const { register, handleSubmit, control, getValues, formState, reset } =
     useForm<doctorType>({ resolver: yupResolver(doctorValidationSchema) });
   const { errors, isDirty } = formState;
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (accessUser) {
-          setLoading(true);
-          const response = await getDoctorInfo(accessUser.token);
-          const data = {
-            ...response,
-            available_days: response.available_days.map((n: string) => ({
-              value: n,
-              label: n,
-            })),
-          };
-          reset(data);
-          setLoading(false);
-        }
+        setLoading(true);
+        const response = await getDoctorInfo();
+        setData(response);
+        reset(response);
       } catch (err: any) {
-        setLoading(false);
-        toast.error("Something went wrong, please try again later!");
+        setError(err?.response?.data ?? err?.message);
         throw new Error(err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
-  }, [accessUser, reset]);
+
+    if (!data) {
+      fetchData();
+    }
+  }, [reset, data]);
 
   const onSubmit = async (data: doctorType) => {
-    setMessage("");
+    setError("");
     const days = data?.available_days?.map((n) => n.value);
 
     const dataToSend = {
@@ -74,20 +64,14 @@ const PersonalInfoDoc: React.FC = () => {
       available_days: days,
     };
 
-    if (dataToSend && accessUser) {
+    if (dataToSend) {
       try {
         setLoading(true);
-        const response = await updateDoctorInfo(accessUser.token, dataToSend);
+        const response = await updateDoctorInfo(dataToSend);
 
         if (!response.message) {
-          const data = {
-            ...response,
-            available_days: response.available_days.map((n: string) => ({
-              value: n,
-              label: n,
-            })),
-          };
-          reset(data);
+          setData(response);
+          reset(response);
           const userInfo = {
             first_name: data.first_name,
             last_name: data.last_name,
@@ -95,38 +79,38 @@ const PersonalInfoDoc: React.FC = () => {
           dispatch(setInfoAccessUser(userInfo));
           toast.success("Successfully updated profile.");
         } else {
-          setMessage(response.message);
+          setError(response.message);
         }
       } catch (err: any) {
-        toast.error("Something went wrong, please try again later!");
-        setMessage(err.message);
-        setLoading(false);
+        toast.error("An error occurred while updating your profile!");
+        setError(err?.response?.data ?? err?.message);
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const days = getValues("available_days")?.map((n) => ({
-    value: n.value,
-    label: n.label,
-  }));
+  const days = getValues("available_days");
 
-  const available_options: OptionDays[] = availableDaysOptions?.filter(
-    (m) => !days?.some((d) => d.value === m.value)
-  );
+  const available_options: optionsType[] | undefined = useMemo(() => {
+    if (!days) return undefined;
+
+    return availableDaysOptions.filter(
+      (m) => !days.some((d) => d.value === m.value),
+    );
+  }, [days]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <Header text="Personal information" />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full h-full flex-col items-center"
+        className="flex h-full w-full flex-col items-center"
       >
         {loading ? (
           <CustomSpinner />
-        ) : (
-          <div className="w-full flex gap-0.5 flex-col h-full justify-start lg:!justify-start xxl:!gap-2">
+        ) : data ? (
+          <div className="flex h-full w-full flex-col justify-start gap-0.5 lg:!justify-start xxl:!gap-2">
             <FormRow gap={3} className="flex lg:!flex-nowrap">
               <Input
                 autoComplete="true"
@@ -150,7 +134,7 @@ const PersonalInfoDoc: React.FC = () => {
               />
             </FormRow>
 
-            <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
+            <div className="flex flex-wrap justify-between gap-3 lg:!flex-nowrap">
               <div className="flex-grow">
                 <Input
                   label="Qualification"
@@ -186,7 +170,7 @@ const PersonalInfoDoc: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-between gap-3 flex-wrap lg:!flex-nowrap">
+            <div className="flex flex-wrap justify-between gap-3 lg:!flex-nowrap">
               <div className="flex-grow">
                 <Input
                   label="Phone number"
@@ -200,9 +184,9 @@ const PersonalInfoDoc: React.FC = () => {
                     text={
                       errors?.phone_number?.message
                         ? errors?.phone_number?.message
-                        : message?.includes("phone_number")
-                        ? errorMessageConvert(message, "phone_number")
-                        : ""
+                        : error?.includes("phone_number")
+                          ? errorMessageConvert(error, "phone_number")
+                          : ""
                     }
                   />
                 </Input>
@@ -257,7 +241,7 @@ const PersonalInfoDoc: React.FC = () => {
                   {...register("bio")}
                   color={errors.bio && "failure"}
                   rows={5}
-                  className="text-xs mt-1"
+                  className="mt-1 text-xs"
                 />
                 <ErrorMessage text={errors.bio?.message} />
               </>
@@ -287,7 +271,19 @@ const PersonalInfoDoc: React.FC = () => {
                 <ErrorMessage text={errors.available_days?.message} />
               </>
             </FormRow>
+
+            {!error.includes("Validation") && (
+              <div className="my-4 flex h-full w-full items-start justify-start lg:!my-0">
+                <ErrorMessage text={error} />
+              </div>
+            )}
           </div>
+        ) : (
+          !error.includes("Validation") && (
+            <div className="my-4 flex h-full w-full items-center justify-center lg:!my-0">
+              <ErrorMessage text={error} />
+            </div>
+          )
         )}
         <Footer variant={1}>
           <CustomButton

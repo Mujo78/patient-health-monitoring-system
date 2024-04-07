@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
 
+/**
+ * @type {mongoose.SchemaDefinitionProperty}
+ */
 const patientSchema = new mongoose.Schema(
   {
     user_id: {

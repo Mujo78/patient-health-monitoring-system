@@ -15,6 +15,7 @@ import {
 } from "../../features/notification/notificationSlice";
 import NavBarDropdown from "./NavBarDropdown";
 import LogoutButton from "./LogoutButton";
+import moment from "moment";
 
 const customTheme: CustomFlowbiteTheme["avatar"] = {
   root: {
@@ -32,10 +33,7 @@ const CustomNavbar: React.FC = () => {
   let route;
   const [show, setShow] = useState<boolean>(false);
 
-  const { notifications, personNotifications } = useSelector(
-    notification,
-    shallowEqual,
-  );
+  const { personNotifications } = useSelector(notification, shallowEqual);
   const { accessUser, selected } = useSelector(authUser, shallowEqual);
   const dispatch = useAppDispatch();
 
@@ -72,7 +70,7 @@ const CustomNavbar: React.FC = () => {
     return () => {
       dispatch(restartPersonNotifications());
     };
-  }, [dispatch, notifications]);
+  }, [dispatch]);
 
   const showNotifications = () => {
     setShow((n) => !n);
@@ -81,34 +79,31 @@ const CustomNavbar: React.FC = () => {
   const notReaded = personNotifications?.map((n) => n.read === false);
   const readed = notReaded.some((value) => value === true);
 
-  const date = new Date();
-
   return (
     <nav className="sticky flex w-full items-center justify-between border-x-0 border-b border-t-0 border-b-gray-200 p-2 md:relative">
       <div className="w-1/3">
         <p className="text-sm font-semibold lg:text-xl xxl:!text-3xl">
-          {selected ? selected : "Dashboard"}
+          {selected ?? "Dashboard"}
         </p>
       </div>
       <div className="hidden w-1/3 sm:block">
         <p className="text-sm font-semibold xxl:!text-2xl">
-          {date.toString().slice(0, 16)}
+          {moment().toDate().toDateString()}
         </p>
       </div>
       <div className="relative flex flex-row-reverse items-center">
         <div className="flex items-center gap-1">
           <Link to={route}>
             <div className="flex items-center">
-              {accessUser !== undefined && (
+              {accessUser && (
                 <div className="flex flex-wrap items-center justify-center">
                   <CustomImg
                     url={accessUser?.data.photo}
                     className="mr-1 w-8 xxl:!w-14"
                   />
                   <p className="mr-0 text-xs font-semibold sm:mr-3 xxl:!text-2xl">
-                    {accessUser?.info.name
-                      ? accessUser?.info.name
-                      : accessUser?.info.first_name +
+                    {accessUser?.info?.name ??
+                      accessUser?.info.first_name +
                         " " +
                         accessUser?.info.last_name}
                   </p>

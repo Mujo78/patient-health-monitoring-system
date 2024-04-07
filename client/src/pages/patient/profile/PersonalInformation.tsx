@@ -57,6 +57,7 @@ const PersonalInformation: React.FC = () => {
 
     if (realData) {
       try {
+        setLoading(true);
         const response = await updateMe(realData);
         if (!response.message) {
           reset(response);
@@ -75,6 +76,8 @@ const PersonalInformation: React.FC = () => {
         setMessage(err.response.data ?? err.message);
         toast.error("An error occurred while updating your profile!");
         throw new Error(err);
+      } finally {
+        setLoading(false);
       }
     }
   };
