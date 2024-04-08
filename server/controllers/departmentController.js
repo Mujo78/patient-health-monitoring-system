@@ -40,26 +40,24 @@ const updateDepartment = updateDoc(Department);
 const getDepartment = getDoc(Department);
 
 const getMyDepartment = asyncHandler(async (req, res) => {
-  const doctor = await Doctor.findOne({ user_id: req.user._id }).select(
+  const userId = req.user._id;
+
+  const doctor = await Doctor.findOne({ user_id: userId }).select(
     "+department_id"
   );
+
   if (!doctor)
-    return res.status(400).json("There was an error, please try again later!");
+    return res.status(400).json("Doctor not found! Something went wrong!");
 
   const department = await Department.findById(doctor.department_id);
   if (!department)
-    return res.status(400).json("There was an error, please try again later!");
+    return res.status(400).json("Department not found! Something went wrong!");
 
   const doctorsFromDepartment = await Doctor.find({
     department_id: department._id,
   })
     .select("_id user_id first_name last_name available_days")
     .sort({ first_name: 1 });
-
-  if (doctorsFromDepartment.length === 0)
-    return res
-      .status(400)
-      .json("There are no doctors registred in database fror this department!");
 
   const numberOfDoctors = doctorsFromDepartment.length;
 
@@ -79,13 +77,9 @@ const getMyDepartment = asyncHandler(async (req, res) => {
 
   const { male, female, other } = doctorsFromDepartment.reduce(
     (result, doc) => {
-      if (doc.gender === "Male") {
-        result.male += 1;
-      } else if (doc.gender === "Female") {
-        result.female += 1;
-      } else {
-        result.other += 1;
-      }
+      if (doc.gender === "Male") result.male += 1;
+      else if (doc.gender === "Female") result.female += 1;
+      else result.other += 1;
 
       return result;
     },
@@ -113,33 +107,29 @@ const getMyDepartment = asyncHandler(async (req, res) => {
 });
 
 const myDepartmentAppointments = asyncHandler(async (req, res) => {
-  const doctor = await Doctor.findOne({ user_id: req.user._id }).select(
+  const userId = req.user._id;
+  const doctor = await Doctor.findOne({ user_id: userId }).select(
     "+department_id"
   );
+
   if (!doctor)
-    return res.status(400).json("There was an error, please try again later!");
+    return res.status(400).json("Doctor not found! Something went wrong!");
 
   const department = await Department.findById(doctor.department_id);
   if (!department)
-    return res.status(400).json("There was an error, please try again later!");
+    return res.status(400).json("Department not found! Something went wrong!");
 
   const doctorsFromDepartment = await Doctor.find({
     department_id: department._id,
   }).sort({ first_name: 1 });
-  if (doctorsFromDepartment.length === 0)
-    return res
-      .status(400)
-      .json("There are no doctors registred in database fror this department!");
 
   const ids = doctorsFromDepartment.map((n) => n._id);
 
-  const userDate = moment.tz(new Date(), "Europe/Sarajevo");
-
-  const startOfDay = userDate.clone().startOf("day").utc().toDate();
-  const endOfDay = userDate.clone().endOf("day").utc().toDate();
-
-  const startOfWeek = userDate.clone().startOf("week").utc().toDate();
-  const endOfWeek = userDate.clone().endOf("week").utc().toDate();
+  const userDate = moment.tz("Europe/Sarajevo").utc(true);
+  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
+  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
+  const startOfWeek = userDate.clone().startOf("week").utc(true).toDate();
+  const endOfWeek = userDate.clone().endOf("week").utc(true).toDate();
 
   const appointmentsDay = await Appointment.find({
     doctor_id: { $in: ids },
@@ -153,48 +143,36 @@ const myDepartmentAppointments = asyncHandler(async (req, res) => {
     (n) => n.appointment_date >= startOfDay && n.appointment_date <= endOfDay
   );
 
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  moment.updateLocale("en", {
+    week: {
+      dow: 1,
+    },
+  });
 
+  const daysOfWeek = moment.weekdays(true);
   const total = todayAppointments.length;
 
   const { finished, pending } = todayAppointments.reduce(
     (result, app) => {
-      if (app.finished) {
-        result.finished += 1;
-      } else {
-        result.pending += 1;
-      }
+      if (app.finished) result.finished += 1;
+      else result.pending += 1;
+
       return result;
     },
     { finished: 0, pending: 0 }
   );
 
-  const appointmentsByDay = [
-    { name: "Monday", value: 0 },
-    { name: "Tuesday", value: 0 },
-    { name: "Wednesday", value: 0 },
-    { name: "Thursday", value: 0 },
-    { name: "Friday", value: 0 },
-    { name: "Saturday", value: 0 },
-    { name: "Sunday", value: 0 },
-  ];
+  const appointmentsByDay = daysOfWeek.map((m) => ({
+    name: m,
+    value: 0,
+  }));
 
   appointmentsDay.forEach((app) => {
     const appointmentDate = new Date(app.appointment_date);
     const dayOfWeek = daysOfWeek[appointmentDate.getDay()];
 
     const dayObject = appointmentsByDay.find((day) => day.name === dayOfWeek);
-    if (dayObject) {
-      dayObject.value++;
-    }
+    if (dayObject) dayObject.value++;
   });
 
   return res.status(200).json({

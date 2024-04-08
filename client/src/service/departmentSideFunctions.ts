@@ -1,5 +1,5 @@
 import { UserInfo } from "../features/appointment/appointmentSlice";
-import { apiClient, apiClientAuth } from "../helpers/ApiClient";
+import { apiClientAuth } from "../helpers/ApiClient";
 
 const URL = "/department";
 
@@ -12,7 +12,6 @@ export type Department = {
 
 export async function getDepartments() {
   const response = await apiClientAuth.get(`${URL}/`);
-
   return response.data;
 }
 
@@ -50,7 +49,6 @@ export type DoctorType = {
 
 export async function getDoctorsForDepartment(name: string) {
   const response = await apiClientAuth.get(`${URL}/${name}/doctors`);
-
   return response.data;
 }
 
@@ -72,12 +70,8 @@ export type myDepartmentResult = {
   gender: GenderArray[];
 };
 
-export async function getMyDepartment(token: string) {
-  const response = await apiClient.get(`${URL}/my-department`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getMyDepartment() {
+  const response = await apiClientAuth.get(`${URL}/my-department`);
   return response.data;
 }
 
@@ -97,11 +91,7 @@ export type myDepartmentAppointments = {
   appointmentsByDay: appointmentsByDay[];
 };
 
-export async function getMyDepartmentAppointments(token: string) {
-  const response = await apiClient.get(`${URL}/my-department-appointments`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getMyDepartmentAppointments() {
+  const response = await apiClientAuth.get(`${URL}/my-department-appointments`);
   return response.data;
 }

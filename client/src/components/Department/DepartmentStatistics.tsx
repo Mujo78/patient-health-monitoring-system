@@ -21,36 +21,36 @@ const DepartmentStatistics: React.FC<Props> = ({
   todayAppointment,
 }) => {
   return (
-    <div className="flex flex-wrap my-auto flex-col md:flex-row gap-3 items-center xxl:!text-lg justify-around">
+    <div className="my-auto flex flex-col flex-wrap items-center justify-around gap-3 md:flex-row xxl:!text-lg">
       <CustomCardTooltip
         tooltip_content="Number of doctors"
         text={numOfDoctors || 0}
       >
-        <HiOutlineUserGroup className="w-5 xxl:!w-8 h-auto" />
+        <HiOutlineUserGroup className="h-auto w-5 xxl:!w-8" />
       </CustomCardTooltip>
       <CustomCardTooltip
         tooltip_content="Number of active doctors"
         text={numOfActiveDoctors || 0}
       >
-        <HiOutlineUser className="w-5 xxl:!w-8 h-auto" />
+        <HiOutlineUser className="h-auto w-5 xxl:!w-8" />
       </CustomCardTooltip>
       <CustomCardTooltip
         tooltip_content="Number of appointments today"
-        text={todayAppointment.total || 0}
+        text={todayAppointment?.total || 0}
       >
-        <HiOutlineCalendarDays className="w-5 xxl:!w-8 h-auto" />
+        <HiOutlineCalendarDays className="h-auto w-5 xxl:!w-8" />
       </CustomCardTooltip>
       <CustomCardTooltip
         tooltip_content="Finished appointments"
-        text={todayAppointment.finished || 0}
+        text={todayAppointment?.finished || 0}
       >
-        <HiOutlineCheckCircle className="w-5 xxl:!w-8 h-auto" />
+        <HiOutlineCheckCircle className="h-auto w-5 xxl:!w-8" />
       </CustomCardTooltip>
       <CustomCardTooltip
         tooltip_content="Pending appointments"
-        text={todayAppointment.pending || 0}
+        text={todayAppointment?.pending || 0}
       >
-        <HiOutlineClock className="w-5 xxl:!w-8 h-auto" />
+        <HiOutlineClock className="h-auto w-5 xxl:!w-8" />
       </CustomCardTooltip>
     </div>
   );

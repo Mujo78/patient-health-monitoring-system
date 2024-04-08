@@ -15,7 +15,7 @@ const Footer: React.FC<Props> = ({ variant, children, className }) => {
   };
 
   return (
-    <div className={`w-full mt-auto ${className}`}>
+    <div className={`mt-auto w-full ${className}`}>
       <hr />
       <div
         className={`flex justify-${
@@ -24,7 +24,7 @@ const Footer: React.FC<Props> = ({ variant, children, className }) => {
       >
         {variant === 2 && (
           <Button className="hidden lg:flex" color="light" onClick={goBack}>
-            <p className="xxl:text-xl">Back</p>
+            <p className="xxl:text-lg">Back</p>
           </Button>
         )}
         {children}

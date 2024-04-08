@@ -1,5 +1,5 @@
 import { Patient } from "../features/medicine/medicineSlice";
-import { apiClient } from "../helpers/ApiClient";
+import { apiClientAuth } from "../helpers/ApiClient";
 
 export type PatientsType = {
   currentPage: number | null;
@@ -7,27 +7,15 @@ export type PatientsType = {
   numOfPages: number;
 };
 
-export async function getPatientsForDoctor(
-  token: string,
-  page: number,
-  searchQuery: string,
-) {
-  const response = await apiClient.get("/appointment/doctor-patients", {
+export async function getPatientsForDoctor(page: number, searchQuery: string) {
+  const response = await apiClientAuth.get("/appointment/doctor-patients", {
     params: { searchQuery, page },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 
   return response.data;
 }
 
-export async function getPatient(token: string, patientId: string) {
-  const response = await apiClient.get(`/patient/${patientId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function getPatient(patientId: string) {
+  const response = await apiClientAuth.get(`/patient/${patientId}`);
   return response.data;
 }

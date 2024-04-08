@@ -410,14 +410,16 @@ const getPatientsForDoctor = asyncHandler(async (req, res) => {
   const limit = 8;
   const startIndx = (page - 1) * limit;
 
-  const doc = await Doctor.findOne({ user_id: req.user.id });
+  const doctor = await Doctor.findOne({ user_id: req.user.id });
 
-  if (!doc) return res.status(404).json("That doctor doesn't exists!");
+  if (!doctor)
+    return res.status(404).json("Doctor not found! Something went wrong!");
 
   const app = await Appointment.aggregate([
-    { $match: { doctor_id: doc._id } },
+    { $match: { doctor_id: doctor._id } },
     { $group: { _id: "$patient_id" } },
   ]);
+
   if (!app) return res.status(404).json("There are no patients right now!");
 
   const patientIds = app.map((item) => item._id);
@@ -431,22 +433,17 @@ const getPatientsForDoctor = asyncHandler(async (req, res) => {
 
     const conditionals = {};
 
-    if (first) {
-      conditionals.first_name = new RegExp(first, "i");
-    }
+    if (first) conditionals.first_name = new RegExp(first, "i");
 
-    if (last) {
-      conditionals.last_name = new RegExp(last, "i");
-    }
+    if (last) conditionals.last_name = new RegExp(last, "i");
 
     query = query.where({
       $and: [conditionals],
     });
   }
 
-  const patients = await query.exec();
-
-  if (!patients) return res.status(404).json("No data available.");
+  let patients = await query.exec();
+  if (patients.length === 0) return res.status(404).json("No data available.");
 
   const total = await Patient.countDocuments(query.getFilter());
 
@@ -461,10 +458,14 @@ const getFinishedAppointmentsForPatient = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
 
   const patient = await Patient.findById(req.params.id);
-  if (!patient) return res.status(404).json("This patient doesn't exists!");
+  if (!patient)
+    return res
+      .status(404)
+      .json("Patient doesn't exists! Something went wrong!");
 
   const doctor = await Doctor.findOne({ user_id: req.user._id });
-  if (!doctor) return res.status(404).json("This doctor doesn't exists!");
+  if (!doctor)
+    return res.status(404).json("Doctor doesn't exists! Something went wrong!");
 
   const LIMIT = 9;
   const startIndx = (Number(page) - 1) * LIMIT;
@@ -495,6 +496,7 @@ const getFinishedAppointmentsForPatient = asyncHandler(async (req, res) => {
     doctor_id: doctor._id,
     finished: true,
   });
+
   return res.status(200).json({
     currentPage: Number(page),
     numOfPages: Math.ceil(total / LIMIT),

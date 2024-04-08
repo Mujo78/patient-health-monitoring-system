@@ -77,16 +77,9 @@ export type modalDataType = {
   appointment_date: Date;
 };
 
-export async function getPatientFinishedAppointments(
-  token: string,
-  id: string,
-  page: number,
-) {
+export async function getPatientFinishedAppointments(id: string, page: number) {
   const response = await apiClientAuth.get(`/appointment/patient/${id}`, {
     params: { page },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
   return response.data;
 }
@@ -171,9 +164,7 @@ export function isSunday(date: Date) {
 }
 
 export function formatDate(date: Date) {
-  const index = date?.toString().indexOf("T");
-  const newDate = date?.toString().slice(0, index);
-  return newDate;
+  return moment(date).format("YYYY-MM-DD");
 }
 
 export function isDoctorAvailable(date: Date, available_days: string[]) {

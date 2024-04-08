@@ -9,8 +9,6 @@ import { CustomFlowbiteTheme, TextInput } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomButton from "../../../components/UI/CustomButton";
 import Pagination from "../../../components/UI/Pagination";
-import { useSelector } from "react-redux";
-import { authUser } from "../../../features/auth/authSlice";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import { useQuery } from "../../../hooks/useQuery";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
@@ -33,7 +31,6 @@ const MyPatients: React.FC = () => {
   const [patients, setPatients] = useState<PatientsType | undefined>();
   const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { accessUser } = useSelector(authUser);
   const navigate = useNavigate();
   const { id } = useParams();
   const query = useQuery();
@@ -45,19 +42,16 @@ const MyPatients: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!id && accessUser && query.toString() !== lastQuery.current) {
+      if (!id && query.toString() !== lastQuery.current) {
         lastQuery.current = query.toString();
         try {
           setLoading(true);
-          const response = await getPatientsForDoctor(
-            accessUser.token,
-            page,
-            searchQuery,
-          );
+          const response = await getPatientsForDoctor(page, searchQuery);
           setPatients(response);
           navigate(`/my-patients?${query.toString()}`);
         } catch (err: any) {
-          setMessage(err.response?.data);
+          console.log(err);
+          setMessage(err?.response?.data ?? err?.message);
         } finally {
           setLoading(false);
         }
@@ -65,33 +59,20 @@ const MyPatients: React.FC = () => {
     };
 
     fetchData();
-  }, [page, searchQuery, id, accessUser, navigate, query]);
+  }, [page, searchQuery, id, navigate, query]);
 
   const handleNavigatePage = async (newPage: number) => {
-    if (page !== newPage && accessUser) {
+    if (page !== newPage) {
       query.set("page", newPage.toString());
-      const response = await getPatientsForDoctor(
-        accessUser.token,
-        page,
-        searchQuery,
-      );
-      setPatients(response);
       navigate(`/my-patients?${query.toString()}`);
     }
   };
 
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (search !== "" && search !== searchQuery && accessUser) {
+    if (search !== "" && search !== searchQuery) {
       query.set("page", "1");
       query.set("searchQuery", search);
-
-      const response = await getPatientsForDoctor(
-        accessUser.token,
-        page,
-        searchQuery,
-      );
-      setPatients(response);
       navigate(`/my-patients?${query.toString()}`);
     }
   };
@@ -176,8 +157,7 @@ const MyPatients: React.FC = () => {
                 <div className="mt-16 text-center">
                   <ErrorMessage
                     className="mx-auto my-auto xxl:text-2xl"
-                    text={message || "No data available."}
-                    size="md"
+                    text={message}
                   />
                 </div>
               )}

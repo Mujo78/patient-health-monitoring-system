@@ -14,7 +14,7 @@ const CustomCardTooltip: React.FC<Props> = ({
 }) => {
   return (
     <Tooltip content={tooltip_content} className="xxl:!text-xl">
-      <Card className="max-w-fit h-14 flex cursor-pointer ">
+      <Card className="flex h-14 max-w-fit cursor-pointer ">
         <div className="flex h-full items-center gap-6">
           {children}
           <p className="xxl:!text-xl">{text}</p>

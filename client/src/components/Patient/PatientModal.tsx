@@ -25,13 +25,17 @@ const PatientModal: React.FC<Props> = ({
   setMore,
   loading,
 }) => {
+  const handleClose = () => {
+    setMore(false);
+  };
+
   return (
     <Modal
       show={more}
       size="7xl"
       className="font-Poppins"
       position="center-right"
-      onClose={() => setMore(false)}
+      onClose={handleClose}
     >
       <Modal.Header>
         {latestAppState && (
@@ -52,11 +56,11 @@ const PatientModal: React.FC<Props> = ({
               <CustomSpinner />
             </div>
           ) : latestAppState ? (
-            <div className="h-full flex justify-evenly flex-col">
-              <div className="flex p-1 border rounded-lg my-auto divide-y xxl:text-2xl md:!divide-x md:!divide-y-0 justify-between flex-wrap text-center md:!text-start">
-                <div className="divide-y w-full md:!w-2/4">
+            <div className="flex h-full flex-col justify-evenly">
+              <div className="my-auto flex flex-wrap justify-between divide-y rounded-lg border p-1 text-center md:!divide-x md:!divide-y-0 md:!text-start xxl:text-2xl">
+                <div className="w-full divide-y md:!w-2/4">
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Name:
                     </span>{" "}
                     {latestAppState.patient_id.first_name +
@@ -64,33 +68,33 @@ const PatientModal: React.FC<Props> = ({
                       latestAppState.patient_id.last_name}
                   </p>
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Date of birth:
                     </span>{" "}
                     {latestAppState.patient_id.date_of_birth.toString()}
                   </p>
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Blood type:
                     </span>{" "}
                     {latestAppState.patient_id.blood_type}
                   </p>
                 </div>
-                <div className="md:!w-2/4 w-full divide-y md:pl-1">
+                <div className="w-full divide-y md:!w-2/4 md:pl-1">
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Gender:
                     </span>{" "}
                     {latestAppState.patient_id.gender}
                   </p>
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Age:
                     </span>{" "}
                     {yearCalc(latestAppState?.patient_id.date_of_birth)}
                   </p>
                   <p>
-                    <span className="font-semibold hidden md:!inline-block">
+                    <span className="hidden font-semibold md:!inline-block">
                       Address:
                     </span>{" "}
                     {latestAppState.patient_id.address}
@@ -98,10 +102,10 @@ const PatientModal: React.FC<Props> = ({
                 </div>
               </div>
               <div className="mt-6">
-                <h1 className="font-bold text-md mb-1 xxl:text-2xl">
+                <h1 className="text-md mb-1 font-bold xxl:text-2xl">
                   Medical report
                 </h1>
-                <div className="border flex flex-col gap-4 rounded-lg divide-y p-2">
+                <div className="flex flex-col gap-4 divide-y rounded-lg border p-2">
                   {latestAppState.reason.length !== 0 && (
                     <div className="text-sm xxl:!text-xl">
                       <h1 className="font-semibold">Reason</h1>
@@ -133,13 +137,13 @@ const PatientModal: React.FC<Props> = ({
                     </div>
                   )}
                   {latestAppState.description.length !== 0 && (
-                    <div className="pt-2 xxl:!text-xl text-sm">
+                    <div className="pt-2 text-sm xxl:!text-xl">
                       <h1 className="font-semibold">Description</h1>
                       <p>{latestAppState.description}</p>
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col md:!flex-row md:!items-center mt-8 justify-between items-start gap-3">
+                <div className="mt-8 flex flex-col items-start justify-between gap-3 md:!flex-row md:!items-center">
                   <div className="text-sm xxl:!text-xl">
                     <p>
                       <span className="font-semibold">Date: </span>{" "}
@@ -152,7 +156,7 @@ const PatientModal: React.FC<Props> = ({
                   </div>
                   {variant === 1 && (
                     <Link
-                      className="text-blue-700 text-sm xxl:!text-xl hover:underline "
+                      className="text-sm text-blue-700 hover:underline xxl:!text-xl "
                       to={`/my-patients/${latestAppState.patient_id._id}`}
                     >
                       See patient history {"->"}
@@ -162,7 +166,7 @@ const PatientModal: React.FC<Props> = ({
               </div>
             </div>
           ) : (
-            <div className="flex justify-center items-center pb-2 md:!pb-0">
+            <div className="flex items-center justify-center pb-2 md:!pb-0">
               <ErrorMessage
                 className="xxl:text-2xl"
                 size="md"
@@ -173,8 +177,8 @@ const PatientModal: React.FC<Props> = ({
         </div>
       </Modal.Body>
       <Modal.Footer className="hidden md:!flex">
-        <Button className="ml-auto" color="gray" onClick={() => setMore(false)}>
-          <p className="xxl:!text-xl">Close</p>
+        <Button className="ml-auto" color="gray" onClick={handleClose}>
+          <p className="xxl:!text-lg">Close</p>
         </Button>
       </Modal.Footer>
     </Modal>

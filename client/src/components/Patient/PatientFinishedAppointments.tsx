@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { patient_id } from "../../features/appointment/appointmentSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { authUser } from "../../features/auth/authSlice";
 import { useQuery } from "../../hooks/useQuery";
 import {
   appointments,
@@ -18,6 +16,7 @@ import { Table } from "flowbite-react";
 import Pagination from "../UI/Pagination";
 import PatientModal from "./PatientModal";
 import Footer from "../UI/Footer";
+import Header from "../UI/Header";
 
 type Props = {
   patient: patient_id;
@@ -29,28 +28,24 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
   const [appointments, setAppointments] = useState<appointments | undefined>();
   const [show, setShow] = useState<boolean>(false);
   const [modalData, setModalData] = useState<modalDataType>();
-  const { accessUser } = useSelector(authUser);
+
+  const { id } = useParams();
+  const navigate = useNavigate();
   const query = useQuery();
   const page = Number(query.get("page")) || 1;
   const lastQuery = useRef<string>();
-  const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (id && accessUser && query.toString() !== lastQuery.current) {
+      if (id && query.toString() !== lastQuery.current) {
         lastQuery.current = query.toString();
         try {
           setLoading(true);
-          const response = await getPatientFinishedAppointments(
-            accessUser.token,
-            id,
-            page
-          );
+          const response = await getPatientFinishedAppointments(id, page);
           setAppointments(response);
           navigate(`/my-patients/${id}?${query.toString()}`);
         } catch (err: any) {
-          setMessage(err.response?.data);
+          setMessage(err?.response?.data ?? err?.message);
         } finally {
           setLoading(false);
         }
@@ -58,10 +53,9 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
     };
 
     fetchData();
-  }, [id, accessUser, query, lastQuery, page, navigate]);
+  }, [id, query, lastQuery, page, navigate]);
 
   const showModal = (appointment: finishedAppointments) => {
-    console.log(appointment);
     if (appointments && patient) {
       setModalData({
         patient_id: patient,
@@ -78,35 +72,27 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
   };
 
   const handleNavigatePage = async (newPage: number) => {
-    if (page !== newPage && accessUser && id) {
-      const response = await getPatientFinishedAppointments(
-        accessUser.token,
-        id,
-        newPage
-      );
-      setAppointments(response);
+    if (page !== newPage && id) {
       navigate(`/my-patients/${id}?page=${newPage}`);
     }
   };
 
   return (
-    <div className="lg:!w-fit xl:!w-full w-full h-full">
+    <div className="h-full w-full xl:!w-2/4">
       {loading ? (
         <CustomSpinner size="lg" fromTop={8} />
       ) : appointments ? (
         <>
-          <div className="h-full flex justify-between flex-col w-full lg:!w-fit lg:!ml-auto xl:!ml-0 xl:!w-full">
+          <div className="flex h-full w-full flex-col justify-between lg:!ml-auto lg:!w-full xl:!ml-0">
             {Number(page) > appointments.numOfPages ? (
-              <div className="h-full flex justify-center p-4 items-center">
-                <ErrorMessage text="No data available." size="sm" />
+              <div className="flex h-full items-center justify-center p-4">
+                <ErrorMessage text="No data available." />
               </div>
             ) : loading ? (
               <CustomSpinner size="md" />
             ) : (
               <div className="mb-auto xl:!mt-6">
-                <p className="text-lg xxl:!text-2xl text-center font-semibold text-gray-900">
-                  Appointments
-                </p>
+                <Header size={1} text="Appointments" />
                 {appointments.data && appointments.data.length > 0 ? (
                   <Table>
                     <Table.Body className="divide-y text-xs sm:!text-sm xxl:!text-lg">
@@ -118,7 +104,7 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
                       {appointments.data.map((n, index) => (
                         <Table.Row
                           key={n._id}
-                          className="hover:!bg-blue-100 cursor-pointer"
+                          className="cursor-pointer hover:!bg-blue-100"
                           onClick={() => showModal(n)}
                         >
                           <Table.Cell>{index + 1}.</Table.Cell>
@@ -133,8 +119,8 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
                     </Table.Body>
                   </Table>
                 ) : (
-                  <div className="h-full justify-center flex items-center">
-                    <p className="text-sm text-gray-400 text-center">
+                  <div className="flex h-full items-center justify-center">
+                    <p className="text-center text-sm text-gray-400">
                       There are no previous finished appointments for this
                       patient.
                     </p>
@@ -145,7 +131,7 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
 
             {appointments.data && (
               <Footer variant={1}>
-                <div className="w-full mt-2 lg:!mt-0 pb-14 md:!pb-0">
+                <div className="mt-2 w-full pb-14 md:!pb-0 lg:!mt-0">
                   <Pagination
                     page={Number(page)}
                     totalPages={appointments.numOfPages}
@@ -167,11 +153,8 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
           )}
         </>
       ) : (
-        <div className="h-full w-full text-center mt-16">
-          <ErrorMessage
-            className="xl:!text-md xxl:!text-xl"
-            text={message || "Something went wrong, please try again later."}
-          />
+        <div className="mt-16 h-full w-full text-center">
+          <ErrorMessage text={message} />
         </div>
       )}
     </div>
