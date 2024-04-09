@@ -51,8 +51,9 @@ router.get(
   restrictTo("DOCTOR", "PATIENT"),
   getLatestAppointmentForPatient
 );
-router.post(
-  "/:id/patient-latest-record",
+
+router.get(
+  "/:appointmentId/patient-latest-record",
   restrictTo("DOCTOR", "PATIENT"),
   getLatestAppointmentForPatientWithDoctor
 );

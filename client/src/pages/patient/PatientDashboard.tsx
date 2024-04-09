@@ -60,7 +60,7 @@ const PatientDashboard: React.FC = () => {
     <>
       {loading ? (
         <CustomSpinner size="xl" />
-      ) : (
+      ) : latestFinished ? (
         <div className="flex h-full w-full flex-col justify-between gap-3 p-1 transition-all duration-300 sm:!p-3 xl:!flex-row xl:!gap-10 xxl:!p-6">
           <div className="flex w-full flex-grow flex-col gap-3 xl:!gap-6 xxl:!gap-12">
             <div className="flex w-full flex-grow flex-col justify-between gap-2 md:flex-row xl:!gap-4">
@@ -154,6 +154,10 @@ const PatientDashboard: React.FC = () => {
           <div className="flex h-fit w-full justify-end xl:!h-full xl:!w-2/5">
             {latestFinished && <AppointmentReviewCalendar variant={1} />}
           </div>
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <NoDataAvailable />
         </div>
       )}
     </>

@@ -32,6 +32,7 @@ const MyDepartment: React.FC = () => {
         setDepartment(response);
       } catch (err: any) {
         setError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
         setLoading(false);
       }
@@ -48,6 +49,7 @@ const MyDepartment: React.FC = () => {
         setDepartmentAppointments(response);
       } catch (err: any) {
         setAppointmentsError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
         setLoadingAppointments(false);
       }

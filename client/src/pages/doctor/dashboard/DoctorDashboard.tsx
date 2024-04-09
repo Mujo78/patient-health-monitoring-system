@@ -14,11 +14,15 @@ import {
 
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import toast from "react-hot-toast";
+import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 
 const DoctorDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { accessUser } = useSelector(authUser);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingDoctorInfo, setLoadingDoctorInfo] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [docDashInfo, setDocDashInfo] = useState<
     DocDashboardType | undefined
   >();
@@ -34,57 +38,64 @@ const DoctorDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (accessUser) {
-          const response = await doctorDashboard(accessUser.token);
-          setDocDashInfo(response);
-        }
-      } catch (err) {
-        setLoading(false);
+        const response = await doctorDashboard();
+        setDocDashInfo(response);
+      } catch (err: any) {
+        setError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [accessUser]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        if (accessUser) {
-          const response = await doctorDashboardInfo(accessUser.token);
-          setDocDash(response);
-        }
-      } catch (err) {
-        setLoading(false);
+        setLoadingDoctorInfo(true);
+        const response = await doctorDashboardInfo();
+        setDocDash(response);
+      } catch (err: any) {
+        setError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
-        setLoading(false);
+        setLoadingDoctorInfo(false);
       }
     };
+
     fetchData();
-  }, [accessUser]);
+  }, []);
+
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   useSelectedPage("Dashboard");
 
   return (
     <>
-      {loading ? (
+      {loading || loadingDoctorInfo ? (
         <CustomSpinner size="xl" />
-      ) : (
-        <div className="h-full w-full p-3 gap-5 flex flex-col transition-all duration-600">
-          <div className="w-full flex gap-4 flex-col xl:!flex-row justify-between h-full">
-            <div className="w-full xl:!w-2/5 h-full flex justify-between flex-col mb-8 sm:!mb-0">
-              {docDashInfo && <DocDashboard docDashInfo={docDashInfo} />}
+      ) : docDash || docDashInfo ? (
+        <div className="duration-600 flex h-full w-full flex-col gap-5 p-3 transition-all">
+          <div className="flex h-full w-full flex-col justify-between gap-4 xl:!flex-row">
+            <div className="mb-8 flex h-full w-full flex-col justify-between sm:!mb-0 xl:!w-2/5">
+              <DocDashboard docDashInfo={docDashInfo} />
             </div>
-            <div className="w-full xl:!w-1/3 xl:!px-2 xxl:!px-0 h-full flex">
-              <div className="flex flex-col lg:!flex-row xl:!flex-col w-full gap-3 justify-between xl:!items-center">
-                {docDash && <DocDashboardInfo docDash={docDash} />}
+            <div className="flex h-full w-full xl:!w-1/3 xl:!px-2 xxl:!px-0">
+              <div className="flex w-full flex-col justify-between gap-3 lg:!flex-row xl:!flex-col xl:!items-center">
+                <DocDashboardInfo docDash={docDash} />
               </div>
             </div>
-            <div className="h-fit xl:!h-full w-full xl:!w-1/4 flex ">
+            <div className="flex h-fit w-full xl:!h-full xl:!w-1/4 ">
               <AppointmentReviewCalendar variant={2} />
             </div>
           </div>
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <NoDataAvailable />
         </div>
       )}
     </>

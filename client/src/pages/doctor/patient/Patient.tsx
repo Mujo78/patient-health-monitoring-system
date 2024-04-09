@@ -25,6 +25,7 @@ const Patient: React.FC = () => {
           setPatient(response);
         } catch (err: any) {
           setMessage(err?.response?.data ?? err?.message);
+          throw new Error(err);
         } finally {
           setLoading(false);
         }

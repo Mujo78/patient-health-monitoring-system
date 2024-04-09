@@ -22,24 +22,9 @@ export async function getDoctor(id: string) {
   return response.data;
 }
 
-type latestApp = {
-  appointment_id: string;
-  patient_id: string;
-};
-
-export async function getLatestAppointment(
-  token: string,
-  id: string,
-  latestApp: latestApp,
-) {
-  const response = await apiClientAuth.post(
-    `/appointment/${id}/patient-latest-record`,
-    latestApp,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
+export async function getLatestAppointment(appointment_id: string) {
+  const response = await apiClientAuth.get(
+    `/appointment/${appointment_id}/patient-latest-record`,
   );
   return response.data;
 }
@@ -119,14 +104,9 @@ export type DocDashboardInfoType = {
   gender: GenderArray[];
 };
 
-export async function doctorDashboardInfo(token: string) {
+export async function doctorDashboardInfo() {
   const response = await apiClientAuth.get(
     "/appointment/doctor-dashboard-info",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
   );
   return response.data;
 }
@@ -142,12 +122,8 @@ export type DocDashboardType = {
   apps: PatientStatistic[];
 };
 
-export async function doctorDashboard(token: string) {
-  const response = await apiClientAuth.get("/appointment/doctor-dashboard", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function doctorDashboard() {
+  const response = await apiClientAuth.get("/appointment/doctor-dashboard");
   return response.data;
 }
 

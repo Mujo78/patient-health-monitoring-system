@@ -43,7 +43,9 @@ const AppointmentReviewCalendar: React.FC<Props> = ({ variant }) => {
   );
 
   return (
-    <Card className="mb-20 flex h-fit w-full justify-start sm:mb-3 xl:!h-full xl:!max-w-sm xxl:!max-w-xl">
+    <Card
+      className={`mb-20 flex h-fit w-full justify-start sm:mb-3 xl:!h-full ${variant === 2 ? "xl:!max-w-md" : "xl:!max-w-sm"} xxl:!max-w-xl`}
+    >
       <div className="flex h-5/6 max-w-full flex-col items-start justify-start gap-3 lg:!flex-row xl:!h-full xl:!flex-col">
         <div className="lg:!max-w-xs xl:!mx-auto xxl:!max-w-full">
           <p className="text-md mb-1 text-center font-semibold xxl:!text-xl">

@@ -50,8 +50,8 @@ const MyPatients: React.FC = () => {
           setPatients(response);
           navigate(`/my-patients?${query.toString()}`);
         } catch (err: any) {
-          console.log(err);
           setMessage(err?.response?.data ?? err?.message);
+          throw new Error(err);
         } finally {
           setLoading(false);
         }

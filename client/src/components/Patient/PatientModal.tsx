@@ -15,6 +15,7 @@ type Props = {
   setMore: React.Dispatch<React.SetStateAction<boolean>>;
   latestAppState: modalDataType | undefined;
   loading: boolean;
+  error?: string;
   variant: 1 | 2;
 };
 
@@ -23,6 +24,7 @@ const PatientModal: React.FC<Props> = ({
   variant,
   latestAppState,
   setMore,
+  error,
   loading,
 }) => {
   const handleClose = () => {
@@ -52,7 +54,7 @@ const PatientModal: React.FC<Props> = ({
       <Modal.Body id="content">
         <div className="h-full pb-4">
           {loading ? (
-            <div className="h-80">
+            <div className="h-full">
               <CustomSpinner />
             </div>
           ) : latestAppState ? (
@@ -165,13 +167,13 @@ const PatientModal: React.FC<Props> = ({
                 </div>
               </div>
             </div>
+          ) : error ? (
+            <div className="flex items-center justify-center pb-2 md:!pb-0">
+              <ErrorMessage text={error} />
+            </div>
           ) : (
             <div className="flex items-center justify-center pb-2 md:!pb-0">
-              <ErrorMessage
-                className="xxl:text-2xl"
-                size="md"
-                text="There are no record for this patient!"
-              />
+              <ErrorMessage text="There are no record for this patient!" />
             </div>
           )}
         </div>

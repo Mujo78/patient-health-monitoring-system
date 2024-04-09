@@ -143,12 +143,6 @@ const myDepartmentAppointments = asyncHandler(async (req, res) => {
     (n) => n.appointment_date >= startOfDay && n.appointment_date <= endOfDay
   );
 
-  moment.updateLocale("en", {
-    week: {
-      dow: 1,
-    },
-  });
-
   const daysOfWeek = moment.weekdays(true);
   const total = todayAppointments.length;
 
@@ -163,14 +157,13 @@ const myDepartmentAppointments = asyncHandler(async (req, res) => {
   );
 
   const appointmentsByDay = daysOfWeek.map((m) => ({
-    name: m,
+    name: moment().format("dddd") === m ? "Today" : m,
     value: 0,
   }));
 
   appointmentsDay.forEach((app) => {
     const appointmentDate = new Date(app.appointment_date);
     const dayOfWeek = daysOfWeek[appointmentDate.getDay()];
-
     const dayObject = appointmentsByDay.find((day) => day.name === dayOfWeek);
     if (dayObject) dayObject.value++;
   });

@@ -75,17 +75,17 @@ const DoctorSidebar: React.FC = () => {
         <SidebarItemText>Department</SidebarItemText>
       </Sidebar.Item>
       {location.pathname.startsWith("/doctor/") && (
-        <div className="h-2/3 flex-col justify-center hidden md:flex flex-grow w-auto items-center">
+        <div className="hidden h-2/3 w-52 flex-grow flex-col items-center justify-center md:flex">
           {show && (
             <Alert
-              className="bg-gradient-to-b flex justify-between gap-4 flex-col from-blue-600 to-blue-300 mr-3 text-white  w-full h-fit"
+              className="mr-3 flex h-fit w-full flex-col justify-between gap-2 bg-gradient-to-b from-blue-600  to-blue-300 text-white"
               additionalContent={
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <p className="text-xs xxl:!text-lg">
                     {welcomeMessages[randomNumber]}
                   </p>
                   <Button
-                    className="bg-white ml-auto text-blue-700 mt-3 hover:!bg-gray-200"
+                    className="ml-auto mt-3 bg-white text-blue-700 hover:!bg-gray-200"
                     onClick={handleDissmis}
                     size="xs"
                   >
@@ -96,7 +96,7 @@ const DoctorSidebar: React.FC = () => {
               rounded
             >
               <div className="w-full">
-                <p className="text-sm xxl:!text-xl mt-3 font-semibold">
+                <p className="mt-3 text-sm font-semibold xxl:!text-xl">
                   {`Welcome, Dr. ${accessUser?.info.last_name}`}!
                 </p>
               </div>

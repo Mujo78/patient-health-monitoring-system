@@ -191,20 +191,18 @@ const getLatestAppointmentForPatient = asyncHandler(async (req, res) => {
 
 const getLatestAppointmentForPatientWithDoctor = asyncHandler(
   async (req, res) => {
-    const { patient_id, appointment_id } = req.body;
+    const userId = req.user._id;
+    const appointmentId = req.params.appointmentId;
 
-    const doctor = await Doctor.findOne({ user_id: req.params.id });
+    const doctor = await Doctor.findOne({ user_id: userId });
     if (!doctor) return res.status(404).json("This doctor is not in database!");
 
-    const patient = await Patient.findById(patient_id);
-    if (!patient)
-      return res.status(404).json("This patient is not in database!");
+    const currentAppointment = await Appointment.findById(appointmentId);
 
-    const currentAppointment = await Appointment.findById(appointment_id);
     const app = await Appointment.findOne({
-      _id: { $ne: appointment_id },
+      _id: { $ne: appointmentId },
       appointment_date: { $lt: currentAppointment.appointment_date },
-      patient_id: patient._id,
+      patient_id: currentAppointment.patient_id,
       doctor_id: doctor._id,
       finished: true,
     })
@@ -347,9 +345,7 @@ const getAvailableTimeForAppointmentsForADay = asyncHandler(
       user_id: 0,
     });
     if (!patient)
-      return res
-        .status(404)
-        .json("Patient doesn't exists! Something went wrong!");
+      return res.status(404).json("Patient not found! Something went wrong!");
 
     const userDate = moment.tz(date, "Europe/Sarajevo");
 
@@ -540,22 +536,16 @@ const numberOfAppointmentsPerMonthForDepartments = asyncHandler(
     const { month } = req.params;
 
     const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json("There is no user with such ID!");
+    if (!user)
+      return res.status(404).json("User not found! Something went wrong!");
 
     const patient = await Patient.findOne({ user_id: user._id });
     if (!patient)
-      return res.status(404).json("There is no patient with such ID!");
+      return res.status(404).json("Patient not found! Something went wrong!");
 
-    let year = new Date().getFullYear();
-    let newYearMonth;
-    const start = new Date(`${year}/${month}/01 GMT`);
-    if (start.getMonth() + 2 === 13) {
-      newYearMonth = 1;
-      year++;
-    } else {
-      newYearMonth = start.getMonth() + 2;
-    }
-    const end = new Date(`${year}/${newYearMonth}/01 GMT`);
+    const monthDate = moment(month, "MMMM").utc(true);
+    const start = monthDate.startOf("month").toDate();
+    const end = monthDate.endOf("month").toDate();
 
     const result = await Appointment.aggregate([
       {
@@ -594,18 +584,14 @@ const numberOfAppointmentsPerMonthForDepartments = asyncHandler(
 
     const counts = {};
 
-    allSpecialties.forEach((specialty) => {
-      counts[specialty] = 0;
+    result.forEach(({ name, count }) => {
+      counts[name] = count;
     });
 
-    result.forEach((item) => {
-      counts[item.name] = item.count;
-    });
-
-    const final = Object.keys(counts)
-      .map((name) => ({
-        name,
-        visited: counts[name],
+    const final = allSpecialties
+      .map((specialty) => ({
+        name: specialty,
+        visited: counts[specialty] || 0,
       }))
       .sort((a, b) => b.visited - a.visited)
       .slice(0, 5);
@@ -615,13 +601,16 @@ const numberOfAppointmentsPerMonthForDepartments = asyncHandler(
 );
 
 const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user) return res.status(404).json("There is no user with such ID!");
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+  if (!user)
+    return res.status(404).json("User not found! Something went wrong!");
 
   const doctor = await Doctor.findOne({ user_id: user._id })
     .select("+department_id")
     .populate("department_id");
-  if (!doctor) return res.status(404).json("There is no doctor with such ID!");
+  if (!doctor)
+    return res.status(404).json("Doctor not found! Something went wrong!");
 
   const finishedLatest = await Appointment.findOne({
     doctor_id: doctor._id,
@@ -637,7 +626,10 @@ const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
     .lean()
     .exec();
 
-  const startOfYear = new Date(new Date().getFullYear().toString() + "-01-01");
+  const startOfYear = moment()
+    .year(new Date().getFullYear())
+    .startOf("year")
+    .toDate();
 
   const app = await Appointment.aggregate([
     {
@@ -648,20 +640,15 @@ const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
     },
     { $group: { _id: "$patient_id" } },
   ]);
-  if (!app) return res.status(404).json("There are no patients right now!");
 
   const patientIds = app.map((item) => item._id);
   const patients = await Patient.find({ _id: { $in: patientIds } });
 
   const { male, female, other } = patients.reduce(
     (result, doc) => {
-      if (doc.gender === "Male") {
-        result.male += 1;
-      } else if (doc.gender === "Female") {
-        result.female += 1;
-      } else {
-        result.other += 1;
-      }
+      if (doc.gender === "Male") result.male += 1;
+      else if (doc.gender === "Female") result.female += 1;
+      else result.other += 1;
 
       return result;
     },
@@ -680,15 +667,21 @@ const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
 });
 
 const doctorDasboard = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user) return res.status(404).json("There is no user with such ID!");
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+  if (!user)
+    return res.status(404).json("User not found! Something went wrong!");
 
   const doctor = await Doctor.findOne({ user_id: user._id })
     .select("+department_id")
     .populate("department_id");
-  if (!doctor) return res.status(404).json("There is no doctor with such ID!");
+  if (!doctor)
+    return res.status(404).json("Doctor not found! Something went wrong!");
 
-  const startOfYear = new Date(new Date().getFullYear().toString() + "-01-01");
+  const startOfYear = moment()
+    .year(new Date().getFullYear())
+    .startOf("year")
+    .toDate();
 
   const patients = await Appointment.aggregate([
     {
@@ -712,15 +705,15 @@ const doctorDasboard = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const userDate = moment.tz(new Date(), "Europe/Sarajevo");
+  const userDate = moment().tz("Europe/Sarajevo");
 
-  const startOfDay = moment(userDate).startOf("day");
-  const endOfDay = moment(userDate).endOf("day");
+  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
+  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
 
-  const tomorrow = moment(userDate).add(1, "day");
+  const tomorrow = userDate.clone().add(1, "day");
 
-  const startOfTomorrowDay = moment(tomorrow).startOf("day");
-  const endOfTomorrowDay = moment(tomorrow).endOf("day");
+  const startOfTomorrowDay = tomorrow.clone().startOf("day").utc(true).toDate();
+  const endOfTomorrowDay = tomorrow.clone().endOf("day").utc(true).toDate();
 
   const todays = await Appointment.find({
     doctor_id: doctor._id,
@@ -738,8 +731,8 @@ const doctorDasboard = asyncHandler(async (req, res) => {
     },
   }).countDocuments();
 
-  const startOfMonth = moment(userDate).startOf("month");
-  const endOfMonth = moment(userDate).endOf("month");
+  const startOfMonth = userDate.clone().startOf("month").utc(true).toDate();
+  const endOfMonth = userDate.clone().endOf("month").utc(true).toDate();
 
   const apps = await Appointment.find({
     doctor_id: doctor._id,
@@ -761,11 +754,8 @@ const doctorDasboard = asyncHandler(async (req, res) => {
   let oldPatients = 0;
 
   for (const appointment of patients) {
-    if (appointment.count === 1) {
-      newPatients++;
-    } else {
-      oldPatients++;
-    }
+    if (appointment.count === 1) newPatients++;
+    else oldPatients++;
   }
 
   const totalPatients = newPatients + oldPatients;

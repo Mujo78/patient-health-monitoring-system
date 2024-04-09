@@ -46,6 +46,7 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
           navigate(`/my-patients/${id}?${query.toString()}`);
         } catch (err: any) {
           setMessage(err?.response?.data ?? err?.message);
+          throw new Error(err);
         } finally {
           setLoading(false);
         }
@@ -84,11 +85,7 @@ const PatientFinishedAppointments: React.FC<Props> = ({ patient }) => {
       ) : appointments ? (
         <>
           <div className="flex h-full w-full flex-col justify-between lg:!ml-auto lg:!w-full xl:!ml-0">
-            {Number(page) > appointments.numOfPages ? (
-              <div className="flex h-full items-center justify-center p-4">
-                <ErrorMessage text="No data available." />
-              </div>
-            ) : loading ? (
+            {loading ? (
               <CustomSpinner size="md" />
             ) : (
               <div className="mb-auto xl:!mt-6">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   appointment,
@@ -16,18 +16,25 @@ import socket from "../../../socket";
 import { authUser } from "../../../features/auth/authSlice";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { medicine } from "../../../features/medicine/medicineSlice";
+import {
+  getMedicine,
+  medicine,
+} from "../../../features/medicine/medicineSlice";
 import { HiXCircle } from "react-icons/hi2";
 import { Label, Textarea } from "flowbite-react";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
 import Select from "react-select";
 import FormRow from "../../../components/UI/FormRow";
+import Header from "../../../components/UI/Header";
 
 const AppointmentResultForm = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const navigate = useNavigate();
-  const { selectedAppointment: selected } = useSelector(appointment);
+  const { selectedAppointment: selected } = useSelector(
+    appointment,
+    shallowEqual,
+  );
   const { accessUser } = useSelector(authUser);
   const dispatch = useAppDispatch();
 
@@ -47,7 +54,7 @@ const AppointmentResultForm = () => {
             const selectedInfo = {
               _id: selected._id,
               app_date: `${formatDate(
-                selected.appointment_date
+                selected.appointment_date,
               )}, ${formatStartEnd(selected.appointment_date)}`,
               doctor_name: `${
                 selected.doctor_id.first_name +
@@ -60,12 +67,12 @@ const AppointmentResultForm = () => {
               "appointment_finished",
               selectedInfo,
               selected.patient_id.user_id._id,
-              accessUser?.data.role
+              accessUser?.data.role,
             );
             navigate("../", { replace: true });
             toast.success("Successfully finished appointment.");
           }
-        }
+        },
       );
     }
   };
@@ -76,7 +83,7 @@ const AppointmentResultForm = () => {
         if (typeof action.payload === "object") {
           const selectedInfo = {
             app_date: `${formatDate(
-              selected.appointment_date
+              selected.appointment_date,
             )}, ${formatStartEnd(selected.appointment_date)}`,
             doctor_name: `${
               selected.doctor_id.first_name + " " + selected.doctor_id.last_name
@@ -87,7 +94,7 @@ const AppointmentResultForm = () => {
             "appointment_cancel",
             selectedInfo,
             selected.patient_id.user_id._id,
-            accessUser?.data.role
+            accessUser?.data.role,
           );
           navigate("../", { replace: true });
           toast.error("Appointment cancelled");
@@ -101,9 +108,9 @@ const AppointmentResultForm = () => {
     setSelectedValues(newOnes);
   };
 
-  let laterAppointment;
-  if (selected)
-    laterAppointment = new Date(selected?.appointment_date) > new Date();
+  const laterAppointment: boolean | undefined = selected
+    ? new Date(selected?.appointment_date) > new Date()
+    : undefined;
 
   const { medicine: m } = useSelector(medicine);
   const { register, getValues, formState, setValue } =
@@ -116,15 +123,21 @@ const AppointmentResultForm = () => {
   }));
 
   useEffect(() => {
-    if (selected?.finished) {
+    if (selected) {
       setValue("description", selected.description);
       setValue("other_medicine", selected.other_medicine);
       setValue("diagnose", selected.diagnose);
     }
   }, [selected, setValue]);
 
+  useEffect(() => {
+    if (!selected?.finished && !laterAppointment) {
+      dispatch(getMedicine({}));
+    }
+  }, [dispatch, selected, laterAppointment]);
+
   let ifIsFinished;
-  if (selected?.finished && selected.therapy) {
+  if (selected?.therapy) {
     ifIsFinished = selected.therapy.map((t) => ({
       value: t._id,
       label: `${t.name + "(" + t.strength + ")"}`,
@@ -133,20 +146,18 @@ const AppointmentResultForm = () => {
 
   return (
     <>
-      {selected && (
-        <div className="w-full justify-center flex flex-col h-full">
-          <div className="flex w-full flex-col h-full xxl:!h-3/4 xl:!justify-center gap-4">
-            <div className="flex justify-between items-center">
-              <p className="text-xl xxl:!text-2xl font-semibold">
-                Appointment result
-              </p>
+      {selected !== null && (
+        <div className="flex h-full w-full flex-col justify-center">
+          <div className="flex h-full w-full flex-col gap-4 xl:!justify-center xxl:!h-3/4">
+            <div className="flex items-center justify-between">
+              <Header size={1} text="Appointment result" />
               {!selected?.finished &&
                 new Date() < new Date(selected.appointment_date) && (
                   <button
-                    className="w-16 h-auto"
+                    className="h-auto w-16"
                     onClick={cancelAppointmentNow}
                   >
-                    <HiXCircle className="text-red-600 hover:!text-red-700 h-auto w-11 xxl:!w-16 ml-auto" />
+                    <HiXCircle className="ml-auto h-auto w-11 text-red-600 hover:!text-red-700 xxl:!w-16" />
                   </button>
                 )}
             </div>
@@ -164,7 +175,7 @@ const AppointmentResultForm = () => {
                 <Textarea
                   id="diagnose"
                   {...register("diagnose")}
-                  disabled={selected?.finished || laterAppointment}
+                  disabled={selected.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
                   className="text-sm xxl:!text-lg"
                 />
@@ -221,7 +232,7 @@ const AppointmentResultForm = () => {
           </div>
         </div>
       )}
-      <div className="w-full sm:!pb-0 pb-12">
+      <div className="w-full pb-12 sm:!pb-0">
         <Footer variant={2}>
           {selected?.finished ||
             (!laterAppointment && (
@@ -230,7 +241,7 @@ const AppointmentResultForm = () => {
                 disabled={!isDirty}
                 onClick={makeFinished}
               >
-                <p className="xxl:text-xl">Save changes</p>
+                <p className="xxl:text-lg">Save changes</p>
               </CustomButton>
             ))}
         </Footer>
