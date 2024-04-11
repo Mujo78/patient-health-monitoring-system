@@ -25,9 +25,9 @@ module.exports = function (io) {
       }
     });
 
-    socket.on("appointment_cancel", async (app, userId, doc) => {
+    socket.on("appointment_cancel", async (app, userId, req) => {
       const user = await User.findById(userId);
-      if (user && doc === "DOCTOR") {
+      if (user && req === "DOCTOR") {
         const message = `Dear, \nWe regret to inform you that your appointment scheduled for ${app.app_date} with Dr. ${app.doctor_name} (${app.doctor_spec}) has been canceled.\nWe apologize for any inconvenience this may have caused. If you have any questions or need to reschedule, please don't hesitate to contact us.\nSincerely`;
 
         const appointmentCanceledEvent = await Notification.create({
@@ -45,9 +45,9 @@ module.exports = function (io) {
       }
     });
 
-    socket.on("appointment_finished", async (app, userId, doc) => {
+    socket.on("appointment_finished", async (app, userId, req) => {
       const user = await User.findById(userId);
-      if (user && doc === "DOCTOR") {
+      if (user && req === "DOCTOR") {
         const message = `Dear, \nWe are pleased to inform you that the results for your appointment scheduled for ${app.app_date} with Dr. ${app.doctor_name} (${app.doctor_spec}) are now available.\nIf you have any questions about the results or need further clarification, please don't hesitate to contact us.\nThank you for choosing our services.\nSincerely`;
 
         const appointmentFinishedEvent = await Notification.create({

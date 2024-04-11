@@ -1,8 +1,7 @@
 import React from "react";
 import {
   DocDashboardInfoType,
-  formatDate,
-  formatStartEnd,
+  getDateTime,
 } from "../../service/appointmentSideFunctions";
 import { Card } from "flowbite-react";
 import CustomImg from "../UI/CustomImg";
@@ -66,8 +65,7 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
                   Age: {yearCalc(docDash.latest.patient_id.date_of_birth)}
                 </p>
                 <div className="flex flex-wrap gap-1 text-xs text-gray-400 xxl:!mx-auto xxl:!text-lg">
-                  <p>{formatDate(docDash.latest.appointment_date)}</p>
-                  <p>({formatStartEnd(docDash.latest.appointment_date)})</p>
+                  <p>{getDateTime(docDash?.latest?.appointment_date)}</p>
                 </div>
               </div>
             </div>

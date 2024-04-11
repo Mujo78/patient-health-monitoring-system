@@ -10,14 +10,13 @@ const {
   makeAppointmentFinished,
   getAppointmentForDay,
   editAppointmentInfo,
-  getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
   getFinishedAppointmentsForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,
   doctorAppointmentDashboard,
-  doctorDasboard,
+  doctorDashboard,
   getAvailableTimeForAppointmentsForADay,
 } = require("../controllers/appointmentController");
 
@@ -43,14 +42,9 @@ router.get(
   restrictTo("DOCTOR"),
   doctorAppointmentDashboard
 );
-router.get("/doctor-dashboard", restrictTo("DOCTOR"), doctorDasboard);
+router.get("/doctor-dashboard", restrictTo("DOCTOR"), doctorDashboard);
 
 router.get("/:id", restrictTo("DOCTOR", "PATIENT"), getOneAppointment);
-router.get(
-  "/:patientUserId",
-  restrictTo("DOCTOR", "PATIENT"),
-  getLatestAppointmentForPatient
-);
 
 router.get(
   "/:appointmentId/patient-latest-record",

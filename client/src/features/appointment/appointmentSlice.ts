@@ -245,9 +245,7 @@ export const appointmentSlice = createSlice({
       .addCase(getSelectedAppointment.fulfilled, (state, action) => {
         (state.status = "idle"), (state.selectedAppointment = action.payload);
       })
-      .addCase(cancelAppointment.pending, (state) => {
-        state.status = "loading";
-      })
+
       .addCase(cancelAppointment.rejected, (state, action) => {
         (state.status = "failed"), (state.message = action.payload as string);
       })
@@ -280,9 +278,7 @@ export const appointmentSlice = createSlice({
         state.status = "idle";
         state.message = "";
       })
-      .addCase(makeAppointmentFinished.pending, (state) => {
-        state.status = "loading";
-      })
+
       .addCase(makeAppointmentFinished.rejected, (state, action) => {
         (state.status = "failed"), (state.message = action.payload as string);
       })

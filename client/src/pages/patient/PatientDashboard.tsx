@@ -1,8 +1,7 @@
 import { Card } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import {
-  formatDate,
-  formatStartEnd,
+  getDateTime,
   getLatestFinished,
   latestFinishedType,
 } from "../../service/appointmentSideFunctions";
@@ -130,14 +129,9 @@ const PatientDashboard: React.FC = () => {
                           {latestFinished?.appointment?.doctor_id.speciality}
                         </p>
                         <p className="mt-1 text-xs text-gray-700 xxl:!text-lg">
-                          {formatDate(
-                            latestFinished?.appointment?.appointment_date,
-                          )}{" "}
-                          (
-                          {formatStartEnd(
+                          {getDateTime(
                             latestFinished?.appointment?.appointment_date,
                           )}
-                          )
                         </p>
                       </div>
                     </div>

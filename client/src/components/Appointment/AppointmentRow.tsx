@@ -2,21 +2,16 @@ import { Table } from "flowbite-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomImg from "../UI/CustomImg";
+import { Appointment } from "../../features/appointment/appointmentSlice";
 import {
-  Appointment,
-  cancelAppointment,
-} from "../../features/appointment/appointmentSlice";
-import {
-  formatDate,
   formatStartEnd,
+  getDateTime,
   isCurrentAppointment,
 } from "../../service/appointmentSideFunctions";
-import { HiXCircle } from "react-icons/hi2";
 import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
-import { useAppDispatch } from "../../app/hooks";
 import socket from "../../socket";
-import toast from "react-hot-toast";
+import CancelAppointmentButton from "./CancelAppointmentButton";
 
 type Props = {
   variant: 1 | 2;
@@ -26,7 +21,6 @@ type Props = {
 const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
   const navigate = useNavigate();
   const { accessUser } = useSelector(authUser, shallowEqual);
-  const dispatch = useAppDispatch();
 
   const handleNavigate = () => {
     navigate(
@@ -34,32 +28,19 @@ const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
     );
   };
 
-  const cancelAppointmentNow = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    e.stopPropagation();
+  const cancelAppointmentNow = () => {
     if (accessUser) {
-      dispatch(cancelAppointment(data._id)).then((action) => {
-        if (typeof action.payload === "object") {
-          const selectedInfo = {
-            app_date: `${formatDate(
-              data.appointment_date,
-            )}, ${formatStartEnd(data.appointment_date)}`,
-            doctor_name: `${
-              data.doctor_id.first_name + " " + data.doctor_id.last_name
-            }`,
-            doctor_spec: data.doctor_id.speciality,
-          };
-          socket.emit(
-            "appointment_cancel",
-            selectedInfo,
-            data.patient_id.user_id._id,
-            accessUser.data.role,
-          );
-          navigate("../", { replace: true });
-          toast.error("Appointment cancelled");
-        }
-      });
+      const selectedInfo = {
+        app_date: getDateTime(data.appointment_date),
+        doctor_name: data.doctor_id.first_name + " " + data.doctor_id.last_name,
+        doctor_spec: data.doctor_id.speciality,
+      };
+      socket.emit(
+        "appointment_cancel",
+        selectedInfo,
+        data.patient_id.user_id._id,
+        accessUser.data.role,
+      );
     }
   };
 
@@ -110,9 +91,11 @@ const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
         ) : (
           !data.finished &&
           !isCurrentAppointment(data.appointment_date) && (
-            <button className="size-8" onClick={(e) => cancelAppointmentNow(e)}>
-              <HiXCircle className="size-6 text-red-600 hover:!text-red-700" />
-            </button>
+            <CancelAppointmentButton
+              thenFn={cancelAppointmentNow}
+              variant="icon"
+              id={data._id}
+            />
           )
         )}
       </Table.Cell>

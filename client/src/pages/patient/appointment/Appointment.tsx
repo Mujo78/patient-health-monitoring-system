@@ -1,31 +1,27 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../../app/hooks";
 import { shallowEqual, useSelector } from "react-redux";
 import {
   appointment,
-  cancelAppointment,
   getSelectedAppointment,
   resetSelectedAppointment,
 } from "../../../features/appointment/appointmentSlice";
-import { Button, Card } from "flowbite-react";
+import { Card } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import CustomImg from "../../../components/UI/CustomImg";
 import Footer from "../../../components/UI/Footer";
 import AppointmentOverviewEdit from "../../../components/Appointment/AppointmentOverviewEdit";
 import {
   canCancelOrEdit,
-  formatStartEnd,
+  getDateTime,
 } from "../../../service/appointmentSideFunctions";
 import Header from "../../../components/UI/Header";
-import moment from "moment";
-import toast from "react-hot-toast";
-import { isFulfilled } from "@reduxjs/toolkit";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import CancelAppointmentButton from "../../../components/Appointment/CancelAppointmentButton";
 
 const Appointment: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
     selectedAppointment: selected,
@@ -44,20 +40,6 @@ const Appointment: React.FC = () => {
   }, [id, dispatch]);
 
   const mailtoLink = `mailto:${selected?.doctor_id.user_id.email}`;
-  const appDate = moment(selected?.appointment_date).format("DD/MM/YYYY");
-
-  const cancelAppointmentNow = () => {
-    if (selected) {
-      dispatch(cancelAppointment(selected._id)).then((action: any) => {
-        if (isFulfilled(action)) {
-          toast.success("Successfully deleted appointment!");
-          navigate("../", { replace: true });
-        } else {
-          toast.error(action.payload);
-        }
-      });
-    }
-  };
 
   return (
     <>
@@ -113,7 +95,7 @@ const Appointment: React.FC = () => {
               <div className="flex flex-col gap-3 xl:!text-sm xxl:!text-2xl">
                 <p className="flex flex-col">
                   <span className="text-md font-semibold">Date&Time</span>
-                  {appDate} ({formatStartEnd(selected.appointment_date)})
+                  {getDateTime(selected.appointment_date)}
                 </p>
                 {selected.reason.length > 0 && (
                   <p className="flex flex-col">
@@ -125,13 +107,7 @@ const Appointment: React.FC = () => {
 
               {canCancelOrEdit(selected.appointment_date) &&
                 !selected.finished && (
-                  <Button
-                    onClick={cancelAppointmentNow}
-                    className="w-full md:ml-auto md:mt-auto lg:!w-fit"
-                    color="failure"
-                  >
-                    <p className="xxl:text-lg">Cancel Appointment</p>
-                  </Button>
+                  <CancelAppointmentButton id={selected._id} variant="text" />
                 )}
             </div>
           </div>

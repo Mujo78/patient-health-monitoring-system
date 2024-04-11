@@ -167,6 +167,10 @@ export function formatStartEnd(date: Date) {
   return appointmentTime;
 }
 
+export function getDateTime(date: Date) {
+  return `${formatDate(date)} (${formatStartEnd(date)})`;
+}
+
 export function isCurrentAppointment(appointmentDate: Date) {
   const appDate = new Date(appointmentDate);
   const currentDate = new Date();

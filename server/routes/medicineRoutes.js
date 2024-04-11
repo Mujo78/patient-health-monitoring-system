@@ -9,6 +9,7 @@ const {
   updateMedicine,
   deleteMedicine,
   resizeMedicinePhoto,
+  getAllMedicine,
 } = require("../controllers/medicineController");
 
 const router = express.Router();
@@ -16,6 +17,7 @@ const router = express.Router();
 router.use(protect);
 
 router.get("/", getMedicines);
+router.get("/all", getAllMedicine);
 router.get("/:id", getMedicine);
 
 router.use(restrictTo("PHARMACY"));

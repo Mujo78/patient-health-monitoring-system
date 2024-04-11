@@ -23,7 +23,7 @@ const PatientAppointmentCard: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (selected) {
+      if (selected?._id) {
         try {
           setLoading(true);
           const response = await getLatestAppointment(selected._id);
@@ -38,7 +38,7 @@ const PatientAppointmentCard: React.FC = () => {
     };
 
     fetchData();
-  }, [selected]);
+  }, [selected?._id]);
 
   const showMore = () => {
     setMore(true);

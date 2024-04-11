@@ -58,6 +58,13 @@ const getMedicines = asyncHandler(async (req, res) => {
 });
 
 const getMedicine = getDoc(Medicine);
+const getAllMedicine = asyncHandler(async (req, res) => {
+  const data = await Medicine.find().select("_id name strength");
+
+  if (!data) return res.status(404).json("No data available!");
+
+  return res.status(200).json(data);
+});
 
 const createMedicine = asyncHandler(async (req, res) => {
   if (req.file) req.body.photo = req.file.filename;
@@ -130,6 +137,7 @@ const deleteMedicine = deleteDoc(Medicine);
 module.exports = {
   getMedicines,
   getMedicine,
+  getAllMedicine,
   createMedicine,
   updateMedicine,
   deleteMedicine,

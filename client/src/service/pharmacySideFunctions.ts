@@ -103,3 +103,8 @@ export async function pharmacyDashboardInfo(token: string) {
 
   return response.data;
 }
+
+export async function getAllMedicine() {
+  const response = await apiClientAuth.get(`/medicine/all`);
+  return response.data;
+}

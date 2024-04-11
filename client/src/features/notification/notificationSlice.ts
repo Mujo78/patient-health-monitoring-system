@@ -15,7 +15,6 @@ export interface Notification {
 
 interface initialState {
   personNotifications: Notification[];
-  notifications: Notification[];
   oneNotification?: Notification;
   status: "" | "idle" | "failed" | "loading";
   message: string;
@@ -23,7 +22,6 @@ interface initialState {
 
 const initialState: initialState = {
   personNotifications: [],
-  notifications: [],
   status: "",
   message: "",
 };
@@ -117,17 +115,14 @@ export const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action) => {
-      state.notifications.push(action.payload);
+      state.personNotifications.push(action.payload);
     },
     restartNotifications: (state) => {
-      state.notifications = [];
+      state.personNotifications = [];
     },
     restart: (state) => {
       state.message = "";
       state.status = "";
-    },
-    restartPersonNotifications: (state) => {
-      state.personNotifications = [];
     },
     restartNotification: (state) => {
       state.oneNotification = undefined;
@@ -205,7 +200,6 @@ export const {
   addNotification,
   restartNotifications,
   restartNotification,
-  restartPersonNotifications,
   restart,
 } = notificationSlice.actions;
 export default notificationSlice.reducer;

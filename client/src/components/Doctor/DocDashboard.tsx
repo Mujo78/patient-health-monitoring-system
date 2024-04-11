@@ -65,7 +65,7 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
       </div>
 
       <Card className="h-96 w-full xl:!h-2/4">
-        <p className="text-sm xxl:!text-lg">
+        <p className="mb-auto text-sm xxl:!text-lg">
           Year:{" "}
           <span className="font-semibold">{new Date().getFullYear()} </span>
         </p>
@@ -100,7 +100,7 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <NoDataAvailable />
+          <NoDataAvailable className="mb-auto" />
         )}
       </Card>
     </div>

@@ -12,69 +12,112 @@ const Doctor = require("../models/doctor");
 const User = require("../models/user");
 const Email = require("../utils/email");
 
-const makeAppointment = asyncHandler(async (req, res) => {
-  const { doctor_id, reason, appointment_date } = req.body;
+const getStartEndOfDay = (customDate) => {
+  let date;
 
-  const patient = await Patient.findOne({ user_id: req.user._id });
+  if (customDate) {
+    date = moment(customDate).tz("Europe/Sarajevo");
+  } else {
+    date = moment().tz("Europe/Sarajevo");
+  }
 
-  if (!patient)
-    return res.status(404).json("User not found! Something went wrong!");
+  const startOfDay = date.startOf("day").utc(true).toDate();
+  const endOfDay = date.endOf("day").utc(true).toDate();
 
-  const appointmentDateWithoutTime =
-    moment(appointment_date).tz("Europe/Sarajevo");
-  const startOfDay = appointmentDateWithoutTime
-    .startOf("day")
-    .utc(true)
-    .toDate();
-  const endOfDay = appointmentDateWithoutTime.endOf("day").utc(true).toDate();
+  return { startOfDay, endOfDay, date };
+};
+
+const appointmentCheck = async (
+  res,
+  appointmentDate,
+  patientId,
+  doctorId,
+  appointmentId
+) => {
+  const { startOfDay, endOfDay } = getStartEndOfDay(appointmentDate);
 
   const existingAppointment = await Appointment.findOne({
-    patient_id: { $ne: patient._id },
-    doctor_id,
-    appointment_date: new Date(appointment_date),
+    patient_id: { $ne: patientId },
+    doctor_id: doctorId,
+    appointment_date: new Date(appointmentDate),
   });
 
-  if (existingAppointment)
+  if (existingAppointment) {
     return res
       .status(400)
       .json(
         "It's not possible to make appointment with this doctor at that time."
       );
+  }
 
-  const myExistingAppointment = await Appointment.findOne({
-    doctor_id,
-    patient_id: patient._id,
-    appointment_date: { $gte: startOfDay, $lt: endOfDay },
-  });
+  let options = {
+    doctor_id: doctorId,
+    patient_id: patientId,
+    appointment_date: {
+      $gte: startOfDay,
+      $lt: endOfDay,
+    },
+  };
 
-  if (myExistingAppointment)
+  if (appointmentId) {
+    options._id = { $ne: appointmentId };
+  }
+
+  const myExistingAppointment = await Appointment.findOne(options);
+
+  if (myExistingAppointment) {
     return res
       .status(400)
       .json("You already have an appointment with this doctor on this day.");
+  }
 
   const overlappingAppointment = await Appointment.findOne({
-    doctor_id: { $ne: doctor_id },
-    patient_id: patient._id,
-    appointment_date: new Date(appointment_date),
+    doctor_id: { $ne: doctorId },
+    patient_id: patientId,
+    appointment_date: {
+      $eq: moment(appointmentDate).tz("Europe/Sarajevo").utc(false),
+    },
   });
 
-  if (overlappingAppointment)
+  if (overlappingAppointment) {
     return res
       .status(400)
       .json(
         "You already have an appointment with a different doctor at that time."
       );
+  }
 
-  const newDate = moment.utc(appointment_date).tz("Europe/Sarajevo");
+  return null;
+};
 
-  const newAppointment = await Appointment.create({
-    doctor_id,
-    patient_id: patient._id,
-    reason,
-    appointment_date: newDate.toDate(),
-  });
+const makeAppointment = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const { doctor_id, reason, appointment_date } = req.body;
 
-  return res.status(200).json(newAppointment);
+  const patient = await Patient.findOne({ user_id: userId });
+
+  if (!patient) {
+    return res.status(404).json("Patient not found! Something went wrong!");
+  }
+
+  if (
+    !(await appointmentCheck(res, appointment_date, patient._id, doctor_id))
+  ) {
+    const newDate = moment.utc(appointment_date).tz("Europe/Sarajevo");
+    const newAppointment = await Appointment.create({
+      doctor_id,
+      patient_id: patient._id,
+      reason,
+      appointment_date: newDate.toDate(),
+    });
+
+    if (!newAppointment)
+      return res
+        .status(400)
+        .json("Not possible to make appointment! There was an error!");
+
+    return res.status(200).json(newAppointment);
+  }
 });
 
 const makeAppointmentFinished = asyncHandler(async (req, res) => {
@@ -101,93 +144,62 @@ const makeAppointmentFinished = asyncHandler(async (req, res) => {
 });
 
 const editAppointmentInfo = asyncHandler(async (req, res) => {
-  const appToEdit = await Appointment.findById(req.params.id);
-  if (!appToEdit) return res.status(200).json("Appointment not found!");
+  const appointmentId = req.params.id;
+  const appToEdit = await Appointment.findById(appointmentId);
+  if (!appToEdit)
+    return res.status(404).json("Appointment not found! Something went wrong!");
 
   const patientEditing = await Patient.findById(appToEdit.patient_id);
+
+  if (!patientEditing) {
+    return res.status(404).json("Patient not found! Something went wrong!");
+  }
+
   const currentUserPatient = await Patient.findOne({ user_id: req.user._id });
+
+  if (!currentUserPatient) {
+    return res.status(404).json("Patient not found! Something went wrong!");
+  }
+
   if (patientEditing._id.toString() !== currentUserPatient._id.toString())
     return res
       .status(400)
       .json("This is not your appointment, you can't edit it!");
 
-  const appDate = new Date(appToEdit.appointment_date);
-  if (appDate <= new Date())
+  const appDate = moment(appToEdit.appointment_date).tz("Europe/Sarajevo");
+  const currentDateTime = moment().tz("Europe/Sarajevo");
+  if (appDate.isBefore(currentDateTime)) {
     return res.status(400).json("You can't edit past appointments!");
+  }
 
-  const timeDifference = appDate - new Date();
-  const minutesDifference = timeDifference / (1000 * 60);
-  if (minutesDifference < 60)
+  const timeDifference = appDate.diff(currentDateTime, "minutes");
+  if (timeDifference <= 60) {
     return res
       .status(400)
       .json(
         "You can't edit appointments within 1 hour of the appointment time."
       );
+  }
 
-  const appointmentDateWithoutTime = moment(req.body.appointment_date)
-    .tz("Europe/Sarajevo")
-    .format("YYYY-MM-DD");
+  if (
+    !(await appointmentCheck(
+      res,
+      req.body.appointment_date,
+      appToEdit.patient_id._id,
+      appToEdit.doctor_id._id,
+      appToEdit._id
+    ))
+  ) {
+    if (req.body.reason) appToEdit.reason = req.body.reason;
+    if (req.body.appointment_date)
+      appToEdit.appointment_date = req.body.appointment_date;
 
-  const existingAppointment = await Appointment.findOne({
-    patient_id: { $ne: patientEditing._id },
-    doctor_id: appToEdit.doctor_id,
-    appointment_date: new Date(req.body.appointment_date),
-  });
-
-  if (existingAppointment)
-    return res
-      .status(400)
-      .json(
-        "It's not possible to make appointment with this doctor at that time."
-      );
-
-  const myExistingAppointment = await Appointment.findOne({
-    _id: { $ne: appToEdit._id },
-    doctor_id: appToEdit.doctor_id,
-    patient_id: appToEdit.patient_id,
-    appointment_date: {
-      $gte: new Date(appointmentDateWithoutTime),
-      $lt: moment(appointmentDateWithoutTime).add(1, "day"),
-    },
-  });
-  if (myExistingAppointment)
-    return res
-      .status(400)
-      .json("You already have an appointment with this doctor on this day.");
-
-  const overlappingAppointment = await Appointment.findOne({
-    doctor_id: { $ne: appToEdit.doctor_id },
-    patient_id: appToEdit.patient_id,
-    appointment_date: {
-      $eq: moment(req.body.appointment_date).tz("Europe/Sarajevo").utc(false),
-    },
-  });
-  if (overlappingAppointment)
-    return res
-      .status(400)
-      .json(
-        "You already have an appointment with a different doctor at that time."
-      );
-
-  if (req.body.reason) appToEdit.reason = req.body.reason;
-  if (req.body.appointment_date)
-    appToEdit.appointment_date = req.body.appointment_date;
-
-  await appToEdit.save({ validateBeforeSave: false });
-  return res.status(200).json(appToEdit);
+    await appToEdit.save({ validateBeforeSave: false });
+    return res.status(200).json(appToEdit);
+  }
 });
 
 const getAppointmentForPatient = getAllDocForUser();
-
-const getLatestAppointmentForPatient = asyncHandler(async (req, res) => {
-  const patient = await Patient.findOne({ user_id: req.params.patientUserId });
-  const app = await Appointment.findOne({
-    patient_id: patient._id,
-    finished: true,
-  }).sort({ appointment_date: -1 });
-
-  return res.status(200).json(app);
-});
 
 const getLatestAppointmentForPatientWithDoctor = asyncHandler(
   async (req, res) => {
@@ -195,9 +207,14 @@ const getLatestAppointmentForPatientWithDoctor = asyncHandler(
     const appointmentId = req.params.appointmentId;
 
     const doctor = await Doctor.findOne({ user_id: userId });
-    if (!doctor) return res.status(404).json("This doctor is not in database!");
+    if (!doctor)
+      return res.status(404).json("Doctor not found! Something went wrong!");
 
     const currentAppointment = await Appointment.findById(appointmentId);
+    if (!currentAppointment)
+      return res
+        .status(404)
+        .json("Appointment not found! Something went wrong!");
 
     const app = await Appointment.findOne({
       _id: { $ne: appointmentId },
@@ -220,8 +237,12 @@ const getLatestAppointmentForPatientWithDoctor = asyncHandler(
 );
 
 cron.schedule("* * * * *", async () => {
+  const { startOfDay, endOfDay } = getStartEndOfDay();
+
   const allApp = await Appointment.find({
-    appointment_date: { $gte: new Date() },
+    appointment_date: { $gte: startOfDay, $lte: endOfDay },
+    finished: false,
+    notification: false,
   });
 
   const currentTime = moment().tz("Europe/Sarajevo");
@@ -232,9 +253,10 @@ cron.schedule("* * * * *", async () => {
       appT.isBetween(currentTime, oneHourFromNow) && !appointment.notification
     );
   });
+
   upcomingAppointments.forEach(async (el) => {
     try {
-      const patient = await Patient.findById(el.patient_id);
+      const patient = await Patient.findById(el.patient_id._id);
 
       if (!patient)
         return res.status(200).json("Patient not found! Something went wrong!");
@@ -266,7 +288,11 @@ cron.schedule("* * * * *", async () => {
 
 const getAppointmentForDay = asyncHandler(async (req, res) => {
   const { date } = req.body;
-  const user = await User.findById(req.user._id);
+  const userId = req.user._id;
+
+  const { startOfDay, endOfDay, date: userDate } = getStartEndOfDay(date);
+
+  const user = await User.findById(userId);
   if (!user)
     return res.status(404).json("User not found! Something went wrong!");
 
@@ -281,18 +307,15 @@ const getAppointmentForDay = asyncHandler(async (req, res) => {
     mod_id = "doctor_id";
   }
 
-  const mod = await model.findOne({ user_id: user._id });
-  if (!mod)
-    return res.status(404).json("Model not found! Something went wrong!");
-
-  const userDate = moment.tz(date, "Europe/Sarajevo");
+  const modelToFind = await model.findOne({ user_id: user._id });
+  if (!modelToFind)
+    return res
+      .status(404)
+      .json(`${model.modelName} not found! Something went wrong!`);
 
   if (!userDate.isValid()) return res.status(400).json("Invalid date format");
 
-  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
-  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
-
-  query[mod_id] = mod._id;
+  query[mod_id] = modelToFind._id;
   query.appointment_date = {
     $gte: startOfDay,
     $lte: endOfDay,
@@ -337,6 +360,8 @@ const getAvailableTimeForAppointmentsForADay = asyncHandler(
     const { date, doctor_id } = req.body;
     const user = await User.findById(req.user._id);
 
+    const { startOfDay, endOfDay, date: userDate } = getStartEndOfDay(date);
+
     if (!user)
       return res.status(404).json("User not found! Something went wrong!");
 
@@ -347,14 +372,9 @@ const getAvailableTimeForAppointmentsForADay = asyncHandler(
     if (!patient)
       return res.status(404).json("Patient not found! Something went wrong!");
 
-    const userDate = moment.tz(date, "Europe/Sarajevo");
-
     if (!userDate.isValid()) {
       return res.status(400).json("Invalid date format!");
     }
-
-    const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
-    const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
 
     const appointmentsDay = await Appointment.find({
       doctor_id: doctor_id,
@@ -401,12 +421,13 @@ const getAvailableTimeForAppointmentsForADay = asyncHandler(
 );
 
 const getPatientsForDoctor = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
   const page = parseInt(req.query.page) || 1;
   const { searchQuery } = req.query;
   const limit = 8;
   const startIndx = (page - 1) * limit;
 
-  const doctor = await Doctor.findOne({ user_id: req.user.id });
+  const doctor = await Doctor.findOne({ user_id: userId });
 
   if (!doctor)
     return res.status(404).json("Doctor not found! Something went wrong!");
@@ -451,17 +472,17 @@ const getPatientsForDoctor = asyncHandler(async (req, res) => {
 });
 
 const getFinishedAppointmentsForPatient = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const patientId = req.params.id;
   const page = parseInt(req.query.page) || 1;
 
-  const patient = await Patient.findById(req.params.id);
+  const patient = await Patient.findById(patientId);
   if (!patient)
-    return res
-      .status(404)
-      .json("Patient doesn't exists! Something went wrong!");
+    return res.status(404).json("Patient not found! Something went wrong!");
 
-  const doctor = await Doctor.findOne({ user_id: req.user._id });
+  const doctor = await Doctor.findOne({ user_id: userId });
   if (!doctor)
-    return res.status(404).json("Doctor doesn't exists! Something went wrong!");
+    return res.status(404).json("Doctor not found! Something went wrong!");
 
   const LIMIT = 9;
   const startIndx = (Number(page) - 1) * LIMIT;
@@ -501,12 +522,15 @@ const getFinishedAppointmentsForPatient = asyncHandler(async (req, res) => {
 });
 
 const getLatestFinishedAppointment = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (!user) return res.status(404).json("There is no user with such ID!");
+  const userId = req.user._id;
+
+  const user = await User.findById(userId);
+  if (!user)
+    return res.status(404).json("User not found! Something went wrong!");
 
   const patient = await Patient.findOne({ user_id: user._id });
   if (!patient)
-    return res.status(404).json("There is no patient with such ID!");
+    return res.status(404).json("Patient not found! Something went wrong!");
 
   const latestApp = await Appointment.findOne({
     patient_id: patient._id,
@@ -666,8 +690,15 @@ const doctorAppointmentDashboard = asyncHandler(async (req, res) => {
   });
 });
 
-const doctorDasboard = asyncHandler(async (req, res) => {
+const doctorDashboard = asyncHandler(async (req, res) => {
   const userId = req.user._id;
+
+  const { startOfDay, endOfDay, date: userDate } = getStartEndOfDay();
+
+  const tomorrow = moment().add(1, "day").tz("Europe/Sarajevo");
+  const { startOfDay: startOfTomorrowDay, endOfDay: endOfTomorrowDay } =
+    getStartEndOfDay(tomorrow);
+
   const user = await User.findById(userId);
   if (!user)
     return res.status(404).json("User not found! Something went wrong!");
@@ -704,16 +735,6 @@ const doctorDasboard = asyncHandler(async (req, res) => {
       },
     },
   ]);
-
-  const userDate = moment().tz("Europe/Sarajevo");
-
-  const startOfDay = userDate.clone().startOf("day").utc(true).toDate();
-  const endOfDay = userDate.clone().endOf("day").utc(true).toDate();
-
-  const tomorrow = userDate.clone().add(1, "day");
-
-  const startOfTomorrowDay = tomorrow.clone().startOf("day").utc(true).toDate();
-  const endOfTomorrowDay = tomorrow.clone().endOf("day").utc(true).toDate();
 
   const todays = await Appointment.find({
     doctor_id: doctor._id,
@@ -776,15 +797,28 @@ const doctorDasboard = asyncHandler(async (req, res) => {
 
 const getOneAppointment = asyncHandler(async (req, res) => {
   const appId = req.params.id;
-
+  const user = req.user;
   const appointment = await Appointment.findById(appId).populate("therapy");
 
-  if (appointment) {
-    return res.status(200).json(appointment);
+  if (!appointment) {
+    return res.status(404).json("Appointment not found! Something went wrong!");
   }
 
-  return res.status(404).json("Appointment not found! Something went wrong!");
+  if (user.role === "PATIENT") {
+    const patient = await Patient.findOne({ user_id: user._id });
+
+    if (!patient)
+      return res.status(404).json("Patient not found! Something went wrong!");
+
+    if (appointment.patient_id._id.toString() !== patient._id.toString()) {
+      return res
+        .status(400)
+        .json("You are not authorized to access this appointment!");
+    }
+  }
+  return res.status(200).json(appointment);
 });
+
 const getAllAppointments = getAllData(Appointment);
 const cancelAppointment = deleteDoc(Appointment);
 
@@ -797,13 +831,12 @@ module.exports = {
   makeAppointmentFinished,
   getAppointmentForDay,
   editAppointmentInfo,
-  getLatestAppointmentForPatient,
   getLatestAppointmentForPatientWithDoctor,
   getPatientsForDoctor,
   getFinishedAppointmentsForPatient,
   getLatestFinishedAppointment,
   numberOfAppointmentsPerMonthForDepartments,
   doctorAppointmentDashboard,
-  doctorDasboard,
+  doctorDashboard,
   getAvailableTimeForAppointmentsForADay,
 };

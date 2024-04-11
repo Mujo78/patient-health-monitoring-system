@@ -11,7 +11,7 @@ import {
   addNotification,
   getPersonNotifications,
   notification,
-  restartPersonNotifications,
+  restartNotifications,
 } from "../../features/notification/notificationSlice";
 import NavBarDropdown from "./NavBarDropdown";
 import LogoutButton from "./LogoutButton";
@@ -68,7 +68,7 @@ const CustomNavbar: React.FC = () => {
     dispatch(getPersonNotifications());
 
     return () => {
-      dispatch(restartPersonNotifications());
+      dispatch(restartNotifications());
     };
   }, [dispatch]);
 
