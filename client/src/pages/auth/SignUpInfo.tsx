@@ -3,12 +3,15 @@ import { Props } from "../LandingPage";
 import { Button } from "flowbite-react";
 import Header from "../../components/UI/Header";
 import { useSelector } from "react-redux";
-import { authUser } from "../../features/auth/authSlice";
+import { authUser, reset } from "../../features/auth/authSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 const SignUpInfo: React.FC<Props> = ({ setSignUp }) => {
   const { status } = useSelector(authUser);
+  const dispatch = useAppDispatch();
 
   const goLogin = () => {
+    dispatch(reset());
     setSignUp((n) => !n);
   };
   return (

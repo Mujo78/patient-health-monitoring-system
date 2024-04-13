@@ -59,19 +59,16 @@ const resetPassword = async (ResetPasswordData: ResetPassword) => {
 
 const verifyEmail = async (verificationToken: string) => {
   const response = await apiClient.get(`${URL}/verify/${verificationToken}`);
-
   return response.data;
 };
 
 const updateUser = async (data: UpdateUserInterface) => {
   const response = await apiClientAuth.patch(`${URL}/update-me`, data);
-
   return response.data;
 };
 
 const deactivateMyAccount = async (data: { active: boolean }) => {
   const response = await apiClientAuth.patch(`${URL}/deactivate`, data);
-
   return response.data;
 };
 
@@ -89,7 +86,6 @@ export async function updatePhoto(photo: File) {
 
 const firstTimeUsing = async () => {
   const response = await apiClientAuth.patch(`${URL}/`, {});
-
   return response.data;
 };
 

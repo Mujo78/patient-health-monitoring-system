@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signupValidationSchema } from "../../validations/auth/signupValidation";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import CustomButton from "../../components/UI/CustomButton";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { errorMessageConvert } from "../../service/authSideFunctions";
 import { HiOutlineEyeSlash, HiOutlineEye } from "react-icons/hi2";
 import Input from "../../components/UI/Input";
@@ -17,7 +17,7 @@ import CustomSpinner from "../../components/UI/CustomSpinner";
 import FormRow from "../../components/UI/FormRow";
 import { bloodTypes, genders } from "../../validations/personValidation";
 import Header from "../../components/UI/Header";
-import toast from "react-hot-toast";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 const SignUpForm: React.FC = () => {
   const [Image, setImage] = useState("");
@@ -30,7 +30,7 @@ const SignUpForm: React.FC = () => {
   // @ts-ignore
   const selectedOne = photo?.length ? photo[0] : null;
   const dispatch = useAppDispatch();
-  const { status, message } = useSelector(authUser);
+  const { status, message } = useSelector(authUser, shallowEqual);
 
   useEffect(() => {
     let objectURL: string;
@@ -43,20 +43,16 @@ const SignUpForm: React.FC = () => {
   }, [getValues, selectedOne]);
 
   const onSubmit = async (data: PatientUser) => {
-    dispatch(signup(data));
+    dispatch(signup(data)).then((action) => {
+      if (isFulfilled(action)) {
+        reset();
+      }
+    });
   };
 
   const togglePassword = () => {
     setShowNewPassword((n) => !n);
   };
-
-  useEffect(() => {
-    if (status === "idle") {
-      reset();
-    } else if (status === "failed" && !message.includes("validation")) {
-      toast.error("Something went wrong, please try again later!");
-    }
-  }, [status, reset, message]);
 
   return (
     <div className="flex w-full flex-col-reverse md:!flex-row-reverse ">
@@ -263,11 +259,15 @@ const SignUpForm: React.FC = () => {
               </FormRow>
 
               <div className="flex w-full flex-wrap justify-between gap-2 pb-6 md:!flex-nowrap md:!pb-0">
-                {status === "idle" && (
+                {status === "idle" ? (
                   <Alert className="flex h-10 w-fit items-center justify-center xxl:!text-lg">
                     <strong>Action Required:</strong> Please verify your email
                     address.
                   </Alert>
+                ) : (
+                  !message.includes("validation") && (
+                    <ErrorMessage text={message} />
+                  )
                 )}
                 <CustomButton
                   className="w-full md:!ml-auto md:!w-1/3 lg:!w-fit"

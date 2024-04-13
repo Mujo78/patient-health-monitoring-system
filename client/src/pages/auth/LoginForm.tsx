@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
-import {
-  authUser,
-  login,
-  reset as resetAuth,
-} from "../../features/auth/authSlice";
+import { authUser, login } from "../../features/auth/authSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginValidationSchema } from "../../validations/auth/loginValidation";
 import {
@@ -22,6 +18,7 @@ import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
 import Input from "../../components/UI/Input";
 import Header from "../../components/UI/Header";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 type User = {
   email: string;
@@ -38,16 +35,12 @@ const LoginForm: React.FC = () => {
   const { errors } = formState;
 
   const dispatch = useAppDispatch();
-  const { accessUser, status, message } = useSelector(authUser);
+  const { accessUser, status, message } = useSelector(authUser, shallowEqual);
 
-  const route = accessUser?.data.role.toLowerCase();
-
-  useEffect(() => {
-    dispatch(resetAuth());
-  }, [dispatch]);
+  const route = accessUser?.data?.role.toLowerCase();
 
   useEffect(() => {
-    if (accessUser !== null && status === "idle") {
+    if (accessUser && status === "idle") {
       navigate(`/${route}/${accessUser.data._id}`);
     } else {
       navigate("/");
@@ -55,7 +48,11 @@ const LoginForm: React.FC = () => {
   }, [accessUser, dispatch, status, route, navigate]);
 
   const onSubmit = (data: User) => {
-    dispatch(login(data));
+    dispatch(login(data)).then((action) => {
+      if (isFulfilled(action)) {
+        reset();
+      }
+    });
   };
 
   const forgotPasswordShow = (
@@ -64,12 +61,6 @@ const LoginForm: React.FC = () => {
     event.preventDefault();
     setForgotPassword(true);
   };
-
-  useEffect(() => {
-    if (status === "idle") {
-      reset();
-    }
-  }, [status, reset]);
 
   const togglePassword = () => {
     setShowPassword((n) => !n);

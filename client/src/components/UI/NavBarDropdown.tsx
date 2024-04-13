@@ -6,7 +6,7 @@ import {
   HiOutlineUserGroup,
   HiOutlineInformationCircle,
 } from "react-icons/hi2";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   markAllAsRead,
   notification,
@@ -18,52 +18,65 @@ import { useAppDispatch } from "../../app/hooks";
 import { authUser } from "../../features/auth/authSlice";
 import { colorPick } from "../../service/authSideFunctions";
 import CustomSpinner from "./CustomSpinner";
+import { isRejected } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 type Props = {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  hasNewNotification: boolean;
 };
 
-const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
+const NavBarDropdown: React.FC<Props> = ({ setShow, hasNewNotification }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { personNotifications, status, message } = useSelector(notification);
-  const readed = personNotifications?.some((value) => value.read === false);
-  const { accessUser } = useSelector(authUser);
-  let route = "";
-  if (accessUser?.data.role === "PATIENT") route = "/notifications";
-  if (accessUser?.data.role === "DOCTOR") route = "/doctor-notifications";
-  if (accessUser?.data.role === "PHARMACY") route = "/pharmacy-notifications";
+
+  const { personNotifications, status, message } = useSelector(
+    notification,
+    shallowEqual,
+  );
+  const { accessUser } = useSelector(authUser, shallowEqual);
+
+  const role = accessUser?.data?.role;
+  let route;
+
+  if (role === "PATIENT") route = "/notifications";
+  else if (role === "DOCTOR") route = "/doctor-notifications";
+  else route = "/pharmacy-notifications";
 
   const markAll = () => {
-    if (readed) {
-      dispatch(markAllAsRead());
+    if (hasNewNotification) {
+      dispatch(markAllAsRead()).then((action: any) => {
+        if (isRejected(action)) {
+          toast.error(action.payload);
+        }
+      });
     }
   };
 
   const navigateNotifications = () => {
-    if (route !== "") {
+    if (route) {
       setShow(false);
       navigate(route);
     }
   };
 
   const handleNavigateNotification = (id: string) => {
-    if (route !== "") {
+    if (route) {
       setShow(false);
       navigate(`${route}/${id}`);
     }
   };
 
-  const oldOnes = personNotifications
-    ?.filter((n) => n.read === true)
-    .slice(personNotifications.length - 3, personNotifications.length)
-    .reverse();
-
   return (
-    <div className="h-full flex flex-col overflow-y-auto">
-      <p className="px-3 pt-3 mb-2 flex text-[10px] xxl:!text-xl justify-between items-center">
-        <span className="font-semibold">Notifications</span>
-        <button onClick={markAll} className="text-blue-700 underline">
+    <div className="flex h-full flex-col overflow-y-auto">
+      <p className="mb-2 flex flex-wrap justify-between px-3 pt-3 text-center">
+        <span className="text-sm font-semibold xxl:!text-xl">
+          Notifications
+        </span>
+        <button
+          onClick={markAll}
+          className="text-xs text-blue-700 underline xxl:!text-lg"
+        >
           Mark All as read
         </button>
       </p>
@@ -78,46 +91,8 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                     <CustomSpinner />
                   </Table.Cell>
                 </Table.Row>
-              ) : readed ? (
-                personNotifications.map(
-                  (n) =>
-                    !n.read && (
-                      <Table.Row
-                        onClick={() => handleNavigateNotification(n._id)}
-                        key={n._id}
-                        className={`cursor-pointer hover:!bg-gray-200 ${
-                          n.read ? "bg-gray-100" : "bg-white"
-                        } transition-colors duration-300`}
-                      >
-                        <Table.Cell className="flex gap-2 items-center p-2">
-                          {n.type === "MESSAGE" ? (
-                            <HiOutlineUserGroup className="h-8 w-8 xxl:!w-12 xxl:!h-12" />
-                          ) : n.type === "INFO" ? (
-                            <HiOutlineInformationCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-green-600" />
-                          ) : (
-                            <HiOutlineXCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-red-600" />
-                          )}
-                          <div className="flex flex-col w-full text-xs">
-                            <h3
-                              className={`font-bold text-[10px] xxl:!text-lg ${colorPick(
-                                n.type
-                              )}`}
-                            >
-                              {n.name}
-                            </h3>
-                            <div className="text-[9px] flex justify-between w-full xxl:!text-lg">
-                              <p className="w-3/4">{n.content.slice(0, 120)}</p>
-                              <p className="mt-auto">
-                                {moment(n.createdAt).format("hh:mm A")}
-                              </p>
-                            </div>
-                          </div>
-                        </Table.Cell>
-                      </Table.Row>
-                    )
-                )
               ) : (
-                oldOnes.map((n) => (
+                personNotifications.map((n) => (
                   <Table.Row
                     onClick={() => handleNavigateNotification(n._id)}
                     key={n._id}
@@ -125,24 +100,24 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
                       n.read ? "bg-gray-100" : "bg-white"
                     } transition-colors duration-300`}
                   >
-                    <Table.Cell className="flex gap-2 items-center p-2">
+                    <Table.Cell className="flex items-center gap-2 p-2">
                       {n.type === "MESSAGE" ? (
-                        <HiOutlineUserGroup className="h-8 w-8 xxl:!w-12 xxl:!h-12" />
+                        <HiOutlineUserGroup className="h-8 w-8 xxl:!h-12 xxl:!w-12" />
                       ) : n.type === "INFO" ? (
-                        <HiOutlineInformationCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-green-600" />
+                        <HiOutlineInformationCircle className="h-8 w-8 text-green-600 xxl:!h-12 xxl:!w-12" />
                       ) : (
-                        <HiOutlineXCircle className="h-8 w-8 xxl:!w-12 xxl:!h-12 text-red-600" />
+                        <HiOutlineXCircle className="h-8 w-8 text-red-600 xxl:!h-12 xxl:!w-12" />
                       )}
-                      <div className="flex flex-col w-full text-xs">
+                      <div className="flex w-full flex-col text-xs">
                         <h3
-                          className={`font-bold text-[10px] xxl:!text-lg ${colorPick(
-                            n.type
+                          className={`text-[10px] font-bold xxl:!text-lg ${colorPick(
+                            n.type,
                           )}`}
                         >
                           {n.name}
                         </h3>
-                        <div className="text-[9px] flex justify-between w-full xxl:!text-lg">
-                          <p className="w-3/4">{n.content.slice(0, 120)}</p>
+                        <div className="flex w-full justify-between text-[9px] xxl:!text-lg">
+                          <p className="line-clamp-2 w-3/4">{n.content}</p>
                           <p className="mt-auto">
                             {moment(n.createdAt).format("hh:mm A")}
                           </p>
@@ -156,14 +131,14 @@ const NavBarDropdown: React.FC<Props> = ({ setShow }) => {
           </Table>
           <CustomButton
             onClick={navigateNotifications}
-            className="mt-auto w-full"
+            className="absolute bottom-0 mt-auto w-full"
             size="xs"
           >
             <p className="xxl:!text-lg">See all</p>
           </CustomButton>
         </>
       ) : (
-        <ErrorMessage text={message} />
+        <ErrorMessage className="mt-6 text-center" text={message} />
       )}
     </div>
   );

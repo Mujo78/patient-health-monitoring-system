@@ -21,10 +21,10 @@ const LogoutButton = () => {
     <Button
       color="light"
       onClick={logOut}
-      className="h-fit !w-fit md:!w-2/3 mx-auto mb-0 sm:mb-2 hover:bg-gray-50 cursor-pointer"
+      className="mx-auto mb-0 h-fit !w-fit cursor-pointer hover:bg-gray-50 sm:mb-2 md:!w-2/3"
     >
-      <div className="flex justify-center items-center gap-2">
-        <HiOutlineArrowRightOnRectangle className="w-5 h-5 xxl:!w-8 xxl:!h-8" />
+      <div className="flex items-center justify-center gap-2">
+        <HiOutlineArrowRightOnRectangle className="h-5 w-5 xxl:!h-8 xxl:!w-8" />
         <span className="hidden md:block xxl:!text-xl">Logout</span>
       </div>
     </Button>

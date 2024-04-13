@@ -38,17 +38,7 @@ const VerificationPageRes: React.FC = () => {
         status === "failed" && (
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <HiOutlineXCircle color="red" className="h-auto w-28 xxl:!w-56" />
-            <Header
-              text={
-                message.includes("/api/")
-                  ? "Something went wrong, please try again later!"
-                  : message
-              }
-              bold
-              size={1}
-              className="!text-red-600"
-            />
-
+            <Header text={message} bold size={1} className="!text-red-600" />
             <p className="text-md text-red-600 xxl:text-2xl">
               Please try again later!
             </p>

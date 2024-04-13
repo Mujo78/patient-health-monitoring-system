@@ -12,7 +12,7 @@ const CustomImg: React.FC<Props> = ({ url, className, width, height }) => {
   const imgUpload = `http://localhost:3001/uploads/${url}`;
 
   const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
+    e: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
     e.currentTarget.src = defaultImg;
   };

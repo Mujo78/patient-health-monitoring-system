@@ -231,7 +231,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     await user.save({ validateBeforeSave: false });
 
-    return res.status(404).json("There was an error, please try again later!");
+    return res.status(400).json(err);
   }
 });
 

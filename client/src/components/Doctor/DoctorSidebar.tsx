@@ -75,7 +75,7 @@ const DoctorSidebar: React.FC = () => {
         <SidebarItemText>Department</SidebarItemText>
       </Sidebar.Item>
       {location.pathname.startsWith("/doctor/") && (
-        <div className="hidden h-2/3 w-52 flex-grow flex-col items-center justify-center md:flex">
+        <div className="hidden h-2/3 w-52 flex-grow flex-col items-center justify-center xl:!flex">
           {show && (
             <Alert
               className="mr-3 flex h-fit w-full flex-col justify-between gap-2 bg-gradient-to-b from-blue-600  to-blue-300 text-white"

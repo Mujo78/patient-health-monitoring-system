@@ -8,8 +8,8 @@ const ErrorFallback: React.FC<FallbackProps> = ({
   resetErrorBoundary,
 }) => {
   return (
-    <div className="h-screen gap-2 flex text-center flex-col justify-center mx-auto">
-      <div className="flex justify-start text-start flex-col w-fit mx-auto">
+    <div className="mx-auto flex h-screen flex-col justify-center gap-2 text-center">
+      <div className="mx-auto flex w-fit flex-col justify-start text-start">
         <p className="text-lg font-medium">{error?.message}</p>
         <p className="text-xl font-semibold">
           Something went wrong, please try refresh page with the button below!
@@ -18,7 +18,7 @@ const ErrorFallback: React.FC<FallbackProps> = ({
       <Button
         size="lg"
         color="light"
-        className="border-0 w-fit mx-auto"
+        className="mx-auto w-fit border-0"
         onClick={resetErrorBoundary}
       >
         <HiOutlineArrowPath

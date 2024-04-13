@@ -115,7 +115,7 @@ export const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action) => {
-      state.personNotifications.push(action.payload);
+      state.personNotifications.unshift(action.payload);
     },
     restartNotifications: (state) => {
       state.personNotifications = [];

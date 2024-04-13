@@ -4,7 +4,7 @@ import LoginForm from "./auth/LoginForm";
 import SignUpInfo from "./auth/SignUpInfo";
 import LoginInfo from "./auth/LoginInfo";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../features/auth/authSlice";
 
 export type Props = {
@@ -13,7 +13,7 @@ export type Props = {
 
 const LandingPage: React.FC = () => {
   const [signup, setSignUp] = useState<boolean>(false);
-  const { accessUser } = useSelector(authUser);
+  const { accessUser } = useSelector(authUser, shallowEqual);
   const navigate = useNavigate();
   const route = accessUser?.data.role.toLowerCase();
 
@@ -26,20 +26,20 @@ const LandingPage: React.FC = () => {
   }, [accessUser, route, navigate]);
 
   return (
-    <div className="text-start w-full h-screen flex items-center flex-col md:flex-row">
+    <div className="flex h-screen w-full flex-col items-center text-start md:flex-row">
       <div
-        className={`w-full p-3 md:p-0 md:!w-3/4 h-fit md:!h-screen flex flex-col ${
+        className={`flex h-fit w-full flex-col p-3 md:!h-screen md:!w-3/4 md:p-0 ${
           signup
             ? "animate-slide-down md:!animate-slide-right"
             : "animate-slide-back-down md:!animate-slide-back-right"
         }`}
       >
-        <div className="h-fit md:!h-screen flex justify-center items-center">
+        <div className="flex h-fit items-center justify-center md:!h-screen">
           {signup ? <SignUpForm /> : <LoginForm />}
         </div>
       </div>
       <div
-        className={`bg-photo-vertical w-full md:!w-1/4 h-full md:!h-screen flex-col relative flex items-center justify-center ${
+        className={`relative flex h-full w-full flex-col items-center justify-center bg-photo-vertical md:!h-screen md:!w-1/4 ${
           signup
             ? "animate-slide-up md:!animate-slide-left"
             : "animate-slide-back-up md:!animate-slide-back-left"
@@ -50,7 +50,7 @@ const LandingPage: React.FC = () => {
           className="absolute h-full"
           alt="Background"
         />
-        <div className="w-full px-6 flex flex-col z-10">
+        <div className="z-10 flex w-full flex-col px-6">
           {signup ? (
             <SignUpInfo setSignUp={setSignUp} />
           ) : (

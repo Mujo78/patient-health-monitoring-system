@@ -12,8 +12,8 @@ const IconLink: React.FC<Props> = ({ children, to }) => {
     <Link
       to={to}
       className={`${
-        location.includes(to) && "bg-gray-300 rounded-md"
-      } transition-all duration-300 p-2 text-gray-800`}
+        location.includes(to) && "rounded-md bg-gray-300"
+      } p-2 text-gray-800 transition-all duration-300`}
     >
       {children}
     </Link>

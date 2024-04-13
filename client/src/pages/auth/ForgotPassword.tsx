@@ -9,7 +9,7 @@ import { HiLockClosed } from "react-icons/hi2";
 import CustomButton from "../../components/UI/CustomButton";
 import Logo from "../../components/UI/Logo";
 import { useAppDispatch } from "../../app/hooks";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import Header from "../../components/UI/Header";
 import Input from "../../components/UI/Input";
 
@@ -27,7 +27,7 @@ const ForgotPassword: React.FC = () => {
     });
   const { errors } = formState;
   const dispatch = useAppDispatch();
-  const { status } = useSelector(authUser);
+  const { status } = useSelector(authUser, shallowEqual);
 
   const goToLoginPage = () => {
     navigate("/");
@@ -35,7 +35,7 @@ const ForgotPassword: React.FC = () => {
 
   const onSubmit = () => {
     const passwordsObject = {
-      token: token ? token : "",
+      token: token ?? "",
       password: getValues().password,
       passwordConfirm: getValues().passwordConfirm,
     };

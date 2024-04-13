@@ -6,7 +6,7 @@ type Props = {
 
 const RootTabNav: React.FC<Props> = ({ children }) => {
   return (
-    <div className="w-full border-t flex items-center justify-around border-t-gray-200 bottom-0 bg-white z-50 fixed sm:!hidden h-14">
+    <div className="fixed bottom-0 z-50 flex h-14 w-full items-center justify-around border-t border-t-gray-200 bg-white sm:!hidden">
       {children}
     </div>
   );

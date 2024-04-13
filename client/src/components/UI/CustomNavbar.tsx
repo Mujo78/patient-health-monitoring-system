@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Avatar, CustomFlowbiteTheme } from "flowbite-react";
 import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../../features/auth/authSlice";
@@ -30,18 +30,19 @@ const customTheme: CustomFlowbiteTheme["avatar"] = {
 };
 
 const CustomNavbar: React.FC = () => {
-  let route;
   const [show, setShow] = useState<boolean>(false);
 
   const { personNotifications } = useSelector(notification, shallowEqual);
   const { accessUser, selected } = useSelector(authUser, shallowEqual);
   const dispatch = useAppDispatch();
 
-  if (accessUser?.data.role === "PATIENT")
-    route = `/profile/p/${accessUser.data._id}`;
-  else if (accessUser?.data.role === "DOCTOR")
-    route = `/profile/d/${accessUser.data._id}`;
-  else route = `/profile/ph/${accessUser?.data._id}`;
+  const _id = accessUser?.data?._id;
+  const role = accessUser?.data?.role;
+
+  let route;
+  if (role === "DOCTOR") route = `/profile/d/${_id}`;
+  else if (role === "PATIENT") route = `/profile/p/${_id}`;
+  else route = `/profile/ph/${_id}`;
 
   useEffect(() => {
     socket.emit("userLogin", accessUser?.data._id);
@@ -76,8 +77,9 @@ const CustomNavbar: React.FC = () => {
     setShow((n) => !n);
   };
 
-  const notReaded = personNotifications?.map((n) => n.read === false);
-  const readed = notReaded.some((value) => value === true);
+  const hasNewNotifications = useMemo(() => {
+    return personNotifications.some((notification) => !notification.read);
+  }, [personNotifications]);
 
   return (
     <nav className="sticky flex w-full items-center justify-between border-x-0 border-b border-t-0 border-b-gray-200 p-2 md:relative">
@@ -121,7 +123,7 @@ const CustomNavbar: React.FC = () => {
               theme={customTheme}
               onClick={showNotifications}
               img={HiOutlineBell}
-              status={readed ? "busy" : undefined}
+              status={hasNewNotifications ? "busy" : undefined}
               statusPosition="top-right"
               rounded
               size="xs"
@@ -132,7 +134,10 @@ const CustomNavbar: React.FC = () => {
           </div>
           {show && (
             <div className="absolute -right-24 top-9 z-30 h-80 w-fit rounded-b-lg border border-t-0 border-gray-200 bg-gray-100 shadow-lg sm:right-0 sm:w-64 xxl:!h-96 xxl:!w-96 ">
-              <NavBarDropdown setShow={setShow} />
+              <NavBarDropdown
+                setShow={setShow}
+                hasNewNotification={hasNewNotifications}
+              />
             </div>
           )}
         </div>

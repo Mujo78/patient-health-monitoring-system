@@ -50,13 +50,7 @@ const ForgotPassword: React.FC<Props> = ({
         setResponse(res);
         setEmail("");
       } catch (error: any) {
-        const res = error.response.data;
-        console.log(error);
-        setResponse(
-          res.includes("/api/v1/")
-            ? "Something went wrong, please try again later"
-            : res,
-        );
+        setResponse(error?.response?.data ?? error?.message);
       }
     }
   };

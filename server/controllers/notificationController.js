@@ -26,13 +26,14 @@ const markAllAsRead = asyncHandler(async (req, res) => {
     { user_id: user._id, read: false },
     { $set: { read: true } }
   );
+
   if (!notificationsForUser)
     return res.status(404).json("There are no notifications to mark!");
 
   const updatedNotifications = await Notification.find({
     user_id: user._id,
     read: true,
-  });
+  }).sort({ createdAt: -1 });
 
   return res.status(200).json(updatedNotifications);
 });

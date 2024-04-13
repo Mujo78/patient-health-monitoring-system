@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 
+/**
+ * @type {mongoose.SchemaDefinitionProperty}
+ */
 const notificationSchema = new mongoose.Schema(
   {
     user_id: {

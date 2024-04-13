@@ -18,7 +18,7 @@ const CustomCard: React.FC<Props> = ({ children, to }) => {
   return (
     <div
       onClick={handleNavigate}
-      className="bg-white shadow-md m-4 cursor-pointer rounded-lg p-1 md:p-4 flex flex-col border max-w-[200px]"
+      className="m-4 flex max-w-[200px] cursor-pointer flex-col rounded-lg border bg-white p-1 shadow-md md:p-4"
     >
       {children}
     </div>

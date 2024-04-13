@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import CustomButton from "../../components/UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   authUser,
   reset,
@@ -17,7 +17,7 @@ const VerificationPage: React.FC = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const { status } = useSelector(authUser);
+  const { status } = useSelector(authUser, shallowEqual);
 
   useEffect(() => {
     dispatch(reset());
