@@ -4,19 +4,20 @@ import {
   getDateTime,
   getLatestFinished,
   latestFinishedType,
-} from "../../service/appointmentSideFunctions";
+} from "../../../service/appointmentSideFunctions";
 import { shallowEqual, useSelector } from "react-redux";
-import CustomImg from "../../components/UI/CustomImg";
+import CustomImg from "../../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
-import { authUser } from "../../features/auth/authSlice";
-import AppointmentsChart from "../../components/Patient/AppointmentsChart";
-import AppointmentReviewCalendar from "../../components/Appointment/AppointmentReviewCalendar";
-import useSelectedPage from "../../hooks/useSelectedPage";
-import CustomSpinner from "../../components/UI/CustomSpinner";
-import Header from "../../components/UI/Header";
-import PatientCard from "../../components/Patient/PatientCard";
-import NoDataAvailable from "../../components/UI/NoDataAvailable";
+import { authUser } from "../../../features/auth/authSlice";
+import AppointmentsChart from "../../../components/Patient/AppointmentsChart";
+import AppointmentReviewCalendar from "../../../components/Appointment/AppointmentReviewCalendar";
+import useSelectedPage from "../../../hooks/useSelectedPage";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Header from "../../../components/UI/Header";
+import PatientCard from "../../../components/Patient/PatientCard";
+import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 import toast from "react-hot-toast";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 
 const PatientDashboard: React.FC = () => {
   const [latestFinished, setLatestFinished] = useState<latestFinishedType>();
@@ -148,6 +149,10 @@ const PatientDashboard: React.FC = () => {
           <div className="flex h-fit w-full justify-end xl:!h-full xl:!w-2/5">
             {latestFinished && <AppointmentReviewCalendar variant={1} />}
           </div>
+        </div>
+      ) : error ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <ErrorMessage text={error} />
         </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center">

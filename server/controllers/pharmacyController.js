@@ -73,8 +73,9 @@ const pharmacyDashboard = asyncHandler(async (req, res) => {
   const pharmacy = await Pharmacy.findOne().select(
     "_id name address phone_number working_hours"
   );
+
   if (!pharmacy)
-    return res.status(404).json("There is no pharmacy in our system.");
+    return res.status(404).json("Pharmacy not found! Something went wrong!");
 
   const total = await Medicine.aggregate([
     {

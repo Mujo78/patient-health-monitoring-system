@@ -16,6 +16,7 @@ import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import toast from "react-hot-toast";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 
 const DoctorDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -92,6 +93,10 @@ const DoctorDashboard: React.FC = () => {
               <AppointmentReviewCalendar variant={2} />
             </div>
           </div>
+        </div>
+      ) : error ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <ErrorMessage text={error} />
         </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center">

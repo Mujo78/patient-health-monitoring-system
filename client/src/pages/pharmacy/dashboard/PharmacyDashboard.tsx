@@ -8,20 +8,27 @@ import {
   pharmacyDashboard,
   pharmacyDashboardInfo,
 } from "../../../service/pharmacySideFunctions";
-import PDashboard from "../../../components/Pharmacy/PDashboard";
-import PDashboardInfo from "../../../components/Pharmacy/PDashboardInfo";
+import PharmacyDashboardData from "../../../components/Pharmacy/PharmacyDashboardData";
+import PharmacyDashboardMedicine from "../../../components/Pharmacy/PharmacyDashboardMedicine";
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
+import toast from "react-hot-toast";
+import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 
 const PharmacyDashboard: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { accessUser } = useSelector(authUser);
-
+  const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [phDash, setPhDash] = useState<PharmacyDashboardType | undefined>();
-  const [phDashInfo, setPhDashInfo] = useState<
+  const [loadingInfo, setLoadingInfo] = useState<boolean>(false);
+  const [phDashboardData, setPhDashboardData] = useState<
+    PharmacyDashboardType | undefined
+  >();
+  const [phDashboardMedicine, setPhDashboardMedicine] = useState<
     PharmacyDashboardInfoType | undefined
   >();
+
+  const dispatch = useAppDispatch();
+  const { accessUser } = useSelector(authUser);
 
   useSelectedPage("Dashboard");
 
@@ -35,52 +42,62 @@ const PharmacyDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (accessUser) {
-          const response = await pharmacyDashboard(accessUser.token);
-          setPhDash(response);
-        }
+        const response = await pharmacyDashboard();
+        setPhDashboardData(response);
       } catch (err: any) {
-        setLoading(false);
+        setError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [accessUser]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        if (accessUser) {
-          const response = await pharmacyDashboardInfo(accessUser.token);
-          setPhDashInfo(response);
-        }
+        setLoadingInfo(true);
+        const response = await pharmacyDashboardInfo();
+        setPhDashboardMedicine(response);
       } catch (err: any) {
-        setLoading(false);
+        setError(err?.response?.data ?? err?.message);
+        throw new Error(err);
       } finally {
-        setLoading(false);
+        setLoadingInfo(false);
       }
     };
 
     fetchData();
-  }, [accessUser]);
+  }, []);
+
+  useEffect(() => {
+    if (error) toast.error(error);
+  }, [error]);
 
   return (
     <>
-      {loading ? (
-        <CustomSpinner size="lg" />
-      ) : (
+      {loading || loadingInfo ? (
+        <CustomSpinner size="xl" />
+      ) : phDashboardData || phDashboardMedicine ? (
         <div className="h-full p-3">
-          <div className="flex w-full flex-col gap-5 h-full">
-            <div className="w-full h-fit gap-3 flex flex-wrap items-center lg:!gap-6 xl:!gap-12 xl:!h-2/4 transition-all duration-300">
-              {phDash && <PDashboard data={phDash} />}
+          <div className="flex h-full w-full flex-col gap-5">
+            <div className="flex h-fit w-full flex-wrap items-center gap-3 transition-all duration-300 lg:!gap-6 xl:!h-2/4 xl:!gap-12">
+              <PharmacyDashboardData data={phDashboardData} />
             </div>
-            <div className="flex h-fit lg:!h-full items-center flex-wrap w-full gap-5 xl:!h-2/4">
-              {phDashInfo && <PDashboardInfo data={phDashInfo} />}
+            <div className="flex h-fit w-full flex-wrap items-center gap-5 lg:!h-full xl:!h-2/4">
+              <PharmacyDashboardMedicine data={phDashboardMedicine} />
             </div>
           </div>
+        </div>
+      ) : error ? (
+        <div className="flex h-full w-full items-center justify-center">
+          <ErrorMessage text={error} />
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <NoDataAvailable />
         </div>
       )}
     </>

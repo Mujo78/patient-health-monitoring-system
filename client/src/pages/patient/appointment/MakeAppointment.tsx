@@ -137,7 +137,7 @@ const MakeAppointment: React.FC = () => {
                   placeholder="Note for the doctor"
                   title="Note"
                   rows={4}
-                  className="mt-2 text-sm lg:!mt-10 xxl:!text-lg"
+                  className="mt-2 text-sm focus:!border-blue-700 focus:!ring-blue-700 lg:!mt-10 xxl:!text-lg"
                   value={reason}
                   name="reason"
                   onChange={onChange}

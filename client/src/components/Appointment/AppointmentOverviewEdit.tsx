@@ -141,7 +141,7 @@ const AppointmentOverviewEdit: React.FC = () => {
                       placeholder="Reason"
                       name="reason"
                       id="content"
-                      className="text-sm xxl:!text-xl"
+                      className="text-sm focus:border-blue-700 focus:ring-blue-700 xxl:!text-xl"
                       onChange={onChange}
                       value={reason}
                       rows={10}

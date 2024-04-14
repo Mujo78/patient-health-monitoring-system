@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../../components/UI/Header";
-import { useSelector } from "react-redux";
-import { authUser, setInfoAccessUser } from "../../../features/auth/authSlice";
-import { getData, updateData } from "../../../service/pharmacySideFunctions";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { setInfoAccessUser } from "../../../features/auth/authSlice";
 import {
   PharmacyType,
-  PharmacyUpdateType,
-  pharmacyValidationSchema,
-} from "../../../validations/pharmacyValidation";
+  getData,
+  updateData,
+} from "../../../service/pharmacySideFunctions";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { pharmacyValidationSchema } from "../../../validations/pharmacyValidation";
 import { TextInput, Label, Textarea } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import Footer from "../../../components/UI/Footer";
@@ -19,76 +18,45 @@ import { toast } from "react-hot-toast";
 import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
+import { errorMessageConvert } from "../../../service/authSideFunctions";
 
 const InfoPharmacy: React.FC = () => {
-  const { accessUser } = useSelector(authUser);
   const dispatch = useAppDispatch();
   const { register, handleSubmit, formState, reset } = useForm<PharmacyType>({
     resolver: yupResolver(pharmacyValidationSchema),
   });
   const { errors, isDirty } = formState;
   const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<PharmacyType>();
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (accessUser) {
-          setLoading(true);
-          const response = await getData(accessUser.token);
-          const data = {
-            ...response,
-            from: response.working_hours
-              .slice(0, response.working_hours.indexOf("AM"))
-              .trim(),
-            to: response.working_hours
-              .slice(
-                response.working_hours.indexOf("-") + 1,
-                response.working_hours.indexOf("PM")
-              )
-              .trim(),
-          };
-          delete data.working_hours;
-          reset(data);
-          setLoading(false);
-        }
+        setLoading(true);
+        const response = await getData();
+        setData(response);
+        reset(response);
       } catch (err: any) {
-        setLoading(false);
-        toast.error("Something went wrong, please try again later!");
+        setError(err?.response?.data ?? err?.message);
         throw new Error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
-  }, [accessUser, reset]);
+  }, [reset]);
 
   const onSubmit = async (data: PharmacyType) => {
     try {
       setLoading(true);
-      const dataToSend: PharmacyUpdateType = {
-        ...data,
-        working_hours: data.from + " AM" + " - " + data.to + " PM",
-      };
-      if (accessUser) {
-        const res = await updateData(dataToSend, accessUser?.token);
-        const data = {
-          ...res,
-          from: res.working_hours
-            .slice(0, res.working_hours.indexOf("AM"))
-            .trim(),
-          to: res.working_hours
-            .slice(
-              res.working_hours.indexOf("-") + 1,
-              res.working_hours.indexOf("PM")
-            )
-            .trim(),
-        };
-        reset(data);
-        dispatch(setInfoAccessUser({ name: data.name }));
-        toast.success("Successfully updated profile.");
-      }
-      setLoading(false);
+      const res = await updateData(data);
+      setData(res);
+      reset(res);
+      dispatch(setInfoAccessUser({ name: res.name }));
+      toast.success("Successfully updated profile.");
     } catch (error: any) {
-      toast.error("Something went wrong, please try again later!");
-      setLoading(false);
+      setError(error?.response?.data ?? error?.message);
       throw new Error(error);
     } finally {
       setLoading(false);
@@ -96,16 +64,16 @@ const InfoPharmacy: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex h-full flex-col justify-between">
       <Header text="General information" />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full h-full flex-col items-center"
+        className="flex h-full w-full flex-col items-center"
       >
         {loading ? (
           <CustomSpinner />
-        ) : (
-          <div className="w-full flex flex-col h-full mt-3 justify-start">
+        ) : data ? (
+          <div className="mt-3 flex h-full w-full flex-col justify-start">
             <FormRow over gap={4}>
               <Input
                 autoComplete="true"
@@ -124,7 +92,7 @@ const InfoPharmacy: React.FC = () => {
                   className="text-sm xxl:!text-lg"
                   value="Working Hours (from - to)"
                 />
-                <div className="flex gap-4 mt-2 items-center">
+                <div className="mt-2 flex items-center gap-4">
                   <TextInput
                     id="from"
                     {...register("from")}
@@ -169,8 +137,17 @@ const InfoPharmacy: React.FC = () => {
                 type="text"
                 color={errors.phone_number && "failure"}
                 className="mt-1"
-                error={errors.phone_number}
-              />
+              >
+                <ErrorMessage
+                  text={
+                    errors?.phone_number?.message
+                      ? errors?.phone_number?.message
+                      : error?.includes("phone_number")
+                        ? errorMessageConvert(error, "phone_number")
+                        : ""
+                  }
+                />
+              </Input>
             </FormRow>
 
             <FormRow>
@@ -185,12 +162,24 @@ const InfoPharmacy: React.FC = () => {
                   {...register("description")}
                   color={errors.description && "failure"}
                   rows={4}
-                  className="text-xs mt-1"
+                  className="mt-1 text-xs focus:!border-blue-700 focus:!ring-blue-700"
                 />
                 <ErrorMessage text={errors.description?.message} />
               </div>
             </FormRow>
+
+            {!error.includes("validation") && (
+              <div className="my-4 flex h-full w-full items-start justify-start lg:!my-0">
+                <ErrorMessage text={error} />
+              </div>
+            )}
           </div>
+        ) : (
+          !error.includes("validation") && (
+            <div className="my-4 flex h-full w-full items-center justify-center lg:!my-0">
+              <ErrorMessage text={error} />
+            </div>
+          )
         )}
         <Footer variant={1} className="mt-3 lg:!mt-0">
           <CustomButton

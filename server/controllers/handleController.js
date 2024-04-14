@@ -61,14 +61,14 @@ const getMyInfo = (Model) =>
   asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
-    if (!user) return res.status(404).json("There is no user with such ID!");
+    if (!user)
+      return res.status(404).json("User not found! Something went wrong!");
 
     const model = await Model.findOne({ user_id: user._id });
     if (!model)
       return res
         .status(404)
         .json(`${Model.modelName} not found! Something went wrong!`);
-
     return res.status(200).json(model);
   });
 
@@ -107,7 +107,7 @@ const updateMyInfo = (Model) =>
     if (!info)
       return res.status(404).json("User not found! Something went wrong!");
 
-    return res.status(200).json(info);
+    return res.status(200).json(info._doc);
   });
 
 module.exports = {

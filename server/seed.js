@@ -12,7 +12,8 @@ const pharmacyData = {
   address: process.env.PH_ADDRESS,
   description: process.env.PH_DESCRIPTION,
   phone_number: process.env.PH_PHONE_NUMBER,
-  working_hours: process.env.PH_HOURS,
+  from: process.env.PH_FROM,
+  to: process.env.PH_TO,
   email: process.env.PH_EMAIL,
   password: process.env.PH_PASSWORD,
 };
@@ -45,7 +46,8 @@ const seedDb = asyncHandler(async () => {
             user_id: newPharmacyUser[0]._id,
             name: pharmacyData.name,
             address: pharmacyData.address,
-            working_hours: pharmacyData.working_hours,
+            from: pharmacyData.from,
+            to: pharmacyData.to,
             description: pharmacyData.description,
             phone_number: pharmacyData.phone_number,
           },
@@ -63,6 +65,7 @@ const seedDb = asyncHandler(async () => {
     session.endSession();
 
     console.log(err.message);
+    throw new Error(err);
   }
 });
 

@@ -96,7 +96,7 @@ const Profile: React.FC<Props> = ({ children }) => {
             <div>
               <p className="mt-1 text-sm xxl:!text-lg">Joined</p>
               <p className="text-md text-center xxl:!text-xl">
-                {formatDate(accessUser?.data.createdAt as Date)}
+                {formatDate(accessUser?.data?.createdAt as Date)}
               </p>
             </div>
             <CustomButton

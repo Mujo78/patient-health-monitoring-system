@@ -181,7 +181,7 @@ const AppointmentResultForm = () => {
                   {...register("diagnose")}
                   disabled={selected.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
-                  className="text-sm xxl:!text-lg"
+                  className="text-sm focus:border-blue-700 focus:ring-blue-700 xxl:!text-lg"
                 />
               </>
 
@@ -215,7 +215,7 @@ const AppointmentResultForm = () => {
                   {...register("other_medicine")}
                   disabled={selected?.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
-                  className="text-sm xxl:!text-lg"
+                  className="text-sm focus:border-blue-700 focus:ring-blue-700 xxl:!text-lg"
                 />
               </>
               <>
@@ -229,7 +229,7 @@ const AppointmentResultForm = () => {
                   {...register("description")}
                   disabled={selected?.finished || laterAppointment}
                   rows={selected.reason !== "" ? 5 : 7}
-                  className="text-sm xxl:!text-lg"
+                  className="text-sm focus:border-blue-700 focus:ring-blue-700 xxl:!text-lg"
                 />
               </>
             </FormRow>

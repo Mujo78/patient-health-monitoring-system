@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const uniqueValidator = require("mongoose-unique-validator");
 
+/**
+ * @type {mongoose.SchemaDefinitionProperty}
+ */
 const pharmacySchema = new mongoose.Schema(
   {
     user_id: {
@@ -33,15 +37,27 @@ const pharmacySchema = new mongoose.Schema(
         message: "Phone number ({VALUE}) must be valid!",
       },
     },
-    working_hours: {
-      type: String,
-      required: [true, "Working hours are required!"],
+    from: {
+      type: Number,
+      required: [true, "Starting hour is required!"],
+      min: 1,
+      max: 12,
+    },
+    to: {
+      type: Number,
+      required: [true, "Ending hour is required!"],
+      min: 1,
+      max: 12,
     },
   },
   {
     timestamps: true,
   }
 );
+
+pharmacySchema.plugin(uniqueValidator, {
+  message: "Phone number already used!",
+});
 
 pharmacySchema.pre("save", async function (next) {
   const count = await this.constructor.countDocuments();

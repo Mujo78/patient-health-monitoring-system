@@ -1,24 +1,5 @@
 import * as Yup from "yup";
 
-export type PharmacyType = {
-  name: string;
-  address: string;
-  description: string;
-  phone_number: string;
-  from: string;
-  to: string;
-};
-
-export interface PharmacyUpdateType {
-  name: string;
-  address: string;
-  description: string;
-  phone_number: string;
-  working_hours: string;
-  from?: string;
-  to?: string;
-}
-
 export const categories = [
   "Pain Relief",
   "Antibiotics",
@@ -42,11 +23,11 @@ export const pharmacyValidationSchema = Yup.object({
   address: Yup.string().required("Address is required!"),
   description: Yup.string().required("Description is required!"),
   from: Yup.string()
-    .required("Working hours are required!")
+    .required("Starting hour is required!")
     .matches(/^[0-9]+$/, "Working hours must contain only numbers!")
     .matches(/^(?:[1-9]|1[0-2])$/, "Number must be between 1 and 12!"),
   to: Yup.string()
-    .required("Working hours are required!")
+    .required("Ending hour is required!")
     .matches(/^[0-9]+$/, "Working hours must contain only numbers!")
     .matches(/^(?:[1-9]|1[0-2])$/, "Number must be between 1 and 12!"),
 });

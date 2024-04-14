@@ -4,15 +4,15 @@ import {
   getMyDepartmentAppointments,
   myDepartmentAppointments,
   myDepartmentResult,
-} from "../../service/departmentSideFunctions";
+} from "../../../service/departmentSideFunctions";
 import { Tabs } from "flowbite-react";
-import ErrorMessage from "../../components/UI/ErrorMessage";
-import useSelectedPage from "../../hooks/useSelectedPage";
-import DepartmentStatistics from "../../components/Department/DepartmentStatistics";
-import DepartmentAppointmentStatistics from "../../components/Department/DepartmentAppointmentStatistics";
-import CustomSpinner from "../../components/UI/CustomSpinner";
-import Header from "../../components/UI/Header";
-import DoctorDepartmentTable from "../../components/Doctor/DoctorDepartmentTable";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
+import useSelectedPage from "../../../hooks/useSelectedPage";
+import DepartmentStatistics from "../../../components/Department/DepartmentStatistics";
+import DepartmentAppointmentStatistics from "../../../components/Department/DepartmentAppointmentStatistics";
+import CustomSpinner from "../../../components/UI/CustomSpinner";
+import Header from "../../../components/UI/Header";
+import DoctorDepartmentTable from "../../../components/Doctor/DoctorDepartmentTable";
 
 const MyDepartment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);

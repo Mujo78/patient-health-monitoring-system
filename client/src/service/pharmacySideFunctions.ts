@@ -1,21 +1,18 @@
-import { apiClient, apiClientAuth } from "../helpers/ApiClient";
+import { apiClientAuth } from "../helpers/ApiClient";
 
-export type PharmacyUpdateType = {
+export type PharmacyType = {
   name: string;
   address: string;
   description: string;
   phone_number: string;
-  working_hours: string;
+  from: string;
+  to: string;
 };
 
 const URL = "/pharmacy/";
 
-export async function getData(token: string) {
-  const response = await apiClient.get(`${URL}/get-me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function getData() {
+  const response = await apiClientAuth.get(`${URL}/get-me`);
   return response.data;
 }
 
@@ -24,12 +21,8 @@ export async function getPharmacy() {
   return response.data;
 }
 
-export async function updateData(data: PharmacyUpdateType, token: string) {
-  const response = await apiClient.patch(URL, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function updateData(data: PharmacyType) {
+  const response = await apiClientAuth.patch(URL, data);
   return response.data;
 }
 
@@ -62,13 +55,8 @@ export type PharmacyDashboardType = {
   recentMedicine: recentMedicine[];
 };
 
-export async function pharmacyDashboard(token: string) {
-  const response = await apiClient.get(`${URL}dashboard`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function pharmacyDashboard() {
+  const response = await apiClientAuth.get(`${URL}dashboard`);
   return response.data;
 }
 
@@ -94,13 +82,8 @@ export type PharmacyDashboardInfoType = {
   usedMedicine: usedMedicine[];
 };
 
-export async function pharmacyDashboardInfo(token: string) {
-  const response = await apiClient.get(`${URL}dashboard-info`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
+export async function pharmacyDashboardInfo() {
+  const response = await apiClientAuth.get(`${URL}dashboard-info`);
   return response.data;
 }
 

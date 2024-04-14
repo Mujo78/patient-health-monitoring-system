@@ -78,7 +78,7 @@ const CustomNavbar: React.FC = () => {
   };
 
   const hasNewNotifications = useMemo(() => {
-    return personNotifications.some((notification) => !notification.read);
+    return personNotifications?.some((notification) => !notification.read);
   }, [personNotifications]);
 
   return (

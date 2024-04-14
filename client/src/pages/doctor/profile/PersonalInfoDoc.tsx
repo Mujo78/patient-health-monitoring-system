@@ -241,7 +241,7 @@ const PersonalInfoDoc: React.FC = () => {
                   {...register("bio")}
                   color={errors.bio && "failure"}
                   rows={5}
-                  className="mt-1 text-xs"
+                  className="mt-1 text-xs focus:border-blue-700 focus:ring-blue-700"
                 />
                 <ErrorMessage text={errors.bio?.message} />
               </>
