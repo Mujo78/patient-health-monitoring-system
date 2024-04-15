@@ -36,8 +36,8 @@ const AppointmentDepartment: React.FC = () => {
         const response = await getDepartments();
         setDepartments(response);
       } catch (error: any) {
-        setError(error.response.data ?? error.message);
-        throw new Error(error.message);
+        setError(error?.response?.data ?? error?.message);
+        throw new Error(error);
       } finally {
         setLoading(false);
       }
@@ -64,8 +64,8 @@ const AppointmentDepartment: React.FC = () => {
         const response = await getDoctorsForDepartment(name);
         setDoctors(response);
       } catch (error: any) {
-        setError(error.response.data ?? error.message);
-        throw new Error(error.message);
+        setError(error?.response?.data ?? error?.message);
+        throw new Error(error);
       } finally {
         setLoadingDoc(false);
       }

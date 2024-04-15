@@ -73,7 +73,7 @@ const PersonalInformation: React.FC = () => {
           setMessage(response.message);
         }
       } catch (err: any) {
-        setMessage(err.response.data ?? err.message);
+        setMessage(err?.response?.data ?? err?.message);
         toast.error("An error occurred while updating your profile!");
         throw new Error(err);
       } finally {

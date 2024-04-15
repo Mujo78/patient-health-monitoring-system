@@ -24,13 +24,14 @@ import { Medicine } from "../../../features/medicine/medicineSlice";
 import { isFulfilled } from "@reduxjs/toolkit";
 import CancelAppointmentButton from "../../../components/Appointment/CancelAppointmentButton";
 import { getAllMedicine } from "../../../service/pharmacySideFunctions";
+import ErrorMessage from "../../../components/UI/ErrorMessage";
 
 const AppointmentResultForm = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [medicineData, setMedicineData] = useState<Medicine[]>();
   const [error, setError] = useState<string>();
   const navigate = useNavigate();
-  const { selectedAppointment: selected } = useSelector(
+  const { selectedAppointment: selected, message } = useSelector(
     appointment,
     shallowEqual,
   );
@@ -72,8 +73,6 @@ const AppointmentResultForm = () => {
             );
             navigate("../", { replace: true });
             toast.success("Successfully finished appointment.");
-          } else {
-            toast.error(action.payload);
           }
         },
       );
@@ -233,6 +232,8 @@ const AppointmentResultForm = () => {
                 />
               </>
             </FormRow>
+
+            {message && <ErrorMessage text={message} />}
           </div>
         </div>
       )}

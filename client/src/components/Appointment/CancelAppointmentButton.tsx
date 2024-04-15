@@ -10,10 +10,16 @@ import toast from "react-hot-toast";
 type Props = {
   variant: "icon" | "text";
   thenFn?: () => void;
+  showToast?: boolean;
   id: string;
 };
 
-const CancelAppointmentButton: React.FC<Props> = ({ variant, id, thenFn }) => {
+const CancelAppointmentButton: React.FC<Props> = ({
+  variant,
+  id,
+  thenFn,
+  showToast,
+}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -28,7 +34,7 @@ const CancelAppointmentButton: React.FC<Props> = ({ variant, id, thenFn }) => {
           toast.success("Appointment cancelled");
           navigate("../", { replace: true });
         } else {
-          toast.error(action.payload);
+          if (showToast) toast.error(action.payload);
         }
       });
     }

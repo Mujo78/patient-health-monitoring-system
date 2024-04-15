@@ -19,7 +19,7 @@ const PharmacyInfo = () => {
         const response = await getPharmacy();
         setPharmacy(response);
       } catch (err: any) {
-        setError(err.response.data ?? err.message);
+        setError(err?.response?.data ?? err?.message);
         throw new Error(err);
       } finally {
         setLoading(false);

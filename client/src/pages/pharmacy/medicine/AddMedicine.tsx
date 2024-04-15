@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   MedicineDataType,
   addNewMedicine,
@@ -31,16 +31,20 @@ import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
 import { categories } from "../../../validations/pharmacyValidation";
+import { isFulfilled } from "@reduxjs/toolkit";
+import Header from "../../../components/UI/Header";
 
 const AddMedicine: React.FC = () => {
-  const { status, message } = useSelector(medicine);
-  const { register, handleSubmit, formState, control, reset } =
-    useForm<MedicineType>({ resolver: yupResolver(medicineValidationSchema) });
-  const { isDirty, errors } = formState;
   const [img, setImg] = useState<string | null>(null);
   const [selectedImg, setSelectedImg] = useState<File | null>();
   const fileInputRef = useRef(null);
+
+  const { register, handleSubmit, formState, control, reset } =
+    useForm<MedicineType>({ resolver: yupResolver(medicineValidationSchema) });
+  const { isDirty, errors } = formState;
+
   const dispatch = useAppDispatch();
+  const { status, message } = useSelector(medicine, shallowEqual);
 
   useSelectedPage("Add medicine");
 
@@ -59,11 +63,11 @@ const AddMedicine: React.FC = () => {
   const onSubmit = (data: MedicineType) => {
     const newData: MedicineDataType = {
       ...data,
-      photo: selectedImg ? selectedImg : data.photo,
+      photo: selectedImg ?? data.photo,
     };
 
-    dispatch(addNewMedicine(newData)).then((action) => {
-      if (typeof action.payload === "object") {
+    dispatch(addNewMedicine(newData)).then((action: any) => {
+      if (isFulfilled(action)) {
         toast.success("Successfully added new medicine!");
         setImg(null);
         setSelectedImg(null);
@@ -78,21 +82,19 @@ const AddMedicine: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex justify-center items-center w-full">
-      <div className="flex-grow flex-col flex h-full justify-between">
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="flex h-full flex-grow flex-col justify-between">
         <form
           onSubmit={handleSubmit(onSubmit)}
           encType="multipart/form-data"
-          className="flex w-full h-full flex-col items-center"
+          className="flex h-full w-full flex-col items-center"
         >
           {status === "loading" ? (
             <CustomSpinner />
           ) : (
-            <div className="h-fit lg:!h-full w-full lg:!px-8 xl:!px-16 xl:!w-3/4 flex flex-col gap-2">
-              <div className=" flex lg:gap-3 flex-col h-full px-3 justify-center xl:!gap-2 xxl:!gap-6">
-                <h1 className="text-2xl xxl:!text-3xl font-semibold mt-2 text-center">
-                  Add new medicine
-                </h1>
+            <div className="flex h-fit w-full flex-col gap-2 lg:!h-full lg:!px-8 xl:!w-3/4 xl:!px-16">
+              <div className=" flex h-full flex-col justify-center px-3 lg:gap-3 xl:!gap-2 xxl:!gap-6">
+                <Header text="Add new Medicine" size={2} />
                 <FormRow over gap={4} className="flex-col md:flex-row">
                   <Input
                     autoComplete="true"
@@ -103,12 +105,12 @@ const AddMedicine: React.FC = () => {
                     type="text"
                     color={errors.name && "failure"}
                   >
-                    <p className="text-red-600 text-xs xxl:!text-[1rem]">
+                    <p className="text-xs text-red-600 xxl:!text-[1rem]">
                       {errors.name?.message
                         ? errors.name.message
-                        : message.includes("name")
-                        ? errorMessageConvert(message, "name")
-                        : ""}
+                        : message?.includes("name")
+                          ? errorMessageConvert(message, "name")
+                          : ""}
                     </p>
                   </Input>
 
@@ -157,7 +159,7 @@ const AddMedicine: React.FC = () => {
                   />
                 </FormRow>
 
-                <FormRow className="lg:!items-center flex-col lg:flex-row w-full">
+                <FormRow className="w-full flex-col lg:flex-row lg:!items-center">
                   <Input
                     label="Manufacturer"
                     id="manufacturer"
@@ -167,7 +169,7 @@ const AddMedicine: React.FC = () => {
                     color={errors.manufacturer && "failure"}
                     error={errors.manufacturer}
                   />
-                  <div className="ml-auto flex justify-center flex-col w-full lg:!w-2/3">
+                  <div className="ml-auto flex w-full flex-col justify-center lg:!w-2/3">
                     <Controller
                       control={control}
                       name="available"
@@ -191,7 +193,7 @@ const AddMedicine: React.FC = () => {
                     className="text-sm xxl:!text-lg"
                     value="Photo URL (optional)"
                   />
-                  <div className="flex flex-wrap flex-col lg:!flex-row gap-4 w-full items-center">
+                  <div className="flex w-full flex-col flex-wrap items-center gap-4 lg:!flex-row">
                     <div className="relative w-full lg:!w-2/3">
                       <TextInput
                         id="photo"
@@ -214,12 +216,12 @@ const AddMedicine: React.FC = () => {
                         selectedImg && img ? (
                           <div>
                             <HiXCircle
-                              className="text-red-600 ml-auto h-auto w-5 xxl:!w-8 cursor-pointer hover:scale-125 mt-1 hover:transition-all hover:duration-300"
+                              className="ml-auto mt-1 h-auto w-5 cursor-pointer text-red-600 hover:scale-125 hover:transition-all hover:duration-300 xxl:!w-8"
                               onClick={handleDelete}
                             />
                             <img
                               src={img}
-                              className="w-44 xxl:!w-56 h-auto"
+                              className="h-auto w-44 xxl:!w-56"
                               alt="Selected Image"
                             />
                           </div>
@@ -231,11 +233,11 @@ const AddMedicine: React.FC = () => {
                     >
                       <div className="w-full">
                         <label
-                          className={`block text-sm w-full xl:!text-md xxl:!text-lg bg-white p-2 cursor-pointer ${
+                          className={`xl:!text-md block w-full cursor-pointer bg-white p-2 text-sm xxl:!text-lg ${
                             errors.photo
-                              ? "text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
-                              : "text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
-                          }  border-2 rounded-xl text-center`}
+                              ? "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                              : "border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white"
+                          }  rounded-xl border-2 text-center`}
                         >
                           {selectedImg ? "File selected" : "Choose file"}
                           <input
@@ -271,9 +273,9 @@ const AddMedicine: React.FC = () => {
                       {...register("description")}
                       color={errors.description && "failure"}
                       rows={5}
-                      className="text-xs mt-1"
+                      className="mt-1 text-xs"
                     />
-                    <div className="h-6 mt-1">
+                    <div className="mt-1 h-6">
                       {errors.description ? (
                         <ErrorMessage text={errors.description?.message} />
                       ) : (
@@ -287,18 +289,18 @@ const AddMedicine: React.FC = () => {
               </div>
             </div>
           )}
-          <Footer variant={1} className="pb-14 sm:!pb-0 mt-5">
+          <Footer variant={1} className="mt-5 pb-14 sm:!pb-0">
             <CustomButton
               type="submit"
               className="m-3"
               disabled={!isDirty || status === "loading"}
             >
-              <p className="xxl:text-xl">Save</p>
+              <p className="xxl:text-lg">Save</p>
             </CustomButton>
           </Footer>
         </form>
       </div>
-      <div className="bg-photo-second-vertical hidden lg:flex w-1/6 h-full" />
+      <div className="hidden h-full w-1/6 bg-photo-second-vertical lg:flex" />
     </div>
   );
 };

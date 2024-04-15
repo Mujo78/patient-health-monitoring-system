@@ -70,26 +70,26 @@ const PatientAppointmentCard: React.FC = () => {
                   <p className="hidden text-gray-500">Details</p>
                   <hr />
                   <p className="flex justify-between text-gray-500">
-                    <span>Age :</span>
+                    Age :
                     <span className="ml-auto text-black">
                       {yearCalc(selected.patient_id.date_of_birth)}
                     </span>
                   </p>
                   <p className="flex justify-between text-gray-500">
-                    <span>Address :</span>
+                    Address :
                     <span className="ml-auto text-black">
                       {selected?.patient_id.address}
                     </span>
                   </p>
                   <p className="flex justify-between text-gray-500">
-                    <span>Blood type :</span>
+                    Blood type :
                     <span className="ml-auto text-black">
                       {selected?.patient_id.blood_type}
                     </span>
                   </p>
                   {selected?.patient_id.height && (
                     <p className="flex justify-between text-gray-500">
-                      <span>Height (m) :</span>
+                      Height (m) :
                       <span className="ml-auto text-black">
                         {selected?.patient_id.height}
                       </span>
@@ -97,14 +97,14 @@ const PatientAppointmentCard: React.FC = () => {
                   )}
                   {selected?.patient_id.weight && (
                     <p className="flex justify-between text-gray-500">
-                      <span>Weight (kg) :</span>
+                      Weight (kg) :
                       <span className="ml-auto text-black">
                         {selected?.patient_id.weight}
                       </span>
                     </p>
                   )}
                   <p className="flex justify-between text-gray-500">
-                    <span>Gender :</span>
+                    Gender :
                     <span className="ml-auto text-black">
                       {selected?.patient_id.gender}
                     </span>

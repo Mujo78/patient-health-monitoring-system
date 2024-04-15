@@ -94,6 +94,7 @@ const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
             <CancelAppointmentButton
               thenFn={cancelAppointmentNow}
               variant="icon"
+              showToast
               id={data._id}
             />
           )

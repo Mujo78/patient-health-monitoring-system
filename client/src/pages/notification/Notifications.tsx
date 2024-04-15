@@ -81,7 +81,7 @@ const Notifications: React.FC = () => {
     <>
       {status === "loading" && !id ? (
         <CustomSpinner size="lg" />
-      ) : personNotifications && personNotifications.length > 0 ? (
+      ) : personNotifications && personNotifications?.length > 0 ? (
         <div className="flex h-full pb-16 sm:!pb-2 lg:!divide-x">
           <div
             id="content"
@@ -195,7 +195,7 @@ const Notifications: React.FC = () => {
           <ErrorMessage text={message} />
         </div>
       ) : (
-        personNotifications.length === 0 &&
+        personNotifications?.length === 0 &&
         status === "idle" && <NoDataAvailable className="mt-12" />
       )}
     </>

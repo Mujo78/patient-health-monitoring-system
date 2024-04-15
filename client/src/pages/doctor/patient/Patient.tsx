@@ -106,10 +106,7 @@ const Patient: React.FC = () => {
         </div>
       ) : (
         <div className="mt-12 text-center">
-          <ErrorMessage
-            className="md:!text-md text-sm xl:!text-lg xxl:!text-2xl"
-            text={message}
-          />
+          <ErrorMessage text={message} />
         </div>
       )}
     </div>

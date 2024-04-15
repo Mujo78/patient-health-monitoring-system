@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -14,7 +14,6 @@ import useSelectedPage from "../../hooks/useSelectedPage";
 import CustomSpinner from "../../components/UI/CustomSpinner";
 import { MyEvent } from "../../service/appointmentSideFunctions";
 import toast from "react-hot-toast";
-import { isRejected } from "@reduxjs/toolkit";
 import ErrorMessage from "../../components/UI/ErrorMessage";
 import { useAppDispatch } from "../../app/hooks";
 
@@ -25,19 +24,19 @@ type Props = {
 };
 
 const AppointmentsCalendarPreview: React.FC<Props> = ({ titleFormat }) => {
-  const [error, setError] = useState<string>();
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { personAppointments, status } = useSelector(appointment, shallowEqual);
+  const { personAppointments, status, message } = useSelector(
+    appointment,
+    shallowEqual,
+  );
 
   useSelectedPage("My appointments");
 
   useEffect(() => {
     if (!id) {
-      dispatch(getAppointmentsForPerson()).then((action: any) => {
-        if (isRejected(action)) setError(action.payload);
-      });
+      dispatch(getAppointmentsForPerson());
     }
 
     return () => {
@@ -62,11 +61,11 @@ const AppointmentsCalendarPreview: React.FC<Props> = ({ titleFormat }) => {
   };
 
   useEffect(() => {
-    if (error)
+    if (status === "failed")
       toast.error(
         "Something went wrong while getting your appointments data, please try again later!",
       );
-  }, [error]);
+  }, [status]);
 
   return (
     <>
@@ -91,7 +90,7 @@ const AppointmentsCalendarPreview: React.FC<Props> = ({ titleFormat }) => {
               />
             </>
           ) : (
-            error && <ErrorMessage text={error} />
+            status === "failed" && <ErrorMessage text={message} />
           )}
         </div>
       )}

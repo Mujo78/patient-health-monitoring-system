@@ -34,7 +34,7 @@ export const getOneNotification = createAsyncThunk<
   try {
     return await notificationServices.getOneNotification(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -48,7 +48,7 @@ export const getPersonNotifications = createAsyncThunk<
   try {
     return await notificationServices.getAllNotificationsForPerson();
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -62,7 +62,7 @@ export const deleteAllNotifications = createAsyncThunk<
   try {
     return await notificationServices.deleteAllNotifications();
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -76,7 +76,7 @@ export const deleteOneNotification = createAsyncThunk<
   try {
     return await notificationServices.deleteOneNotification(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -90,7 +90,7 @@ export const markOneAsRead = createAsyncThunk<
   try {
     return await notificationServices.markOneNotificationAsRead(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -104,7 +104,7 @@ export const markAllAsRead = createAsyncThunk<
   try {
     return await notificationServices.markAllAsRead();
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }

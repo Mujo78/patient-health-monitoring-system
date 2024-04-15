@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect, useRef } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   getMedicine,
   medicine,
@@ -18,30 +18,35 @@ import MedicineCard from "../../../components/Pharmacy/MedicineCard";
 
 const MedicineOverview: React.FC = () => {
   const navigate = useNavigate();
-  const { medicine: med, status, message } = useSelector(medicine);
+  const {
+    medicine: med,
+    status,
+    message,
+  } = useSelector(medicine, shallowEqual);
   const query = useQuery();
-  const page = Number(query.get("page")) || 1;
+  const page = Number(query.get("page")) ?? 1;
   const medicineId = query.get("id");
   const searchQuery = query.get("searchQuery") || "";
   const category = query.get("category") || "";
   const dispatch = useAppDispatch();
   const lastQuery = useRef<string>();
 
-  useSelectedPage("Medicine overview");
+  const queryParamsSame = query.toString() !== lastQuery.current;
+
+  const handleGetMedicine = useCallback(() => {
+    lastQuery.current = query.toString();
+    dispatch(getMedicine({ page, searchQuery, category }));
+    navigate(`/medicine?${query.toString()}`);
+  }, [page, dispatch, searchQuery, category, navigate, query]);
 
   useEffect(() => {
-    if (query.toString() !== lastQuery.current) {
-      lastQuery.current = query.toString();
-      dispatch(getMedicine({ page, searchQuery, category }));
-      navigate(`/medicine?${query.toString()}`);
-    }
-  }, [page, dispatch, navigate, category, searchQuery, query]);
+    if (queryParamsSame) handleGetMedicine();
+  }, [queryParamsSame, handleGetMedicine]);
 
   const handleNavigate = (newPage: number) => {
     if (page !== newPage) {
       const page = newPage;
       query.set("page", page.toString());
-      dispatch(getMedicine({ page, searchQuery, category }));
       navigate(`/medicine?${query.toString()}`);
     }
   };
@@ -51,62 +56,60 @@ const MedicineOverview: React.FC = () => {
     navigate(`/medicine?${query.toString()}`);
   };
 
+  useSelectedPage("Medicine overview");
+
   return (
     <div className="h-full">
-      <div className="h-full flex-col lg:flex-row transition-all px-2 duration-300 lg:!divide-x flex justify-between w-full">
+      <div className="flex h-full w-full flex-col justify-between px-2 transition-all duration-300 lg:flex-row lg:!divide-x">
         {status === "loading" ? (
           <CustomSpinner size="lg" />
         ) : (
           <div className="w-full">
-            <div className="flex-grow w-full flex flex-col h-full justify-between">
+            <div className="flex h-full w-full flex-grow flex-col justify-between">
               <MedicineSearchHeader />
-              {med?.data && med?.data?.length > 0 ? (
-                <div className="flex flex-col justify-between h-full pb-12 md:!pb-0">
-                  <div className="w-full h-fit flex-col md:!flex-row flex-wrap flex xxl:mt-2 justify-center xl:!mt-4">
-                    {med?.data?.map((m) => (
-                      <MedicineCard
-                        key={m._id}
-                        medicine={m}
-                        onClick={() => handleShow(m._id)}
-                        className={medicineId === m._id ? "!bg-green-50" : ""}
-                      />
-                    ))}
-                  </div>
-                  <Footer variant={1}>
-                    <Pagination
-                      page={Number(med?.currentPage)}
-                      totalPages={Number(med?.numOfPages)}
-                      handleNavigate={handleNavigate}
-                    />
-                  </Footer>
+              {status === "failed" &&
+              (!medicineId || message?.includes("Network")) ? (
+                <div className="mt-12 flex h-full w-full flex-col items-center justify-center">
+                  <ErrorMessage text={message} className="my-auto" />
                 </div>
               ) : (
-                status === "failed" &&
-                !medicineId && (
-                  <div className="h-full w-full flex-col flex justify-center items-center mt-12">
-                    <ErrorMessage
-                      text={message || "There are no results!"}
-                      size="md"
-                      className="my-auto"
-                    />
+                med?.data &&
+                med?.data?.length > 0 && (
+                  <div className="flex h-full flex-col justify-between pb-12 md:!pb-0">
+                    <div className="flex h-fit w-full flex-col flex-wrap justify-center md:!flex-row xl:!mt-4 xxl:mt-2">
+                      {med?.data?.map((m) => (
+                        <MedicineCard
+                          key={m._id}
+                          medicine={m}
+                          onClick={() => handleShow(m._id)}
+                          className={medicineId === m._id ? "!bg-green-50" : ""}
+                        />
+                      ))}
+                    </div>
+                    <Footer variant={1}>
+                      <Pagination
+                        page={Number(med?.currentPage)}
+                        totalPages={Number(med?.numOfPages)}
+                        handleNavigate={handleNavigate}
+                      />
+                    </Footer>
                   </div>
                 )
               )}
             </div>
           </div>
         )}
-        <div className="w-full lg:!w-1/3 h-full">
-          {!medicineId && status !== "loading" ? (
-            <div className="h-full justify-center items-center text-center hidden md:!flex">
-              <ErrorMessage
-                className="text-md xxl:!text-2xl"
-                text="You haven't selected any medicine to review"
-              />
-            </div>
-          ) : (
-            <OneMedicine />
-          )}
-        </div>
+        {!message?.includes("Network") && (
+          <div className="h-full w-full lg:!w-1/3">
+            {!medicineId && status !== "loading" ? (
+              <div className="hidden h-full items-center justify-center text-center md:!flex">
+                <ErrorMessage text="You haven't selected any medicine to review" />
+              </div>
+            ) : (
+              <OneMedicine />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

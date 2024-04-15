@@ -70,43 +70,49 @@ const Medicine: React.FC = () => {
   return (
     <div className="h-fit md:!h-full">
       <div className="h-full transition-all duration-300">
-        <div className="flex h-full w-full flex-col gap-4 md:!gap-0 lg:!flex-row lg:!gap-3 lg:divide-x lg:pl-3">
-          {status === "loading" ? (
-            <div className="w-full lg:!w-2/3">
-              <CustomSpinner size="xl" />
-            </div>
-          ) : (
-            <div className=" flex h-full w-full flex-col justify-start px-2 lg:!w-2/3 lg:!px-0">
-              <MedicineSearchHeader />
-              {med && med?.data?.length > 0 && status !== "failed" ? (
-                <div className="flex h-full flex-col justify-between">
-                  <div className="flex h-fit w-full flex-col flex-wrap justify-center md:!flex-row xxl:mt-2">
-                    {med?.data?.map((m: MedicineType) => (
-                      <MedicineCard
-                        key={m._id}
-                        medicine={m}
-                        onClick={() => handleShow(m)}
-                      />
-                    ))}
-                  </div>
+        {message?.includes("Network") ? (
+          <div className="mt-12 flex h-full w-full flex-col items-center justify-center">
+            <ErrorMessage text={message} className="my-auto" />
+          </div>
+        ) : (
+          <div className="flex h-full w-full flex-col gap-4 md:!gap-0 lg:!flex-row lg:!gap-3 lg:divide-x lg:pl-3">
+            {status === "loading" ? (
+              <div className="w-full lg:!w-2/3">
+                <CustomSpinner size="xl" />
+              </div>
+            ) : (
+              <div className=" flex h-full w-full flex-col justify-start px-2 lg:!w-2/3 lg:!px-0">
+                <MedicineSearchHeader />
+                {med && med?.data?.length > 0 && status !== "failed" ? (
+                  <div className="flex h-full flex-col justify-between">
+                    <div className="flex h-fit w-full flex-col flex-wrap justify-center md:!flex-row xxl:mt-2">
+                      {med?.data?.map((m: MedicineType) => (
+                        <MedicineCard
+                          key={m._id}
+                          medicine={m}
+                          onClick={() => handleShow(m)}
+                        />
+                      ))}
+                    </div>
 
-                  <Footer variant={1}>
-                    <Pagination
-                      page={Number(med?.currentPage)}
-                      totalPages={Number(med?.numOfPages)}
-                      handleNavigate={handleNavigate}
-                    />
-                  </Footer>
-                </div>
-              ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center pb-6 lg:!pb-0">
-                  <ErrorMessage text={message} className="my-auto" />
-                </div>
-              )}
-            </div>
-          )}
-          <PharmacyInfo />
-        </div>
+                    <Footer variant={1}>
+                      <Pagination
+                        page={Number(med?.currentPage)}
+                        totalPages={Number(med?.numOfPages)}
+                        handleNavigate={handleNavigate}
+                      />
+                    </Footer>
+                  </div>
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center pb-6 lg:!pb-0">
+                    <ErrorMessage text={message} className="my-auto" />
+                  </div>
+                )}
+              </div>
+            )}
+            <PharmacyInfo />
+          </div>
+        )}
       </div>
 
       {medicineData && (

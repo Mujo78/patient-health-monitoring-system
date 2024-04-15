@@ -110,7 +110,7 @@ export const changePassword = createAsyncThunk<
   try {
     return await authServices.changeMyPassword(data);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -202,7 +202,7 @@ export const updateUser = createAsyncThunk<
     const response = await authServices.updateUser(data);
     return response;
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -214,9 +214,9 @@ export const deactivateAccount = createAsyncThunk<
   { state: RootState }
 >("/auth/deactivate", async (data, thunkAPI) => {
   try {
-    return authServices.deactivateMyAccount(data);
+    return await authServices.deactivateMyAccount(data);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -332,13 +332,18 @@ export const authSlice = createSlice({
         }
         localStorage.setItem("user", JSON.stringify(state.accessUser));
       })
+      .addCase(deactivateAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.message = action.payload as string;
+      })
+
       .addCase(changePassword.rejected, (state, action) => {
         state.status = "failed";
         state.message = action.payload as string;
       })
       .addCase(changePassword.fulfilled, (state, action) => {
-        state.status = "idle";
         if (state.accessUser) {
+          state.status = "idle";
           state.accessUser = action.payload;
         }
         localStorage.setItem("user", JSON.stringify(state.accessUser));

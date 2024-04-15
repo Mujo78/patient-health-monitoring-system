@@ -70,19 +70,22 @@ const GeneralSettings: React.FC = () => {
   };
 
   const closeModal = () => {
-    if (deactivate) setDeactivate(false);
+    if (deactivate) {
+      dispatch(reset());
+      setDeactivate(false);
+    }
   };
 
   const handleOperation = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (deactivate) {
       const data: { active: boolean } = { active: false };
-      dispatch(deactivateAccount(data)).then((action) => {
+      dispatch(deactivateAccount(data)).then((action: any) => {
         if (isFulfilled(action)) {
           setDeactivate(false);
           dispatch(logout());
         } else {
-          toast.error("Something went wrong, please try again later!");
+          toast.error(action.payload ?? action.error.message);
         }
       });
     }
@@ -129,15 +132,17 @@ const GeneralSettings: React.FC = () => {
                       type="email"
                     />
 
-                    <ErrorMessage
-                      text={
-                        errors.email?.message
-                          ? errors.email.message
-                          : errorMessage?.includes("email")
-                            ? errorMessageConvert(errorMessage, "email")
-                            : errorMessage
-                      }
-                    />
+                    {!deactivate && (
+                      <ErrorMessage
+                        text={
+                          errors.email?.message
+                            ? errors.email.message
+                            : errorMessage?.includes("email")
+                              ? errorMessageConvert(errorMessage, "email")
+                              : errorMessage
+                        }
+                      />
+                    )}
                   </div>
                 </>
               </FormRow>

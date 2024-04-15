@@ -25,19 +25,23 @@ import Input from "../UI/Input";
 import { useQuery } from "../../hooks/useQuery";
 import FormRow from "../UI/FormRow";
 import { categories } from "../../validations/pharmacyValidation";
+import { isFulfilled } from "@reduxjs/toolkit";
 
 const OneMedicine: React.FC = () => {
-  const query = useQuery();
-  const id = query.get("id");
-  const dispatch = useAppDispatch();
-  const { specificMedicine, message, status } = useSelector(medicine);
-  const navigate = useNavigate();
-  const { register, handleSubmit, formState, control, reset } =
-    useForm<MedicineType>({ resolver: yupResolver(medicineValidationSchema) });
-  const { errors, isDirty } = formState;
   const [img, setImg] = useState<string | null>(null);
   const [selectedImg, setSelectedImg] = useState<File | null>();
   const fileInputRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const query = useQuery();
+  const id = query.get("id");
+  const { register, handleSubmit, formState, control, reset } =
+    useForm<MedicineType>({ resolver: yupResolver(medicineValidationSchema) });
+  const { errors, isDirty } = formState;
+
+  const dispatch = useAppDispatch();
+  const { specificMedicine, message, status } = useSelector(medicine);
 
   useEffect(() => {
     let objectURL: string;
@@ -75,7 +79,7 @@ const OneMedicine: React.FC = () => {
         ...newData,
         _id: id,
         pharmacy_id: specificMedicine.pharmacy_id,
-        photo: selectedImg ? selectedImg : newData.photo,
+        photo: selectedImg ?? newData.photo,
       };
 
       if (
@@ -83,7 +87,7 @@ const OneMedicine: React.FC = () => {
         (selectedImg && selectedImg.name !== specificMedicine.photo)
       ) {
         dispatch(updateMedicineById({ id, data })).then((action) => {
-          if (typeof action.payload === "object") {
+          if (isFulfilled(action)) {
             toast.success("Successfully updated medicine!");
             navigate("/medicine");
           }
@@ -95,18 +99,19 @@ const OneMedicine: React.FC = () => {
   const navigateBack = () => {
     navigate("/medicine", { replace: true });
   };
+
   return (
-    <div className="lg:!overflow-auto w-full h-full" id="content">
+    <div className="h-full w-full lg:!overflow-auto" id="content">
       {id && specificMedicine ? (
-        <div className="overflow-hidden">
+        <div className="overflow-hidden ">
           <div className="h-4">
             <HiXMark
               onClick={navigateBack}
-              className="ml-auto my-3 transition-all duration-300 w-6 h-auto cursor-pointer hover:scale-125"
+              className="my-3 ml-auto h-auto w-6 cursor-pointer transition-all duration-300 hover:scale-125"
             />
           </div>
           {img ? (
-            <img src={img} className="mx-auto mb-4 w-24 mt-2 md:!w-52 h-auto" />
+            <img src={img} className="mx-auto mb-4 mt-2 h-auto w-24 md:!w-52" />
           ) : (
             <CustomMedicineImg
               url={
@@ -114,16 +119,16 @@ const OneMedicine: React.FC = () => {
                   ? `http://localhost:3001/uploads/${specificMedicine.photo}`
                   : specificMedicine.photo
               }
-              className="mx-auto w-24 mt-3 md:!w-52 h-auto"
+              className="mx-auto mt-3 h-auto w-24 md:!w-52"
             />
           )}
 
           <form
             onSubmit={handleSubmit(onSubmit)}
             encType="multipart/form-data"
-            className="flex w-full h-full overflow-y-auto flex-col px-4 items-center pb-16 sm:!pb-2 "
+            className="flex h-full w-full flex-col items-center overflow-y-auto px-4 pb-16 sm:!pb-2 "
           >
-            <div className=" flex text-xs gap-3 flex-col w-full justify-center">
+            <div className=" flex w-full flex-col justify-center gap-3 text-xs">
               <FormRow>
                 <Input
                   autoComplete="true"
@@ -193,7 +198,7 @@ const OneMedicine: React.FC = () => {
                   error={errors.manufacturer}
                 />
               </FormRow>
-              <div className="relative w-full flex flex-col gap-1">
+              <div className="relative flex w-full flex-col gap-1">
                 <div>
                   <Input
                     label="Photo URL (optional)"
@@ -209,11 +214,11 @@ const OneMedicine: React.FC = () => {
                 <p className="text-center xxl:text-xl">OR</p>
                 <div className="flex-grow">
                   <label
-                    className={`block w-full bg-white p-2.5 xxl:text-xl cursor-pointer ${
+                    className={`block w-full cursor-pointer bg-white p-2.5 xxl:text-xl ${
                       errors.photo
-                        ? "text-red-600 border-red-600 hover:bg-red-600 hover:text-white"
-                        : "text-blue-700 border-blue-700 hover:bg-blue-700 hover:text-white"
-                    }  border-2 rounded-xl text-center`}
+                        ? "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                        : "border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white"
+                    }  rounded-xl border-2 text-center`}
                   >
                     {selectedImg ? "File selected" : "Choose file"}
                     <input
@@ -247,9 +252,9 @@ const OneMedicine: React.FC = () => {
                     {...register("description")}
                     color={errors.description && "failure"}
                     rows={5}
-                    className="text-xs mt-1"
+                    className="mt-1 text-xs"
                   />
-                  <div className="h-6 mt-1">
+                  <div className="mt-1 h-6">
                     {errors.description ? (
                       <ErrorMessage text={errors.description?.message} />
                     ) : (
@@ -285,9 +290,9 @@ const OneMedicine: React.FC = () => {
         </div>
       ) : (
         id &&
-        status === "failed" && (
-          <div className="text-center mt-14">
-            <ErrorMessage text={message} className="text-md xxl:!text-xl" />
+        message && (
+          <div className="mt-14 text-center">
+            <ErrorMessage text={message} />
           </div>
         )
       )}

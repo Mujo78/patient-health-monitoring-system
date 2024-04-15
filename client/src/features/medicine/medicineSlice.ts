@@ -76,7 +76,7 @@ export const getMedicine = createAsyncThunk<
   try {
     return await medicineService.getAllMedicine(page, searchQuery, category);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -90,7 +90,7 @@ export const getMedicineById = createAsyncThunk<
   try {
     return await medicineService.getMedicine(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -104,7 +104,7 @@ export const updateMedicineById = createAsyncThunk<
   try {
     return await medicineService.updateMedicine(id, data);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -136,7 +136,7 @@ export const addNewMedicine = createAsyncThunk<
   try {
     return await medicineService.addMedicine(data);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -187,6 +187,7 @@ export const medicineSlice = createSlice({
       .addCase(getMedicineById.fulfilled, (state, action) => {
         state.specificMedicine = action.payload;
         state.status = "idle";
+        state.message = "";
       })
       .addCase(getMedicineById.pending, (state) => {
         state.status = "loading";

@@ -92,7 +92,7 @@ export const bookAppointment = createAsyncThunk<
   try {
     return await appointmentService.makeAppointment(appointmentData);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -106,7 +106,7 @@ export const editAppointment = createAsyncThunk<
   try {
     return await appointmentService.editAppointment(id, editObjectData);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -120,7 +120,7 @@ export const makeAppointmentFinished = createAsyncThunk<
   try {
     return await appointmentService.finishAppointment(id, finishAppointment);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -134,7 +134,7 @@ export const getAppointmentsForADay = createAsyncThunk<
   try {
     return await appointmentService.getAppointmentsForDay(date);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -152,7 +152,7 @@ export const getAppointmentsForPerson = createAsyncThunk<
     const _id = id || "";
     return await appointmentService.getAppointmentForPerson(_id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -166,7 +166,7 @@ export const getSelectedAppointment = createAsyncThunk<
   try {
     return await appointmentService.getAppointment(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -180,7 +180,7 @@ export const cancelAppointment = createAsyncThunk<
   try {
     return await appointmentService.deleteAppointment(id);
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }

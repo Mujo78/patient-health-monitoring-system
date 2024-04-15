@@ -117,9 +117,11 @@ const Appointment: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center">
-          <ErrorMessage text={message} />
-        </div>
+        status === "failed" && (
+          <div className="flex h-full items-center justify-center">
+            <ErrorMessage text={message} />
+          </div>
+        )
       )}
     </>
   );
