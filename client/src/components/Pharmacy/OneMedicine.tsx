@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+  MedicineType,
   getMedicineById,
   medicine,
   resetSpecificMedicine,
@@ -13,10 +14,7 @@ import CustomMedicineImg from "./CustomMedicineImg";
 import { HiXMark } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  MedicineType,
-  medicineValidationSchema,
-} from "../../validations/medicineValidation";
+import { medicineValidationSchema } from "../../validations/medicineValidation";
 import { Label, Select, Textarea, ToggleSwitch } from "flowbite-react";
 import Footer from "../UI/Footer";
 import CustomButton from "../UI/CustomButton";

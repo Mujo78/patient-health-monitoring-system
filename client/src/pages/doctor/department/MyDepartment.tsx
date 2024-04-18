@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-  getMyDepartment,
-  getMyDepartmentAppointments,
   myDepartmentAppointments,
   myDepartmentResult,
 } from "../../../service/departmentSideFunctions";
@@ -13,50 +11,22 @@ import DepartmentAppointmentStatistics from "../../../components/Department/Depa
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import Header from "../../../components/UI/Header";
 import DoctorDepartmentTable from "../../../components/Doctor/DoctorDepartmentTable";
+import useAPI from "../../../hooks/useAPI";
 
 const MyDepartment: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingAppointments, setLoadingAppointments] =
-    useState<boolean>(false);
-  const [department, setDepartment] = useState<myDepartmentResult>();
-  const [departmentAppointments, setDepartmentAppointments] =
-    useState<myDepartmentAppointments>();
-  const [error, setError] = useState<string>("");
-  const [appointmentsError, setAppointmentsError] = useState<string>("");
+  const {
+    data: department,
+    loading,
+    error,
+  } = useAPI<myDepartmentResult>("/department/my-department");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getMyDepartment();
-        setDepartment(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingAppointments(true);
-        const response = await getMyDepartmentAppointments();
-        setDepartmentAppointments(response);
-      } catch (err: any) {
-        setAppointmentsError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoadingAppointments(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const {
+    data: departmentAppointments,
+    loading: loadingAppointments,
+    error: appointmentsError,
+  } = useAPI<myDepartmentAppointments>(
+    "/department/my-department-appointments",
+  );
 
   useSelectedPage("My department");
 

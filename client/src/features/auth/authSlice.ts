@@ -95,7 +95,7 @@ export const login = createAsyncThunk(
     try {
       return await authServices.login(loginData);
     } catch (error: any) {
-      const message = error.response.data;
+      const message = error?.response?.data ?? error?.message;
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -122,7 +122,7 @@ export const signup = createAsyncThunk(
     try {
       return await authServices.signup(signupData);
     } catch (error: any) {
-      const message = error.response.data;
+      const message = error?.response?.data ?? error?.message;
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -135,7 +135,7 @@ export const verifyEmailAddress = createAsyncThunk(
     try {
       return await authServices.verifyEmail(verificationToken);
     } catch (error: any) {
-      const message = error.response.data;
+      const message = error?.response?.data ?? error?.message;
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -148,7 +148,7 @@ export const resetPassword = createAsyncThunk(
     try {
       return await authServices.resetPassword(ResetPasswordData);
     } catch (error: any) {
-      const message = error.response.data;
+      const message = error?.response?.data ?? error?.message;
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -173,7 +173,7 @@ export const updatePicture = createAsyncThunk<
   try {
     return await authServices.updatePhoto(photo);
   } catch (error: any) {
-    const message = error.response?.data ?? error.message;
+    const message = error.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }
@@ -187,7 +187,7 @@ export const firstTime = createAsyncThunk<
   try {
     return authServices.firstTimeUsing();
   } catch (error: any) {
-    const message = error.response.data;
+    const message = error?.response?.data ?? error?.message;
 
     return thunkAPI.rejectWithValue(message);
   }

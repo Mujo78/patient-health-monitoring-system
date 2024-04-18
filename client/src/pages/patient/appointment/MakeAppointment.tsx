@@ -6,7 +6,6 @@ import {
   Value,
   getOtherAppsForDay,
   getCorrectDate,
-  getDoctor,
   isDoctorAvailable,
 } from "../../../service/appointmentSideFunctions";
 import { useAppDispatch } from "../../../app/hooks";
@@ -27,39 +26,28 @@ import MakeAppointmentInfo from "../../../components/Appointment/MakeAppointment
 import TimeButton from "../../../components/Appointment/TimeButton";
 import { isFulfilled } from "@reduxjs/toolkit";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import useAPI from "../../../hooks/useAPI";
 
 const MakeAppointment: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingDoc, setLoadingDoc] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
   const [time, setTime] = useState<string[] | null>();
   const [value, setValue] = useState<Value>(new Date());
   const [newTime, setNewTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
-  const [doctor, setDoctor] = useState<DoctorType>();
 
   const { doctorId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status, message } = useSelector(appointment);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingDoc(true);
-        if (doctorId && !doctor) {
-          const response = await getDoctor(doctorId);
-          setDoctor(response);
-        }
-      } catch (error: any) {
-        setError(error?.response?.data ?? error?.message);
-        throw new Error(error);
-      } finally {
-        setLoadingDoc(false);
-      }
-    };
-    fetchData();
-  }, [doctorId, doctor]);
+  const {
+    loading: loadingDoc,
+    error,
+    setError,
+    data: doctor,
+  } = useAPI<DoctorType>(`/doctor/${doctorId}`, {
+    conditions: doctorId !== undefined,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +65,7 @@ const MakeAppointment: React.FC = () => {
       }
     };
     fetchData();
-  }, [doctorId, value, error]);
+  }, [doctorId, value, error, setError]);
 
   const makeNewAppointment = () => {
     if (doctorId && newTime) {

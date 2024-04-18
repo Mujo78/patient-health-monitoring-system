@@ -10,11 +10,10 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { numberOfAppointmentsPerMonthForDepartments } from "../../service/appointmentSideFunctions";
-
 import moment from "moment";
 import NoDataAvailable from "../UI/NoDataAvailable";
 import CustomSpinner from "../UI/CustomSpinner";
+import useAPI from "../../hooks/useAPI";
 
 type dataAppointments = {
   name: string;
@@ -27,28 +26,17 @@ type Props = {
 };
 
 const AppointmentsChart: React.FC<Props> = ({ setError, error }) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const [month, setMonth] = useState<string>(moment().format("MMMM"));
-  const [dataApps, setDataApps] = useState<dataAppointments[]>([]);
+
+  const {
+    data: dataApps,
+    loading,
+    error: appError,
+  } = useAPI<dataAppointments[]>(`/appointment/per-month/${month}`);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response =
-          await numberOfAppointmentsPerMonthForDepartments(month);
-        setDataApps(response);
-      } catch (err: any) {
-        if (!error) {
-          setError(err.response?.data ?? err.message);
-        }
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [month, setError, error]);
+    if (!error) setError(appError);
+  }, [error, appError, setError]);
 
   const onHandleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMonth(event.target.value);
@@ -58,7 +46,7 @@ const AppointmentsChart: React.FC<Props> = ({ setError, error }) => {
     <Card className="flex h-96 w-full flex-col xl:!h-2/4">
       {loading ? (
         <CustomSpinner />
-      ) : dataApps.length > 0 ? (
+      ) : dataApps && dataApps?.length > 0 ? (
         <>
           <div className="flex items-center">
             <p className="text-xs font-semibold xxl:!text-lg">

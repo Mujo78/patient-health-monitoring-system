@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import {
   Appointment,
@@ -8,37 +8,24 @@ import { Button, Card } from "flowbite-react";
 import CustomImg from "../UI/CustomImg";
 import { Link } from "react-router-dom";
 import { yearCalc } from "../../service/personSideFunctions";
-import { getLatestAppointment } from "../../service/appointmentSideFunctions";
 import PatientModal from "./PatientModal";
+import useAPI from "../../hooks/useAPI";
 
 const PatientAppointmentCard: React.FC = () => {
   const [more, setMore] = useState<boolean>(false);
-  const [latestAppState, setLatestAppState] = useState<Appointment>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
   const { selectedAppointment: selected } = useSelector(
     appointment,
     shallowEqual,
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selected?._id) {
-        try {
-          setLoading(true);
-          const response = await getLatestAppointment(selected._id);
-          setLatestAppState(response);
-        } catch (error: any) {
-          setError(error?.response?.data ?? error?.message);
-          throw new Error(error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-  }, [selected?._id]);
+  const {
+    data: latestAppState,
+    loading,
+    error,
+  } = useAPI<Appointment>(
+    `/appointment/${selected?._id}/patient-latest-record`,
+    { conditions: selected?._id },
+  );
 
   const showMore = () => {
     setMore(true);

@@ -10,11 +10,6 @@ export type Department = {
   phone_number: string;
 };
 
-export async function getDepartments() {
-  const response = await apiClientAuth.get(`${URL}/`);
-  return response.data;
-}
-
 type DoctorInfo = {
   _id: string;
   user_id: UserInfo;
@@ -28,11 +23,6 @@ export type DepartmentAllInfo = {
   department: Department;
   doctors: DoctorInfo[];
 };
-
-export async function getDepartmentAllInfo(name: string) {
-  const response = await apiClientAuth.get(`${URL}/${name}`);
-  return response.data;
-}
 
 export type DoctorType = {
   _id: string;
@@ -70,11 +60,6 @@ export type myDepartmentResult = {
   gender: GenderArray[];
 };
 
-export async function getMyDepartment() {
-  const response = await apiClientAuth.get(`${URL}/my-department`);
-  return response.data;
-}
-
 export type appointmentsByDay = {
   name: string;
   value: number;
@@ -90,8 +75,3 @@ export type myDepartmentAppointments = {
   todayAppointment: todayAppointmentDataType;
   appointmentsByDay: appointmentsByDay[];
 };
-
-export async function getMyDepartmentAppointments() {
-  const response = await apiClientAuth.get(`${URL}/my-department-appointments`);
-  return response.data;
-}

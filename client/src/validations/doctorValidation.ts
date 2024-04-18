@@ -1,24 +1,6 @@
 import * as Yup from "yup";
 import { genders } from "./personValidation";
 
-export type optionsType = {
-  value: string;
-  label: string;
-};
-
-export type doctorType = {
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  speciality: string;
-  qualification: string;
-  address: string;
-  bio: string;
-  gender: string;
-  age: string;
-  available_days: optionsType[];
-};
-
 export const doctorValidationSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required!")

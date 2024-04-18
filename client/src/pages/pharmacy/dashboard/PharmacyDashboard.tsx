@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { authUser, firstTime } from "../../../features/auth/authSlice";
 import {
   PharmacyDashboardInfoType,
   PharmacyDashboardType,
-  pharmacyDashboard,
-  pharmacyDashboardInfo,
 } from "../../../service/pharmacySideFunctions";
 import PharmacyDashboardData from "../../../components/Pharmacy/PharmacyDashboardData";
 import PharmacyDashboardMedicine from "../../../components/Pharmacy/PharmacyDashboardMedicine";
@@ -15,18 +13,9 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import toast from "react-hot-toast";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
+import useAPI from "../../../hooks/useAPI";
 
 const PharmacyDashboard: React.FC = () => {
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingInfo, setLoadingInfo] = useState<boolean>(false);
-  const [phDashboardData, setPhDashboardData] = useState<
-    PharmacyDashboardType | undefined
-  >();
-  const [phDashboardMedicine, setPhDashboardMedicine] = useState<
-    PharmacyDashboardInfoType | undefined
-  >();
-
   const dispatch = useAppDispatch();
   const { accessUser } = useSelector(authUser);
 
@@ -38,43 +27,25 @@ const PharmacyDashboard: React.FC = () => {
     }
   }, [dispatch, accessUser]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await pharmacyDashboard();
-        setPhDashboardData(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    data: phDashboardData,
+    loading,
+    error,
+  } = useAPI<PharmacyDashboardType>("/pharmacy/dashboard");
 
-    fetchData();
-  }, []);
+  const {
+    data: phDashboardMedicine,
+    loading: loadingInfo,
+    error: errorInfo,
+  } = useAPI<PharmacyDashboardInfoType>("/pharmacy/dashboard-info");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingInfo(true);
-        const response = await pharmacyDashboardInfo();
-        setPhDashboardMedicine(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoadingInfo(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+    if (error) {
+      toast.error(error);
+    } else {
+      if (errorInfo) toast.error(errorInfo);
+    }
+  }, [error, errorInfo]);
 
   return (
     <>
@@ -96,9 +67,13 @@ const PharmacyDashboard: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <NoDataAvailable />
-        </div>
+        !error &&
+        !loading &&
+        !phDashboardData && (
+          <div className="flex h-full w-full items-center justify-center">
+            <NoDataAvailable />
+          </div>
+        )
       )}
     </>
   );

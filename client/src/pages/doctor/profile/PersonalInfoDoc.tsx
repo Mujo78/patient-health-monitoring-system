@@ -1,17 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import Header from "../../../components/UI/Header";
 import { setInfoAccessUser } from "../../../features/auth/authSlice";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  doctorType,
-  doctorValidationSchema,
-  optionsType,
-} from "../../../validations/doctorValidation";
+import { doctorValidationSchema } from "../../../validations/doctorValidation";
 import {
   availableDaysOptions,
-  getDoctorInfo,
   updateDoctorInfo,
+  optionsType,
+  doctorType,
 } from "../../../service/personSideFunctions";
 import { Label, Textarea, Select as CustomSelect } from "flowbite-react";
 import Footer from "../../../components/UI/Footer";
@@ -25,35 +22,21 @@ import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
 import { genders } from "../../../validations/personValidation";
+import useAPI from "../../../hooks/useAPI";
 
 const PersonalInfoDoc: React.FC = () => {
-  const [data, setData] = useState<doctorType>();
   const dispatch = useAppDispatch();
   const { register, handleSubmit, control, getValues, formState, reset } =
     useForm<doctorType>({ resolver: yupResolver(doctorValidationSchema) });
   const { errors, isDirty } = formState;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getDoctorInfo();
-        setData(response);
-        reset(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (!data) {
-      fetchData();
-    }
-  }, [reset, data]);
+  const { data, loading, error, setError, setLoading } = useAPI<doctorType>(
+    "/doctor/get-me",
+    {
+      checkData: true,
+      onSuccess: reset,
+    },
+  );
 
   const onSubmit = async (data: doctorType) => {
     setError("");
@@ -70,7 +53,6 @@ const PersonalInfoDoc: React.FC = () => {
         const response = await updateDoctorInfo(dataToSend);
 
         if (!response.message) {
-          setData(response);
           reset(response);
           const userInfo = {
             first_name: data.first_name,
@@ -272,13 +254,14 @@ const PersonalInfoDoc: React.FC = () => {
               </>
             </FormRow>
 
-            {!error.includes("Validation") && (
+            {error && !error.includes("Validation") && (
               <div className="my-4 flex h-full w-full items-start justify-start lg:!my-0">
                 <ErrorMessage text={error} />
               </div>
             )}
           </div>
         ) : (
+          error &&
           !error.includes("Validation") && (
             <div className="my-4 flex h-full w-full items-center justify-center lg:!my-0">
               <ErrorMessage text={error} />

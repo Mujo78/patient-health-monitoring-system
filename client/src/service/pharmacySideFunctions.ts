@@ -1,5 +1,7 @@
 import { apiClientAuth } from "../helpers/ApiClient";
 
+const URL = "/pharmacy/";
+
 export type PharmacyType = {
   name: string;
   address: string;
@@ -8,18 +10,6 @@ export type PharmacyType = {
   from: string;
   to: string;
 };
-
-const URL = "/pharmacy/";
-
-export async function getData() {
-  const response = await apiClientAuth.get(`${URL}/get-me`);
-  return response.data;
-}
-
-export async function getPharmacy() {
-  const response = await apiClientAuth.get(URL);
-  return response.data;
-}
 
 export async function updateData(data: PharmacyType) {
   const response = await apiClientAuth.patch(URL, data);
@@ -55,11 +45,6 @@ export type PharmacyDashboardType = {
   recentMedicine: recentMedicine[];
 };
 
-export async function pharmacyDashboard() {
-  const response = await apiClientAuth.get(`${URL}dashboard`);
-  return response.data;
-}
-
 type PieCategories = {
   name: string;
   value: number;
@@ -81,13 +66,3 @@ export type PharmacyDashboardInfoType = {
   topExpensive: topExpensive[];
   usedMedicine: usedMedicine[];
 };
-
-export async function pharmacyDashboardInfo() {
-  const response = await apiClientAuth.get(`${URL}dashboard-info`);
-  return response.data;
-}
-
-export async function getAllMedicine() {
-  const response = await apiClientAuth.get(`/medicine/all`);
-  return response.data;
-}

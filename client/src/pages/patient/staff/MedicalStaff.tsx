@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  Department,
-  getDepartments,
-} from "../../../service/departmentSideFunctions";
+import React, { useEffect } from "react";
+import { Department } from "../../../service/departmentSideFunctions";
 import { Table } from "flowbite-react";
 import { HiChevronRight } from "react-icons/hi2";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
@@ -12,33 +9,19 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import Header from "../../../components/UI/Header";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 import toast from "react-hot-toast";
+import useAPI from "../../../hooks/useAPI";
 
 const MedicalStaff: React.FC = () => {
-  const [departments, setDepartments] = useState<Department[]>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
-
   const navigate = useNavigate();
   const { departmentName } = useParams();
 
   useSelectedPage("Medical staff");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getDepartments();
-        setDepartments(response);
-      } catch (error: any) {
-        setError(error.response?.data ?? error.message);
-        throw new Error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const {
+    loading,
+    error,
+    data: departments,
+  } = useAPI<Department[]>("/department");
 
   const chooseDepartment = (name: string) => {
     navigate(name);
@@ -114,7 +97,11 @@ const MedicalStaff: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <NoDataAvailable className="flex h-full items-center justify-center" />
+        !error &&
+        !loading &&
+        !departments && (
+          <NoDataAvailable className="flex h-full items-center justify-center" />
+        )
       )}
     </div>
   );

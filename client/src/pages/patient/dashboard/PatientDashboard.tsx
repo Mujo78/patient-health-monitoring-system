@@ -1,8 +1,7 @@
 import { Card } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   getDateTime,
-  getLatestFinished,
   latestFinishedType,
 } from "../../../service/appointmentSideFunctions";
 import { shallowEqual, useSelector } from "react-redux";
@@ -18,33 +17,22 @@ import PatientCard from "../../../components/Patient/PatientCard";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 import toast from "react-hot-toast";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
+import useAPI from "../../../hooks/useAPI";
 
 const PatientDashboard: React.FC = () => {
-  const [latestFinished, setLatestFinished] = useState<latestFinishedType>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
   const navigate = useNavigate();
   const { accessUser } = useSelector(authUser, shallowEqual);
 
   useSelectedPage("Dashboard");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!latestFinished) {
-          setLoading(true);
-          const response = await getLatestFinished();
-          setLatestFinished(response);
-        }
-      } catch (err: any) {
-        setError(err.response?.data ?? err.message);
-        throw new Error(err?.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [latestFinished]);
+  const {
+    error,
+    setError,
+    loading,
+    data: latestFinished,
+  } = useAPI<latestFinishedType>("/appointment/", {
+    checkData: true,
+  });
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -73,10 +61,10 @@ const PatientDashboard: React.FC = () => {
               <div className="mx-auto flex h-full w-full flex-col justify-center gap-2 lg:!w-1/2 xl:!gap-4 xxl:!gap-8">
                 <Card className="bg-gradient-to-r from-blue-500 to-blue-400 xl:!h-32 xxl:!h-48 ">
                   <div>
-                    {accessUser?.data.first ? (
+                    {accessUser?.data?.first ? (
                       <div>
                         <Header
-                          text={`Welcome back, ${accessUser?.info.first_name}`}
+                          text={`Welcome back, ${accessUser?.info?.first_name}`}
                           bold
                           position="start"
                           size={2}
@@ -107,27 +95,27 @@ const PatientDashboard: React.FC = () => {
                   onClick={handleNavigateApp}
                   className="w-full cursor-pointer"
                 >
-                  {latestFinished && latestFinished.appointment ? (
+                  {latestFinished && latestFinished?.appointment ? (
                     <div className="flex flex-wrap items-center">
                       <CustomImg
                         url={
-                          latestFinished?.appointment?.doctor_id.user_id.photo
+                          latestFinished?.appointment?.doctor_id?.user_id?.photo
                         }
                         className="mx-auto h-auto w-20 xl:!w-24 xxl:!w-40"
                       />
                       <div className="mx-auto">
                         <Header
                           text={
-                            latestFinished?.appointment?.doctor_id.first_name +
+                            latestFinished?.appointment?.doctor_id?.first_name +
                             " " +
-                            latestFinished?.appointment?.doctor_id.last_name
+                            latestFinished?.appointment?.doctor_id?.last_name
                           }
                           position="start"
                           size={1}
                         />
 
                         <p className="text-sm xxl:!text-lg">
-                          {latestFinished?.appointment?.doctor_id.speciality}
+                          {latestFinished?.appointment?.doctor_id?.speciality}
                         </p>
                         <p className="mt-1 text-xs text-gray-700 xxl:!text-lg">
                           {getDateTime(
@@ -155,9 +143,13 @@ const PatientDashboard: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <NoDataAvailable />
-        </div>
+        !error &&
+        !loading &&
+        !latestFinished && (
+          <div className="flex h-full w-full items-center justify-center ">
+            <NoDataAvailable />
+          </div>
+        )
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { useSelector } from "react-redux";
 import { authUser, firstTime } from "../../../features/auth/authSlice";
@@ -8,8 +8,6 @@ import DocDashboard from "../../../components/Doctor/DocDashboard";
 import {
   DocDashboardInfoType,
   DocDashboardType,
-  doctorDashboard,
-  doctorDashboardInfo,
 } from "../../../service/appointmentSideFunctions";
 
 import useSelectedPage from "../../../hooks/useSelectedPage";
@@ -17,17 +15,11 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import toast from "react-hot-toast";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
+import useAPI from "../../../hooks/useAPI";
 
 const DoctorDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { accessUser } = useSelector(authUser);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingDoctorInfo, setLoadingDoctorInfo] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [docDashInfo, setDocDashInfo] = useState<
-    DocDashboardType | undefined
-  >();
-  const [docDash, setDocDash] = useState<DocDashboardInfoType | undefined>();
 
   useEffect(() => {
     if (accessUser && !accessUser.data.first) {
@@ -35,42 +27,25 @@ const DoctorDashboard: React.FC = () => {
     }
   }, [dispatch, accessUser]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await doctorDashboard();
-        setDocDashInfo(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const {
+    data: docDashInfo,
+    loading,
+    error,
+  } = useAPI<DocDashboardType>("/appointment/doctor-dashboard");
+
+  const {
+    data: docDash,
+    loading: loadingDoctorInfo,
+    error: typeError,
+  } = useAPI<DocDashboardInfoType>("/appointment/doctor-dashboard-info");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingDoctorInfo(true);
-        const response = await doctorDashboardInfo();
-        setDocDash(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoadingDoctorInfo(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (error) toast.error(error);
-  }, [error]);
+    if (error) {
+      toast.error(error);
+    } else {
+      if (typeError) toast.error(typeError);
+    }
+  }, [error, typeError]);
 
   useSelectedPage("Dashboard");
 
@@ -99,9 +74,13 @@ const DoctorDashboard: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <NoDataAvailable />
-        </div>
+        !error &&
+        !loading &&
+        !docDash && (
+          <div className="flex h-full w-full items-center justify-center">
+            <NoDataAvailable />
+          </div>
+        )
       )}
     </>
   );

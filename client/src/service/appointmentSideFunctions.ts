@@ -17,18 +17,6 @@ export type MyEvent = {
   title: string;
 };
 
-export async function getDoctor(id: string) {
-  const response = await apiClientAuth.get(`/doctor/${id}`);
-  return response.data;
-}
-
-export async function getLatestAppointment(appointment_id: string) {
-  const response = await apiClientAuth.get(
-    `/appointment/${appointment_id}/patient-latest-record`,
-  );
-  return response.data;
-}
-
 export type AppointmentFinished = {
   diagnose: string;
   other_medicine: string;
@@ -69,18 +57,6 @@ export async function getPatientFinishedAppointments(id: string, page: number) {
   return response.data;
 }
 
-export async function getLatestFinished() {
-  const response = await apiClientAuth.get(`/appointment/`);
-  return response.data;
-}
-
-export async function numberOfAppointmentsPerMonthForDepartments(
-  month: string,
-) {
-  const response = await apiClientAuth.get(`/appointment/per-month/${month}`);
-  return response.data;
-}
-
 export type appointment = {
   _id: string;
   appointment_date: Date;
@@ -104,13 +80,6 @@ export type DocDashboardInfoType = {
   gender: GenderArray[];
 };
 
-export async function doctorDashboardInfo() {
-  const response = await apiClientAuth.get(
-    "/appointment/doctor-dashboard-info",
-  );
-  return response.data;
-}
-
 type PatientStatistic = {
   name: string;
   value: number;
@@ -121,11 +90,6 @@ export type DocDashboardType = {
   averageAge: number;
   apps: PatientStatistic[];
 };
-
-export async function doctorDashboard() {
-  const response = await apiClientAuth.get("/appointment/doctor-dashboard");
-  return response.data;
-}
 
 export async function getOtherAppsForDay(date: Date, doctor_id: string) {
   const response = await apiClientAuth.post("/appointment/others-today", {

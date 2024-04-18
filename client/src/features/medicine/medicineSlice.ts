@@ -25,6 +25,17 @@ export interface Medicine {
   manufacturer: string;
 }
 
+export type MedicineType = {
+  name: string;
+  strength: string;
+  category: string;
+  description: string;
+  available: boolean;
+  price: string;
+  photo: string | File | any;
+  manufacturer: string;
+};
+
 export interface MedicineDataType {
   name: string;
   strength: string;

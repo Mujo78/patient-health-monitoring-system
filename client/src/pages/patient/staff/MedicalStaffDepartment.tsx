@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  DepartmentAllInfo,
-  getDepartmentAllInfo,
-} from "../../../service/departmentSideFunctions";
+import React from "react";
+import { DepartmentAllInfo } from "../../../service/departmentSideFunctions";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { Card } from "flowbite-react";
 import CustomImg from "../../../components/UI/CustomImg";
@@ -10,32 +7,18 @@ import { useParams, Link } from "react-router-dom";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import Header from "../../../components/UI/Header";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import useAPI from "../../../hooks/useAPI";
 
 const MedicalStaffDepartment: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [selectedDepartment, setSelectedDepartment] =
-    useState<DepartmentAllInfo>();
-  const [error, setError] = useState<string>();
-
   const { departmentName } = useParams();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (departmentName) {
-          setLoading(true);
-          const response = await getDepartmentAllInfo(departmentName);
-          setSelectedDepartment(response);
-        }
-      } catch (error: any) {
-        setError(error?.response?.data ?? error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [departmentName]);
+  const {
+    loading,
+    error,
+    data: selectedDepartment,
+  } = useAPI<DepartmentAllInfo>(`/department/${departmentName}`, {
+    conditions: departmentName,
+  });
 
   return (
     <>
@@ -47,42 +30,42 @@ const MedicalStaffDepartment: React.FC = () => {
             <Header
               size={3}
               bold
-              text={selectedDepartment.department.name}
+              text={selectedDepartment?.department.name}
               position="start"
             />
 
             <p className="xl:!text-md text-justify xxl:!text-2xl">
-              {selectedDepartment.department.description}
+              {selectedDepartment?.department?.description}
             </p>
             <p className="xl:!text-md ml-0 lg:!ml-auto xxl:!text-2xl">
               Phone number:{" "}
               <Link
-                to={`tel:${selectedDepartment.department.phone_number}`}
+                to={`tel:${selectedDepartment?.department?.phone_number}`}
                 className="text-blue-700"
               >
-                +{selectedDepartment.department.phone_number}
+                +{selectedDepartment?.department?.phone_number}
               </Link>
             </p>
           </div>
           <div className="flex flex-wrap pb-14 md:!pb-0">
-            {selectedDepartment.doctors?.length > 0 ? (
-              selectedDepartment.doctors.map((d) => (
+            {selectedDepartment?.doctors?.length > 0 ? (
+              selectedDepartment?.doctors.map((d) => (
                 <Card
-                  key={d._id}
+                  key={d?._id}
                   className="m-3 w-full xl:!w-fit"
-                  href={`/appointment/new/${d._id}`}
+                  href={`/appointment/new/${d?._id}`}
                 >
                   <div className="flex items-center gap-3">
                     <CustomImg
-                      url={d.user_id.photo}
+                      url={d?.user_id?.photo}
                       className=" h-auto w-10 rounded-full md:!w-14 xxl:!w-24"
                     />
                     <div className="w-full">
                       <p className="xxl:text-2xl">
-                        Dr. {d.first_name + " " + d.last_name}
+                        Dr. {d?.first_name + " " + d?.last_name}
                       </p>
                       <p className="text-xs text-gray-500 xxl:!text-lg">
-                        {d.qualification}
+                        {d?.qualification}
                       </p>
                     </div>
                   </div>
@@ -98,9 +81,13 @@ const MedicalStaffDepartment: React.FC = () => {
           <ErrorMessage text={error} />
         </div>
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
-          <ErrorMessage text="You haven't selected any department" />
-        </div>
+        !selectedDepartment &&
+        !error &&
+        !loading && (
+          <div className="flex h-full w-full items-center justify-center">
+            <ErrorMessage text="You haven't selected any department" />
+          </div>
+        )
       )}
     </>
   );

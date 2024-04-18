@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  getDepartments,
   getDoctorsForDepartment,
   Department,
   DoctorType,
@@ -16,36 +15,26 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import toast from "react-hot-toast";
 import Header from "../../../components/UI/Header";
 import NoDataAvailable from "../../../components/UI/NoDataAvailable";
+import useAPI from "../../../hooks/useAPI";
 
 const AppointmentDepartment: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedDoctor, setSelectedDoctor] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
   const [loadingDoc, setLoadingDoc] = useState<boolean>(false);
-  const [departments, setDepartments] = useState<Department[] | null>();
   const [doctors, setDoctors] = useState<DoctorType[]>();
 
   const { doctorId } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getDepartments();
-        setDepartments(response);
-      } catch (error: any) {
-        setError(error?.response?.data ?? error?.message);
-        throw new Error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (!departments && !doctorId) {
-      fetchData();
-    }
-  }, [departments, doctorId]);
+  const {
+    loading,
+    error,
+    setError,
+    data: departments,
+  } = useAPI<Department[] | null>("/department/", {
+    conditions: !doctorId,
+    checkData: true,
+  });
 
   useEffect(() => {
     if (error)

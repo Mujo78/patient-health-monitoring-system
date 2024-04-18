@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Header from "../../../components/UI/Header";
 import { setInfoAccessUser } from "../../../features/auth/authSlice";
 import {
   PharmacyType,
-  getData,
   updateData,
 } from "../../../service/pharmacySideFunctions";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
+import useAPI from "../../../hooks/useAPI";
 
 const InfoPharmacy: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,32 +26,16 @@ const InfoPharmacy: React.FC = () => {
     resolver: yupResolver(pharmacyValidationSchema),
   });
   const { errors, isDirty } = formState;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<PharmacyType>();
-  const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getData();
-        setData(response);
-        reset(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [reset]);
+  const { data, error, loading, setError, setLoading } = useAPI<PharmacyType>(
+    "/pharmacy/get-me",
+    { onSuccess: reset },
+  );
 
   const onSubmit = async (data: PharmacyType) => {
     try {
       setLoading(true);
       const res = await updateData(data);
-      setData(res);
       reset(res);
       dispatch(setInfoAccessUser({ name: res.name }));
       toast.success("Successfully updated profile.");
@@ -168,13 +152,14 @@ const InfoPharmacy: React.FC = () => {
               </div>
             </FormRow>
 
-            {!error.includes("validation") && (
+            {error && !error.includes("validation") && (
               <div className="my-4 flex h-full w-full items-start justify-start lg:!my-0">
                 <ErrorMessage text={error} />
               </div>
             )}
           </div>
         ) : (
+          error &&
           !error.includes("validation") && (
             <div className="my-4 flex h-full w-full items-center justify-center lg:!my-0">
               <ErrorMessage text={error} />

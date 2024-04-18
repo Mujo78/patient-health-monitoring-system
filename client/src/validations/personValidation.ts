@@ -1,18 +1,6 @@
 import * as Yup from "yup";
 import { getEighteenYearsAgoDate } from "../service/authSideFunctions";
 
-export type patient = {
-  blood_type: string;
-  date_of_birth: Date;
-  first_name: string;
-  phone_number: string;
-  gender: string;
-  height: string | "";
-  last_name: string;
-  weight: string | "";
-  address: string;
-};
-
 export const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 export const genders = ["Male", "Female", "Other"];
 
@@ -42,11 +30,6 @@ export const personValidationSchema = Yup.object({
   height: Yup.string().default(""),
 });
 
-export type patientGeneralSettings = {
-  email: string;
-  notification: boolean | true;
-};
-
 export const generalPatientSettings = Yup.object({
   email: Yup.string()
     .required("Email is required!")
@@ -59,7 +42,7 @@ export const generalPatientSettings = Yup.object({
           return false;
         }
         return true;
-      }
+      },
     ),
   notification: Yup.boolean().required("Notification field is required!"),
 });

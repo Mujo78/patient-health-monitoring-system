@@ -1,33 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Pharmacy } from "../../features/medicine/medicineSlice";
-import { getPharmacy } from "../../service/pharmacySideFunctions";
 import CustomImg from "../UI/CustomImg";
 import { Link } from "react-router-dom";
 import CustomSpinner from "../UI/CustomSpinner";
 import toast from "react-hot-toast";
 import ErrorMessage from "../UI/ErrorMessage";
+import useAPI from "../../hooks/useAPI";
 
 const PharmacyInfo = () => {
-  const [pharmacy, setPharmacy] = useState<Pharmacy>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getPharmacy();
-        setPharmacy(response);
-      } catch (err: any) {
-        setError(err?.response?.data ?? err?.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { data: pharmacy, loading, error } = useAPI<Pharmacy>("/pharmacy/");
 
   useEffect(() => {
     if (error)

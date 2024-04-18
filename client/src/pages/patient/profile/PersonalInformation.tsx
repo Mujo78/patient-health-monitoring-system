@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Header from "../../../components/UI/Header";
 import Footer from "../../../components/UI/Footer";
 import CustomButton from "../../../components/UI/CustomButton";
@@ -6,13 +6,12 @@ import { useForm } from "react-hook-form";
 import {
   bloodTypes,
   genders,
-  patient,
   personValidationSchema,
 } from "../../../validations/personValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Label, Select } from "flowbite-react";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
-import { getMe, updateMe } from "../../../service/personSideFunctions";
+import { updateMe, patient } from "../../../service/personSideFunctions";
 import { setInfoAccessUser } from "../../../features/auth/authSlice";
 import { toast } from "react-hot-toast";
 import { useAppDispatch } from "../../../app/hooks";
@@ -21,37 +20,22 @@ import moment from "moment";
 import Input from "../../../components/UI/Input";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
+import useAPI from "../../../hooks/useAPI";
 
 const PersonalInformation: React.FC = () => {
-  const [data, setData] = useState<patient>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
   const dispatch = useAppDispatch();
   const { register, handleSubmit, formState, reset } = useForm<patient>({
     resolver: yupResolver(personValidationSchema),
   });
   const { errors, isDirty } = formState;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await getMe();
-        setData(response);
-        reset(response);
-      } catch (err: any) {
-        setMessage(err.response?.data ?? err.message);
-        throw new Error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [reset]);
+  const { data, loading, error, setError, setLoading } = useAPI<patient>(
+    "/patient/get-me",
+    { onSuccess: reset },
+  );
 
   const onSubmit = async (data: patient) => {
-    setMessage("");
+    setError("");
     const formatted = moment(data.date_of_birth).utc(true).format("YYYY-MM-DD");
     const realData: unknown = { ...data, date_of_birth: formatted };
 
@@ -65,15 +49,14 @@ const PersonalInformation: React.FC = () => {
             first_name: response.first_name,
             last_name: response.last_name,
           };
-          setMessage("");
-          setData(response);
+          setError("");
           dispatch(setInfoAccessUser(userInfo));
           toast.success("Successfully updated profile.");
         } else {
-          setMessage(response.message);
+          setError(response.message);
         }
       } catch (err: any) {
-        setMessage(err?.response?.data ?? err?.message);
+        setError(err?.response?.data ?? err?.message);
         toast.error("An error occurred while updating your profile!");
         throw new Error(err);
       } finally {
@@ -159,8 +142,8 @@ const PersonalInformation: React.FC = () => {
                     text={
                       errors.phone_number?.message
                         ? errors.phone_number.message
-                        : message
-                          ? errorMessageConvert(message, "phone_number")
+                        : error
+                          ? errorMessageConvert(error, "phone_number")
                           : ""
                     }
                   />
@@ -223,16 +206,17 @@ const PersonalInformation: React.FC = () => {
                 </div>
               </div>
 
-              {!message.includes("Validation") && (
+              {error && !error.includes("Validation") && (
                 <div className="my-4 flex h-full w-full items-start justify-start lg:!my-0">
-                  <ErrorMessage text={message} />
+                  <ErrorMessage text={error} />
                 </div>
               )}
             </div>
           ) : (
-            !message.includes("Validation") && (
+            error &&
+            !error.includes("Validation") && (
               <div className="my-4 flex h-full w-full items-center justify-center lg:!my-0">
-                <ErrorMessage text={message} />
+                <ErrorMessage text={error} />
               </div>
             )
           )}

@@ -16,14 +16,12 @@ import ErrorMessage from "../../../components/UI/ErrorMessage";
 import { toast } from "react-hot-toast";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  generalPatientSettings,
-  patientGeneralSettings,
-} from "../../../validations/personValidation";
+import { generalPatientSettings } from "../../../validations/personValidation";
 import { errorMessageConvert } from "../../../service/authSideFunctions";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import FormRow from "../../../components/UI/FormRow";
 import { isFulfilled } from "@reduxjs/toolkit";
+import { patientGeneralSettings } from "../../../service/personSideFunctions";
 
 const GeneralSettings: React.FC = () => {
   const {

@@ -1,16 +1,5 @@
 import * as Yup from "yup";
 
-export type MedicineType = {
-  name: string;
-  strength: string;
-  category: string;
-  description: string;
-  available: boolean;
-  price: string;
-  photo: string | File | any;
-  manufacturer: string;
-};
-
 export const medicineValidationSchema = Yup.object({
   name: Yup.string().required("Name is required!"),
   strength: Yup.string().required("Strength is required!"),

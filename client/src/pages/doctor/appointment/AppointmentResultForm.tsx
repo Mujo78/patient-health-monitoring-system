@@ -23,13 +23,12 @@ import Header from "../../../components/UI/Header";
 import { Medicine } from "../../../features/medicine/medicineSlice";
 import { isFulfilled } from "@reduxjs/toolkit";
 import CancelAppointmentButton from "../../../components/Appointment/CancelAppointmentButton";
-import { getAllMedicine } from "../../../service/pharmacySideFunctions";
 import ErrorMessage from "../../../components/UI/ErrorMessage";
+import useAPI from "../../../hooks/useAPI";
 
 const AppointmentResultForm = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-  const [medicineData, setMedicineData] = useState<Medicine[]>();
-  const [error, setError] = useState<string>();
+
   const navigate = useNavigate();
   const { selectedAppointment: selected, message } = useSelector(
     appointment,
@@ -96,21 +95,9 @@ const AppointmentResultForm = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!selected?.finished) {
-          const response = await getAllMedicine();
-          setMedicineData(response);
-        }
-      } catch (error: any) {
-        setError(error?.response?.data ?? error?.message);
-        throw new Error(error);
-      }
-    };
-
-    fetchData();
-  }, [selected?.finished]);
+  const { data: medicineData, error } = useAPI<Medicine[]>("/medicine/all", {
+    conditions: !selected?.finished,
+  });
 
   useEffect(() => {
     if (error) toast.error(error);

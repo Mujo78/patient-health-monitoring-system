@@ -14,8 +14,3 @@ export async function getPatientsForDoctor(page: number, searchQuery: string) {
 
   return response.data;
 }
-
-export async function getPatient(patientId: string) {
-  const response = await apiClientAuth.get(`/patient/${patientId}`);
-  return response.data;
-}

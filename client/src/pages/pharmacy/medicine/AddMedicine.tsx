@@ -14,14 +14,12 @@ import CustomButton from "../../../components/UI/CustomButton";
 import { shallowEqual, useSelector } from "react-redux";
 import {
   MedicineDataType,
+  MedicineType,
   addNewMedicine,
   medicine,
 } from "../../../features/medicine/medicineSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  MedicineType,
-  medicineValidationSchema,
-} from "../../../validations/medicineValidation";
+import { medicineValidationSchema } from "../../../validations/medicineValidation";
 import { useAppDispatch } from "../../../app/hooks";
 import { toast } from "react-hot-toast";
 import { HiXCircle } from "react-icons/hi2";

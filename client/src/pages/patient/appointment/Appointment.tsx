@@ -39,7 +39,7 @@ const Appointment: React.FC = () => {
     };
   }, [id, dispatch]);
 
-  const mailtoLink = `mailto:${selected?.doctor_id.user_id.email}`;
+  const mailtoLink = `mailto:${selected?.doctor_id?.user_id?.email}`;
 
   return (
     <>
@@ -51,16 +51,16 @@ const Appointment: React.FC = () => {
             <Card className="h-auto xl:w-full xxl:!w-fit xxl:p-12">
               <div className="flex flex-col items-center gap-2 p-0 xl:!flex-row xl:justify-center">
                 <CustomImg
-                  url={selected.doctor_id.user_id.photo}
+                  url={selected?.doctor_id?.user_id?.photo}
                   className="h-auto w-28 xxl:!w-48"
                 />
                 <div>
                   <Header
                     text={
                       "Dr. " +
-                      selected.doctor_id.first_name +
+                      selected?.doctor_id?.first_name +
                       " " +
-                      selected.doctor_id.last_name
+                      selected?.doctor_id?.last_name
                     }
                     size={1}
                     bold
@@ -69,11 +69,11 @@ const Appointment: React.FC = () => {
                   />
                   <div className="xl:!text-md text-xs text-gray-600 xxl:!text-xl">
                     <p>
-                      Age: {selected.doctor_id.age} |{" "}
-                      {selected.doctor_id.speciality}{" "}
+                      Age: {selected?.doctor_id?.age} |{" "}
+                      {selected?.doctor_id?.speciality}{" "}
                     </p>
                     <p className="mb mt-2">
-                      Qualification: {selected.doctor_id.qualification}
+                      Qualification: {selected?.doctor_id?.qualification}
                     </p>
                     <p>
                       Email:{" "}
@@ -81,12 +81,12 @@ const Appointment: React.FC = () => {
                         to={mailtoLink}
                         className="cursor-pointer text-blue-500 underline hover:text-blue-700"
                       >
-                        {selected.doctor_id.user_id.email}
+                        {selected?.doctor_id?.user_id?.email}
                       </Link>
                     </p>
                   </div>
                   <p className="xl:!text-md mt-2 line-clamp-2 text-justify text-xs text-gray-500 xxl:!text-xl">
-                    {selected.doctor_id.bio}
+                    {selected?.doctor_id?.bio}
                   </p>
                 </div>
               </div>
@@ -95,19 +95,21 @@ const Appointment: React.FC = () => {
               <div className="flex flex-col gap-3 xl:!text-sm xxl:!text-2xl">
                 <p className="flex flex-col">
                   <span className="text-md font-semibold">Date&Time</span>
-                  {getDateTime(selected.appointment_date)}
+                  {getDateTime(selected?.appointment_date)}
                 </p>
-                {selected.reason.length > 0 && (
-                  <p className="flex flex-col">
+                {selected?.reason?.length > 0 && (
+                  <div className="flex flex-col">
                     <span className="text-md font-semibold">Reason</span>
-                    {selected.reason}
-                  </p>
+                    <div className="h-40 overflow-y-auto">
+                      {selected?.reason}
+                    </div>
+                  </div>
                 )}
               </div>
 
               {canCancelOrEdit(selected.appointment_date) &&
-                !selected.finished && (
-                  <CancelAppointmentButton id={selected._id} variant="text" />
+                !selected?.finished && (
+                  <CancelAppointmentButton id={selected?._id} variant="text" />
                 )}
             </div>
           </div>
