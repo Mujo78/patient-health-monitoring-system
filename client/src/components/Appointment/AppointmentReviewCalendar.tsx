@@ -1,6 +1,7 @@
 import { Card, Spinner, Table } from "flowbite-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { Value } from "../../service/appointmentSideFunctions";
 import { useAppDispatch } from "../../app/hooks";
 import { useSelector, shallowEqual } from "react-redux";
@@ -55,7 +56,7 @@ const AppointmentReviewCalendar: React.FC<Props> = ({ variant }) => {
             })}
           </p>
           <Calendar
-            className="w-full rounded-md border-gray-300 p-3 text-xs shadow-xl xxl:!text-lg"
+            className="!w-full rounded-md !border-gray-200 p-3 !font-Poppins !text-xs shadow-xl xxl:!text-lg"
             locale="eng"
             onChange={setValue}
             onViewChange={({ view }) => view === "month"}

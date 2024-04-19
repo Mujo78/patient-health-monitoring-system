@@ -7,6 +7,7 @@ import {
   useParams,
 } from "react-router-dom";
 import {
+  ContextTyped,
   getOneNotification,
   markOneAsRead,
   notification,
@@ -19,7 +20,6 @@ import DeleteNotificationButton from "./DeleteNotificationButton";
 import CustomSpinner from "../UI/CustomSpinner";
 import { isRejected } from "@reduxjs/toolkit";
 import ErrorMessage from "../UI/ErrorMessage";
-import { ContextTyped } from "../../pages/notification/Notifications";
 
 const Notification: React.FC = () => {
   const { setError } = useOutletContext<ContextTyped>();

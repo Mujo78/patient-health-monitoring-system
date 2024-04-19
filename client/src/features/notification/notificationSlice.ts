@@ -13,6 +13,11 @@ export interface Notification {
   createdAt: Date;
 }
 
+export type ContextTyped = {
+  error: string | undefined;
+  setError: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
 interface initialState {
   personNotifications: Notification[];
   oneNotification?: Notification;

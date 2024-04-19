@@ -1,6 +1,6 @@
 import React from "react";
-import Calendar, { OnClickFunc } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Calendar, { OnClickFunc } from "react-calendar";
 import {
   isDoctorAvailable,
   Value,
@@ -23,7 +23,7 @@ const CalendarAppointment: React.FC<Props> = ({
 }) => {
   return (
     <Calendar
-      className={`w-full rounded-xl border-gray-300 font-Poppins shadow-xl lg:w-fit xxl:!p-8 xxl:!text-xl ${
+      className={`!lg:w-fit !w-full rounded-xl !border-gray-200 !font-Poppins shadow-xl xxl:!p-8 xxl:!text-xl ${
         variant === 1 ? "text-md mt-3 w-full p-4" : "mt-0 h-fit  p-2 text-sm"
       }`}
       onChange={setValue}

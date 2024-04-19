@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import {
+  ContextTyped,
   getPersonNotifications,
   markOneAsRead,
   notification,
@@ -18,11 +19,6 @@ import CustomSpinner from "../../components/UI/CustomSpinner";
 import NoDataAvailable from "../../components/UI/NoDataAvailable";
 import { isRejected } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-
-export type ContextTyped = {
-  error: string | undefined;
-  setError: React.Dispatch<React.SetStateAction<string | undefined>>;
-};
 
 const Notifications: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
