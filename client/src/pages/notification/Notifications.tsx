@@ -135,8 +135,7 @@ const Notifications: React.FC = () => {
                                   className="text-blue-700 hover:!underline"
                                   to={mailtoLink}
                                 >
-                                  {import.meta.env.VITE_EMAIL_SUPPORT ||
-                                    "application.supp.2023@gmail.com"}
+                                  {import.meta.env.VITE_EMAIL_SUPPORT}
                                 </Link>
                               </p>
                             </>

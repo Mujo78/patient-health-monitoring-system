@@ -24,7 +24,9 @@ const CalendarAppointment: React.FC<Props> = ({
   return (
     <Calendar
       className={`!lg:w-fit !w-full rounded-xl !border-gray-200 !font-Poppins shadow-xl xxl:!p-8 xxl:!text-xl ${
-        variant === 1 ? "text-md mt-3 w-full p-4" : "mt-0 h-fit  p-2 text-sm"
+        variant === 1
+          ? "!text-md !mt-3 !w-full !p-4"
+          : "!mt-0 !h-fit !p-2 !text-sm"
       }`}
       onChange={setValue}
       onClickDay={handleGetAppForADay}
@@ -39,7 +41,7 @@ const CalendarAppointment: React.FC<Props> = ({
       tileClassName={({ date, view }) =>
         view === "month"
           ? ` rounded-full ${
-              variant === 1 ? "p-3 mx-1" : "p-1.5"
+              variant === 1 ? "!p-3" : "!p-3"
             } hover:bg-blue-100 cursor-pointer${
               value && value.toString() === date.toString()
                 ? "!bg-blue-700 hover:!bg-700 hover:!text-white"

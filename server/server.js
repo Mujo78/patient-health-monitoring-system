@@ -37,7 +37,6 @@ const appointmentRoutes = require("./routes/appointmentRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 const { errorHandler } = require("./middlewares/errorMiddleware");
-// File for the routes
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/department", departmentRoutes);

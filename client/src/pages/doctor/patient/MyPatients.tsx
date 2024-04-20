@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import {
   PatientsType,
@@ -29,7 +29,7 @@ const customTextInputTheme: CustomFlowbiteTheme["textInput"] = {
 const MyPatients: React.FC = () => {
   const [search, setSearch] = useState<string>("");
   const [patients, setPatients] = useState<PatientsType | undefined>();
-  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -40,26 +40,27 @@ const MyPatients: React.FC = () => {
 
   useSelectedPage("My patients");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!id && query.toString() !== lastQuery.current) {
-        lastQuery.current = query.toString();
-        try {
-          setLoading(true);
-          const response = await getPatientsForDoctor(page, searchQuery);
-          setPatients(response);
-          navigate(`/my-patients?${query.toString()}`);
-        } catch (err: any) {
-          setMessage(err?.response?.data ?? err?.message);
-          throw new Error(err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
+  const queryConditions = !id && query.toString() !== lastQuery.current;
 
-    fetchData();
-  }, [page, searchQuery, id, navigate, query]);
+  const handleGetPatients = useCallback(async () => {
+    lastQuery.current = query.toString();
+    try {
+      setLoading(true);
+      setError("");
+      const response = await getPatientsForDoctor(page, searchQuery);
+      setPatients(response);
+      navigate(`/my-patients?${query.toString()}`);
+    } catch (err: any) {
+      setError(err?.response?.data ?? err?.message);
+      throw new Error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate, page, query, searchQuery]);
+
+  useEffect(() => {
+    if (queryConditions) handleGetPatients();
+  }, [queryConditions, handleGetPatients]);
 
   const handleNavigatePage = async (newPage: number) => {
     if (page !== newPage) {
@@ -128,7 +129,7 @@ const MyPatients: React.FC = () => {
             <CustomSpinner size="lg" fromTop={24} />
           ) : (
             <div className="flex h-full flex-col gap-4">
-              {patients && patients.data?.length > 0 ? (
+              {patients && patients.data?.length > 0 && error === "" ? (
                 <div className="flex h-full flex-col justify-between gap-4">
                   <div className="h-fit w-full">
                     <div className="mx-1 flex w-full flex-wrap justify-start gap-1">
@@ -157,7 +158,7 @@ const MyPatients: React.FC = () => {
                 <div className="mt-16 text-center">
                   <ErrorMessage
                     className="mx-auto my-auto xxl:text-2xl"
-                    text={message}
+                    text={error}
                   />
                 </div>
               )}
