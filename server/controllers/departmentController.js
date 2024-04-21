@@ -179,7 +179,7 @@ const getAllInfoAboutDepartment = asyncHandler(async (req, res) => {
 
   const department = await Department.findOne({ name: departmentName });
   if (!department)
-    return res.status(404).json("There is no department with such name!");
+    return res.status(404).json("Department not found! Something went wrong!");
 
   const departmentDoctors = await Doctor.find({
     department_id: department._id,

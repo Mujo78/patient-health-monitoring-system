@@ -10,7 +10,6 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV.match("production")) {
-      console.log("production");
       //sendgrid
       return nodemailer.createTransport({
         service: "SendGrid",
@@ -20,7 +19,6 @@ module.exports = class Email {
         },
       });
     } else {
-      console.log("development");
       return nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,

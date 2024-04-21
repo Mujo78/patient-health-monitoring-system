@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
+/**
+ * @type {mongoose.SchemaDefinitionProperty}
+ */
 const departmentSchema = new mongoose.Schema(
   {
     name: {

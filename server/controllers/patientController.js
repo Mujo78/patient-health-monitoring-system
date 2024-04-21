@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const mongoose = require("mongoose");
 const Patient = require("../models/patient");
 const {
   deleteDoc,
@@ -27,7 +26,7 @@ const banUserProfile = asyncHandler(async (req, res) => {
     { runValidators: false, new: true }
   );
   if (!userToBan)
-    return res.status(404).json("There was an error, please try again latter!");
+    return res.status(404).json("User not found! Something went wrong!");
 
   return res.status(200).json(userToBan);
 });

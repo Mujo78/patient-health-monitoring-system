@@ -10,7 +10,8 @@ const moment = require("moment-timezone");
 const getPharmacy = asyncHandler(async (req, res) => {
   const pharmacy = await Pharmacy.findOne().populate("user_id");
 
-  if (!pharmacy) return res.status(404).json("Pharmacy not found!");
+  if (!pharmacy)
+    return res.status(404).json("Pharmacy not found! Something went wrong!");
   return res.status(200).json(pharmacy);
 });
 

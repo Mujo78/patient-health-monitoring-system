@@ -1,6 +1,8 @@
 const User = require("./models/user");
 const Notification = require("./models/notification");
-const Appointment = require("./models/appointment");
+
+const logger = require("./utils/logger");
+
 let usersIo = [];
 
 module.exports = function (io) {
@@ -9,7 +11,7 @@ module.exports = function (io) {
       const oneUser = await User.findById(userId).lean().exec();
       if (oneUser) {
         usersIo[userId] = socket;
-        console.log(`Socket: User with id ${userId} connected`);
+        logger.info(`Socket: User with id ${userId} connected`);
         if (oneUser.first === false) {
           const welcome = await Notification.create({
             user_id: oneUser._id,
@@ -21,7 +23,7 @@ module.exports = function (io) {
           usersIo[userId]?.emit("first_message", welcome);
         }
       } else {
-        console.log(`Socket: No user with id ${userId}`);
+        logger.warn(`Socket: No user with id ${userId}`);
       }
     });
 
@@ -67,7 +69,7 @@ module.exports = function (io) {
     });
 
     socket.on("disconnect", (userId) => {
-      console.log(`User with id ${userId} disconnected from socket`);
+      logger.info(`User with id ${userId} disconnected from socket`);
       usersIo[userId] = null;
     });
   });

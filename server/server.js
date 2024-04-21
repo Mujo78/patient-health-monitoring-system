@@ -1,12 +1,21 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const logger = require("./utils/logger.js");
+
 const app = express();
+if (process.env.NODE_ENV.match("development")) {
+  app.use(morgan("dev"));
+}
+
 const path = require("path");
 
 const connectDB = require("./config/db");
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-dotenv.config();
+const helmet = require("helmet");
+const expressMongoSanitize = require("express-mongo-sanitize");
 
 const port = process.env.PORT || 3001;
 connectDB();
@@ -17,6 +26,8 @@ app.use(
 );
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use(helmet());
+app.use(expressMongoSanitize());
 
 const { Server } = require("socket.io");
 const server = require("http").createServer(app);
@@ -53,9 +64,6 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(errorHandler);
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
 
 console.log(process.env.NODE_ENV);
 
@@ -64,5 +72,5 @@ if (process.env.NODE_ENV.match("production")) {
 }
 
 server.listen(port, () => {
-  console.log(`Server working on port: ${port}`);
+  logger.info(`Server working on port: ${port}`);
 });

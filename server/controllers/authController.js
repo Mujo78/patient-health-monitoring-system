@@ -224,8 +224,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     return res.status(200).json("Token successfully sent!");
   } catch (err) {
-    console.log(err);
-
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
@@ -258,8 +256,8 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 const firstTimeUsing = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
-
-  if (!user) return res.status(404).json("There is no user with that ID");
+  if (!user)
+    return res.status(404).json("User not found! Something went wrong!");
   user.first = true;
   user.save({ validateBeforeSave: false });
 

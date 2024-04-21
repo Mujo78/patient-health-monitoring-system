@@ -1,6 +1,4 @@
-const { Model } = require("mongoose");
 const asyncHandler = require("express-async-handler");
-
 const Appointment = require("../models/appointment");
 const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
@@ -89,7 +87,10 @@ const getAllDocForUser = () =>
     const model = await mod.findOne({ user_id: req.params.id });
 
     if (!model)
-      return res.status(404).json("User not found! Something went wrong!");
+      return res
+        .status(404)
+        .json(`${mod.modelName} not found! Something went wrong!`);
+
     query[mod_id] = model._id;
     const allApp = await Appointment.find(query);
 
@@ -105,7 +106,9 @@ const updateMyInfo = (Model) =>
     );
 
     if (!info)
-      return res.status(404).json("User not found! Something went wrong!");
+      return res
+        .status(404)
+        .json(`${Model.modelName} not found! Something went wrong!`);
 
     return res.status(200).json(info._doc);
   });
