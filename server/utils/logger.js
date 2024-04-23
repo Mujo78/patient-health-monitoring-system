@@ -9,7 +9,8 @@ const levels = {
 };
 
 const level = () => {
-  const isDevelopment = process.env.NODE_ENV.match("development");
+  const env = process.env.NODE_ENV || "development";
+  const isDevelopment = env === "development";
   return isDevelopment ? "debug" : "warn";
 };
 

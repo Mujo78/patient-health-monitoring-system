@@ -6,15 +6,15 @@ const uniqueValidator = require("mongoose-unique-validator");
  */
 const medicineSchema = new mongoose.Schema(
   {
+    pharmacy_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pharamcy",
+    },
     name: {
       type: String,
       required: [true, "Name is required!"],
       minlength: [2, "Name is too short!"],
       unique: true,
-    },
-    pharmacy_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Pharamcy",
     },
     description: {
       type: String,
