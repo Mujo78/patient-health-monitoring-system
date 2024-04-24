@@ -26,7 +26,7 @@ const useAPI = <T>(url: string, options?: Options<T>) => {
         setData(response.data);
         if (onSuccess) onSuccess(response.data);
       } catch (error: any) {
-        setError(error?.response?.message ?? error?.message);
+        setError(error?.response?.data ?? error?.message);
         throw new Error(error);
       } finally {
         setLoading(false);

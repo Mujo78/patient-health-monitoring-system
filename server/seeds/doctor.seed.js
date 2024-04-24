@@ -3,9 +3,9 @@ const User = require("../models/user");
 const logger = require("../utils/logger");
 
 const doctorProfileData = {
-  email: "michael.johnson213@hs.com",
+  email: "michael.johnson444@hs.com",
   role: "DOCTOR",
-  photo: "user-doctor.png",
+  photo: "user-doctor.jpg",
   password: "michael.johnson",
   passwordConfirm: "michael.johnson",
   first: false,
@@ -50,7 +50,6 @@ const seedDoctor = async (session, departmentId) => {
             user_id: newDoctorUser[0]._id,
             department_id: departmentId,
             ...doctorData,
-            session,
           },
         ],
         { session }

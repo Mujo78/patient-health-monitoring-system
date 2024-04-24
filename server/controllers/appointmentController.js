@@ -333,26 +333,26 @@ const formatTime = (time) => {
 };
 
 const workTime = [
-  "9:00",
-  "9:20",
-  "9:40",
-  "10:00",
-  "10:20",
-  "10:40",
-  "11:00",
-  "11:20",
-  "11:40",
-  "12:00",
-  "1:00",
-  "1:20",
-  "1:40",
-  "2:00",
-  "2:20",
-  "2:40",
-  "3:00",
-  "3:20",
-  "3:40",
-  "4:00",
+  "9:00 AM",
+  "9:20 AM",
+  "9:40 AM",
+  "10:00 AM",
+  "10:20 AM",
+  "10:40 AM",
+  "11:00 AM",
+  "11:20 AM",
+  "11:40 AM",
+  "12:00 AM",
+  "1:00 PM",
+  "1:20 PM",
+  "1:40 PM",
+  "2:00 PM",
+  "2:20 PM",
+  "2:40 PM",
+  "3:00 PM",
+  "3:20 PM",
+  "3:40 PM",
+  "4:00 PM",
 ];
 
 const getAvailableTimeForAppointmentsForADay = asyncHandler(
@@ -410,9 +410,20 @@ const getAvailableTimeForAppointmentsForADay = asyncHandler(
       ...formattedOtherAppointments,
     ];
 
-    const availableTimes = workTime.filter(
-      (time) => !takenAppointmentsTimes.includes(time)
-    );
+    const isToday = moment().isSame(date, "date");
+
+    let availableTimes;
+    if (isToday) {
+      availableTimes = workTime.filter(
+        (time) =>
+          !takenAppointmentsTimes.includes(time) &&
+          moment().format("HH:mm") < moment(time, "hh:mm A").format("HH:mm")
+      );
+    } else {
+      availableTimes = workTime.filter(
+        (time) => !takenAppointmentsTimes.includes(time)
+      );
+    }
 
     if (availableTimes) return res.status(200).json(availableTimes);
 

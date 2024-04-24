@@ -65,7 +65,7 @@ app.all("*", (req, res, next) => {
 
 app.use(errorHandler);
 
-console.log(process.env.NODE_ENV);
+logger.warn(process.env.NODE_ENV);
 
 if (process.env.NODE_ENV.match("production")) {
   process.env.URL_LINK = "url";

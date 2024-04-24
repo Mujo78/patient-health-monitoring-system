@@ -34,7 +34,7 @@ const PharmacyDashboardData: React.FC<Props> = ({ data }) => {
               <div>
                 <p className="text-sm xxl:!text-lg">Working hours:</p>
                 <p className="text-md mt-2 text-center text-gray-400 xl:!text-lg xxl:!text-2xl">
-                  {data?.pharmacy?.working_hours}
+                  {data?.pharmacy?.from + " AM - " + data?.pharmacy?.to + " PM"}
                 </p>
               </div>
             </div>

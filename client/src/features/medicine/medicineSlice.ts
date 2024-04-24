@@ -9,7 +9,8 @@ export interface Pharmacy {
   address: string;
   description: string;
   phone_number: string;
-  working_hours: string;
+  from: string;
+  to: string;
 }
 
 export interface Medicine {

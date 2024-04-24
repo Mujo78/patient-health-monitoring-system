@@ -23,9 +23,7 @@ const TimeButton: React.FC<Props> = ({ newTime, time, setNewTime }) => {
         "bg-blue-500 text-white hover:text-black"
       }  focus:!ring-blue-600`}
     >
-      <p className="xxl:text-xl">
-        {parseInt(time.split(":")[0]) < 9 ? `${time} PM` : `${time} AM`}
-      </p>
+      <p className="xxl:text-xl">{time}</p>
     </Button>
   );
 };

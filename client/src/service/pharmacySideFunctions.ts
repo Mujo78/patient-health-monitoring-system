@@ -21,7 +21,8 @@ type PharmacyMainInfo = {
   name: string;
   address: string;
   phone_number: string;
-  working_hours: string;
+  from: string;
+  to: string;
 };
 
 type Total = {

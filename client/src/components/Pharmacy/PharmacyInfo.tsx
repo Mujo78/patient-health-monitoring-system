@@ -49,7 +49,7 @@ const PharmacyInfo = () => {
             </Link>
             <p>Working hours</p>
             <p className="text-center font-semibold text-blue-700 xl:text-xl xxl:text-4xl">
-              {pharmacy.working_hours}
+              {pharmacy.from + " AM - " + pharmacy.to + " PM"}
             </p>
           </div>
         </div>

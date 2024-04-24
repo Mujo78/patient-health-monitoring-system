@@ -72,7 +72,7 @@ const getMe = getMyInfo(Pharmacy);
 
 const pharmacyDashboard = asyncHandler(async (req, res) => {
   const pharmacy = await Pharmacy.findOne().select(
-    "_id name address phone_number working_hours"
+    "_id name address phone_number from to"
   );
 
   if (!pharmacy)

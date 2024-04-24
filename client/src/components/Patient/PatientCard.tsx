@@ -33,7 +33,7 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
       {data ? (
         <>
           {variant === 1 && (
-            <p className="font-semibold text-blue-700">Patient</p>
+            <p className="mb-auto font-semibold text-blue-700">Patient</p>
           )}
           {variant === 2 && (
             <CustomImg
@@ -41,28 +41,42 @@ const PatientCard: React.FC<Props> = ({ data, variant, className }) => {
               className="mx-auto h-auto w-20 xxl:!w-40"
             />
           )}
-          <Header text={data.first_name + " " + data.last_name} bold size={1} />
-          {variant === 1 && <p className="text-gray-500">Details</p>}
-          <hr />
-          <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
-            Age:
-            <span className="ml-auto text-black">
-              {yearCalc(data?.date_of_birth)}
-            </span>
-          </p>
-          {variant === 1 && (
-            <>
-              <p className="flex justify-between text-sm text-gray-500">
-                Blood type :<span className="ml-auto text-black">A+</span>
-              </p>
-              <p className="flex justify-between text-sm text-gray-500">
-                Height (m) :<span className="ml-auto text-black">1.70</span>
-              </p>
-              <p className="flex justify-between text-sm text-gray-500">
-                Weight (kg) :<span className="ml-auto text-black">60</span>
-              </p>
-            </>
-          )}
+          <div className="mb-auto flex flex-col gap-3">
+            <Header
+              text={data.first_name + " " + data.last_name}
+              bold
+              size={1}
+            />
+            {variant === 1 && (
+              <p className="text-gray-500 xxl:!text-lg">Details</p>
+            )}
+            <hr />
+            <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
+              Age:
+              <span className="ml-auto text-black">
+                {yearCalc(data?.date_of_birth)}
+              </span>
+            </p>
+            {variant === 1 && (
+              <>
+                <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
+                  Blood type :<span className="ml-auto text-black">A+</span>
+                </p>
+                {data?.height && (
+                  <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
+                    Height (m) :
+                    <span className="ml-auto text-black">{data.height}</span>
+                  </p>
+                )}
+                {data?.weight && (
+                  <p className="flex justify-between text-sm text-gray-500 xxl:!text-xl">
+                    Weight (kg) :
+                    <span className="ml-auto text-black">{data.weight}</span>
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </>
       ) : (
         <NoDataAvailable />

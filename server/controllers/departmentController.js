@@ -56,7 +56,7 @@ const getMyDepartment = asyncHandler(async (req, res) => {
   const doctorsFromDepartment = await Doctor.find({
     department_id: department._id,
   })
-    .select("_id user_id first_name last_name available_days")
+    .select("_id user_id first_name last_name available_days gender")
     .sort({ first_name: 1 });
 
   const numberOfDoctors = doctorsFromDepartment.length;

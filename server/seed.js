@@ -7,8 +7,6 @@ const seedPharmacy = require("./seeds/pharmacy.seed");
 const seedMedicine = require("./seeds/medicine.seed");
 const seedDoctor = require("./seeds/doctor.seed");
 
-connectDB();
-
 const seedDb = asyncHandler(async () => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -30,6 +28,8 @@ const seedDb = asyncHandler(async () => {
   }
 });
 
-seedDb().then(() => {
-  mongoose.disconnect();
+connectDB().then(() => {
+  seedDb().then(() => {
+    mongoose.disconnect();
+  });
 });

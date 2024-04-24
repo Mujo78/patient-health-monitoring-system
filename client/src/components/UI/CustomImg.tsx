@@ -19,6 +19,7 @@ const CustomImg: React.FC<Props> = ({ url, className, width, height }) => {
 
   return (
     <img
+      crossOrigin="anonymous"
       className={className}
       src={imgUpload}
       alt="Uploaded"

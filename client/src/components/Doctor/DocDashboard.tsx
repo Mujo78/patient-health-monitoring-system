@@ -70,7 +70,7 @@ const DocDashboard: React.FC<Props> = ({ docDashInfo }) => {
           <span className="font-semibold">{new Date().getFullYear()} </span>
         </p>
         {docDashInfo?.patientStatistic &&
-        docDashInfo?.patientStatistic?.length > 0 ? (
+        docDashInfo?.patientStatistic[0].value > 0 ? (
           <ResponsiveContainer height="100%" width="100%">
             <PieChart>
               <Pie

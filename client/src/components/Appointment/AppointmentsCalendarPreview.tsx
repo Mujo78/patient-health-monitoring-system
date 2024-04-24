@@ -75,7 +75,7 @@ const AppointmentsCalendarPreview: React.FC<Props> = ({ titleFormat }) => {
         <div className="flex h-full w-full flex-col items-center justify-center px-4 py-3 text-sm">
           {status === "loading" ? (
             <CustomSpinner size="xl" />
-          ) : personAppointments && personAppointments.length > 0 ? (
+          ) : personAppointments ? (
             <>
               <Calendar
                 className="flex h-full w-full flex-col rounded-xl pb-12 sm:pb-0 xxl:!text-2xl"

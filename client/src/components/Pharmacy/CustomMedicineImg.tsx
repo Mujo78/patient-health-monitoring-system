@@ -22,6 +22,7 @@ const CustomMedicineImg: React.FC<Props> = ({
 
   return (
     <img
+      crossOrigin="anonymous"
       src={url}
       alt="Medicine-image"
       className={className && className}

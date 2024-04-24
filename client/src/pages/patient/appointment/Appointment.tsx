@@ -48,49 +48,51 @@ const Appointment: React.FC = () => {
       ) : selected !== null ? (
         <div className="flex h-full flex-col p-3">
           <div className="flex flex-col items-center justify-between gap-3 lg:flex-row">
-            <Card className="h-auto xl:w-full xxl:!w-fit xxl:p-12">
-              <div className="flex flex-col items-center gap-2 p-0 xl:!flex-row xl:justify-center">
-                <CustomImg
-                  url={selected?.doctor_id?.user_id?.photo}
-                  className="h-auto w-28 xxl:!w-48"
-                />
-                <div>
-                  <Header
-                    text={
-                      "Dr. " +
-                      selected?.doctor_id?.first_name +
-                      " " +
-                      selected?.doctor_id?.last_name
-                    }
-                    size={1}
-                    bold
-                    position="start"
-                    className="!text-blue-700"
+            <div className="h-auto w-full xl:!w-full">
+              <Card className="mx-auto h-auto w-fit p-0 xl:!px-12">
+                <div className="flex flex-wrap items-center justify-center gap-2 p-0 xl:!flex-row xl:justify-center">
+                  <CustomImg
+                    url={selected?.doctor_id?.user_id?.photo}
+                    className="h-auto w-28 xxl:!w-48"
                   />
-                  <div className="xl:!text-md text-xs text-gray-600 xxl:!text-xl">
-                    <p>
-                      Age: {selected?.doctor_id?.age} |{" "}
-                      {selected?.doctor_id?.speciality}{" "}
-                    </p>
-                    <p className="mb mt-2">
-                      Qualification: {selected?.doctor_id?.qualification}
-                    </p>
-                    <p>
-                      Email:{" "}
-                      <Link
-                        to={mailtoLink}
-                        className="cursor-pointer text-blue-500 underline hover:text-blue-700"
-                      >
-                        {selected?.doctor_id?.user_id?.email}
-                      </Link>
+                  <div>
+                    <Header
+                      text={
+                        "Dr. " +
+                        selected?.doctor_id?.first_name +
+                        " " +
+                        selected?.doctor_id?.last_name
+                      }
+                      size={1}
+                      bold
+                      position="start"
+                      className="!text-blue-700"
+                    />
+                    <div className="xl:!text-md text-xs text-gray-600 xxl:!text-xl">
+                      <p>
+                        Age: {selected?.doctor_id?.age} |{" "}
+                        {selected?.doctor_id?.speciality}{" "}
+                      </p>
+                      <p className="mb mt-2">
+                        Qualification: {selected?.doctor_id?.qualification}
+                      </p>
+                      <p>
+                        Email:{" "}
+                        <Link
+                          to={mailtoLink}
+                          className="cursor-pointer text-blue-500 underline hover:text-blue-700"
+                        >
+                          {selected?.doctor_id?.user_id?.email}
+                        </Link>
+                      </p>
+                    </div>
+                    <p className="xl:!text-md mt-2 line-clamp-2 text-justify text-xs text-gray-500 xxl:!text-xl">
+                      {selected?.doctor_id?.bio}
                     </p>
                   </div>
-                  <p className="xl:!text-md mt-2 line-clamp-2 text-justify text-xs text-gray-500 xxl:!text-xl">
-                    {selected?.doctor_id?.bio}
-                  </p>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
             <div className="flex h-full w-full flex-col gap-3">
               <div className="flex flex-col gap-3 xl:!text-sm xxl:!text-2xl">
                 <p className="flex flex-col">

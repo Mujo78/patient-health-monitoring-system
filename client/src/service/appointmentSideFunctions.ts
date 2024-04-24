@@ -144,10 +144,7 @@ export function isCurrentAppointment(appointmentDate: Date) {
 }
 
 export function convert12HourTo24Hour(time12Hour: string) {
-  const [hours, minutes] = time12Hour.split(":").map(Number);
-  return `${
-    hours <= 4 ? hours + 12 : hours < 10 && hours > 4 ? "0" + hours : hours
-  }:${minutes === 0 ? "00" : minutes}`;
+  return moment(time12Hour, "h:mm A").format("HH:mm");
 }
 
 export function isDSTFunc() {

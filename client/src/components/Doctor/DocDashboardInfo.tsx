@@ -75,7 +75,9 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
         </Card>
       </div>
       <Card className="h-72 w-full xl:!h-2/5 xl:!max-w-md">
-        {docDash && docDash?.gender && docDash.gender.length > 0 ? (
+        {docDash?.gender &&
+        docDash?.gender?.length > 0 &&
+        docDash.gender.some((g) => g.value > 0) ? (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart className="flex items-center">
               <Pie
