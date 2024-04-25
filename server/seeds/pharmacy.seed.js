@@ -5,7 +5,7 @@ const logger = require("../utils/logger");
 const pharmacyProfileData = {
   email: "pharmacy_hospital@hs.com",
   role: "PHARMACY",
-  photo: "pharmacy.jpeg",
+  photo: "pharmacy.png",
   password: "123456789",
   passwordConfirm: "123456789",
   first: true,

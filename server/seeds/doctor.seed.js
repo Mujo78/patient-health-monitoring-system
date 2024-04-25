@@ -5,7 +5,7 @@ const logger = require("../utils/logger");
 const doctorProfileData = {
   email: "michael.johnson444@hs.com",
   role: "DOCTOR",
-  photo: "user-doctor.jpg",
+  photo: "doctor-user.jpg",
   password: "michael.johnson",
   passwordConfirm: "michael.johnson",
   first: false,

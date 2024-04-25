@@ -1,6 +1,6 @@
 node_modules
 .env
-uploads
+uploads/user-*
 data.txt
 
 logs

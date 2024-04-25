@@ -37,7 +37,7 @@ const NavBarDropdown: React.FC<Props> = ({ setShow, hasNewNotification }) => {
   const { accessUser } = useSelector(authUser, shallowEqual);
 
   const role = accessUser?.data?.role;
-  let route;
+  let route: string = "";
 
   if (role === "PATIENT") route = "/notifications";
   else if (role === "DOCTOR") route = "/doctor-notifications";
@@ -54,14 +54,14 @@ const NavBarDropdown: React.FC<Props> = ({ setShow, hasNewNotification }) => {
   };
 
   const navigateNotifications = () => {
-    if (route) {
+    if (route !== "") {
       setShow(false);
       navigate(route);
     }
   };
 
   const handleNavigateNotification = (id: string) => {
-    if (route) {
+    if (route !== "") {
       setShow(false);
       navigate(`${route}/${id}`);
     }

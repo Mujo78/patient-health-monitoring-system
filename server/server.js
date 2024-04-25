@@ -1,4 +1,5 @@
 const express = require("express");
+const compression = require("compression");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
@@ -24,6 +25,8 @@ app.use(
     origin: "*",
   })
 );
+app.use(compression());
+
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(helmet());
