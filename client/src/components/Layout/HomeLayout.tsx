@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../app/hooks";
 import PatientTabNav from "../Patient/PatientTabNav";
 import DoctorTabNav from "../Doctor/DoctorTabNav";
 import PharmacyTabNav from "../Pharmacy/PharmacyTabNav";
+import { Toaster } from "react-hot-toast";
 
 const HomeLayout: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ const HomeLayout: React.FC = () => {
 
   return (
     <div className="flex w-full">
+      <Toaster position="top-right" />
       <div className=" flex w-full">
         {accessUser?.data.role === "PATIENT" && (
           <>

@@ -4,7 +4,7 @@ import defaultImg from "../../assets/default.jpg";
 type Props = {
   url: string | undefined;
   className?: string;
-  width?: string;
+  width?: string | number;
   height?: string;
 };
 

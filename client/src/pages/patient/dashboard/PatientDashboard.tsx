@@ -8,8 +8,14 @@ import { shallowEqual, useSelector } from "react-redux";
 import CustomImg from "../../../components/UI/CustomImg";
 import { useNavigate } from "react-router-dom";
 import { authUser } from "../../../features/auth/authSlice";
-import AppointmentsChart from "../../../components/Patient/AppointmentsChart";
-import AppointmentReviewCalendar from "../../../components/Appointment/AppointmentReviewCalendar";
+
+const AppointmentsChart = React.lazy(
+  () => import("../../../components/Patient/AppointmentsChart"),
+);
+const AppointmentReviewCalendar = React.lazy(
+  () => import("../../../components/Appointment/AppointmentReviewCalendar"),
+);
+
 import useSelectedPage from "../../../hooks/useSelectedPage";
 import CustomSpinner from "../../../components/UI/CustomSpinner";
 import Header from "../../../components/UI/Header";

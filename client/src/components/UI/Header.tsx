@@ -20,7 +20,7 @@ const Header: React.FC<Props> = ({
   normal,
 }) => {
   return (
-    <header>
+    <div>
       <p
         className={`font-${bold ? "bold" : "semibold"} text-${
           position ?? "center"
@@ -35,7 +35,7 @@ const Header: React.FC<Props> = ({
         {text}
       </p>
       {border && <hr />}
-    </header>
+    </div>
   );
 };
 

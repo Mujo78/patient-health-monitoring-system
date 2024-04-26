@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AppLayout from "./components/Layout/AppLayout";
+//import AppLayout from "./components/Layout/AppLayout";
 import LandingPage from "./pages/LandingPage";
-import HomeLayout from "./components/Layout/HomeLayout";
 import Authorized from "./helpers/Authorized";
 import UserRequired from "./helpers/UserRequired";
 import ErrorPage from "./pages/ErrorPage";
@@ -9,6 +8,9 @@ import patientRoutes from "./routes/patient";
 import doctorRoutes from "./routes/doctor";
 import pharmacyRoutes from "./routes/pharmacy";
 import { lazy } from "react";
+
+const HomeLayout = lazy(() => import("./components/Layout/HomeLayout"));
+const AppLayout = lazy(() => import("./components/Layout/AppLayout"));
 
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const VerificationPage = lazy(() => import("./pages/auth/VerificationPage"));

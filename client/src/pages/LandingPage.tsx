@@ -6,6 +6,7 @@ import LoginInfo from "./auth/LoginInfo";
 import { useNavigate } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../features/auth/authSlice";
+import backgroundImage from "/background-vert.svg";
 
 export type Props = {
   setSignUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,11 +40,12 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
       <div
-        className={`relative flex h-full w-full flex-col items-center justify-center bg-photo-vertical bg-cover md:!h-screen md:!w-1/4 ${
+        className={`relative flex h-full w-full flex-col items-center justify-center bg-cover md:!h-screen md:!w-1/4 ${
           signup
             ? "animate-slide-up md:!animate-slide-left"
             : "animate-slide-back-up md:!animate-slide-back-left"
         }`}
+        style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="z-10 flex w-full flex-col px-6">
           {signup ? (

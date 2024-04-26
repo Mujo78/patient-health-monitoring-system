@@ -56,7 +56,8 @@ const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
               ? data.doctor_id.user_id.photo
               : data.patient_id.user_id.photo
           }
-          className="h-auto w-32 rounded-full xxl:!w-44"
+          className="h-auto rounded-full xxl:!w-44"
+          width={128}
         />
       </Table.Cell>
       <Table.Cell className="h-full w-full">

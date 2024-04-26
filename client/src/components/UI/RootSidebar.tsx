@@ -1,7 +1,7 @@
 import React from "react";
 import { CustomFlowbiteTheme, Sidebar } from "flowbite-react";
 import hospitalImage from "../../assets/hospital-logos.webp";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
 import { authUser, setSelected } from "../../features/auth/authSlice";
 import { useAppDispatch } from "../../app/hooks";
@@ -25,12 +25,16 @@ type Props = {
 
 const RootSidebar: React.FC<Props> = ({ children }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { accessUser } = useSelector(authUser, shallowEqual);
 
   const route = accessUser?.data.role.toLowerCase();
 
   const onClickSelect = (name: string) => {
-    dispatch(setSelected(name));
+    if (name !== "Dashboard") {
+      dispatch(setSelected(name));
+    }
+    navigate(`/${route}/${accessUser?.data._id}`);
   };
 
   return (
@@ -39,25 +43,23 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
         className="flex h-screen w-fit flex-col justify-between gap-12 border-r border-r-gray-200"
         theme={theme}
       >
-        <Sidebar.Items className="justify flex h-5/6 flex-col font-Poppins">
-          <Sidebar.ItemGroup className="flex h-full flex-col justify-between">
-            <Sidebar.ItemGroup>
-              <Sidebar.Item
-                className=" hover:bg-white"
-                as={NavLink}
-                onClick={() => onClickSelect("Dashboard")}
-                to={`/${route}/${accessUser?.data._id}`}
-              >
-                <img
-                  src={hospitalImage}
-                  className="mx-auto h-auto w-32 rounded bg-white"
-                  alt="Hospital logo"
-                />
-              </Sidebar.Item>
-              {children}
-            </Sidebar.ItemGroup>
-          </Sidebar.ItemGroup>
+        <Sidebar.Items className="flex h-5/6 flex-col justify-start font-Poppins">
+          <Sidebar.CTA
+            color="light"
+            className="!mt-0 hover:cursor-pointer hover:bg-white"
+            onClick={() => onClickSelect("Dashboard")}
+          >
+            <img
+              src={hospitalImage}
+              width={120}
+              height={120}
+              className="mx-auto rounded bg-white"
+              alt="Hospital logo"
+            />
+          </Sidebar.CTA>
+          <Sidebar.ItemGroup className="!pt-2">{children}</Sidebar.ItemGroup>
         </Sidebar.Items>
+
         <LogoutButton />
       </Sidebar>
     </div>

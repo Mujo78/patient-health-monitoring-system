@@ -101,7 +101,8 @@ const CustomNavbar: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-center">
                   <CustomImg
                     url={accessUser?.data.photo}
-                    className="mr-1 w-8 xxl:!w-14"
+                    className="mr-1 xxl:!w-14"
+                    width={32}
                   />
                   <p className="mr-0 text-xs font-semibold sm:mr-3 xxl:!text-2xl">
                     {accessUser?.info?.name ??
