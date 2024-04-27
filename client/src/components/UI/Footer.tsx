@@ -23,7 +23,11 @@ const Footer: React.FC<Props> = ({ variant, children, className }) => {
         }`}
       >
         {variant === 2 && (
-          <Button className="hidden lg:flex" color="light" onClick={goBack}>
+          <Button
+            className="hidden focus:!ring-gray-300 lg:flex"
+            color="light"
+            onClick={goBack}
+          >
             <p className="xxl:text-lg">Back</p>
           </Button>
         )}

@@ -16,8 +16,8 @@ export function colorPick(type: string) {
   return type === "MESSAGE"
     ? "text-blue-700"
     : type === "INFO"
-      ? "text-green-600"
-      : "text-red-600";
+      ? "text-green-700"
+      : "text-red-700";
 }
 
 export function getEighteenYearsAgoDate() {

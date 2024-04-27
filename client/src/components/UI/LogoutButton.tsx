@@ -21,6 +21,7 @@ const LogoutButton = () => {
     <Button
       color="light"
       onClick={logOut}
+      aria-label="log-out"
       className="mx-auto mb-0 h-fit !w-fit cursor-pointer hover:bg-gray-50 sm:mb-2 md:!w-2/3"
     >
       <div className="flex items-center justify-center gap-2">

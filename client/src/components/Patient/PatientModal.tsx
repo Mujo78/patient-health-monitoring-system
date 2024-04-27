@@ -58,8 +58,8 @@ const PatientModal: React.FC<Props> = ({
               <CustomSpinner />
             </div>
           ) : latestAppState ? (
-            <div className="flex h-full flex-col justify-evenly">
-              <div className="my-auto flex flex-wrap justify-between divide-y rounded-lg border p-1 text-center md:!divide-x md:!divide-y-0 md:!text-start xxl:text-2xl">
+            <div className="flex h-full flex-col justify-evenly divide-gray-300">
+              <div className="my-auto flex flex-wrap justify-between divide-y rounded-lg border border-gray-300 p-1 text-center md:!divide-x md:!divide-y-0 md:!text-start xxl:text-2xl">
                 <div className="w-full divide-y md:!w-2/4">
                   <p>
                     <span className="hidden font-semibold md:!inline-block">
@@ -107,7 +107,7 @@ const PatientModal: React.FC<Props> = ({
                 <h1 className="text-md mb-1 font-bold xxl:text-2xl">
                   Medical report
                 </h1>
-                <div className="flex flex-col gap-4 divide-y rounded-lg border p-2">
+                <div className="flex flex-col gap-4 divide-y  rounded-lg border border-gray-300 p-2">
                   {latestAppState.reason.length !== 0 && (
                     <div className="text-sm xxl:!text-xl">
                       <h1 className="font-semibold">Reason</h1>
@@ -179,7 +179,11 @@ const PatientModal: React.FC<Props> = ({
         </div>
       </Modal.Body>
       <Modal.Footer className="hidden md:!flex">
-        <Button className="ml-auto" color="gray" onClick={handleClose}>
+        <Button
+          className="ml-auto focus:!ring-gray-300"
+          color="light"
+          onClick={handleClose}
+        >
           <p className="xxl:!text-lg">Close</p>
         </Button>
       </Modal.Footer>

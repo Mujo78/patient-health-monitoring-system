@@ -42,7 +42,7 @@ const PatientAppointmentCard: React.FC = () => {
             <div className="flex flex-col lg:!flex-row xl:!flex-col">
               <CustomImg
                 url={selected?.patient_id.user_id.photo}
-                className="mx-auto h-auto w-20 rounded-xl lg:!w-52 xxl:!w-80"
+                className="mx-auto h-auto w-20 rounded-xl lg:!w-60 xl:!w-52 xxl:!w-80"
               />
               <div className="flex-grow">
                 <div className="flex flex-col gap-1 text-sm xl:!gap-4 xxl:!gap-8 xxl:!text-2xl">
@@ -101,7 +101,7 @@ const PatientAppointmentCard: React.FC = () => {
                 <Button
                   color="light"
                   onClick={showMore}
-                  className="mt-1 w-full focus:!ring-gray-100 md:!mt-0 xl:!mt-2"
+                  className="mt-1 w-full focus:!ring-gray-100 xl:!mt-2"
                 >
                   <p className="text-sm xxl:!text-lg">See more</p>
                 </Button>

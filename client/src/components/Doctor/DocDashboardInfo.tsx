@@ -64,7 +64,7 @@ const DocDashboardInfo: React.FC<Props> = ({ docDash }) => {
                 <p className="ml-auto xxl:!text-lg">
                   Age: {yearCalc(docDash.latest.patient_id.date_of_birth)}
                 </p>
-                <div className="flex flex-wrap gap-1 text-xs text-gray-400 xxl:!mx-auto xxl:!text-lg">
+                <div className="flex flex-wrap gap-1 text-xs text-gray-600 xxl:!mx-auto xxl:!text-lg">
                   <p>{getDateTime(docDash?.latest?.appointment_date)}</p>
                 </div>
               </div>

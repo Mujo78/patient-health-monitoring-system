@@ -118,7 +118,7 @@ const PersonalInformation: React.FC = () => {
                     id="gender"
                     {...register("gender")}
                     color={errors.gender && "failure"}
-                    className="mt-1.5"
+                    className="mt-1.5 focus:!border-blue-700 "
                   >
                     {genders.map((gender) => (
                       <option key={gender} value={gender}>

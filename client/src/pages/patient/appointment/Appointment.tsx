@@ -66,7 +66,7 @@ const Appointment: React.FC = () => {
                       size={1}
                       bold
                       position="start"
-                      className="!text-blue-700"
+                      className="!text-blue-800"
                     />
                     <div className="xl:!text-md text-xs text-gray-600 xxl:!text-xl">
                       <p>
@@ -80,7 +80,7 @@ const Appointment: React.FC = () => {
                         Email:{" "}
                         <Link
                           to={mailtoLink}
-                          className="cursor-pointer text-blue-500 underline hover:text-blue-700"
+                          className="cursor-pointer text-blue-800 underline hover:text-blue-900"
                         >
                           {selected?.doctor_id?.user_id?.email}
                         </Link>

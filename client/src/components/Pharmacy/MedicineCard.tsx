@@ -20,7 +20,7 @@ const MedicineCard: React.FC<Props> = ({ onClick, medicine, className }) => {
           url={
             medicine.photo.startsWith(medicine.name)
               ? `http://localhost:3001/uploads/${medicine.photo}`
-              : medicine.photo
+              : "default"
           }
           className="mx-auto h-auto  w-24 rounded-full xxl:!w-44"
         />

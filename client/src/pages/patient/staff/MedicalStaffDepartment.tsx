@@ -34,7 +34,7 @@ const MedicalStaffDepartment: React.FC = () => {
               position="start"
             />
 
-            <p className="xl:!text-md text-justify xxl:!text-2xl">
+            <p className="text-justify xl:!text-sm xxl:!text-2xl">
               {selectedDepartment?.department?.description}
             </p>
             <p className="xl:!text-md ml-0 lg:!ml-auto xxl:!text-2xl">

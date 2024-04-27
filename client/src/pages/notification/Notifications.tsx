@@ -116,7 +116,7 @@ const Notifications: React.FC = () => {
                         <div className="flex w-full flex-col gap-3 text-[0.7rem] xxl:!text-sm">
                           {n?.name.startsWith("Welcome to the") ? (
                             <>
-                              <p className="lg:!line-clamp-2">
+                              <p className="text-gray-800 lg:!line-clamp-2">
                                 Welcome to the Patient Health Monitoring System!
                                 🏥 We're delighted to have you here. Your health
                                 and well-being are our top priorities. Our
@@ -140,7 +140,9 @@ const Notifications: React.FC = () => {
                               </p>
                             </>
                           ) : (
-                            <p className="lg:!line-clamp-2">{n.content}</p>
+                            <p className="text-gray-800 lg:!line-clamp-2">
+                              {n.content}
+                            </p>
                           )}
 
                           <div className="flex flex-col gap-1">
@@ -154,7 +156,7 @@ const Notifications: React.FC = () => {
                                 </Link>
                               )}
 
-                              <p className=" ml-auto">
+                              <p className="ml-auto text-gray-800">
                                 {moment(n.createdAt).format("hh:mm A")}
                               </p>
                             </div>
@@ -178,7 +180,7 @@ const Notifications: React.FC = () => {
               <Outlet context={{ error, setError } satisfies ContextTyped} />
             ) : (
               <div className="hidden h-full w-full items-center justify-center lg:flex">
-                <p className="text-gray-400">
+                <p className="text-gray-600">
                   Please, choose notification for review.
                 </p>
               </div>

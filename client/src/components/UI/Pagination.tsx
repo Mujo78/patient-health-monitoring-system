@@ -44,7 +44,7 @@ const Pagination: React.FC<Props> = ({
             {pageNum > 1 && (
               <Button
                 onClick={() => handlePageChange(pageNum - 1)}
-                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 active:!bg-transparent active:ring-1 active:ring-indigo-100"
+                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 focus:!ring-indigo-50 active:!bg-transparent active:ring-1 active:!ring-indigo-50"
               >
                 <HiArrowLongLeft className="xxl:!text-2xl" />
               </Button>
@@ -55,7 +55,7 @@ const Pagination: React.FC<Props> = ({
               <Button
                 key={pageNumber}
                 onClick={() => handlePageChange(pageNumber)}
-                className={`relative mx-auto inline-flex items-center justify-center rounded-lg text-sm font-medium hover:!bg-indigo-100 active:!bg-indigo-100 active:ring-1 active:ring-indigo-100 ${
+                className={`relative mx-auto inline-flex items-center justify-center rounded-lg text-sm font-medium hover:!bg-indigo-100 focus:!ring-indigo-50 active:!bg-indigo-100 active:ring-1 active:!ring-indigo-50 ${
                   pageNumber === pageNum
                     ? "bg-indigo-100 text-blue-600"
                     : "bg-white text-gray-700 hover:bg-gray-50"
@@ -69,7 +69,7 @@ const Pagination: React.FC<Props> = ({
             {pageNum < totalPages && (
               <Button
                 onClick={() => handlePageChange(pageNum + 1)}
-                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 active:!bg-transparent active:ring-1 active:ring-indigo-100"
+                className="relative inline-flex items-center  bg-white text-gray-700 hover:!bg-gray-50 focus:!ring-indigo-50 active:!bg-transparent active:ring-1 active:ring-indigo-50"
               >
                 <HiArrowLongRight className="xxl:!text-2xl" />
               </Button>

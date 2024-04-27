@@ -70,7 +70,7 @@ const AppointmentOverview: React.FC = () => {
             className="xxl:!text-xl"
             text={`Your appointment date: ${moment(sApp?.appointment_date).format("DD/MM/YYYY")}`}
           />
-          <p className="mt-2 text-xs text-gray-400 xxl:!mt-4 xxl:!text-xl">
+          <p className="mt-2 text-xs text-gray-600 xxl:!mt-4 xxl:!text-xl">
             You will be able to see overview after doctor make it finished
           </p>
         </div>

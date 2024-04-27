@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Textarea } from "flowbite-react";
+import { CustomFlowbiteTheme, Tabs, Textarea } from "flowbite-react";
 import {
   appointment,
   editAppointment,
@@ -30,6 +30,22 @@ import CustomSpinner from "../UI/CustomSpinner";
 import TimeButton from "./TimeButton";
 import { isFulfilled } from "@reduxjs/toolkit";
 
+const tabItemTheme: CustomFlowbiteTheme["tab"] = {
+  tablist: {
+    tabitem: {
+      base: "flex items-center justify-center rounded-t-lg p-4 text-sm font-medium first:ml-0 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:dark:text-gray-500",
+      styles: {
+        default: {
+          active: {
+            on: "bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-blue-500",
+            off: "text-gray-500 hover:bg-gray-50 hover:text-gray-600 dark:text-gray-400 dark:hover:bg-gray-800  dark:hover:text-gray-300",
+          },
+        },
+      },
+    },
+  },
+};
+
 const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -53,7 +69,7 @@ const AppointmentOverviewEdit: React.FC = () => {
     new Date(sApp?.appointment_date as Date),
   );
 
-  const isFinished = sApp?.finished ? 0 : 1;
+  const isFinished = sApp?.finished ? -1 : 0;
   const [newTime, setNewTime] = useState<string>(formatedAppointmentTime);
   const [reason, setReason] = useState<string>(appointmentReason);
   const [active] = useState<number>(isFinished);
@@ -81,7 +97,7 @@ const AppointmentOverviewEdit: React.FC = () => {
       }
     }
 
-    if (active === 1) {
+    if (active === 0) {
       fetchData();
     }
   }, [value, active, sApp?.doctor_id._id]);
@@ -114,12 +130,17 @@ const AppointmentOverviewEdit: React.FC = () => {
 
   return (
     <>
-      <Tabs.Group aria-label="Default tabs" style="default" tabIndex={active}>
+      <Tabs.Group
+        aria-label="Default tabs"
+        theme={tabItemTheme}
+        style="default"
+        tabIndex={active}
+      >
         {sApp?.finished ||
         (sApp?.finished === false &&
           !canCancelOrEdit(sApp?.appointment_date)) ? (
           <Tabs.Item
-            active={active === 0}
+            active={active === -1}
             title="Overview"
             icon={HiOutlineDocumentDuplicate}
           >
@@ -129,7 +150,7 @@ const AppointmentOverviewEdit: React.FC = () => {
           sApp?.appointment_date &&
           canCancelOrEdit(sApp?.appointment_date) && (
             <Tabs.Item
-              active={active === 1}
+              active={active === 0}
               title="Edit"
               icon={HiOutlinePencilSquare}
             >
@@ -140,7 +161,6 @@ const AppointmentOverviewEdit: React.FC = () => {
                     <Textarea
                       placeholder="Reason"
                       name="reason"
-                      id="content"
                       className="text-sm focus:border-blue-700 focus:ring-blue-700 xxl:!text-xl"
                       onChange={onChange}
                       value={reason}

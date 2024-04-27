@@ -157,6 +157,7 @@ const GeneralSettings: React.FC = () => {
                   render={({ field: { value, onChange } }) => (
                     <ToggleSwitch
                       id="notification"
+                      aria-label="notification"
                       label=""
                       color="success"
                       checked={value}

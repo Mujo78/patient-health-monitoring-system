@@ -17,6 +17,14 @@
   font-weight: 400;
 }
 
+#gender:focus {
+  border-color: blue !important;
+}
+
+#blood_type:focus {
+  border-color: blue !important;
+}
+
 @media (min-width: 400px) {
   @keyframes slide-up {
     0% {

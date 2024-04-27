@@ -51,8 +51,7 @@ const RootSidebar: React.FC<Props> = ({ children }) => {
           >
             <img
               src={hospitalImage}
-              width={120}
-              height={120}
+              width={100}
               className="mx-auto rounded bg-white"
               alt="Hospital logo"
             />
