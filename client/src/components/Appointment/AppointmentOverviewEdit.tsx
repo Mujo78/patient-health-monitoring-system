@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CustomFlowbiteTheme, Tabs, Textarea } from "flowbite-react";
+import { Tabs, Textarea } from "flowbite-react";
 import {
   appointment,
   editAppointment,
@@ -20,6 +20,7 @@ import {
   getCorrectDate,
   isDSTFunc,
   isDoctorAvailable,
+  tabItemTheme,
 } from "../../service/appointmentSideFunctions";
 import CustomButton from "../UI/CustomButton";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,22 +30,6 @@ import AppointmentOverview from "./AppointmentOverview";
 import CustomSpinner from "../UI/CustomSpinner";
 import TimeButton from "./TimeButton";
 import { isFulfilled } from "@reduxjs/toolkit";
-
-const tabItemTheme: CustomFlowbiteTheme["tab"] = {
-  tablist: {
-    tabitem: {
-      base: "flex items-center justify-center rounded-t-lg p-4 text-sm font-medium first:ml-0 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:text-gray-400 disabled:dark:text-gray-500",
-      styles: {
-        default: {
-          active: {
-            on: "bg-gray-100 text-blue-600 dark:bg-gray-800 dark:text-blue-500",
-            off: "text-gray-500 hover:bg-gray-50 hover:text-gray-600 dark:text-gray-400 dark:hover:bg-gray-800  dark:hover:text-gray-300",
-          },
-        },
-      },
-    },
-  },
-};
 
 const AppointmentOverviewEdit: React.FC = () => {
   const navigate = useNavigate();

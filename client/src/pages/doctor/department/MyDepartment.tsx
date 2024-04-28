@@ -12,6 +12,7 @@ import CustomSpinner from "../../../components/UI/CustomSpinner";
 import Header from "../../../components/UI/Header";
 import DoctorDepartmentTable from "../../../components/Doctor/DoctorDepartmentTable";
 import useAPI from "../../../hooks/useAPI";
+import { tabItemTheme } from "../../../service/appointmentSideFunctions";
 
 const MyDepartment: React.FC = () => {
   const {
@@ -44,7 +45,11 @@ const MyDepartment: React.FC = () => {
             <div className="mt-5 flex h-full w-full flex-grow flex-col gap-3 px-2 lg:!mt-0 lg:flex-row lg:!gap-2 lg:!divide-x lg:pt-2">
               <div className="flex w-full flex-col gap-3 lg:!w-2/5">
                 <Header size={2} text={department?.department?.name} />
-                <Tabs.Group aria-label="Default tabs" style="default">
+                <Tabs.Group
+                  aria-label="Default tabs"
+                  theme={tabItemTheme}
+                  style="underline"
+                >
                   <Tabs.Item active title="Active">
                     <DoctorDepartmentTable
                       data={department.todayActiveDoctors}

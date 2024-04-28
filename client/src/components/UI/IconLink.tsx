@@ -13,8 +13,10 @@ const IconLink: React.FC<Props> = ({ children, to }) => {
       to={to}
       aria-label={to}
       className={`${
-        location.includes(to) && "rounded-md bg-gray-300"
-      } p-2 text-gray-800 transition-all duration-300`}
+        location.includes(to)
+          ? "rounded-md bg-gray-200 text-gray-800"
+          : "text-gray-400"
+      } p-2 transition-all duration-700 hover:rounded-md hover:bg-gray-200 hover:text-gray-800`}
     >
       {children}
     </Link>

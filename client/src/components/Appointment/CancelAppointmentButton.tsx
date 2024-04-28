@@ -47,11 +47,16 @@ const CancelAppointmentButton: React.FC<Props> = ({
           onClick={cancelAppointmentNow}
           className="mx-auto w-fit md:!mx-0 md:!ml-auto md:mt-auto lg:!w-fit"
           color="failure"
+          aria-label="cancel-appointment"
         >
           <p className="xxl:text-lg">Cancel Appointment</p>
         </Button>
       ) : (
-        <button className="size-8" onClick={cancelAppointmentNow}>
+        <button
+          className="size-8"
+          aria-label="cancel-app"
+          onClick={cancelAppointmentNow}
+        >
           <HiXCircle className="size-6 text-red-600 hover:!text-red-700" />
         </button>
       )}

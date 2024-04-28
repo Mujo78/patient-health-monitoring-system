@@ -98,14 +98,18 @@ const AppointmentDepartment: React.FC = () => {
                           onClick={() => chooseDepartment(n.name)}
                           key={n._id}
                           className={`cursor-pointer bg-white dark:border-gray-700 ${
-                            selectedDepartment === n.name && "bg-blue-200"
+                            selectedDepartment === n.name && "bg-blue-200 "
                           } dark:bg-gray-800`}
                         >
                           <Table.Cell className="whitespace-nowrap  font-medium text-gray-900 dark:text-white xxl:!text-xl">
                             {n.name}
                           </Table.Cell>
-                          <Table.Cell className="text-[0.7rem] xxl:!text-lg">
-                            <p className="line-clamp-1">{n.description}</p>
+                          <Table.Cell className="text-[0.8rem] xxl:!text-lg">
+                            <p
+                              className={`${selectedDepartment === n.name && "text-gray-600"} line-clamp-1 `}
+                            >
+                              {n.description}
+                            </p>
                           </Table.Cell>
                           <Table.Cell className="hidden lg:!table-cell">
                             <HiChevronRight />
@@ -133,7 +137,8 @@ const AppointmentDepartment: React.FC = () => {
                           <Table.Row
                             key={n._id}
                             className={`${
-                              selectedDoctor === n._id && "bg-blue-200"
+                              selectedDoctor === n._id &&
+                              "bg-blue-200 !text-gray-950"
                             } flex w-full cursor-pointer items-center justify-start gap-3 text-center`}
                             onClick={() => handleClick(n._id)}
                           >

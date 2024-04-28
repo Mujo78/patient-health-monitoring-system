@@ -25,15 +25,15 @@ const PharmacyDashboardData: React.FC<Props> = ({ data }) => {
               <hr />
               <div className="flex justify-between text-sm xxl:!text-lg">
                 Address:
-                <p className="text-gray-400">{data?.pharmacy?.address}</p>
+                <p className="text-gray-600">{data?.pharmacy?.address}</p>
               </div>
               <div className="flex justify-between text-sm xxl:!text-lg">
                 Phone number:
-                <p className="text-gray-400">+{data?.pharmacy?.phone_number}</p>
+                <p className="text-gray-600">+{data?.pharmacy?.phone_number}</p>
               </div>
               <div>
                 <p className="text-sm xxl:!text-lg">Working hours:</p>
-                <p className="text-md mt-2 text-center text-gray-400 xl:!text-lg xxl:!text-2xl">
+                <p className="text-md mt-2 text-center text-gray-600 xl:!text-lg xxl:!text-2xl">
                   {data?.pharmacy?.from + " AM - " + data?.pharmacy?.to + " PM"}
                 </p>
               </div>
@@ -48,7 +48,7 @@ const PharmacyDashboardData: React.FC<Props> = ({ data }) => {
               <p className="text-center text-sm xxl:!text-lg">
                 Num. of medicine
               </p>
-              <h1 className="mx-auto my-auto text-2xl text-green-500 xxl:!text-4xl">
+              <h1 className="mx-auto my-auto text-2xl text-green-600 xxl:!text-4xl">
                 {data?.total?.total_number ?? 0}
               </h1>
             </Card>
@@ -56,7 +56,7 @@ const PharmacyDashboardData: React.FC<Props> = ({ data }) => {
               <p className="text-center text-sm xxl:!text-lg">
                 Total available
               </p>
-              <h1 className="mx-auto my-auto text-2xl text-green-500 xxl:!text-4xl">
+              <h1 className="mx-auto my-auto text-2xl text-green-600 xxl:!text-4xl">
                 {data?.total?.total_available ?? 0}
               </h1>
             </Card>
@@ -64,7 +64,7 @@ const PharmacyDashboardData: React.FC<Props> = ({ data }) => {
           <div className="flex w-44 flex-col justify-around gap-3 xxl:!w-80 xxl:!gap-6">
             <Card className="max-w-xs xxl:!max-w-sm">
               <p className="text-center text-sm xxl:!text-lg">Total price</p>
-              <h1 className="mx-auto my-auto text-2xl text-green-500 xxl:!text-4xl">
+              <h1 className="mx-auto my-auto text-2xl text-green-600 xxl:!text-4xl">
                 {data?.total?.total_price ?? 0}{" "}
                 <span className="text-sm">BAM</span>
               </h1>

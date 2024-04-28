@@ -91,7 +91,8 @@ const AppointmentRow: React.FC<Props> = ({ variant, data }) => {
           </>
         ) : (
           !data.finished &&
-          !isCurrentAppointment(data.appointment_date) && (
+          !isCurrentAppointment(data.appointment_date) &&
+          data.appointment_date > new Date() && (
             <CancelAppointmentButton
               thenFn={cancelAppointmentNow}
               variant="icon"

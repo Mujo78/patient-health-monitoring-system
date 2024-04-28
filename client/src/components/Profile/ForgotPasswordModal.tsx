@@ -8,6 +8,7 @@ import { reset } from "../../features/auth/authSlice";
 import { forgotPasswordSchema } from "../../validations/auth/loginValidation";
 import ErrorMessage from "../UI/ErrorMessage";
 import Input from "../UI/Input";
+import { tabItemTheme } from "../../service/appointmentSideFunctions";
 
 type Props = {
   forgotPassword: boolean;
@@ -64,7 +65,7 @@ const ForgotPassword: React.FC<Props> = ({
     <Modal show={forgotPassword} className="font-Poppins" onClose={onClose}>
       <Modal.Header>Forgot Password</Modal.Header>
       <Modal.Body>
-        <Tabs.Group>
+        <Tabs.Group theme={tabItemTheme} style="underline">
           <Tabs.Item active title="Email verification">
             <form
               onSubmit={handleSubmit}

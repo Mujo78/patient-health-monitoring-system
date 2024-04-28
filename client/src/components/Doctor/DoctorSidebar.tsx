@@ -74,36 +74,38 @@ const DoctorSidebar: React.FC = () => {
       >
         <SidebarItemText>Department</SidebarItemText>
       </Sidebar.Item>
-      {location.pathname.startsWith("/doctor/") && (
-        <div className="hidden h-2/3 w-52 flex-grow flex-col items-center justify-center xl:!flex">
-          {show && (
-            <Alert
-              className="mr-3 flex h-fit w-full flex-col justify-between gap-2 bg-gradient-to-b from-blue-600  to-blue-300 text-white"
-              additionalContent={
-                <div className="flex flex-col gap-2">
-                  <p className="text-xs xxl:!text-lg">
-                    {welcomeMessages[randomNumber]}
+      <li>
+        {location.pathname.startsWith("/doctor/") && (
+          <div className="hidden h-2/3 w-52 flex-grow flex-col items-center justify-center xl:!flex">
+            {show && (
+              <Alert
+                className="mr-3 flex h-fit w-full flex-col justify-between gap-2 bg-gradient-to-b from-blue-600  to-blue-300 text-white"
+                additionalContent={
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs xxl:!text-lg">
+                      {welcomeMessages[randomNumber]}
+                    </p>
+                    <Button
+                      className="ml-auto mt-3 bg-white text-blue-700 hover:!bg-gray-200"
+                      onClick={handleDissmis}
+                      size="xs"
+                    >
+                      <p className="xxl:!text-lg">Dismiss</p>
+                    </Button>
+                  </div>
+                }
+                rounded
+              >
+                <div className="w-full">
+                  <p className="mt-3 text-sm font-semibold xxl:!text-xl">
+                    {`Welcome, Dr. ${accessUser?.info.last_name}`}!
                   </p>
-                  <Button
-                    className="ml-auto mt-3 bg-white text-blue-700 hover:!bg-gray-200"
-                    onClick={handleDissmis}
-                    size="xs"
-                  >
-                    <p className="xxl:!text-lg">Dismiss</p>
-                  </Button>
                 </div>
-              }
-              rounded
-            >
-              <div className="w-full">
-                <p className="mt-3 text-sm font-semibold xxl:!text-xl">
-                  {`Welcome, Dr. ${accessUser?.info.last_name}`}!
-                </p>
-              </div>
-            </Alert>
-          )}
-        </div>
-      )}
+              </Alert>
+            )}
+          </div>
+        )}
+      </li>
     </RootSidebar>
   );
 };

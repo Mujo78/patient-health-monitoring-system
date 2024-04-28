@@ -131,7 +131,7 @@ const LoginForm: React.FC = () => {
             </div>
             <button
               type="button"
-              className="xxl:!text-md mb-2 ml-auto cursor-pointer !bg-white p-0 text-xs text-black underline"
+              className="xxl:!text-md mb-2 ml-auto cursor-pointer !bg-white p-0 text-sm text-black underline sm:!text-xs"
               disabled={status === "loading"}
               onClick={(event) => forgotPasswordShow(event)}
             >

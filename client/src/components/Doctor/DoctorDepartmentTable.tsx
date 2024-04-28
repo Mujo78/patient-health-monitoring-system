@@ -2,6 +2,7 @@ import React from "react";
 import CustomImg from "../UI/CustomImg";
 import { Table } from "flowbite-react";
 import { DoctorType } from "../../service/departmentSideFunctions";
+import NoDataAvailable from "../UI/NoDataAvailable";
 
 type Props = {
   data: DoctorType[];
@@ -29,9 +30,7 @@ const DoctorDepartmentTable: React.FC<Props> = ({ data }) => {
           </Table.Body>
         </Table>
       ) : (
-        <p className="mt-6 text-center text-sm text-gray-400">
-          No data available.
-        </p>
+        <NoDataAvailable />
       )}
     </>
   );

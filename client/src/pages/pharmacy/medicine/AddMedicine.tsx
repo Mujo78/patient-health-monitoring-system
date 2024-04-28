@@ -175,6 +175,7 @@ const AddMedicine: React.FC = () => {
                         <ToggleSwitch
                           className="mb-2"
                           label="Available now?"
+                          aria-label="available"
                           color="success"
                           checked={value}
                           onChange={onChange}

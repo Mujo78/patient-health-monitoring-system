@@ -113,7 +113,7 @@ const Notifications: React.FC = () => {
                         >
                           {n.name}
                         </h3>
-                        <div className="flex w-full flex-col gap-3 text-[0.7rem] xxl:!text-sm">
+                        <div className="flex w-full flex-col gap-3 text-[0.8rem] xxl:!text-sm">
                           {n?.name.startsWith("Welcome to the") ? (
                             <>
                               <p className="text-gray-800 lg:!line-clamp-2">
@@ -129,7 +129,7 @@ const Notifications: React.FC = () => {
                                 your health journey. Stay healthy and stay
                                 connected
                               </p>
-                              <p className="mr-auto text-xs lg:!hidden">
+                              <p className="mr-auto text-xs text-gray-800 lg:!hidden">
                                 Support email:{" "}
                                 <Link
                                   className="text-blue-700 hover:!underline"
@@ -146,7 +146,7 @@ const Notifications: React.FC = () => {
                           )}
 
                           <div className="flex flex-col gap-1">
-                            <div className="flex flex-wrap justify-between">
+                            <div className="flex flex-wrap justify-between text-gray-800">
                               {n.link && (
                                 <Link
                                   to={n.link}
@@ -156,7 +156,7 @@ const Notifications: React.FC = () => {
                                 </Link>
                               )}
 
-                              <p className="ml-auto text-gray-800">
+                              <p className="ml-auto">
                                 {moment(n.createdAt).format("hh:mm A")}
                               </p>
                             </div>

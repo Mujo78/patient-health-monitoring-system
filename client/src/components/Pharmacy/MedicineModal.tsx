@@ -54,8 +54,8 @@ const MedicineModal: React.FC<Props> = ({ show, onClose, medicine }) => {
           <span
             className={
               isAvailable
-                ? "font-bold text-green-500"
-                : "font-bold text-red-600"
+                ? "font-bold text-green-600"
+                : "font-bold text-red-700"
             }
           >
             {isAvailable ? " Yes" : " No"}

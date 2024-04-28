@@ -76,6 +76,7 @@ const InfoPharmacy: React.FC = () => {
                   className="text-sm xxl:!text-lg"
                   value="Working Hours (from - to)"
                 />
+                <Label htmlFor="to" value="" />
                 <div className="mt-2 flex items-center gap-4">
                   <TextInput
                     id="from"
@@ -87,6 +88,7 @@ const InfoPharmacy: React.FC = () => {
                     color={errors.from && "failure"}
                   />
                   <TextInput
+                    id="to"
                     {...register("to")}
                     className="w-1/4"
                     min={1}

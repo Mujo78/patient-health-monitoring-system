@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { shallowEqual, useSelector } from "react-redux";
 import Header from "../../components/UI/Header";
 import Input from "../../components/UI/Input";
+import { tabItemTheme } from "../../service/appointmentSideFunctions";
 
 type PasswordReset = {
   password: string;
@@ -54,7 +55,7 @@ const ForgotPassword: React.FC = () => {
       </div>
       <div className="flex w-full flex-col gap-4 lg:!w-1/2">
         <Header bold size={2} text="Reset Password" />
-        <Tabs.Group className="px-2">
+        <Tabs.Group className="px-2" theme={tabItemTheme} style="underline">
           <Tabs.Item active title="Password reset">
             <form
               onSubmit={handleSubmit(onSubmit)}

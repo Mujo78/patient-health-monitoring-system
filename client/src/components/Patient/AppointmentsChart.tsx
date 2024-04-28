@@ -53,6 +53,9 @@ const AppointmentsChart: React.FC<Props> = ({ setError, error }) => {
               Year: {new Date().getFullYear()}
             </p>
             <div className="ml-auto flex items-center gap-5">
+              <Label htmlFor="month" className="lg:!hidden">
+                Month:
+              </Label>
               <Label htmlFor="month" className="hidden lg:block xxl:!text-lg">
                 Choose a month:
               </Label>
