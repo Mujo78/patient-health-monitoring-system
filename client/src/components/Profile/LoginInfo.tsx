@@ -1,9 +1,9 @@
 import React from "react";
-import { Props } from "../LandingPage";
+import { Props } from "../../pages/LandingPage";
 import { Button } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { authUser, reset } from "../../features/auth/authSlice";
-import Header from "../../components/UI/Header";
+import Header from "../UI/Header";
 import { useAppDispatch } from "../../app/hooks";
 
 const LoginInfo: React.FC<Props> = ({ setSignUp }) => {

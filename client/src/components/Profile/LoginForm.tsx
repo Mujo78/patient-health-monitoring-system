@@ -13,11 +13,11 @@ import {
   HiOutlineEyeSlash,
 } from "react-icons/hi2";
 
-import ForgotPasswordModal from "../../components/Profile/ForgotPasswordModal";
-import CustomButton from "../../components/UI/CustomButton";
-import Logo from "../../components/UI/Logo";
-import Input from "../../components/UI/Input";
-import Header from "../../components/UI/Header";
+import ForgotPasswordModal from "./ForgotPasswordModal";
+import CustomButton from "../UI/CustomButton";
+import Logo from "../UI/Logo";
+import Input from "../UI/Input";
+import Header from "../UI/Header";
 import { isFulfilled } from "@reduxjs/toolkit";
 
 type User = {

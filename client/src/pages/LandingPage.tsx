@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SignUpForm from "./auth/SignUpForm";
-import LoginForm from "./auth/LoginForm";
-import SignUpInfo from "./auth/SignUpInfo";
-import LoginInfo from "./auth/LoginInfo";
+import SignUpForm from "../components/Profile/SignUpForm";
+import LoginForm from "../components/Profile/LoginForm";
+import SignUpInfo from "../components/Profile/SignUpInfo";
+import LoginInfo from "../components/Profile/LoginInfo";
 import { useNavigate } from "react-router-dom";
 import { shallowEqual, useSelector } from "react-redux";
 import { authUser } from "../features/auth/authSlice";
