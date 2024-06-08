@@ -14,9 +14,10 @@ The Patient Health Monitoring System is a platform that enables doctors, patient
 ## Table of Contents
 - [Patient Health Monitoring System](#patient-health-monitoring-system)
 - [Project Overview](#project-overview)
-- [Features](#features)
-- [Technologies](#technologies)
 - [Schema Diagram](#schema-diagram)
+- [Technologies](#technologies)
+- [Features](#features)
+- [Getting Started](#getting-started)
 
 ## Project Overview
 
@@ -35,7 +36,22 @@ There are three distinct user roles within the system:
 ▶️ During the examination, the doctor enters results (OPTIONAL: The doctor can choose a medication available in the pharmacy, and this medication becomes part of the results)  
 ▶️ The doctor saves the results  
 ▶️ The patient receives a notification within the app about the results  
-▶️ Reviewing the results (OPTIONAL: If a pharmacy medication is prescribed, the patient can view its details)  
+▶️ Reviewing the results (OPTIONAL: If a pharmacy medication is prescribed, the patient can view its details)
+
+## Schema Diagram
+![Screenshot_2](https://github.com/Mujo78/patient-health-monitoring-system/assets/96636536/bd28b36f-e666-4233-bd7a-2f9ad08af311)
+
+## Technologies
++ MongoDB Atlas
++ Express.js
++ React.js (with TypeScript)
++ Node.js
++ TailwindCSS
++ Flowbite
++ Socket.io
++ Redux
++ Nodemailer
++ JWT Authentication
 
 ## Features
 
@@ -68,19 +84,48 @@ There are three distinct user roles within the system:
 - [x] Medicine Overview with Editing form
 - [x] Add a New medicine
 
-## Technologies
-+ MongoDB Atlas
-+ Express.js
-+ React.js (with TypeScript)
-+ Node.js
-+ TailwindCSS
-+ Flowbite
-+ Socket.io
-+ Redux
-+ Nodemailer
-+ JWT Authentication
+## Getting Started
 
-## Schema Diagram
-![Screenshot_2](https://github.com/Mujo78/patient-health-monitoring-system/assets/96636536/bd28b36f-e666-4233-bd7a-2f9ad08af311)
+### Prerequisites
 
+Before runing the application and starting using, make sure you have following installed:
+- Node.js
+- MongoDB Atlas Account
+
+### Installation
+
+1. Clone the repository
+```
+git clone https://github.com/Mujo78/patient-health-monitoring-system.git
+```
+
+2. Go to the project directory and install dependencies for both `client` and `server`
+
+- Server
+```
+npm install
+```
+- Client
+```
+cd client
+npm install
+```
+
+3. Create a `.env` files in both the `client` and `server` directories and add the environment variables as shown in the `.env.example` files
+
+5. Run `seed` script for the `server`
+```
+npm run seed
+```
+
+5. Start the `server`
+```
+npm start
+```
+
+6. Start the `client`
+```
+cd client
+npm run dev
+```
 
